@@ -47,4 +47,25 @@ $app->get('/user/token/{email}', function (Request $request, Response $response)
     ]);
 });
 
+$app->get('/user', function (Request $request, Response $response) {
+    $token = $request->getQueryParam('token');
+    if (!$token) {
+        $token = $request->getCookieParam('token');
+    }
+
+    $userData = false;
+
+    $userModel = Model::makeFromToken($token, $this->get('db'));
+    if ($userModel) {
+        $entity = $userModel->loadFromDatabase();
+        $userData = $entity->toArray();
+    }
+
+    return $response->withJson([
+        "status"  => 200,
+        "user" => $userData,
+    ]);
+
+});
+
 $app->run();
