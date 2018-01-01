@@ -1,7 +1,7 @@
 <?php
 
 use Competencies\Entity\UserEntity;
-use Competencies\User\Model;
+use Competencies\User\UserModel;
 use PHPUnit\Framework\TestCase;
 use Spot\Mapper;
 
@@ -9,7 +9,7 @@ class UserModelTest extends TestCase
 {
     public function testMake() {
         $testEmail = 'ap@mailinator.com';
-        $instance = Model::make($testEmail);
+        $instance = UserModel::make($testEmail);
 
         $this->assertEquals($instance->getEmail(), $testEmail);
         $this->assertNull($instance->getName());
@@ -19,13 +19,13 @@ class UserModelTest extends TestCase
         $testEmail = 'ap@mailinator.com';
         $testToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYXRyaXgiLCJpYXQiOjE1MTM3MDAwMDAsImV4cCI6MTUxMzcxMDgwMCwiZW1haWwiOiJhcEBtYWlsaW5hdG9yLmNvbSJ9.oW5Ym4MT-HmKQlXIPd1u7bJBdJRyWU6B6wzJN7pNh90';
 
-        $instance = Model::makeFromToken($testToken);
+        $instance = UserModel::makeFromToken($testToken);
         $this->assertEquals($testEmail, $instance->getEmail());
     }
 
     public function testSaveNew() {
         $testEmail = 'ap@mailinator.com';
-        $instance = Model::make($testEmail);
+        $instance = UserModel::make($testEmail);
 
         $entity = new UserEntity();
 
@@ -63,7 +63,7 @@ class UserModelTest extends TestCase
 
     public function testSaveExistant() {
         $testEmail = 'ap@mailinator.com';
-        $instance = Model::make($testEmail);
+        $instance = UserModel::make($testEmail);
 
         $entity = new UserEntity();
 
@@ -92,7 +92,7 @@ class UserModelTest extends TestCase
 
     public function testToken() {
         $testEmail = 'ap@mailinator.com';
-        $instance = Model::make($testEmail);
+        $instance = UserModel::make($testEmail);
 
         $issuedAt = 1513700000;
         $generatedToken = $instance->getToken($issuedAt);
@@ -105,7 +105,7 @@ class UserModelTest extends TestCase
      * @expectedException Exception
      */
     public function testSaveException() {
-        $instance = Model::make();
+        $instance = UserModel::make();
         $instance->saveToDatabase();
     }
 }

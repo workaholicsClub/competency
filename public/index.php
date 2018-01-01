@@ -2,10 +2,10 @@
 require '../vendor/autoload.php';
 
 use Competencies\Mail\MailgunMailer;
-use Competencies\User\Controller;
-use Competencies\User\Model;
-use \Psr\Http\Message\ServerRequestInterface as Request;
+use Competencies\User\UserController;
+use Competencies\User\UserModel;
 use Slim\App;
+use Slim\Http\Request;
 use Slim\Http\Response;
 use Spot\Config;
 use Spot\Locator;
@@ -34,10 +34,10 @@ $app = new App([
 $app->get('/user/token/{email}', function (Request $request, Response $response) {
     $email = $request->getAttribute('email');
 
-    $userModel = Model::make($email, $this->get('db'));
+    $userModel = UserModel::make($email, $this->get('db'));
     $userModel->saveToDatabase();
 
-    $userController = new Controller($userModel, $this->get('mailer'));
+    $userController = new UserController($userModel, $this->get('mailer'));
 
     $result = $userController->sendLoginEmail();
 
@@ -55,7 +55,7 @@ $app->get('/user', function (Request $request, Response $response) {
 
     $userData = false;
 
-    $userModel = Model::makeFromToken($token, $this->get('db'));
+    $userModel = UserModel::makeFromToken($token, $this->get('db'));
     if ($userModel) {
         $entity = $userModel->loadFromDatabase();
         $userData = $entity->toArray();
@@ -65,6 +65,10 @@ $app->get('/user', function (Request $request, Response $response) {
         "status"  => 200,
         "user" => $userData,
     ]);
+
+});
+
+$app->get('/', function (Request $request, Response $response) {
 
 });
 

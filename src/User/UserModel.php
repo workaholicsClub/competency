@@ -10,7 +10,7 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Spot\Locator;
 use Competencies\UserModelInterface;
 
-class Model implements UserModelInterface
+class UserModel implements UserModelInterface
 {
     const TOKEN_ISSUER = 'matrix';
     const TOKEN_SIGN_KEY = 'matrixSecret';
@@ -22,7 +22,7 @@ class Model implements UserModelInterface
     /**
      * @param string|null  $email
      * @param Locator|null $db
-     * @return Model
+     * @return UserModel
      */
     public static function make($email = null, $db = null) {
         $instance = new self();
@@ -39,7 +39,7 @@ class Model implements UserModelInterface
     /**
      * @param string|null  $token
      * @param Locator|null $db
-     * @return Model
+     * @return UserModel
      */
     public static function makeFromToken($token = null, $db = null) {
         $instance = new self();

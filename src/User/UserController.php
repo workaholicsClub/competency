@@ -5,7 +5,7 @@ namespace Competencies\User;
 use Competencies\MailerInterface;
 use Competencies\UserModelInterface;
 
-class Controller
+class UserController
 {
     private $user;
     private $mailer;

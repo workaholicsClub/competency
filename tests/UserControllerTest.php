@@ -1,7 +1,7 @@
 <?php
 
 use Competencies\MailerInterface;
-use Competencies\User\Controller;
+use Competencies\User\UserController;
 use Competencies\UserModelInterface;
 use Mailgun\Model\Message\SendResponse;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +33,7 @@ class UserControllerTest extends TestCase
             $mailer = $this->getMailer();
         }
 
-        $controller = new Controller($user, $mailer);
+        $controller = new UserController($user, $mailer);
 
         return $controller;
     }
