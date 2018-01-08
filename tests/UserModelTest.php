@@ -1,9 +1,9 @@
 <?php
 
-use Competencies\Entity\UserEntity;
+use Competencies\Mocks\Database;
+use Competencies\User\UserEntity;
 use Competencies\User\UserModel;
 use PHPUnit\Framework\TestCase;
-use Spot\Mapper;
 
 class UserModelTest extends TestCase
 {
@@ -23,69 +23,33 @@ class UserModelTest extends TestCase
         $this->assertEquals($testEmail, $instance->getEmail());
     }
 
-    public function testSaveNew() {
+    public function testLoad() {
         $testEmail = 'ap@mailinator.com';
-        $instance = UserModel::make($testEmail);
+        $locator = Database::getTest();
+        $instance = UserModel::make($testEmail, $locator);
 
-        $entity = new UserEntity();
+        $entity = $instance->load();
 
-        $mapper = $this->createMock(Mapper::class);
+        $this->assertInstanceOf(UserEntity::class, $entity);
+        $this->assertEquals($testEmail, $entity->get('email'));
+    }
 
-        $mapper
-            ->expects($this->once())
-            ->method('first')
-            ->with([
-                'email' => $testEmail
-            ])
-            ->willReturn(false);
+    public function testSaveNew() {
+        $testEmail = 'ap2@mailinator.com';
+        $locator = Database::getTest();
+        $instance = UserModel::make($testEmail, $locator);
 
-        $mapper
-            ->expects($this->once())
-            ->method('build')
-            ->with([
-                'name'  => null,
-                'email' => $testEmail
-            ])
-            ->willReturn($entity);
-
-        $mapper
-            ->expects($this->once())
-            ->method('save')
-            ->with($entity)
-            ->willReturn("1");
-
-        $instance->setMapper($mapper);
-
-        $saveResult = $instance->saveToDatabase();
+        $saveResult = $instance->save();
 
         $this->assertTrue($saveResult);
     }
 
     public function testSaveExistant() {
         $testEmail = 'ap@mailinator.com';
-        $instance = UserModel::make($testEmail);
+        $locator = Database::getTest();
+        $instance = UserModel::make($testEmail, $locator);
 
-        $entity = new UserEntity();
-
-        $mapper = $this->createMock(Mapper::class);
-
-        $mapper
-            ->expects($this->once())
-            ->method('first')
-            ->with([
-                'email' => $testEmail
-            ])
-            ->willReturn($entity);
-
-        $mapper
-            ->expects($this->once())
-            ->method('save')
-            ->with($entity)
-            ->willReturn(0);
-
-        $instance->setMapper($mapper);
-
-        $saveResult = $instance->saveToDatabase();
+        $saveResult = $instance->save();
 
         $this->assertTrue($saveResult);
     }
@@ -106,6 +70,6 @@ class UserModelTest extends TestCase
      */
     public function testSaveException() {
         $instance = UserModel::make();
-        $instance->saveToDatabase();
+        $instance->save();
     }
 }

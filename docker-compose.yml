@@ -18,7 +18,7 @@ services:
       dockerfile: "./etc/php/Dockerfile"
     working_dir: "/var/www"
     environment:
-      - MYSQL_DSN=mysql://${DATABASE_USER}:${DATABASE_PASSWORD}@database/${DATABASE_SCHEMA}
+      - MYSQL_DSN=mysql://${DATABASE_USER}:${DATABASE_PASSWORD}@database/${DATABASE_SCHEMA}?charset=UTF8
       - MAILGUN_KEY=${MAILGUN_KEY}
       - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
       - XDEBUG_CONFIG=remote_host=${HOST_IP}
@@ -27,6 +27,7 @@ services:
       - ".:/var/www"
       - "./etc/php/log-stdout.conf:/usr/local/etc/php-fpm.d/zz-log.conf"
       - "./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini"
+      - "./etc/php/pdo_sqlite.ini:/usr/local/etc/php/conf.d/pdo_sqlite.ini"
     depends_on:
       - database
 

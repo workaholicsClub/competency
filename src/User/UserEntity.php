@@ -1,13 +1,14 @@
 <?php
 
-namespace Competencies\Entity;
+namespace Competencies\User;
 
-class UserEntity extends \Spot\Entity
+use Spot\Entity;
+
+class UserEntity extends Entity
 {
     protected static $table = 'users';
 
-    public static function fields()
-    {
+    public static function fields() {
         return [
             'id'             => ['type' => 'integer', 'primary' => true, 'autoincrement' => true],
             'dateRegistered' => ['type' => 'datetime', 'value' => new \DateTime()],

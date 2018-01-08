@@ -1,6 +1,7 @@
 <?php
 require '../vendor/autoload.php';
 
+use Competencies\Competency\CompetencyModel;
 use Competencies\Mail\MailgunMailer;
 use Competencies\User\UserController;
 use Competencies\User\UserModel;
@@ -19,23 +20,23 @@ $settings = [
     'displayErrorDetails' => true,
 ];
 
-$ormConfig = new Config();
-$ormConfig->addConnection('mysql', $settings['mysql_dsn']);
-$orm = new Locator($ormConfig);
+$connectionConfig = new Config();
+$connectionConfig->addConnection('mysql', $settings['mysql_dsn']);
+$locator = new Locator($connectionConfig);
 
 $mailer = new MailgunMailer($settings['mailgun_key'], $settings['mailgun_domain']);
 
 $app = new App([
-    'settings' => $settings,
-    'db'       => $orm,
-    'mailer'   => $mailer,
+    'settings'  => $settings,
+    'dbLocator' => $locator,
+    'mailer'    => $mailer,
 ]);
 
 $app->get('/user/token/{email}', function (Request $request, Response $response) {
     $email = $request->getAttribute('email');
 
-    $userModel = UserModel::make($email, $this->get('db'));
-    $userModel->saveToDatabase();
+    $userModel = UserModel::make($email, $this->get('dbLocator'));
+    $userModel->save();
 
     $userController = new UserController($userModel, $this->get('mailer'));
 
@@ -55,9 +56,9 @@ $app->get('/user', function (Request $request, Response $response) {
 
     $userData = false;
 
-    $userModel = UserModel::makeFromToken($token, $this->get('db'));
+    $userModel = UserModel::makeFromToken($token, $this->get('dbLocator'));
     if ($userModel) {
-        $entity = $userModel->loadFromDatabase();
+        $entity = $userModel->load();
         $userData = $entity->toArray();
     }
 
@@ -68,8 +69,14 @@ $app->get('/user', function (Request $request, Response $response) {
 
 });
 
-$app->get('/', function (Request $request, Response $response) {
+$app->get('/profession', function (Request $request, Response $response) {
+    $competencyModel = CompetencyModel::make($this->get('dbLocator'));
+    $professionTree = $competencyModel->loadProfessions();
 
+    return $response->withJson([
+        "status" => 200,
+        "profession" => $professionTree,
+    ]);
 });
 
 $app->run();

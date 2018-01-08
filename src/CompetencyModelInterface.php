@@ -2,18 +2,8 @@
 
 namespace Competencies;
 
-interface UserModelInterface
+interface CompetencyModelInterface
 {
-    /**
-     * @return string
-     */
-    public function getEmail();
-
-    /**
-     * @return string
-     */
-    public function getToken();
-
     /**
      * @return \Spot\Mapper
      */

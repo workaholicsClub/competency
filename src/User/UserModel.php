@@ -2,7 +2,6 @@
 
 namespace Competencies\User;
 
-use Competencies\Entity\UserEntity;
 use Exception;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
@@ -26,22 +25,21 @@ class UserModel implements UserModelInterface
      */
     public static function make($email = null, $db = null) {
         $instance = new self();
+        $instance->setMapperFromLocator($db);
 
         if ($email) {
             $instance->setEmail($email);
         }
-
-        $instance->setMapperFromDb($db);
 
         return $instance;
     }
 
     /**
      * @param string|null  $token
-     * @param Locator|null $db
+     * @param Locator|null $locator
      * @return UserModel
      */
-    public static function makeFromToken($token = null, $db = null) {
+    public static function makeFromToken($token = null, $locator = null) {
         $instance = new self();
 
         if ($token) {
@@ -52,7 +50,7 @@ class UserModel implements UserModelInterface
             }
         }
 
-        $instance->setMapperFromDb($db);
+        $instance->setMapperFromLocator($locator);
 
         return $instance;
     }
@@ -76,7 +74,7 @@ class UserModel implements UserModelInterface
     /**
      * @return \Spot\Mapper
      */
-    protected function getMapper() {
+    public function getMapper() {
         return $this->mapper;
     }
 
@@ -88,11 +86,11 @@ class UserModel implements UserModelInterface
     }
 
     /**
-     * @param Locator|null $db
+     * @param Locator|null $locator
      */
-    public function setMapperFromDb($db = null) {
-        if ($db instanceof Locator) {
-            $mapper = $db->mapper('Competencies\Entity\UserEntity');
+    public function setMapperFromLocator($locator = null) {
+        if ($locator instanceof Locator) {
+            $mapper = $locator->mapper(UserEntity::class);
             $this->setMapper($mapper);
         }
     }
@@ -100,20 +98,20 @@ class UserModel implements UserModelInterface
     /**
      * @return UserEntity|false
      */
-    public function loadFromDatabase() {
+    public function load() {
         $mapper = $this->getMapper();
 
         return $mapper->first(['email' => $this->getEmail()]);
     }
 
-    public function saveToDatabase() {
+    public function save() {
         if (!$this->getEmail()) {
             throw new Exception('Email not set');
         }
 
         $mapper = $this->getMapper();
 
-        $entity = $this->loadFromDatabase();
+        $entity = $this->load();
 
         if ($entity !== false) {
             $entity->set('name', $this->getName());
