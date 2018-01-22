@@ -4,3 +4,13 @@
 clover.xml
 /.env
 !/etc/database/data/.gitkeep
+
+### Node.js
+logs
+*.log
+*.log*
+.npm
+.eslintcache
+
+node_modules/
+*.build.js

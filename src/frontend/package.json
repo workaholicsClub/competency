@@ -1,0 +1,29 @@
+{
+  "name": "vault-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "public/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest",
+    "hot-test": "jest --watch",
+    "build": "node_modules/webpack/bin/webpack.js --config webpack.config.js",
+    "hot-build": "node_modules/webpack-dev-server/bin/webpack-dev-server.js --hot --inline --colors --config webpack.config.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "hyperscript": "^2.0.2",
+    "jss": "^9.0.0",
+    "jss-preset-default": "^4.0.1",
+    "page": "^1.8.2"
+  },
+  "devDependencies": {
+    "jest": "^21.2.1",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.4"
+  }
+}

@@ -8,7 +8,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Competencies\\": "src/",
+            "Competencies\\": "src/api/",
             "Competencies\\Mocks\\": "tests/mocks"
         }
     },

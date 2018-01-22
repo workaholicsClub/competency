@@ -56,6 +56,9 @@ class CompetencyModel implements CompetencyModelInterface
     }
 
     public function loadProfessions() {
+        $groupIndexes = [];
+        $professionIndexes = [];
+
         $mapper = $this->getMapper();
         $professions = [];
 
@@ -69,23 +72,39 @@ class CompetencyModel implements CompetencyModelInterface
             $groupEntity = $competencyEntity->relation('group');
             $groupCode = $groupEntity->get('code');
 
-            $competencyCode = $competencyEntity->get('code');
-
             /**
              * @var ProfessionEntity $professionEntity
              */
             foreach ($competencyEntity->relation('professions') as $professionEntity) {
                 $professionCode = $professionEntity->get('code');
 
-                if ( !isset($professions[$professionCode]) ) {
-                    $professions[$professionCode] = $professionEntity->toArray();
+                if (!isset($professionIndexes[$professionCode])) {
+                    $professionIndex = count($professionIndexes);
+                    $professionIndexes[$professionCode] = $professionIndex;
+
+                    $professions[$professionIndex] = $professionEntity->toArray();
+                }
+                else {
+                    $professionIndex = $professionIndexes[$professionCode];
                 }
 
-                if ( !isset($professions[$professionCode]['groups'][$groupCode]) ) {
-                    $professions[$professionCode]['groups'][$groupCode] = $groupEntity->toArray();
+                if (!isset($groupIndexes[$professionIndex])) {
+                    $groupIndexes[$professionIndex] = [];
                 }
 
-                $professions[$professionCode]['groups'][$groupCode]['competencies'][$competencyCode] =
+                if (!isset($groupIndexes[$professionIndex][$groupCode])) {
+                    $groupIndex = count($groupIndexes[$professionIndex]);
+                    $groupIndexes[$professionIndex][$groupCode] = $groupIndex;
+                }
+                else {
+                    $groupIndex = $groupIndexes[$professionIndex][$groupCode];
+                }
+
+                if ( !isset($professions[$professionIndex]['groups'][$groupIndex]) ) {
+                    $professions[$professionIndex]['groups'][$groupIndex] = $groupEntity->toArray();
+                }
+
+                $professions[$professionIndex]['groups'][$groupIndex]['competencies'][] =
                     $competencyEntity->toArray();
             }
 
