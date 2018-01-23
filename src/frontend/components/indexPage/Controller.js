@@ -8,14 +8,6 @@ var IndexController = {
         this.events = [];
     },
 
-    /**
-     * @param {CustomEvent} event
-     */
-    renderProfessions: function (event) {
-        this.view.stopLoadProgress();
-        this.renderIndexPageAfterLoad();
-    },
-
     initEvents: function () {
         this.events = [
             {types: ['load'], target: this.professionsModel, handler: this.renderIndexPageAfterLoad}
@@ -51,7 +43,7 @@ var IndexController = {
      */
 };
 
-IndexController = Object.assign(BaseController, IndexController);
+IndexController = Object.assign(Object.create(BaseController), IndexController);
 
 /**
  * @param view

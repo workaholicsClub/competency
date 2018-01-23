@@ -1,13 +1,9 @@
-const mainViewFactory = require('./View');
+const indexViewFactory = require('./View');
 
 const jss = require('jss').default;
 const sleep = require('../../mocks/sleep.fn.js');
 
-function createMainView(DOMelement, intervalInterface) {
-    return mainViewFactory(DOMelement, jss, intervalInterface);
-}
-
-test('MainView.loadingInterval', function () {
+test('IndexView.loadingInterval', function () {
     var DOMelement = document.createElement('div');
     var milisecondsToCatchOneTick = 1000;
     var testIntervalId = 1;
@@ -16,36 +12,41 @@ test('MainView.loadingInterval', function () {
         clearInterval: jest.fn()
     };
 
-    var mainView = createMainView(DOMelement, intervalInterface);
-    mainView.startLoadProgress();
+    var indexView = indexViewFactory(DOMelement, jss, intervalInterface);
+    indexView.startLoadProgress();
 
     sleep(milisecondsToCatchOneTick);
 
-    mainView.stopLoadProgress();
+    indexView.stopLoadProgress();
     expect(intervalInterface.setInterval).toHaveBeenCalledTimes(1);
     expect(intervalInterface.clearInterval).toHaveBeenCalledTimes(1);
 
     //если таймер остановлен, то функция остановки не должна вызываться еще раз
-    mainView.stopLoadProgress();
+    indexView.stopLoadProgress();
     expect(intervalInterface.clearInterval).toHaveBeenCalledTimes(1);
 });
 
-test('MainView.createDOM', function () {
+test('IndexView.createDOM', function () {
     var DOMelement = document.createElement('div');
-    var mainView = createMainView(DOMelement);
+    var indexView = indexViewFactory(DOMelement, jss);
+    var viewModel = {
+        professions: []
+    };
 
-    var mainViewDOM = mainView.createDOM({});
-    expect(mainViewDOM).toBeInstanceOf(HTMLElement);
+    var indexViewDOM = indexView.createDOM(viewModel);
+    expect(indexViewDOM).toBeInstanceOf(HTMLElement);
 });
 
-test('MainView.render', function () {
+test('IndexView.render', function () {
     var DOMelement = document.createElement('div');
-    var mainView = createMainView(DOMelement);
-    var viewModel = {};
+    var indexView = indexViewFactory(DOMelement, jss);
+    var viewModel = {
+        professions: []
+    };
 
-    mainView.render(viewModel);
+    indexView.render(viewModel);
 
-    expect(mainView.getRootElement()).toBe(DOMelement);
+    expect(indexView.getRootElement()).toBe(DOMelement);
     //expect(mainView.queryVehicleDataElement()).toBeInstanceOf(HTMLElement);
     //expect(mainView.queryNumberInput()).toBeInstanceOf(HTMLInputElement);
 

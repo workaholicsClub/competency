@@ -1,5 +1,5 @@
 const h = require('hyperscript');
-const menuViewFactory = require('../menu/View');
+const footerViewFactory = require('../footer/View');
 
 var IndexView = {
     init: function (element, stylesManager, intervalInterface) {
@@ -12,13 +12,6 @@ var IndexView = {
 
     createStyles: function () {
         return this.stylesManager.createStyleSheet({
-            'footer': {
-                position: 'absolute',
-                bottom: 0,
-                width: '100%',
-                height: '60px',
-                'line-height': '60px'
-            }
         }).attach();
     },
 
@@ -45,20 +38,6 @@ var IndexView = {
         }
     },
 
-    createMenuView: function () {
-        return menuViewFactory(null, this.stylesManager, this.theme);
-    },
-
-    createBottomMenu: function () {
-        var menuView = this.createMenuView();
-
-        var menuItems = [
-            {href: '/about', text: 'О нас'}
-        ];
-
-        return menuView.createDOM({type: 'horizontal', menuItems: menuItems});
-    },
-
     createProfessionCards: function (viewModel) {
         return viewModel.professions.map(function (profession) {
             return h('div.col-sm',
@@ -73,7 +52,8 @@ var IndexView = {
     },
 
     createDOM: function (viewModel) {
-        var styles = this.createStyles();
+        //var styles = this.createStyles();
+        var footerView = footerViewFactory(this.stylesManager);
 
         return h('div#page.container-fluid.mt-3',
                     h('div#head.jumbotron.jumbotron-fluid',
@@ -91,7 +71,7 @@ var IndexView = {
                             this.createProfessionCards(viewModel)
                         )
                     ),
-                    h('div#footer.row.'+styles.classes.footer, this.createBottomMenu())
+                    footerView.createDOM()
                 );
     },
 

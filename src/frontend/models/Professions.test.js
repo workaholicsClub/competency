@@ -72,13 +72,12 @@ test('ProfessionsModel.load (двойной вызов)', function () {
         professionsModel.load();
 
         setTimeout(function () {
-            //expect не работает
-            var callsCount = loadHandler.mock.calls.length;
-            if (callsCount === 1) {
+            try {
+                expect(loadHandler).toHaveBeenCalledTimes(1);
                 resolve();
             }
-            else {
-                reject('loadHandler был вызван '+callsCount+' раз(а), а нужно 1');
+            catch (exception) {
+                reject(exception);
             }
         }, waitLoadMs);
     });
@@ -92,13 +91,12 @@ test('ProfessionsModel.loadAndSetFields', function () {
 
     return new Promise(function (resolve, reject) {
         professionsModel.addEventListener('load', function () {
-            var recievedValue = professionsModel.get('testField');
-
-            if (recievedValue === expectedValue) {
+            try {
+                expect( professionsModel.get('testField') ).toEqual(expectedValue);
                 resolve();
             }
-            else {
-                reject('testField: ' + recievedValue + ' (revieved) !== ' + expectedValue + ' (expected)');
+            catch (exception) {
+                reject(exception);
             }
         });
 
@@ -114,19 +112,18 @@ test('ProfessionsModel.isLoaded', function () {
 
     return new Promise(function (resolve, reject) {
         professionsModel.addEventListener('load', function () {
-            if ( professionsModel.isLoaded() === true) {
+            try {
+                expect( professionsModel.isLoaded() ).toBeTruthy();
                 resolve();
             }
-            else {
-                reject('ProfessionsModel.isLoaded() !== true');
+            catch (exception) {
+                reject(exception);
             }
         });
 
         professionsModel.load();
     });
-
 });
-
 
 test('ProfessionsModel.setProps', function () {
     var changeHandler = jest.fn();
@@ -156,14 +153,118 @@ test('ProfessionsModel.getProfessions', function () {
     return new Promise(function (resolve, reject) {
         professionsModel.addEventListener('load', function () {
             var recievedList = professionsModel.getProfessions();
-            var expectedListCompare = JSON.stringify(expectedList);
-            var recievedListCompare = JSON.stringify(recievedList);
 
-            if ( recievedListCompare === expectedListCompare ) {
+            try {
+                expect(recievedList).toEqual(expectedList);
+                resolve();
+            } catch (exception) {
+                reject(exception);
+            }
+        });
+
+        professionsModel.load();
+    });
+});
+
+test('ProfessionsModel.getProfession', function () {
+    var xhrMock = getXHRMock(JSON.stringify(professionsMockData));
+    var professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
+
+    return new Promise(function (resolve, reject) {
+        professionsModel.addEventListener('load', function () {
+            var profession = professionsModel.getProfession('tester');
+
+            try {
+                expect(profession).toHaveProperty('code');
+                expect(profession).toHaveProperty('name');
+                expect(profession).toHaveProperty('groups');
+                expect(profession.groups).toHaveLength(4);
                 resolve();
             }
-            else {
-                reject('getProfessions(): ' + recievedListCompare + ' (revieved) !== ' + expectedListCompare + ' (expected)')
+            catch (exception) {
+                reject(exception);
+            }
+        });
+
+        professionsModel.load();
+    });
+});
+
+test('ProfessionsModel.getProfession (с данными из свойств)', function () {
+    var professionsModel = professionsModelFactory(professionsMockData);
+    var profession = professionsModel.getProfession('tester');
+
+    expect(profession).toHaveProperty('code');
+    expect(profession).toHaveProperty('name');
+    expect(profession).toHaveProperty('groups');
+    expect(profession.groups).toHaveLength(4);
+});
+
+test('ProfessionsModel.getCompetencies', function () {
+    var xhrMock = getXHRMock(JSON.stringify(professionsMockData));
+    var professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
+
+    return new Promise(function (resolve, reject) {
+        professionsModel.addEventListener('load', function () {
+            var competencies = professionsModel.getCompetencies('tester');
+
+            try {
+                expect(competencies).toHaveLength(6);
+
+                var competency = competencies[0];
+                expect(competency).toHaveProperty('code');
+                expect(competency).toHaveProperty('name');
+                expect(competency).toHaveProperty('level1');
+                expect(competency).toHaveProperty('level2');
+                expect(competency).toHaveProperty('level3');
+                expect(competency).toHaveProperty('level4');
+                expect(competency).toHaveProperty('group');
+                expect(competency.group).toHaveProperty('code');
+                expect(competency.group).toHaveProperty('name');
+
+                resolve();
+            }
+            catch (exception) {
+                reject(exception);
+            }
+        });
+
+        professionsModel.load();
+    });
+});
+
+test('ProfessionsModel.getCompetency', function () {
+    var xhrMock = getXHRMock(JSON.stringify(professionsMockData));
+    var professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
+    var professionCode = 'tester';
+    var expectedCompetencyCode = 'operatingSystems';
+    var expectedCompetencyIndex = 2;
+
+    return new Promise(function (resolve, reject) {
+        professionsModel.addEventListener('load', function () {
+
+            try {
+                var competencyAndIndex = professionsModel.getCompetencyAndIndex(professionCode, expectedCompetencyCode);
+                var competency = professionsModel.getCompetency(professionCode, expectedCompetencyCode);
+                var competencyIndex = professionsModel.getCompetencyIndex(professionCode, expectedCompetencyCode);
+                var nonExistantCompetency = professionsModel.getCompetency('tester', 'dataScience');
+                var nonExistantProfession = professionsModel.getCompetency('dancer', 'operatingSystems');
+
+                expect(nonExistantCompetency).toBeFalsy();
+                expect(nonExistantProfession).toBeFalsy();
+                expect(competencyAndIndex).toHaveProperty('competency');
+                expect(competencyAndIndex).toHaveProperty('index');
+                expect(competencyAndIndex.competency).toHaveProperty('code');
+                expect(competencyAndIndex.competency.code).toEqual(expectedCompetencyCode);
+                expect(competencyAndIndex.index).toEqual(expectedCompetencyIndex);
+                expect(competency).toHaveProperty('code');
+                expect(competency.code).toEqual(expectedCompetencyCode);
+                expect(competencyIndex).toEqual(expectedCompetencyIndex);
+
+                resolve();
+            }
+            catch (exception) {
+                reject(exception);
             }
         });
 

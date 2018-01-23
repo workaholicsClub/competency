@@ -35,7 +35,7 @@ var ProfessionsModel = Object.assign(Object.create(BaseModel), {
         /**
          * @property {ProfessionHash[]} professions
          */
-        this.professions = [];
+        this.professions = this.get('profession') || [];
 
         this.isLoading = false;
 
@@ -93,7 +93,14 @@ var ProfessionsModel = Object.assign(Object.create(BaseModel), {
         this.dispatchModelEvent('load');
     },
 
+    /**
+     * @returns {ProfessionHash[]|boolean}
+     */
     getProfessions: function () {
+        if (!this.professions) {
+            return false;
+        }
+
         return this.professions.reduce(function (accumulator, currentProfession) {
             /**
              * @param {ProfessionHash} currentProfession
@@ -106,6 +113,78 @@ var ProfessionsModel = Object.assign(Object.create(BaseModel), {
 
             return accumulator;
         }, []);
+    },
+
+    /**
+     * @param {string} professionCode
+     * @returns {ProfessionHash|boolean}
+     */
+    getProfession: function (professionCode) {
+        var profession;
+
+        for (var index = 0; index < this.professions.length; index++) {
+            profession = this.professions[index];
+            if (profession.code === professionCode) {
+                return profession;
+            }
+        }
+
+        return false;
+    },
+
+    /**
+     * @param {string} professionCode
+     * @returns {CompetencyHash[]|boolean}
+     */
+    getCompetencies: function (professionCode) {
+        var profession = this.getProfession(professionCode);
+        if (!profession) {
+            return false;
+        }
+
+        return profession.groups.reduce(function (accumulator, currentGroup) {
+            accumulator = accumulator.concat(currentGroup.competencies);
+            return accumulator;
+        }, []);
+    },
+
+    /**
+     * @param {string} professionCode
+     * @param {string} competencyCode
+     * @returns {*}
+     */
+    getCompetencyAndIndex: function (professionCode, competencyCode) {
+        var competencies = this.getCompetencies(professionCode);
+        var competency;
+
+        for (var index = 0; index < competencies.length; index++) {
+            competency = competencies[index];
+            if (competency.code === competencyCode) {
+                return {competency: competency, index: index};
+            }
+        }
+
+        return false;
+    },
+
+    /**
+     * @param professionCode
+     * @param competencyCode
+     * @returns {CompetencyHash}
+     */
+    getCompetency: function (professionCode, competencyCode) {
+        var competencyAndIndex = this.getCompetencyAndIndex(professionCode, competencyCode);
+        return competencyAndIndex.competency;
+    },
+
+    /**
+     * @param professionCode
+     * @param competencyCode
+     * @returns {number}
+     */
+    getCompetencyIndex: function (professionCode, competencyCode) {
+        var competencyAndIndex = this.getCompetencyAndIndex(professionCode, competencyCode);
+        return competencyAndIndex.index;
     },
 
     handleLoadError: function (xhr, event) {
