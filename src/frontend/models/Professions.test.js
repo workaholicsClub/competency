@@ -36,6 +36,9 @@ test('ProfessionsModel.interface', function () {
     expect(professionsModel.addEventListener).toBeInstanceOf(Function);
     expect(professionsModel.removeEventListener).toBeInstanceOf(Function);
     expect(professionsModel.dispatchEvent).toBeInstanceOf(Function);
+    expect(professionsModel.set).toBeInstanceOf(Function);
+    expect(professionsModel.get).toBeInstanceOf(Function);
+    expect(professionsModel.load).toBeInstanceOf(Function);
 });
 
 test('ProfessionsModel.load', function () {
@@ -250,6 +253,9 @@ test('ProfessionsModel.getCompetency', function () {
                 var nonExistantCompetency = professionsModel.getCompetency('tester', 'dataScience');
                 var nonExistantProfession = professionsModel.getCompetency('dancer', 'operatingSystems');
 
+                var anyCompetencyDeveloper = professionsModel.getAnyProfessionCompetency('codeQuality');
+                var anyCompetencyTester = professionsModel.getAnyProfessionCompetency('probabiltyBasics');
+
                 expect(nonExistantCompetency).toBeFalsy();
                 expect(nonExistantProfession).toBeFalsy();
                 expect(competencyAndIndex).toHaveProperty('competency');
@@ -260,6 +266,11 @@ test('ProfessionsModel.getCompetency', function () {
                 expect(competency).toHaveProperty('code');
                 expect(competency.code).toEqual(expectedCompetencyCode);
                 expect(competencyIndex).toEqual(expectedCompetencyIndex);
+
+                expect(anyCompetencyDeveloper).toHaveProperty('code');
+                expect(anyCompetencyTester).toHaveProperty('code');
+                expect(anyCompetencyDeveloper.code).toEqual('codeQuality');
+                expect(anyCompetencyTester.code).toEqual('probabiltyBasics');
 
                 resolve();
             }

@@ -1,9 +1,16 @@
 const page = require('page');
+
 const indexPageControllerFactory = require('./components/indexPage/Controller');
 const indexPageViewFactory = require('./components/indexPage/View');
+
 const testPageControllerFactory = require('./components/testPage/Controller');
 const testPageViewFactory = require('./components/testPage/View');
-const professionsModelFactory = require('./models/Professions');
+
+const resultsControllerFactory = require('./components/resultsPage/Controller');
+const resultsViewFactory = require('./components/resultsPage/View');
+
+const professionsFactory = require('./models/Professions');
+const answersFactory = require('./models/Answers');
 
 const configFactory = require('./classes/Config');
 
@@ -25,7 +32,6 @@ const polyfillsFactory = require('./classes/Polyfills');
  * @property {string} title
  */
 
-
 function initAndGoToRoute() {
     polyfillsFactory();
 
@@ -33,7 +39,8 @@ function initAndGoToRoute() {
     var rootElement = document.body;
 
     var config = configFactory();
-    var professionsModel = professionsModelFactory({}, config);
+    var professionsModel = professionsFactory({}, config);
+    var answersModel = answersFactory({}, config);
 
     page('/', function () {
         var indexView = indexPageViewFactory(rootElement, stylesManager);
@@ -47,13 +54,19 @@ function initAndGoToRoute() {
          * @param {RouteContextHash} context
          */
         var testView = testPageViewFactory(rootElement, stylesManager);
-        var testController = testPageControllerFactory(testView, professionsModel, context.params.professionCode, context.params.competencyCode);
+        var testController = testPageControllerFactory(testView, professionsModel, answersModel, context.params.professionCode, context.params.competencyCode);
 
         testController.loadDataAndRenderIndexPage();
     });
 
+    page('/results', function () {
+        var resultsView = resultsViewFactory(rootElement, stylesManager);
+        var resultsController = resultsControllerFactory(resultsView, professionsModel, answersModel);
+
+        resultsController.loadDataAndRenderIndexPage();
+    });
+
     page();
 }
-
 
 document.addEventListener("DOMContentLoaded", initAndGoToRoute);

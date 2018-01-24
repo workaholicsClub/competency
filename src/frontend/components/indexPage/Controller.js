@@ -36,11 +36,6 @@ var IndexController = {
         this.view.stopLoadProgress();
         this.view.render(modelView);
     }
-
-    /**
-     * @method handleEvent
-     * @method bindEvents
-     */
 };
 
 IndexController = Object.assign(Object.create(BaseController), IndexController);

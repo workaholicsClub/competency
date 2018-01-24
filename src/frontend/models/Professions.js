@@ -1,5 +1,9 @@
 const BaseModel = require('./Base');
 
+function deepClone(source) {
+    //TODO eval is evil
+    return JSON.parse(JSON.stringify(source));
+}
 /**
  * @typedef {Object} CompetencyHash
  * @property {number} id
@@ -27,7 +31,7 @@ const BaseModel = require('./Base');
  * @property {GroupHash[]} groups
  */
 
-var ProfessionsModel = Object.assign(Object.create(BaseModel), {
+var ProfessionsModel = {
     init: function (props, config, xhr) {
         this.initPropsAndEvents(props);
         this.xhr = xhr;
@@ -125,7 +129,7 @@ var ProfessionsModel = Object.assign(Object.create(BaseModel), {
         for (var index = 0; index < this.professions.length; index++) {
             profession = this.professions[index];
             if (profession.code === professionCode) {
-                return profession;
+                return deepClone(profession);
             }
         }
 
@@ -143,7 +147,7 @@ var ProfessionsModel = Object.assign(Object.create(BaseModel), {
         }
 
         return profession.groups.reduce(function (accumulator, currentGroup) {
-            accumulator = accumulator.concat(currentGroup.competencies);
+            accumulator = accumulator.concat( deepClone(currentGroup.competencies) );
             return accumulator;
         }, []);
     },
@@ -160,7 +164,7 @@ var ProfessionsModel = Object.assign(Object.create(BaseModel), {
         for (var index = 0; index < competencies.length; index++) {
             competency = competencies[index];
             if (competency.code === competencyCode) {
-                return {competency: competency, index: index};
+                return {competency: deepClone(competency), index: index};
             }
         }
 
@@ -178,6 +182,25 @@ var ProfessionsModel = Object.assign(Object.create(BaseModel), {
     },
 
     /**
+     * @param {string} competencyCode
+     * @returns {CompetencyHash|boolean}
+     */
+    getAnyProfessionCompetency: function (competencyCode) {
+        var professions = this.getProfessions();
+
+        for (var index in professions) {
+            var profession = professions[index];
+
+            var competency = this.getCompetency(profession.code, competencyCode);
+            if (competency) {
+                return competency;
+            }
+        }
+
+        return false;
+    },
+
+    /**
      * @param professionCode
      * @param competencyCode
      * @returns {number}
@@ -191,7 +214,9 @@ var ProfessionsModel = Object.assign(Object.create(BaseModel), {
         this.isLoading = false;
         this.dispatchModelEvent('loadError');
     }
-});
+};
+
+ProfessionsModel = Object.assign(Object.create(BaseModel), ProfessionsModel);
 
 /**
  * @param props

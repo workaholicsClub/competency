@@ -1,6 +1,7 @@
 const testControllerFactory = require('./Controller');
 const testPageViewFactory = require('./View');
-const professionsModelFactory = require('../../models/Professions');
+const professionsFactory = require('../../models/Professions');
+const answersFactory = require('../../models/Answers');
 const professionsMockData = require('../../mocks/professions.json');
 
 function getViewInstance() {
@@ -12,8 +13,9 @@ function getViewInstance() {
 
 function getControllerInstance(professionCode, competencyCode) {
     var view = getViewInstance();
-    var professionsModel = professionsModelFactory(professionsMockData);
-    return testControllerFactory(view, professionsModel, professionCode, competencyCode);
+    var professionsModel = professionsFactory(professionsMockData);
+    var answersModel = answersFactory();
+    return testControllerFactory(view, professionsModel, answersModel, professionCode, competencyCode);
 }
 
 test('TestController.interface', function () {

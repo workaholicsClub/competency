@@ -18,7 +18,16 @@ var BaseController = {
 
             var controllerEventHasType = controllerEvent.types.indexOf(incomingEvent.type) !== -1;
             var isModelEvent = incomingEvent instanceof CustomEvent;
-            var controllerEventHasSameTarget = incomingEvent.currentTarget === controllerEvent.target;
+            var controllerEventHasSameTarget = false;
+
+            if (controllerEvent.target instanceof NodeList || controllerEvent.target instanceof Array) {
+                controllerEvent.target.forEach(function (target) {
+                    controllerEventHasSameTarget = target === incomingEvent.currentTarget || controllerEventHasSameTarget;
+                });
+            }
+            else {
+                controllerEventHasSameTarget = incomingEvent.currentTarget === controllerEvent.target;
+            }
 
             if (controllerEventHasType && (controllerEventHasSameTarget || isModelEvent)) {
                 controllerEvent.handler.call(contextForEventHandler, incomingEvent);
@@ -26,19 +35,35 @@ var BaseController = {
         });
     },
 
-    bindEvents: function () {
+    /**
+     * @param {EventTarget[]} events
+     */
+    bindEvents: function (events) {
         var eventListener = this;
 
-        this.events.forEach(function (event) {
+        if (!events) {
+            events = this.events;
+        }
+
+        events.forEach(function (event) {
             /**
              * @param {Object} event
              * @param {string[]} event.types
-             * @param {EventTarget} event.target
+             * @param {EventTarget|EventTarget[]|NodeList} event.target
              * @param {Function} event.handler
              */
 
             event.types.forEach(function (type) {
-                event.target.addEventListener(type, eventListener);
+
+                if (event.target instanceof NodeList || event.target instanceof Array) {
+                    event.target.forEach(function (target) {
+                        target.addEventListener(type, eventListener);
+                    });
+                }
+                else {
+                    event.target.addEventListener(type, eventListener);
+                }
+
             });
         });
     }

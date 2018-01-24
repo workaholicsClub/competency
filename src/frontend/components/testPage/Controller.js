@@ -1,9 +1,10 @@
 const BaseController = require('../base/Controller');
 
 var TestController = {
-    init: function (view, professionsModel, professionCode, competencyCode) {
+    init: function (view, professionsModel, answersModel, professionCode, competencyCode) {
         this.view = view;
         this.professionsModel = professionsModel;
+        this.answersModel = answersModel;
         this.professionCode = professionCode;
         this.competencyCode = competencyCode;
         this.element = view.getRootElement();
@@ -18,6 +19,16 @@ var TestController = {
         this.bindEvents();
     },
 
+    initViewEvents: function () {
+        var additionalEvents = [
+            {types: ['change'], target: this.view.getAllLevelSelects(), handler: this.markLevelCompletedAndUpdateAnswer}
+        ];
+
+        this.events = this.events.concat(additionalEvents);
+
+        this.bindEvents(additionalEvents);
+    },
+
     loadDataAndRenderIndexPage: function () {
         this.initEvents();
 
@@ -27,6 +38,20 @@ var TestController = {
         else {
             this.professionsModel.load();
         }
+    },
+
+    /**
+     * @param {Event} event
+     */
+    markLevelCompletedAndUpdateAnswer: function (event) {
+        var selectElement = event.currentTarget;
+        var completedCard = selectElement.closest('.card');
+
+        completedCard.classList.add('bg-success');
+        completedCard.classList.add('text-white');
+
+        var answers = this.view.getLevelAnswers();
+        this.answersModel.set(this.competencyCode, answers);
     },
 
     getViewModel: function () {
@@ -57,26 +82,23 @@ var TestController = {
 
     renderIndexPageAfterLoad: function () {
         this.view.render(this.getViewModel());
+        this.initViewEvents();
     }
-
-    /**
-     * @method handleEvent
-     * @method bindEvents
-     */
 };
 
 TestController = Object.assign(Object.create(BaseController), TestController);
 
 /**
  * @param view
- * @param professionsModel
- * @param professionCode
- * @param competencyCode
+ * @param {ProfessionsModel} professionsModel
+ * @param {AnswersModel} answersModel
+ * @param {string} professionCode
+ * @param {string} competencyCode
  * @returns {TestController}
  */
-module.exports = function (view, professionsModel, professionCode, competencyCode) {
+module.exports = function (view, professionsModel, answersModel, professionCode, competencyCode) {
     var instance = Object.create(TestController);
-    instance.init(view, professionsModel, professionCode, competencyCode);
+    instance.init(view, professionsModel, answersModel, professionCode, competencyCode);
 
     return instance;
 };
