@@ -71,7 +71,9 @@ $app->get('/user', function (Request $request, Response $response) {
 });
 
 $app->get('/profession', function (Request $request, Response $response) {
-    $competencyModel = CompetencyModel::make($this->get('dbLocator'));
+    $locator = $this->get('dbLocator');
+    $courseModel = CourseModel::make($locator);
+    $competencyModel = CompetencyModel::make($locator, $courseModel);
     $professionTree = $competencyModel->loadProfessions();
 
     return $response->withJson([

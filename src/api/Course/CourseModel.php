@@ -2,7 +2,6 @@
 
 namespace Competencies\Course;
 
-use Competencies\Competency\CompetencyEntity;
 use Spot\Locator;
 
 class CourseModel
@@ -54,6 +53,18 @@ class CourseModel
         $mapper = $this->getMapper();
 
         return $mapper->first(['code' => $code]);
+    }
+
+    public function countCoursesForProfession($professionCode) {
+        $mapper = $this->getMapper();
+
+        $courseEntities = $mapper->query('SELECT DISTINCT c.* FROM courses c
+                        LEFT JOIN courseCompetency cc ON cc.courseId = c.id
+                        LEFT JOIN competencyProfession cp ON cc.competencyId = cp.competencyId
+                        LEFT JOIN professions p ON cp.professionId = p.id
+                    WHERE p.code = ?', [$professionCode]);
+
+        return count($courseEntities);
     }
 
     public function getRecommendations($competencyRatings) {

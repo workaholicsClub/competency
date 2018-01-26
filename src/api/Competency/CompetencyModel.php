@@ -2,46 +2,66 @@
 
 namespace Competencies\Competency;
 
+use Competencies\Course\CourseEntity;
+use Competencies\Course\CourseModel;
 use Spot\Locator;
 
 class CompetencyModel
 {
-    private $mapper;
+    /**
+     * @var Locator|null $locator
+     */
+    private $locator;
+    private $courseModel;
 
     /**
      * @param Locator|null $locator
+     * @param null         $courseModel
      * @return CompetencyModel
      * @internal param null|string $email
      */
-    public static function make($locator = null) {
+    public static function make($locator = null, $courseModel = null) {
         $instance = new self();
-        $instance->setMapperFromLocator($locator);
+        $instance->setLocator($locator);
+        $instance->setCourseModel($courseModel);
 
         return $instance;
     }
 
     /**
-     * @param Locator|null $locator
+     * @return mixed
      */
-    public function setMapperFromLocator($locator = null) {
-        if ($locator instanceof Locator) {
-            $mapper = $locator->mapper(CompetencyEntity::class);
-            $this->setMapper($mapper);
-        }
+    public function getLocator() {
+        return $this->locator;
     }
 
     /**
+     * @param mixed $locator
+     */
+    public function setLocator($locator) {
+        $this->locator = $locator;
+    }
+
+    /**
+     * @param string $entityClass
      * @return \Spot\Mapper
      */
-    public function getMapper() {
-        return $this->mapper;
+    public function getMapper($entityClass = CompetencyEntity::class) {
+        return $this->locator->mapper($entityClass);
     }
 
     /**
-     * @param \Spot\Mapper $mapper
+     * @return CourseModel|null
      */
-    public function setMapper($mapper) {
-        $this->mapper = $mapper;
+    public function getCourseModel() {
+        return $this->courseModel;
+    }
+
+    /**
+     * @param CourseModel $courseModel
+     */
+    public function setCourseModel($courseModel) {
+        $this->courseModel = $courseModel;
     }
 
     /**
@@ -58,7 +78,8 @@ class CompetencyModel
         $groupIndexes = [];
         $professionIndexes = [];
 
-        $mapper = $this->getMapper();
+        $mapper = $this->getMapper(CompetencyEntity::class);
+
         $professions = [];
 
         $competencies = $mapper->all()->with(['professions', 'group']);
@@ -82,6 +103,9 @@ class CompetencyModel
                     $professionIndexes[$professionCode] = $professionIndex;
 
                     $professions[$professionIndex] = $professionEntity->toArray();
+                    $professions[$professionIndex]['competencyCount'] = 0;
+                    $professions[$professionIndex]['courseCount'] = $this->getCourseModel()
+                                                        ->countCoursesForProfession($professionCode);
                 }
                 else {
                     $professionIndex = $professionIndexes[$professionCode];
@@ -105,6 +129,7 @@ class CompetencyModel
 
                 $professions[$professionIndex]['groups'][$groupIndex]['competencies'][] =
                     $competencyEntity->toArray();
+                $professions[$professionIndex]['competencyCount']++;
             }
 
         }

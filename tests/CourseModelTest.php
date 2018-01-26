@@ -23,6 +23,14 @@ class CourseModelTest extends TestCase
         $this->assertEquals($testCode, $entity->get('code'));
     }
 
+    public function testCountCoursesForProfession() {
+        $locator = Database::getTest();
+        $instance = CourseModel::make($locator);
+
+        $this->assertEquals($instance->countCoursesForProfession('webDeveloper'), 8);
+        $this->assertEquals($instance->countCoursesForProfession('tester'), 7);
+    }
+
     public function testGetRecommendations() {
         $locator = Database::getTest();
         $instance = CourseModel::make($locator);
