@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `self_competency` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `self_competency`;
 -- MySQL dump 10.13  Distrib 5.7.20, for Linux (x86_64)
 --
 -- Host: db.staging.cherehapa.ru    Database: self_competency
@@ -165,6 +167,94 @@ INSERT INTO `competencyProfession` VALUES (28,29,2);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `courseCompetency`
+--
+
+DROP TABLE IF EXISTS `courseCompetency`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `courseCompetency` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `courseId` int(11) DEFAULT NULL,
+  `competencyId` int(11) DEFAULT NULL,
+  `startLevel` float(3,2) DEFAULT NULL,
+  `increment` float(3,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `course` (`courseId`),
+  KEY `competency` (`competencyId`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `courseCompetency`
+--
+
+LOCK TABLES `courseCompetency` WRITE;
+/*!40000 ALTER TABLE `courseCompetency` DISABLE KEYS */;
+INSERT INTO `courseCompetency` VALUES (1,1,6,0.00,0.75);
+INSERT INTO `courseCompetency` VALUES (2,2,6,0.50,2.50);
+INSERT INTO `courseCompetency` VALUES (3,2,9,0.00,1.00);
+INSERT INTO `courseCompetency` VALUES (4,2,10,0.00,2.25);
+INSERT INTO `courseCompetency` VALUES (5,4,6,0.00,0.50);
+INSERT INTO `courseCompetency` VALUES (6,5,6,1.00,2.75);
+INSERT INTO `courseCompetency` VALUES (7,5,9,0.25,1.00);
+INSERT INTO `courseCompetency` VALUES (8,5,10,0.50,2.75);
+INSERT INTO `courseCompetency` VALUES (9,8,10,2.50,3.75);
+INSERT INTO `courseCompetency` VALUES (10,6,11,0.00,1.50);
+INSERT INTO `courseCompetency` VALUES (11,6,2,0.00,1.00);
+INSERT INTO `courseCompetency` VALUES (12,6,7,0.00,2.25);
+INSERT INTO `courseCompetency` VALUES (13,7,26,0.00,1.75);
+INSERT INTO `courseCompetency` VALUES (14,7,8,0.00,1.50);
+INSERT INTO `courseCompetency` VALUES (15,9,7,1.75,0.50);
+INSERT INTO `courseCompetency` VALUES (16,9,11,1.75,0.50);
+INSERT INTO `courseCompetency` VALUES (17,9,9,0.75,0.50);
+INSERT INTO `courseCompetency` VALUES (18,9,4,0.00,1.75);
+INSERT INTO `courseCompetency` VALUES (19,10,27,0.00,3.50);
+INSERT INTO `courseCompetency` VALUES (20,11,26,0.00,2.50);
+/*!40000 ALTER TABLE `courseCompetency` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `courses`
+--
+
+DROP TABLE IF EXISTS `courses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `courses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(45) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `url` text,
+  `price` float(10,2) DEFAULT NULL,
+  `weeks` int(11) DEFAULT NULL,
+  `lessons` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code_UNIQUE` (`code`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `courses`
+--
+
+LOCK TABLES `courses` WRITE;
+/*!40000 ALTER TABLE `courses` DISABLE KEYS */;
+INSERT INTO `courses` VALUES (1,'netology-html-verstka','HTML-верстка: с нуля до первого макета','https://netology.ru/programs/html-verstka',23900.00,6,16);
+INSERT INTO `courses` VALUES (2,'netology-html-javascript','JavaScript в браузере: создаем интерактивные веб-страницы','https://netology.ru/programs/html-javascript',20900.00,8,18);
+INSERT INTO `courses` VALUES (3,'netology-adaptive-mobile-layout','Адаптивная и мобильная верстка','https://netology.ru/programs/adaptive-mobile-layout',20900.00,4,10);
+INSERT INTO `courses` VALUES (4,'netology-html-css-base','HTML и CSS с нуля','https://netology.ru/programs/html-css-base',0.00,6,7);
+INSERT INTO `courses` VALUES (5,'netology-javascript','JavaScript: основы и современныe возможности языка','https://netology.ru/programs/javascript',20900.00,9,18);
+INSERT INTO `courses` VALUES (6,'netology-php-sql','PHP/SQL: back-end разработка и базы данных','https://netology.ru/programs/php-sql',20900.00,9,19);
+INSERT INTO `courses` VALUES (7,'netology-python-base','Python: программирование на каждый день и сверхбыстрое прототипирование','https://netology.ru/programs/python-base',20900.00,13,26);
+INSERT INTO `courses` VALUES (8,'netology-react','Библиотека React: построй свою любовь к интерактивным веб-интерфейсам','https://netology.ru/programs/react',20900.00,6,13);
+INSERT INTO `courses` VALUES (9,'netology-node','Node, AngularJS и MongoDB: разработка полноценных веб-приложений','https://netology.ru/programs/node',20900.00,10,20);
+INSERT INTO `courses` VALUES (10,'stepic-probability','Теория вероятностей - наука о случайности','https://stepik.org/course/2911',0.00,3,3);
+INSERT INTO `courses` VALUES (11,'stepic-python','Программирование на Python','https://stepik.org/course/67',0.00,7,7);
+/*!40000 ALTER TABLE `courses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `pollResults`
 --
 
@@ -281,4 +371,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-26 16:30:39
+-- Dump completed on 2018-01-25 19:55:35

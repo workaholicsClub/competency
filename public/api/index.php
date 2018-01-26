@@ -2,6 +2,7 @@
 require '../../vendor/autoload.php';
 
 use Competencies\Competency\CompetencyModel;
+use Competencies\Course\CourseModel;
 use Competencies\Mail\MailgunMailer;
 use Competencies\User\UserController;
 use Competencies\User\UserModel;
@@ -76,6 +77,18 @@ $app->get('/profession', function (Request $request, Response $response) {
     return $response->withJson([
         "status" => 200,
         "profession" => $professionTree,
+    ]);
+});
+
+$app->get('/courses/recommend', function (Request $request, Response $response) {
+    $competencyRatings = $request->getQueryParam('competency');
+    $courseModel = CourseModel::make($this->get('dbLocator'));
+
+    $recommendedCourses = $courseModel->getRecommendations($competencyRatings);
+
+    return $response->withJson([
+        'status' => 200,
+        "course" => $recommendedCourses
     ]);
 });
 

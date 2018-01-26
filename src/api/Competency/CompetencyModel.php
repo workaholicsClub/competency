@@ -2,10 +2,9 @@
 
 namespace Competencies\Competency;
 
-use Competencies\CompetencyModelInterface;
 use Spot\Locator;
 
-class CompetencyModel implements CompetencyModelInterface
+class CompetencyModel
 {
     private $mapper;
 

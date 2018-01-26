@@ -30,7 +30,7 @@ var AnswersModel = {
             return arraySum + current;
         });
 
-        var humanRating = parseFloat( rating.toFixed(2) ) + 1;
+        var humanRating = parseFloat( rating.toFixed(2) );
 
         return rating !== -1 ? humanRating : false;
     },

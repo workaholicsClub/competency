@@ -14,3 +14,8 @@
 [http://127.0.0.1:8080/api/profession](http://127.0.0.1:8080/api/profession)
 
 В выводе куча служебных полей, но полагаю, что для MVP это не страшно
+
+## Рекомендации по курсам
+[http://127.0.0.1:8080/api/courses/recommend?competency[probabiltyBasics]=0.5](http://127.0.0.1:8080/api/courses/recommend?competency[probabiltyBasics]=0.5)
+
+В массиве `competency` - компетенции с рейтингами, по которым будут даваться рекомендации. Рекомендации по курсам отдаются в порядке уменьшения возможного прироста компетенций (`totalIncrement`).

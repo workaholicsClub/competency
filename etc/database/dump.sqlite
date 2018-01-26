@@ -1,9 +1,8 @@
 DROP TABLE IF EXISTS `compentencyGroups`;
 CREATE TABLE `compentencyGroups` (
-  `id` int(11) NOT NULL,
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   `code` varchar(45) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `name` varchar(255) DEFAULT NULL
 );
 
 INSERT INTO `compentencyGroups` VALUES (1,'programmingTheory','Теория программирования');
@@ -16,15 +15,14 @@ INSERT INTO `compentencyGroups` VALUES (7,'testingPractice','Практика т
 INSERT INTO `compentencyGroups` VALUES (8,'testingTheory','Теория тестирования');
 
 CREATE TABLE `competencies` (
-  `id` int(11) NOT NULL,
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   `code` varchar(45) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `level1` text,
   `level2` text,
   `level3` text,
   `level4` text,
-  `competencyGroupId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `competencyGroupId` int(11) DEFAULT NULL
 );
 
 INSERT INTO `competencies` VALUES (1,'functionalProgramming','Функциональное программирование','Владею понятиями алгоритма, именованных переменных и функций. Хорошо знаю базовые алгоритмы: линейный поиск, сортировка и бинарный поиск, обход многомерного массива, векторные и матричные операции','Знаю что такое сложные типы данных, рекурсия, лямбда функции, карринг, функции высшего порядка. Знаю о чистоте функций и побочных эффектах. Имею опыт использования замыканий','Понятие вычислимости. Знаю о машине Тьюринга, конечных автоматах. Хорошо ориентируюсь в классах вычислительной сложности задач. Знаю, что такое NP-полные задачи, могу привести пример одной из формулировок. Алгоритм NP-перебора','Прекрасно понимаю, что такое параллельные алгоритмы (очередь, конвейер), транзакции, мертвая блокировка, состояние гонки. Знаю, что такое семафоры, мьютексы',1);
@@ -58,10 +56,9 @@ INSERT INTO `competencies` VALUES (28,'handTesting','Ручное тестиро
 INSERT INTO `competencies` VALUES (29,'testAutomation','Автоматизация тестирования','Знаю какой-либо из языков программирования, применяемых при автоматизации (python, java, javascript, C#), умею пользоваться соответствующими IDE. Умею пользоваться рекордерами сценариев. Умею выполнять инспекцию кода. Имею понятие о тест-дизайне','Умею пользоваться средствами отладки в CLI и IDE. Умею использовать Selenium и/или надстройки (Appium, Winium, Windows Application Driver). Владею понятиями Data Driven Testing, Behaviour Driven Testing, Model Driven Testing, Keyword Driven Testing. Знаю какие-нибудь шаблоны проектирования тестов (functional, PageObjects)','Знаю фреймворк, используемый при автоматизации (TestNG, jUnit, proboscis, pytest). Умею пользоваться надстройками для автоматизации тестирования производительности (Locust). Знаю альтернативные API (Watir, Selenide, FluentSelenium)','Владею знаниями о распределённом тестировании, знаю о Selenium Server, Selenium Grid, облачных сервисах тестирования.',7);
 
 CREATE TABLE `competencyProfession` (
-  `id` int(11) NOT NULL,
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   `competencyId` int(11) DEFAULT NULL,
-  `professionId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `professionId` int(11) DEFAULT NULL
 );
 
 INSERT INTO `competencyProfession` VALUES (1,1,1);
@@ -96,27 +93,75 @@ INSERT INTO `competencyProfession` VALUES (26,27,2);
 INSERT INTO `competencyProfession` VALUES (27,28,2);
 INSERT INTO `competencyProfession` VALUES (28,29,2);
 
+CREATE TABLE `courseCompetency` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  `courseId` int(11) DEFAULT NULL,
+  `competencyId` int(11) DEFAULT NULL,
+  `startLevel` float(3,2) DEFAULT NULL,
+  `increment` float(3,2) DEFAULT NULL
+);
+
+INSERT INTO `courseCompetency` VALUES (1,1,6,0.00,0.75);
+INSERT INTO `courseCompetency` VALUES (2,2,6,0.50,2.50);
+INSERT INTO `courseCompetency` VALUES (3,2,9,0.00,1.00);
+INSERT INTO `courseCompetency` VALUES (4,2,10,0.00,2.25);
+INSERT INTO `courseCompetency` VALUES (5,4,6,0.00,0.50);
+INSERT INTO `courseCompetency` VALUES (6,5,6,1.00,2.75);
+INSERT INTO `courseCompetency` VALUES (7,5,9,0.25,1.00);
+INSERT INTO `courseCompetency` VALUES (8,5,10,0.50,2.75);
+INSERT INTO `courseCompetency` VALUES (9,8,10,2.50,3.75);
+INSERT INTO `courseCompetency` VALUES (10,6,11,0.00,1.50);
+INSERT INTO `courseCompetency` VALUES (11,6,2,0.00,1.00);
+INSERT INTO `courseCompetency` VALUES (12,6,7,0.00,2.25);
+INSERT INTO `courseCompetency` VALUES (13,7,26,0.00,1.75);
+INSERT INTO `courseCompetency` VALUES (14,7,8,0.00,1.50);
+INSERT INTO `courseCompetency` VALUES (15,9,7,1.75,0.50);
+INSERT INTO `courseCompetency` VALUES (16,9,11,1.75,0.50);
+INSERT INTO `courseCompetency` VALUES (17,9,9,0.75,0.50);
+INSERT INTO `courseCompetency` VALUES (18,9,4,0.00,1.75);
+INSERT INTO `courseCompetency` VALUES (19,10,27,0.00,3.50);
+INSERT INTO `courseCompetency` VALUES (20,11,26,0.00,2.50);
+
+CREATE TABLE `courses` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  `code` varchar(45) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `url` text,
+  `price` float(10,2) DEFAULT NULL,
+  `weeks` int(11) DEFAULT NULL,
+  `lessons` int(11) DEFAULT NULL
+);
+
+INSERT INTO `courses` VALUES (1,'netology-html-verstka','HTML-верстка: с нуля до первого макета','https://netology.ru/programs/html-verstka',23900.00,6,16);
+INSERT INTO `courses` VALUES (2,'netology-html-javascript','JavaScript в браузере: создаем интерактивные веб-страницы','https://netology.ru/programs/html-javascript',20900.00,8,18);
+INSERT INTO `courses` VALUES (3,'netology-adaptive-mobile-layout','Адаптивная и мобильная верстка','https://netology.ru/programs/adaptive-mobile-layout',20900.00,4,10);
+INSERT INTO `courses` VALUES (4,'netology-html-css-base','HTML и CSS с нуля','https://netology.ru/programs/html-css-base',0.00,6,7);
+INSERT INTO `courses` VALUES (5,'netology-javascript','JavaScript: основы и современныe возможности языка','https://netology.ru/programs/javascript',20900.00,9,18);
+INSERT INTO `courses` VALUES (6,'netology-php-sql','PHP/SQL: back-end разработка и базы данных','https://netology.ru/programs/php-sql',20900.00,9,19);
+INSERT INTO `courses` VALUES (7,'netology-python-base','Python: программирование на каждый день и сверхбыстрое прототипирование','https://netology.ru/programs/python-base',20900.00,13,26);
+INSERT INTO `courses` VALUES (8,'netology-react','Библиотека React: построй свою любовь к интерактивным веб-интерфейсам','https://netology.ru/programs/react',20900.00,6,13);
+INSERT INTO `courses` VALUES (9,'netology-node','Node, AngularJS и MongoDB: разработка полноценных веб-приложений','https://netology.ru/programs/node',20900.00,10,20);
+INSERT INTO `courses` VALUES (10,'stepic-probability','Теория вероятностей - наука о случайности','https://stepik.org/course/2911',0.00,3,3);
+INSERT INTO `courses` VALUES (11,'stepic-python','Программирование на Python','https://stepik.org/course/67',0.00,7,7);
+
 CREATE TABLE `pollResults` (
-  `id` int(11) NOT NULL,
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   `pollId` int(11) DEFAULT NULL,
   `competencyId` int(11) DEFAULT NULL,
-  `grade` varchar(15) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `grade` varchar(15) DEFAULT NULL
 );
 
 CREATE TABLE `polls` (
-  `id` int(11) NOT NULL,
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   `date` datetime DEFAULT NULL,
   `professionId` int(11) DEFAULT NULL,
-  `userId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `userId` int(11) DEFAULT NULL
 );
 
 CREATE TABLE `professions` (
-  `id` int(11) NOT NULL,
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   `code` varchar(45) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `name` varchar(255) DEFAULT NULL
 );
 
 INSERT INTO `professions` VALUES (1,'webDeveloper','Веб-разработчик (PHP)');

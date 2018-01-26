@@ -27,7 +27,7 @@ class Database
         $orm = new Locator($ormConfig);
         $mapper = $orm->mapper(\Spot\Entity::class);
 
-        $dumpQueries = explode(";", file_get_contents(__DIR__.'/../../etc/database/dump.sqlite.sql'));
+        $dumpQueries = explode(";", file_get_contents(__DIR__.'/../../etc/database/dump.sqlite'));
         foreach ($dumpQueries as $query) {
             $query = trim($query);
             $isComment = strpos($query, '--') === 0 || strpos($query, '/*') === 0;
