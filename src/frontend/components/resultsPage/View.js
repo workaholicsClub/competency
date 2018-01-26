@@ -14,7 +14,21 @@ var ResultView = {
         return this.element;
     },
 
+    getRecomendationsContainer: function () {
+        return this.element.querySelector('#recomendationsContainer');
+    },
+
+    noResults: function () {
+        return h('div.list-group',
+            h('span.list-group-item', 'Результатов оценки нет')
+        );
+    },
+
     createResults: function (viewModel) {
+        if (viewModel.competencies.length === 0) {
+            return this.noResults();
+        }
+
         return h('div.list-group',
             viewModel.competencies.map(function (competency) {
                 return h('a.list-group-item.d-flex.justify-content-between.align-items-center.list-group-item-action', competency.name,
@@ -76,7 +90,14 @@ var ResultView = {
             ),
             h('div#content.row.mt-5',
                 h('div.col-md-12',
+                    h('h2.display-6', 'Навыки'),
                     this.createResults(viewModel)
+                )
+            ),
+            h('div#recomendations.row.mt-5',
+                h('div.col-md-12',
+                    h('h2.display-6', 'Рекомендуемые курсы'),
+                    h('div#recomendationsContainer')
                 )
             ),
             footerView.createDOM()

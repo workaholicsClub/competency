@@ -20,16 +20,22 @@ var BaseController = {
             var isModelEvent = incomingEvent instanceof CustomEvent;
             var controllerEventHasSameTarget = false;
 
-            if (controllerEvent.target instanceof NodeList || controllerEvent.target instanceof Array) {
-                controllerEvent.target.forEach(function (target) {
-                    controllerEventHasSameTarget = target === incomingEvent.currentTarget || controllerEventHasSameTarget;
-                });
+            if (isModelEvent) {
+                var targetModel = incomingEvent.detail;
+                controllerEventHasSameTarget = targetModel === controllerEvent.target;
             }
             else {
-                controllerEventHasSameTarget = incomingEvent.currentTarget === controllerEvent.target;
+                if (controllerEvent.target instanceof NodeList || controllerEvent.target instanceof Array) {
+                    controllerEvent.target.forEach(function (target) {
+                        controllerEventHasSameTarget = target === incomingEvent.currentTarget || controllerEventHasSameTarget;
+                    });
+                }
+                else {
+                    controllerEventHasSameTarget = incomingEvent.currentTarget === controllerEvent.target;
+                }
             }
 
-            if (controllerEventHasType && (controllerEventHasSameTarget || isModelEvent)) {
+            if (controllerEventHasType && controllerEventHasSameTarget) {
                 controllerEvent.handler.call(contextForEventHandler, incomingEvent);
             }
         });

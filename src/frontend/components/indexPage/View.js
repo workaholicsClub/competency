@@ -42,9 +42,14 @@ var IndexView = {
         return viewModel.professions.map(function (profession) {
             return h('div.col-sm',
                 h('div.card',
+                    h('div.card-header', profession.name),
+                    h('ul.list-group.list-group-flush',
+                        h('li.list-group-item', 'Компетенций: '+profession.competencyCount),
+                        h('li.list-group-item', 'Курсов: '+profession.courseCount)
+                    ),
                     h('div.card-body',
-                        h('h5.card-title', profession.name),
-                        h('a.btn.btn-primary', {href: '/test/'+profession.code}, 'Пройти тестирование')
+                        h('a.btn.btn-primary', {href: '/test/'+profession.code}, 'Пройти самопроверку (~' +
+                            profession.timeToFill + ' мин)')
                     )
                 )
             )

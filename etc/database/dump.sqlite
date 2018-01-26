@@ -88,10 +88,9 @@ INSERT INTO `competencyProfession` VALUES (21,21,1);
 INSERT INTO `competencyProfession` VALUES (22,22,1);
 INSERT INTO `competencyProfession` VALUES (23,23,1);
 INSERT INTO `competencyProfession` VALUES (24,24,1);
-INSERT INTO `competencyProfession` VALUES (25,25,1);
-INSERT INTO `competencyProfession` VALUES (26,27,2);
-INSERT INTO `competencyProfession` VALUES (27,28,2);
-INSERT INTO `competencyProfession` VALUES (28,29,2);
+INSERT INTO `competencyProfession` VALUES (25,27,2);
+INSERT INTO `competencyProfession` VALUES (26,28,2);
+INSERT INTO `competencyProfession` VALUES (27,29,2);
 
 CREATE TABLE `courseCompetency` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

@@ -34,5 +34,5 @@ test('ResultsController.getViewModel', function () {
     expect(viewModel.competencies[0]).toHaveProperty('code');
     expect(viewModel.competencies[0]).toHaveProperty('rating');
     expect(viewModel.competencies[0].code).toEqual('codeQuality');
-    expect(viewModel.competencies[0].rating).toEqual(5);
+    expect(viewModel.competencies[0].rating).toEqual(4);
 });

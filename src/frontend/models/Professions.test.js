@@ -2,32 +2,7 @@ const BaseModel = require('./Base');
 const professionsModelFactory = require('./Professions');
 const configMockFactory = require('../mocks/Config');
 const professionsMockData = require('../mocks/professions.json');
-
-function getXHRMock(response, async) {
-    return {
-        callback: {},
-        responseType: 'load',
-        responseText: response,
-        addEventListener: function (type, callback) {
-            this.callback[type] = callback;
-        },
-        open: function () {},
-        send: function () {
-            var event = {};
-            var xhr = this;
-            var loadTimeMs = 50;
-
-            if (async) {
-                setTimeout(function () {
-                    xhr.callback[xhr.responseType](event);
-                }, loadTimeMs);
-            }
-            else {
-                xhr.callback[xhr.responseType](event);
-            }
-        }
-    };
-}
+const getXHRMock = require('../mocks/getXHRMock.fn');
 
 test('ProfessionsModel.interface', function () {
     var professionsModel = professionsModelFactory({});
@@ -39,6 +14,13 @@ test('ProfessionsModel.interface', function () {
     expect(professionsModel.set).toBeInstanceOf(Function);
     expect(professionsModel.get).toBeInstanceOf(Function);
     expect(professionsModel.load).toBeInstanceOf(Function);
+});
+
+test('ProfessionsModel.makeRequestUrl', function () {
+    var professionsModel = professionsModelFactory({}, configMockFactory());
+
+    var expectedUrl = '//test.api.url/profession';
+    expect(professionsModel.makeRequestUrl()).toEqual(expectedUrl);
 });
 
 test('ProfessionsModel.load', function () {
@@ -145,10 +127,16 @@ test('ProfessionsModel.getProfessions', function () {
     var xhrMock = getXHRMock(JSON.stringify(professionsMockData));
     var expectedList = [{
         code: "webDeveloper",
-        name: "Веб-разработчик (PHP)"
+        name: "Веб-разработчик (PHP)",
+        competencyCount: 25,
+        courseCount: 8,
+        timeToFill: 38
     }, {
         code: "tester",
-        name: "Тестировщик (Python)"
+        name: "Тестировщик (Python)",
+        competencyCount: 6,
+        courseCount: 7,
+        timeToFill: 9
     }];
 
     var professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
@@ -202,6 +190,14 @@ test('ProfessionsModel.getProfession (с данными из свойств)', f
     expect(profession).toHaveProperty('groups');
     expect(profession.groups).toHaveLength(4);
 });
+
+test('ProfessionsModel.getTimeToFillProfession', function () {
+    var professionsModel = professionsModelFactory(professionsMockData);
+
+    expect(professionsModel.getTimeToFillProfession('webDeveloper')).toEqual(38);
+    expect(professionsModel.getTimeToFillProfession('tester')).toEqual(9);
+});
+
 
 test('ProfessionsModel.getCompetencies', function () {
     var xhrMock = getXHRMock(JSON.stringify(professionsMockData));

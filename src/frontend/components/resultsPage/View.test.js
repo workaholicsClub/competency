@@ -24,3 +24,15 @@ test('ResultView.render и createDOM', function () {
     expect(DOMElement.innerHTML.indexOf('null')).toBe(-1);
     expect(DOMElement.innerHTML.indexOf('Качество кода')).toBeGreaterThan(0);
 });
+
+test('ResultView.getRecomendationsContainer', function () {
+    var DOMElement = document.createElement('div');
+    var viewModel = getViewModel();
+
+    var resultView = resultFactory(DOMElement, jss);
+    resultView.render(viewModel);
+
+    var container = resultView.getRecomendationsContainer();
+
+    expect(container).toBeInstanceOf(HTMLElement);
+});

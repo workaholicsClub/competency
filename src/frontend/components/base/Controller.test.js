@@ -1,4 +1,5 @@
 const BaseController = require('./Controller');
+const BaseModel = require('../../models/Base');
 const h = require('hyperscript');
 
 function getBaseControllerInstance() {
@@ -9,6 +10,13 @@ function getBaseControllerInstance() {
     baseController.init(viewMock, modelMock);
 
     return baseController;
+}
+
+function getBaseModel() {
+    var instance = Object.create(BaseModel);
+    instance.init();
+
+    return instance;
 }
 
 test('BaseController.interface', function () {
@@ -71,4 +79,32 @@ test('BaseController.bindEvents и handleEvents', function () {
 
     node.dispatchEvent(changeEvent);
     expect(changeHandler).toHaveBeenCalledTimes(2);
+});
+
+test('BaseController.bindEvents и handleEvents (модели)', function () {
+    var baseController = getBaseControllerInstance();
+    var firstHandler = jest.fn();
+    var secondHandler = jest.fn();
+
+    var firstModel = getBaseModel();
+    var secondModel = getBaseModel();
+
+    baseController.events = [
+        {types: ['change.field'], target: firstModel, handler: firstHandler},
+        {types: ['change.field'], target: secondModel, handler: secondHandler}
+    ];
+
+    baseController.bindEvents();
+
+    firstModel.set('field', 1);
+    secondModel.set('field', 2);
+    expect(firstHandler).toHaveBeenCalledTimes(1);
+    expect(secondHandler).toHaveBeenCalledTimes(1);
+
+    firstModel.set('field', 3);
+    expect(firstHandler).toHaveBeenCalledTimes(2);
+    expect(secondHandler).toHaveBeenCalledTimes(1);
+
+    expect(firstModel.get('field')).toEqual(3);
+    expect(secondModel.get('field')).toEqual(2);
 });

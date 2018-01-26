@@ -1,11 +1,13 @@
 const BaseController = require('../base/Controller');
+const recommendationsViewFactory = require('./RecommendationsView');
 
 var ResultsController = {
-    init: function (view, professionsModel, answersModel) {
-        this.view = view;
+    init: function (pageView, recommendationsView, professionsModel, answersModel) {
+        this.pageView = pageView;
+        this.recommendationsView = recommendationsView;
         this.professionsModel = professionsModel;
         this.answersModel = answersModel;
-        this.element = view.getRootElement();
+        this.element = pageView.getRootElement();
         this.events = [];
     },
 
@@ -19,6 +21,7 @@ var ResultsController = {
 
     initViewEvents: function () {
         var additionalEvents = [
+            {types: ['load'], target: this.answersModel, handler: this.renderRecommendations}
         ];
 
         this.events = this.events.concat(additionalEvents);
@@ -54,27 +57,37 @@ var ResultsController = {
         }, this);
 
         return {
-            'competencies': competenciesWithRatings
+            'competencies': competenciesWithRatings,
+            'recommendations': this.answersModel.getRecommendations()
         };
     },
 
+    renderRecommendations: function () {
+        var viewModel = this.getViewModel();
+        var recommendationsDOM = this.recommendationsView.createDOM(viewModel);
+        this.pageView.getRecomendationsContainer().innerHTML = recommendationsDOM.outerHTML;
+    },
+
     renderIndexPageAfterLoad: function () {
-        this.view.render(this.getViewModel());
+        this.pageView.render(this.getViewModel());
         this.initViewEvents();
+        this.answersModel.loadRecommendations();
     }
 };
 
 ResultsController = Object.assign(Object.create(BaseController), ResultsController);
 
 /**
- * @param view
+ * @param pageView
  * @param {ProfessionsModel} professionsModel
  * @param {AnswersModel} answersModel
  * @returns {ResultsController}
  */
-module.exports = function (view, professionsModel, answersModel) {
+module.exports = function (pageView, professionsModel, answersModel) {
     var instance = Object.create(ResultsController);
-    instance.init(view, professionsModel, answersModel);
+    var recommendationsView = recommendationsViewFactory();
+
+    instance.init(pageView, recommendationsView, professionsModel, answersModel);
 
     return instance;
 };

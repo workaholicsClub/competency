@@ -1,4 +1,5 @@
 const BaseModel = require('./Base');
+const XhrModelMixin = require('./XhrModelMixin');
 
 function deepClone(source) {
     //TODO eval is evil
@@ -28,73 +29,36 @@ function deepClone(source) {
  * @property {number} id
  * @property {string} code
  * @property {string} name
+ * @property {number} competencyCount
+ * @property {number} courseCount
  * @property {GroupHash[]} groups
  */
 
 var ProfessionsModel = {
     init: function (props, config, xhr) {
         this.initPropsAndEvents(props);
-        this.xhr = xhr;
+        this.initXhr(xhr);
         this.config = config;
+        this.url = '/profession';
+
         /**
          * @property {ProfessionHash[]} professions
          */
         this.professions = this.get('profession') || [];
 
-        this.isLoading = false;
+    },
 
-        if (this.xhr) {
-            this.bindXhrEvents();
-        }
+    makeRequestUrl: function () {
+        return this.config.makeAbsoluteApiUrl(this.url);
     },
 
     isLoaded: function () {
         return (this.professions instanceof Array) && (this.professions.length > 0);
     },
 
-    load: function () {
-        if (this.isLoading || this.isLoaded()) {
-            return;
-        }
-
-        var professionsUrl = this.config.makeAbsoluteApiUrl('/profession');
-
-        this.isLoading = true;
-        this.xhr.open("GET", professionsUrl);
-        this.xhr.send();
-    },
-
-    bindXhrEvents: function () {
-        var professionsModel = this;
-        var xhr = this.xhr;
-
-        this.xhr.addEventListener("load", function (event) {
-            professionsModel.handleLoad.call(professionsModel, xhr, event);
-        });
-
-        this.xhr.addEventListener("error", function (event) {
-            professionsModel.handleLoadError.call(professionsModel, xhr, event);
-        });
-
-        this.xhr.addEventListener("abort", function (event) {
-            professionsModel.handleLoadError.call(professionsModel, xhr, event);
-        });
-    },
-
-    handleLoad: function (xhr, event) {
-        var professionsModel = this;
-        this.isLoading = false;
-
-        try {
-            var response = JSON.parse(xhr.responseText);
-            this.setPropsWithoutEvent(response);
-            this.professions = this.get('profession');
-        }
-        catch (exception) {
-            professionsModel.handleLoadError.call(professionsModel, xhr, event);
-        }
-
-        this.dispatchModelEvent('load');
+    afterLoad: function (xhr, event, response) {
+        this.setPropsWithoutEvent(response);
+        this.professions = this.get('profession');
     },
 
     /**
@@ -105,6 +69,8 @@ var ProfessionsModel = {
             return false;
         }
 
+        var professionsModel = this;
+
         return this.professions.reduce(function (accumulator, currentProfession) {
             /**
              * @param {ProfessionHash} currentProfession
@@ -112,7 +78,10 @@ var ProfessionsModel = {
 
             accumulator.push({
                 code: currentProfession.code,
-                name: currentProfession.name
+                name: currentProfession.name,
+                competencyCount: currentProfession.competencyCount,
+                courseCount: currentProfession.courseCount,
+                timeToFill: professionsModel.getTimeToFillProfession(currentProfession.code)
             });
 
             return accumulator;
@@ -134,6 +103,18 @@ var ProfessionsModel = {
         }
 
         return false;
+    },
+
+    getTimeToFillProfession: function (professionCode) {
+        var profession = this.getProfession(professionCode);
+        if (!profession) {
+            return false;
+        }
+
+        var minutesToFillCompetency = 1.5;
+        var minutesToFill = Math.round(profession.competencyCount * minutesToFillCompetency);
+
+        return minutesToFill;
     },
 
     /**
@@ -208,15 +189,11 @@ var ProfessionsModel = {
     getCompetencyIndex: function (professionCode, competencyCode) {
         var competencyAndIndex = this.getCompetencyAndIndex(professionCode, competencyCode);
         return competencyAndIndex.index;
-    },
-
-    handleLoadError: function (xhr, event) {
-        this.isLoading = false;
-        this.dispatchModelEvent('loadError');
     }
 };
 
 ProfessionsModel = Object.assign(Object.create(BaseModel), ProfessionsModel);
+ProfessionsModel = Object.assign(ProfessionsModel, XhrModelMixin);
 
 /**
  * @param props
