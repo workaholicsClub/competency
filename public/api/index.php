@@ -4,6 +4,7 @@ require '../../vendor/autoload.php';
 use Competencies\Competency\CompetencyModel;
 use Competencies\Course\CourseModel;
 use Competencies\Mail\MailgunMailer;
+use Competencies\Poll\PollModel;
 use Competencies\User\UserController;
 use Competencies\User\UserModel;
 use Slim\App;
@@ -39,9 +40,9 @@ $app->get('/user/token/{email}', function (Request $request, Response $response)
     $userModel = UserModel::make($email, $this->get('dbLocator'));
     $userModel->save();
 
-    $userController = new UserController($userModel, $this->get('mailer'));
+    $userController = new UserController($userModel);
 
-    $result = $userController->sendLoginEmail();
+    $result = $userController->sendLoginEmail($this->get('mailer'));
 
     return $response->withJson([
         "status"  => 200,
@@ -91,6 +92,33 @@ $app->get('/courses/recommend', function (Request $request, Response $response) 
     return $response->withJson([
         'status' => 200,
         "course" => $recommendedCourses
+    ]);
+});
+
+$app->post('/results/save', function (Request $request, Response $response) {
+    $email = $request->getParsedBodyParam('email');
+    $pollResults = $request->getParsedBodyParam('competency');
+    $subscribe = $request->getParsedBodyParam('subscribe');
+    $remindMonths = $request->getParsedBodyParam('remindMonths');
+    $success = false;
+
+    if ($email) {
+        $locator = $this->get('dbLocator');
+        $userModel = UserModel::make($email, $locator);
+        $userModel->setSubscribe($subscribe);
+        $userModel->setRemindMonths($remindMonths);
+        $userModel->save();
+
+        $pollModel = PollModel::make($locator);
+        $competencyModel = CompetencyModel::make($locator);
+
+        $userController = new UserController($userModel);
+        $success = $userController->savePollResults($pollResults, $competencyModel, $pollModel);
+    }
+
+    return $response->withJson([
+        'status'  => 200,
+        'success' => $success
     ]);
 });
 

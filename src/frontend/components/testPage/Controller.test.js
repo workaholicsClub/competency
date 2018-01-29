@@ -53,6 +53,7 @@ test('TestController.getViewModel', function () {
     expect(viewModel).toHaveProperty('competencies');
     expect(viewModel).toHaveProperty('competenciesCount');
     expect(viewModel).toHaveProperty('currentCompetency');
+    expect(viewModel).toHaveProperty('isAnswered');
     expect(viewModel).toHaveProperty('nextCompetency');
     expect(viewModel).toHaveProperty('nextCompetencyLink');
     expect(viewModel).toHaveProperty('competencyIndex');
@@ -68,4 +69,7 @@ test('TestController.getViewModel', function () {
     expect(viewModel.competencyIndex).toEqual(expectedCompetencyIndex);
     expect(viewModel.competencyGroup.code).toEqual(expectedGroupCode);
     expect(viewModel.levels).toHaveLength(expectedLevelsCount);
+    expect(viewModel.levels[0]).toHaveProperty('answer');
+    expect(viewModel.levels[0]).toHaveProperty('isAnswered');
+    expect(viewModel.levels[0]).toHaveProperty('text');
 });

@@ -48,10 +48,16 @@ class UserModelTest extends TestCase
         $testEmail = 'ap@mailinator.com';
         $locator = Database::getTest();
         $instance = UserModel::make($testEmail, $locator);
+        $instance->setSubscribe( UserModel::SUBSCRIBE_COURSES );
+        $instance->setRemindMonths(6);
 
         $saveResult = $instance->save();
 
         $this->assertTrue($saveResult);
+        $userEntity = $instance->load();
+
+        $this->assertEquals($userEntity->get('remindMonths'), 6);
+        $this->assertEquals($userEntity->get('subscribe'), UserModel::SUBSCRIBE_COURSES);
     }
 
     public function testToken() {

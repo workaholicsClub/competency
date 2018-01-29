@@ -14,6 +14,7 @@ var BaseModel = {
     set: function (key, value) {
         this.setWithoutEvent(key, value);
         this.dispatchModelEvent('change.'+key);
+        this.dispatchModelEvent('change');
     },
 
     setProps: function (newProps) {

@@ -25,7 +25,7 @@ var RecommendationsView = {
     },
 
     createDOM: function (viewModel) {
-        if (viewModel.recommendations.length === 0) {
+        if (viewModel.recommendations === undefined || viewModel.recommendations.length === 0) {
             return this.noResults();
         }
 

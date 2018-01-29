@@ -22,7 +22,8 @@ var FooterView = {
         var menuView = menuViewFactory(null, this.stylesManager, this.theme);
 
         var menuItems = [
-            {href: '/', text: 'Главная'}
+            {href: '/', text: 'Главная'},
+            {href: 'https://github.com/workaholicsClub/competency/', text: 'GitHub', target: '_blank'}
         ];
 
         return menuView.createDOM({type: 'horizontal', menuItems: menuItems});

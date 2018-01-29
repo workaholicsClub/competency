@@ -26,8 +26,13 @@ var MenuView = {
 
         return h('ul.' + styles.classes.block,
             viewModel.menuItems.map(function (item) {
+                var options = {href: item.href};
+                if (item.target) {
+                    options.target = item.target;
+                }
+
                 return h('li.' + styles.classes.element,
-                    h('a', {href: item.href}, item.text)
+                    h('a', options, item.text)
                 );
             })
         );

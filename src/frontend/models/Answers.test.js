@@ -1,11 +1,15 @@
 const BaseModel = require('./Base');
 const answersFactory = require('./Answers');
 const configMockFactory = require('../mocks/Config');
+const storageMockFactory = require('../mocks/Storage');
 const getXHRMock = require('../mocks/getXHRMock.fn');
-const answersMockData = require('../mocks/recommendProbability.json');
+
+function answersMockFactory(props, config, xhr) {
+    return answersFactory(props, config, xhr, storageMockFactory());
+}
 
 test('AnswersModel.interface', function () {
-    var answersModel = answersFactory({});
+    var answersModel = answersMockFactory({});
 
     expect(BaseModel.isPrototypeOf(answersModel)).toBeTruthy();
     expect(answersModel.addEventListener).toBeInstanceOf(Function);
@@ -16,7 +20,7 @@ test('AnswersModel.interface', function () {
 });
 
 test('AnswersModel.getCompetencyRating', function () {
-    var answers = answersFactory({});
+    var answers = answersMockFactory({});
 
     answers.set('competencyA', [5, 5, 4, 2]);
     answers.set('competencyB', [3, 5, 5, 4]);
@@ -37,7 +41,7 @@ test('AnswersModel.getCompetencyRating', function () {
 });
 
 test('AnswersModel.getAllRatings', function () {
-    var answers = answersFactory({});
+    var answers = answersMockFactory({});
     var expectedRatings = {
         "competencyA": 3,
         "competencyB": 3.25,
@@ -59,45 +63,29 @@ test('AnswersModel.getAllRatings', function () {
     expect(answers.getAllRatings()).toEqual(expectedRatings);
 });
 
-test('AnswersModel.makeRequestUrl', function () {
-    var answers = answersFactory({
-        "competencyA": [5, 5, 4, 2],
-        "competencyB": [3, 5, 5, 4]
-    }, configMockFactory());
+test('AnswersModel.changeHandler', function () {
+    var storageMock = {
+        init: jest.fn(),
+        save: jest.fn(),
+        load: jest.fn()
+    };
 
-    var expectedUrl = '//test.api.url/courses/recommend?competency[competencyA]=3&competency[competencyB]=3.25';
-    expect(answers.makeRequestUrl()).toEqual(expectedUrl);
+    var answers = answersFactory({}, configMockFactory(), false, storageMock);
+
+    expect(storageMock.load).toHaveBeenCalledTimes(1);
+    expect(storageMock.save).not.toHaveBeenCalled();
+
+    answers.set('test', 1);
+    expect(storageMock.save).toHaveBeenCalledTimes(1);
 });
 
-test('AnswersModel.loadRecommendations', function () {
-    var loadHandler = jest.fn();
-    var errorHandler = jest.fn();
-    var xhrMock = getXHRMock(JSON.stringify(answersMockData));
-
-    xhrMock.responseType = 'load';
+test('AnswersModel.saveResults', function () {
+    var xhrMock = getXHRMock(JSON.stringify({status: 200, success: true}));
     var answers = answersFactory({}, configMockFactory(), xhrMock);
-    answers.addEventListener('load', loadHandler);
-    answers.addEventListener('loadError', errorHandler);
-    answers.loadRecommendations();
-    expect(loadHandler).toHaveBeenCalledTimes(1);
-
-    xhrMock.responseType = 'error';
-    answers = answersFactory({}, configMockFactory(), xhrMock);
-    answers.addEventListener('load', loadHandler);
-    answers.addEventListener('loadError', errorHandler);
-    answers.load();
-    expect(errorHandler).toHaveBeenCalledTimes(1);
-});
-
-test('AnswersModel.getRecommendations', function () {
-    var xhrMock = getXHRMock(JSON.stringify(answersMockData));
-    var answers = answersFactory({}, configMockFactory(), xhrMock);
-    var recommendations = answersMockData.course;
 
     return new Promise(function (resolve, reject) {
-        answers.addEventListener('load', function () {
+        answers.addEventListener('save', function () {
             try {
-                expect( answers.getRecommendations() ).toEqual(recommendations);
                 resolve();
             }
             catch (exception) {
@@ -105,6 +93,6 @@ test('AnswersModel.getRecommendations', function () {
             }
         });
 
-        answers.loadRecommendations();
+        answers.saveResults();
     });
 });

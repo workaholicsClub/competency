@@ -4,6 +4,7 @@ namespace Competencies\Competency;
 
 use Competencies\Course\CourseEntity;
 use Competencies\Course\CourseModel;
+use Spot\Entity\Collection;
 use Spot\Locator;
 
 class CompetencyModel
@@ -72,6 +73,16 @@ class CompetencyModel
         $mapper = $this->getMapper();
 
         return $mapper->first(['code' => $code]);
+    }
+
+    /**
+     * @param array $codes
+     * @return Collection
+     */
+    public function loadMultiple($codes) {
+        $mapper = $this->getMapper();
+
+        return $mapper->where(['code' => $codes])->execute();
     }
 
     public function loadProfessions() {

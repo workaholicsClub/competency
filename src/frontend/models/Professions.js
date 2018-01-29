@@ -1,10 +1,7 @@
 const BaseModel = require('./Base');
 const XhrModelMixin = require('./XhrModelMixin');
+const deepClone = require('../classes/deepClone.fn');
 
-function deepClone(source) {
-    //TODO eval is evil
-    return JSON.parse(JSON.stringify(source));
-}
 /**
  * @typedef {Object} CompetencyHash
  * @property {number} id

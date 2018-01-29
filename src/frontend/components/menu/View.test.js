@@ -5,7 +5,7 @@ const jss = require('jss').default;
 test('MenuView.render', function () {
     var testMenu = [
         {href: '/', text: 'Главная'},
-        {href: 'https://humanistic.tech', text: 'Гуманистические технологии'}
+        {href: 'https://humanistic.tech', text: 'Гуманистические технологии', target: '_blank'}
     ];
 
     var verticalDOMElement = document.createElement('div');
@@ -31,5 +31,9 @@ test('MenuView.render', function () {
         expect(horizontalDOMElement.innerHTML).toContain(item.href);
         expect(horizontalDOMElement.innerHTML).toContain(item.text);
     });
+
+    var linkWithTarget = horizontalDOMElement.querySelector('a[target]');
+    expect(linkWithTarget).toBeInstanceOf(HTMLElement);
+    expect(linkWithTarget.getAttribute('target')).toEqual('_blank');
 
 });

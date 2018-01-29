@@ -170,7 +170,9 @@ CREATE TABLE `users` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   `dateRegistered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `name` varchar(45) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL
+  `email` varchar(255) DEFAULT NULL,
+  `remindMonths` int(11) DEFAULT NULL,
+  `subscribe` varchar(10) DEFAULT NULL
 );
 
-INSERT INTO `users` VALUES (1,'2017-12-18 11:45:36',NULL,'ap@mailinator.com');
+INSERT INTO `users` VALUES (1,'2017-12-18 11:45:36',NULL,'ap@mailinator.com', NULL, NULL);

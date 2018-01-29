@@ -1,15 +1,16 @@
 const BaseModel = require('./Base');
 const XhrModelMixin = require('./XhrModelMixin');
+const cookieStorageFactory = require('../classes/CookieStorage');
 
 var AnswersModel = {
-    init: function (props, config, xhr) {
+    init: function (props, config, xhr, storage) {
         this.initPropsAndEvents(props);
         this.initXhr(xhr);
-        this.url = '/courses/recommend';
         this.config = config;
+        this.storage = storage;
 
-        this.recommendations = [];
-        this.isLoadedFlag = false;
+        this.loadAnswers();
+        this.bindChangeHandlers();
     },
 
     /**
@@ -70,35 +71,54 @@ var AnswersModel = {
         return ratings;
     },
 
-    makeRequestUrl: function () {
-        var ratings = this.getAllRatings();
-        var competencyCodes = Object.keys(ratings);
-
-        var queryParams = competencyCodes.reduce(function (accumulator, competencyCode) {
-            accumulator.push('competency[' + competencyCode + ']=' + ratings[competencyCode]);
-            return accumulator;
-        }, []);
-        var query = queryParams.join('&');
-
-        return this.config.makeAbsoluteApiUrl(this.url) + '?' + query;
+    bindChangeHandlers: function () {
+        var model = this;
+        this.addEventListener('change', function (event) {
+            model.saveAnswers.call(model, event);
+        });
     },
 
-    loadRecommendations: function () {
-        this.isLoadedFlag = false;
-        this.load();
+    /**
+     *
+     * @param event
+     */
+    saveAnswers: function (event) {
+        if (this.storage) {
+            this.storage.save(this.getProps());
+        }
+    },
+
+    loadAnswers: function () {
+        if (this.storage) {
+            var savedAnswers = this.storage.load();
+
+            if (savedAnswers) {
+                this.setPropsWithoutEvent(savedAnswers);
+            }
+        }
+    },
+
+    /**
+     * @param {FormData} formData
+     */
+    saveResults: function (formData) {
+        var saveUrl = '/api/results/save';
+
+        this.xhr.open("POST", saveUrl);
+        this.xhr.send(formData);
     },
 
     afterLoad: function (xhr, event, response) {
-        this.recommendations = response.course;
-        this.isLoadedFlag = true;
+        this.saveSuccess(xhr, event, response)
     },
 
-    isLoaded: function () {
-        return this.isLoadedFlag;
-    },
-
-    getRecommendations: function () {
-        return this.recommendations;
+    saveSuccess: function (xhr, event, response) {
+        if (response && response.success === true) {
+            this.dispatchModelEvent('save');
+        }
+        else {
+            this.dispatchModelEvent('saveError');
+        }
     }
 };
 
@@ -109,9 +129,10 @@ AnswersModel = Object.assign(AnswersModel, XhrModelMixin);
  * @param props
  * @param config
  * @param xhr
+ * @param storage
  * @returns {AnswersModel}
  */
-module.exports = function (props, config, xhr) {
+module.exports = function (props, config, xhr, storage) {
     if (!props) {
         props = {};
     }
@@ -120,8 +141,12 @@ module.exports = function (props, config, xhr) {
         xhr = new XMLHttpRequest();
     }
 
+    if (!storage) {
+        storage = cookieStorageFactory('answers');
+    }
+
     var answers = Object.create(AnswersModel);
-    answers.init(props, config, xhr);
+    answers.init(props, config, xhr, storage);
 
     return answers;
 };

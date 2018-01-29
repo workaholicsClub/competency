@@ -1,7 +1,4 @@
-function deepClone(source) {
-    //TODO eval is evil
-    return JSON.parse(JSON.stringify(source));
-}
+const deepClone = require('../classes/deepClone.fn');
 
 function isObject(param) {
     return typeof(param) === 'object';
@@ -24,6 +21,10 @@ var StateMixin = {
         return isObject(this.props[key])
             ? deepClone(this.props[key])
             : this.props[key] || null;
+    },
+
+    getProps: function () {
+        return deepClone(this.props);
     },
 
     has: function (key) {

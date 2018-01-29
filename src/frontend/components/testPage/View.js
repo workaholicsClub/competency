@@ -22,6 +22,13 @@ var TestView = {
         return this.element.querySelector('#levelSelect'+levelIndex);
     },
 
+    markLevelCompleted: function (selectElement) {
+        var completedCard = selectElement.closest('.card');
+
+        completedCard.classList.add('bg-success');
+        completedCard.classList.add('text-white');
+    },
+
     /**
      * @returns {NodeList}
      */
@@ -40,24 +47,41 @@ var TestView = {
     },
 
     createLevels: function (viewModel) {
-        return viewModel.levels.map(function (levelText, index) {
+        var options = [
+            'Оцените себя',
+            'Никак не соотвествую',
+            'Почти не соотвествую',
+            'Частично соотвествую',
+            'Почти соотвествую',
+            'Полностью соотвествую'
+        ];
+
+        return viewModel.levels.map(function (level, index) {
             var humanIndex = index+1;
 
             return h('div.col-sm',
-                h('div.card',
+                h('div.card'+(level.isAnswered ? '.bg-success.text-white': ''),
                     h('div.card-header', 'Уровень ' + humanIndex),
                     h('div.card-body',
                         h('div.form-group',
                             h('select#levelSelect' + humanIndex + '.form-control.level-select', {name: 'level'+humanIndex},
-                                h('option', 'Оцените себя', {disabled: true, attrs: {selected: 'selected', value: '0'}}),
-                                h('option', 'Никак не соотвествую', {attrs: {value: '1'}}),
-                                h('option', 'Почти не соотвествую', {attrs: {value: '2'}}),
-                                h('option', 'Частично соотвествую', {attrs: {value: '3'}}),
-                                h('option', 'Почти соотвествую', {attrs: {value: '4'}}),
-                                h('option', 'Полностью соотвествую', {attrs: {value: '5'}})
+                                options.map(function (optionText, optionIndex) {
+                                    var optionParams = {attrs: {value: optionIndex}};
+                                    var placeholderSelected = level.answer === false && optionIndex === 0;
+
+                                    if (placeholderSelected || level.answer === optionIndex) {
+                                        optionParams.attrs['selected'] = 'selected';
+                                    }
+
+                                    if (optionIndex === 0) {
+                                        optionParams['disabled'] = true;
+                                    }
+
+                                    return h('option', optionText, optionParams);
+                                })
                             )
                         ),
-                        h('p', levelText)
+                        h('p', level.text)
                     )
                 )
             )
@@ -78,7 +102,7 @@ var TestView = {
         var isFinalStep = viewModel.nextCompetency === false;
 
         return isFinalStep
-            ? h('a#next-button.btn.btn-primary.btn-lg', {href: '/results', attrs: {role: 'button'}}, 'Готово')
+            ? h('a#next-button.btn.btn-primary.btn-lg', {href: viewModel.resultsLink, attrs: {role: 'button'}}, 'Готово')
             : [
                 h('a#skip-button.btn.btn-outline-secondary.btn-sm.mr-1', {href: viewModel.nextCompetencyLink}, 'Пропустить'),
                 h('a#next-button.btn.btn-primary.btn-lg', {href: viewModel.nextCompetencyLink, attrs: {role: 'button'}}, 'Далее')
@@ -101,7 +125,10 @@ var TestView = {
                         this.createLevels(viewModel)
                     ),
                     h('div#buttons.row.mt-5',
-                        h('div.col-md-12.text-right', this.createNavigationButtons(viewModel))
+                        h('div.col.text-left',
+                            h('a.btn.btn-outline-secondary.btn-sm', 'Посмотреть результаты', {href: viewModel.resultsLink})
+                        ),
+                        h('div.col.text-right', this.createNavigationButtons(viewModel))
                     ),
                     footerView.createDOM()
                 );

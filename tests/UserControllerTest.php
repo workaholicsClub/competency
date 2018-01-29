@@ -1,9 +1,12 @@
 <?php
 
+use Competencies\Competency\CompetencyModel;
 use Competencies\MailerInterface;
+use Competencies\Mocks\Database;
+use Competencies\Poll\PollModel;
 use Competencies\User\UserController;
+use Competencies\User\UserModel;
 use Competencies\UserModelInterface;
-use Mailgun\Model\Message\SendResponse;
 use PHPUnit\Framework\TestCase;
 
 class UserControllerTest extends TestCase
@@ -24,16 +27,12 @@ class UserControllerTest extends TestCase
         return $user;
     }
 
-    private function getUserControllerInstance($user = null, $mailer = null) {
+    private function getUserControllerInstance($user = null) {
         if (is_null($user)) {
             $user = $this->getUser();
         }
 
-        if (is_null($mailer)) {
-            $mailer = $this->getMailer();
-        }
-
-        $controller = new UserController($user, $mailer);
+        $controller = new UserController($user);
 
         return $controller;
     }
@@ -41,11 +40,8 @@ class UserControllerTest extends TestCase
     public function testSendLoginEmail() {
         $testEmail = 'test@mailinator.com';
 
-        $user = $this->getUser();
-        $user
-            ->expects($this->once())
-            ->method('getEmail')
-            ->willReturn($testEmail);
+        $locator = Database::getTest();
+        $userModel = UserModel::make($testEmail, $locator);
 
         $sendMailResponse = true;
 
@@ -60,8 +56,27 @@ class UserControllerTest extends TestCase
             )
             ->willReturn($sendMailResponse);
 
-        $controller = $this->getUserControllerInstance($user, $mailer);
-        $isSuccess = $controller->sendLoginEmail();
+        $controller = $this->getUserControllerInstance($userModel);
+        $isSuccess = $controller->sendLoginEmail($mailer);
+        $this->assertTrue($isSuccess);
+    }
+
+    public function testSavePollResults() {
+        $pollResults = [
+            'javascript'         => 0.5,
+            'frontendTech'       => 0.75,
+            'baseWebDevelopment' => 0.5
+        ];
+
+        $testEmail = 'ap@mailinator.com';
+
+        $locator = Database::getTest();
+        $pollModel = PollModel::make($locator);
+        $userModel = UserModel::make($testEmail, $locator);
+        $competencyModel = CompetencyModel::make($locator);
+
+        $controller = $this->getUserControllerInstance($userModel);
+        $isSuccess = $controller->savePollResults($pollResults, $competencyModel, $pollModel);
         $this->assertTrue($isSuccess);
     }
 }

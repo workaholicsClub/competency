@@ -93,6 +93,16 @@ test('StateMixin.setProps', function () {
     }).toThrow();
 });
 
+test('StateMixin.getProps', function () {
+    var state = Object.create(StateMixin);
+    state.initProps();
+
+    var expectedProps = {a: 1, b: 2};
+
+    state.setPropsWithoutEvent(expectedProps);
+    expect(state.getProps()).toEqual(expectedProps);
+});
+
 test('StateMixin.setPropsWithoutEvent (неизменяемость)', function () {
     var state = Object.create(StateMixin);
     state.initProps();

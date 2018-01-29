@@ -5,6 +5,7 @@ use Competencies\Competency\CompetencyModel;
 use Competencies\Course\CourseModel;
 use Competencies\Mocks\Database;
 use PHPUnit\Framework\TestCase;
+use Spot\Entity\Collection;
 
 class CompetencyModelTest extends TestCase
 {
@@ -23,6 +24,20 @@ class CompetencyModelTest extends TestCase
         $this->assertEquals($testCode, $entity->get('code'));
     }
 
+    public function testLoadMultiple() {
+        $testCodes = ['codeQuality', 'javascript'];
+        $locator = Database::getTest();
+        $instance = CompetencyModel::make($locator);
+
+        $entities = $instance->loadMultiple($testCodes);
+        $resultCodes = $entities->map(function ($entity) {
+            return $entity->get('code');
+        });
+
+        $this->assertInstanceOf(Collection::class, $entities);
+        $this->assertEquals($testCodes, $resultCodes);
+    }
+
     public function testLoadProfessions() {
         $locator = Database::getTest();
 
@@ -37,7 +52,7 @@ class CompetencyModelTest extends TestCase
         $this->assertArrayHasKey('competencyCount', $result[0]);
         $this->assertEquals('webDeveloper', $result[0]['code']);
         $this->assertEquals(8, $result[0]['courseCount']);
-        $this->assertEquals(25, $result[0]['competencyCount']);
+        $this->assertEquals(24, $result[0]['competencyCount']);
         $this->assertArrayHasKey('groups', $result[0]);
         $this->assertArrayHasKey('1', $result[0]['groups']);
         $this->assertArrayHasKey('code', $result[0]['groups'][1]);

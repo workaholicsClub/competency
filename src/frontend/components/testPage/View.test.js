@@ -1,9 +1,11 @@
+const h = require('hyperscript');
 const testViewFactory = require('./View');
 const testControllerFactory = require('./Controller');
 const jss = require('jss').default;
 const professionsFactory = require('../../models/Professions');
 const answersFactory = require('../../models/Answers');
 const professionsMockData = require('../../mocks/professions.json');
+const polyfillsFactory = require('../../classes/Polyfills');
 
 function getViewModel() {
     var DOMelement = document.createElement('div');
@@ -48,4 +50,23 @@ test('TestView.getLevelSelects и getLevelAnswers', function () {
 
     var answers = testView.getLevelAnswers();
     expect(answers).toEqual([0, 0, 0, 0]);
+});
+
+test('TestView.markLevelCompleted', function () {
+    /**
+     * @type {HTMLElement} DOM
+     */
+    var DOM = h('div',
+            h('div.card',
+                h('select.test')
+            )
+        );
+
+    var select = DOM.querySelector('select');
+    var testView = testViewFactory(DOM, jss);
+    polyfillsFactory();
+    testView.markLevelCompleted(select);
+
+    var card = DOM.querySelector('.card');
+    expect(card.getAttribute('class')).toEqual('card bg-success text-white');
 });

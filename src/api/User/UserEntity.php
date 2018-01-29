@@ -14,6 +14,8 @@ class UserEntity extends Entity
             'dateRegistered' => ['type' => 'datetime', 'value' => new \DateTime()],
             'name'           => ['type' => 'string'],
             'email'          => ['type' => 'string', 'required' => true],
+            'remindMonths'   => ['type' => 'integer'],
+            'subscribe'      => ['type' => 'string'],
         ];
     }
 }

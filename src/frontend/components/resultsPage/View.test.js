@@ -33,6 +33,10 @@ test('ResultView.getRecomendationsContainer', function () {
     resultView.render(viewModel);
 
     var container = resultView.getRecomendationsContainer();
+    var saveButton = resultView.getSaveButton();
+    var subscribeForm = resultView.getSubscribeForm();
 
     expect(container).toBeInstanceOf(HTMLElement);
+    expect(saveButton).toBeInstanceOf(HTMLElement);
+    expect(subscribeForm).toBeInstanceOf(HTMLFormElement);
 });

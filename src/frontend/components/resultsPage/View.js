@@ -1,10 +1,12 @@
 const h = require('hyperscript');
 const footerViewFactory = require('../footer/View');
+const bsn = require('bootstrap.native/dist/bootstrap-native-v4');
 
 var ResultView = {
     init: function (element, stylesManager) {
         this.element = element;
         this.stylesManager = stylesManager;
+        this.successModalInstance = false;
     },
 
     /**
@@ -14,8 +16,29 @@ var ResultView = {
         return this.element;
     },
 
+    /**
+     * @returns {HTMLElement}
+     */
     getRecomendationsContainer: function () {
         return this.element.querySelector('#recomendationsContainer');
+    },
+
+    /**
+     * @returns {HTMLElement}
+     */
+    getSaveButton: function () {
+        return this.element.querySelector('#saveResult');
+    },
+
+    /**
+     * @returns {HTMLFormElement}
+     */
+    getSubscribeForm: function () {
+        return this.element.querySelector('#subscribeForm');
+    },
+
+    getSuccessModal: function () {
+        return this.element.querySelector('#successModal');
     },
 
     noResults: function () {
@@ -40,12 +63,12 @@ var ResultView = {
 
     createHiddenInputs: function (viewModel) {
         return viewModel.competencies.map(function (competency) {
-            return h('input', {name: 'competency[' + competency.code + ']', type: 'hidden', attrs: {value: '1'}})
+            return h('input', {name: 'competency[' + competency.code + ']', type: 'hidden', attrs: {value: competency.rating}})
         });
     },
 
     createSubscribeForm: function (viewModel) {
-        return h('form',
+        return h('form#subscribeForm',
             this.createHiddenInputs(viewModel),
             h('div.form-row.align-items-center',
                 h('div.col-auto',
@@ -59,7 +82,7 @@ var ResultView = {
                 ),
                 h('div.col-auto',
                     h('div.input-group.mb-2',
-                        h('select#remindSelect.form-control', {name: 'remind'},
+                        h('select#remindSelect.form-control', {name: 'remindMonths'},
                             h('option', 'Напомнить мне пройти еще раз', {disabled: true, attrs: {selected: 'selected', value: '0'}}),
                             h('option', 'Через 1 месяц', {attrs: {value: '1'}}),
                             h('option', 'Через 2 месяца', {attrs: {value: '2'}}),
@@ -69,10 +92,48 @@ var ResultView = {
                     )
                 ),
                 h('div.col-auto',
-                    h('button.btn.btn-primary.mb-2', {type: 'submit'}, 'Сохранить результат')
+                    h('div.input-group.mb-2',
+                        h('select#subscribeSelect.form-control', {name: 'subscribe'},
+                            h('option', 'Подписать меня на рассылку', {disabled: true, attrs: {selected: 'selected', value: ''}}),
+                            h('option', 'О новых курсах для меня', {attrs: {value: 'courses'}}),
+                            h('option', 'Об интересной статистике', {attrs: {value: 'stats'}}),
+                            h('option', 'Обо всем (не чаще пары раз в месяц)', {attrs: {value: 'all'}}),
+                            h('option', 'Не надо меня подписывать', {attrs: {value: ''}})
+                        )
+                    )
+                ),
+                h('div.col-auto',
+                    h('button#saveResult.btn.btn-primary.mb-2', {type: 'submit'}, 'Сохранить результат')
+                )
+            ),
+            h('div.form-row.align-items-center',
+                h('div.col-auto',
+                    h('p', h('a', {href: viewModel.pollUrl, target: '_blank'}, 'Помогите нам пройдя небольшой опрос (~2 мин)'))
                 )
             )
         );
+    },
+
+    createSaveSuccessModal: function (viewModel) {
+        return h('div#successModal.modal.fade',
+            h('div.modal-dialog',
+                h('div.modal-content',
+                    h('div.modal-header',
+                        h('h5.modal-title', 'Сохранение результатов'),
+                        h('button.close', {attrs: {'data-dismiss': 'modal', 'aria-label': 'Закрыть'}},
+                            h('span', {attrs: {'aria-hidden': 'true'}}, '\u00d7')
+                        )
+                    ),
+                    h('div.modal-body',
+                        h('p', 'Сделано!')
+                    )
+                )
+            )
+        );
+    },
+
+    showSuccessModal: function () {
+        this.successModalInstance.show();
     },
 
     createDOM: function (viewModel) {
@@ -100,6 +161,7 @@ var ResultView = {
                     h('div#recomendationsContainer')
                 )
             ),
+            this.createSaveSuccessModal(viewModel),
             footerView.createDOM()
         );
     },
@@ -107,6 +169,8 @@ var ResultView = {
     render: function (viewModel) {
         var moduleElement = this.createDOM(viewModel);
         this.element.innerHTML = moduleElement.outerHTML;
+
+        this.successModalInstance = new bsn.Modal(this.getSuccessModal());
     }
 };
 

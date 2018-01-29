@@ -11,6 +11,7 @@ const resultsViewFactory = require('./components/resultsPage/View');
 
 const professionsFactory = require('./models/Professions');
 const answersFactory = require('./models/Answers');
+const coursesFactory = require('./models/Courses');
 
 const configFactory = require('./classes/Config');
 
@@ -41,6 +42,7 @@ function initAndGoToRoute() {
     var config = configFactory();
     var professionsModel = professionsFactory({}, config);
     var answersModel = answersFactory({}, config);
+    var coursesModel = coursesFactory({}, config);
 
     page('/', function () {
         var indexView = indexPageViewFactory(rootElement, stylesManager);
@@ -61,7 +63,7 @@ function initAndGoToRoute() {
 
     page('/results', function () {
         var resultsView = resultsViewFactory(rootElement, stylesManager);
-        var resultsController = resultsControllerFactory(resultsView, professionsModel, answersModel);
+        var resultsController = resultsControllerFactory(resultsView, professionsModel, answersModel, coursesModel);
 
         resultsController.loadDataAndRenderIndexPage();
     });

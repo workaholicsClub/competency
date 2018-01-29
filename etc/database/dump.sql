@@ -346,6 +346,8 @@ CREATE TABLE `users` (
   `dateRegistered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `name` varchar(45) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
+  `remindMonths` int(11) DEFAULT NULL,
+  `subscribe` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -357,7 +359,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'2017-12-18 11:45:36',NULL,'ap@mailinator.com');
+INSERT INTO `users` VALUES (1,'2017-12-18 11:45:36',NULL,'ap@mailinator.com', NULL, NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

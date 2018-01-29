@@ -45,13 +45,18 @@ var TestController = {
      */
     markLevelCompletedAndUpdateAnswer: function (event) {
         var selectElement = event.currentTarget;
-        var completedCard = selectElement.closest('.card');
-
-        completedCard.classList.add('bg-success');
-        completedCard.classList.add('text-white');
+        this.view.markLevelCompleted(selectElement);
 
         var answers = this.view.getLevelAnswers();
-        this.answersModel.set(this.competencyCode, answers);
+
+        var competencyCode = this.competencyCode;
+        if (!competencyCode) {
+            var competencies = this.professionsModel.getCompetencies(this.professionCode);
+            var firstCompetency = competencies[0];
+            competencyCode = firstCompetency ? firstCompetency.code : false;
+        }
+
+        this.answersModel.set(competencyCode, answers);
     },
 
     getViewModel: function () {
@@ -63,8 +68,14 @@ var TestController = {
         var group = currentCompetency.group;
 
         var levels = [];
-        for (var index = 1; index <= 4; index++) {
-            levels.push(currentCompetency['level'+index]);
+        var answers = this.answersModel.get(currentCompetency.code) || false;
+        for (var humanIndex = 1; humanIndex <= 4; humanIndex++) {
+            var answer = answers ? answers[humanIndex-1] : false;
+            levels.push({
+                answer: answer,
+                isAnswered: answer > 0,
+                text: currentCompetency['level'+humanIndex]
+            });
         }
 
         return {
@@ -72,8 +83,10 @@ var TestController = {
             'competencies': competencies,
             'competenciesCount': competencies.length,
             'currentCompetency': currentCompetency,
+            'isAnswered': answers !== false,
             'nextCompetency': nextCompetency,
             'nextCompetencyLink': nextCompetency ? '/test/'+profession.code+'/'+nextCompetency.code : false,
+            'resultsLink': '/results',
             'competencyIndex': competencyIndex,
             'competencyGroup': group,
             'levels': levels

@@ -3,6 +3,7 @@
 namespace Competencies\User;
 
 use Exception;
+use function FastRoute\TestFixtures\empty_options_cached;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
@@ -14,8 +15,14 @@ class UserModel implements UserModelInterface
     const TOKEN_ISSUER = 'matrix';
     const TOKEN_SIGN_KEY = 'matrixSecret';
 
+    const SUBSCRIBE_COURSES = 'courses';
+    const SUBSCRIBE_STATS = 'stats';
+    const SUBSCRIBE_ALL = 'all';
+
     private $email;
     private $name;
+    private $subscribe;
+    private $remindMonths;
     private $mapper;
 
     /**
@@ -104,6 +111,10 @@ class UserModel implements UserModelInterface
         return $mapper->first(['email' => $this->getEmail()]);
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     public function save() {
         if (!$this->getEmail()) {
             throw new Exception('Email not set');
@@ -115,11 +126,21 @@ class UserModel implements UserModelInterface
 
         if ($entity !== false) {
             $entity->set('name', $this->getName());
+
+            if ($this->getRemindMonths()) {
+                $entity->set('remindMonths', $this->getRemindMonths());
+            }
+
+            if ($this->getSubscribe()) {
+                $entity->set('subscribe', $this->getSubscribe());
+            }
         }
         else {
             $entity = $mapper->build([
                 'name'  => $this->getName(),
                 'email' => $this->getEmail(),
+                'remindMonths' => $this->getRemindMonths(),
+                'subscribe' => $this->getSubscribe(),
             ]);
         }
 
@@ -149,6 +170,38 @@ class UserModel implements UserModelInterface
             ->getToken();
 
         return $token->__toString();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubscribe() {
+        return $this->subscribe;
+    }
+
+    /**
+     * @param string $subscribe
+     */
+    public function setSubscribe($subscribe) {
+        if (!empty($subscribe)) {
+            $this->subscribe = $subscribe;
+        }
+    }
+
+    /**
+     * @return integer
+     */
+    public function getRemindMonths() {
+        return $this->remindMonths;
+    }
+
+    /**
+     * @param integer $remindMonths
+     */
+    public function setRemindMonths($remindMonths) {
+        if (!empty($remindMonths)) {
+            $this->remindMonths = $remindMonths;
+        }
     }
 
 }
