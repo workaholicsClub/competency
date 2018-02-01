@@ -51,7 +51,7 @@ class CompetencyModelTest extends TestCase
         $this->assertArrayHasKey('courseCount', $result[0]);
         $this->assertArrayHasKey('competencyCount', $result[0]);
         $this->assertEquals('webDeveloper', $result[0]['code']);
-        $this->assertEquals(8, $result[0]['courseCount']);
+        $this->assertEquals(9, $result[0]['courseCount']);
         $this->assertEquals(24, $result[0]['competencyCount']);
         $this->assertArrayHasKey('groups', $result[0]);
         $this->assertArrayHasKey('1', $result[0]['groups']);

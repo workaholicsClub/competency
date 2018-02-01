@@ -27,7 +27,7 @@ class CourseModelTest extends TestCase
         $locator = Database::getTest();
         $instance = CourseModel::make($locator);
 
-        $this->assertEquals($instance->countCoursesForProfession('webDeveloper'), 8);
+        $this->assertEquals($instance->countCoursesForProfession('webDeveloper'), 9);
         $this->assertEquals($instance->countCoursesForProfession('tester'), 7);
     }
 
