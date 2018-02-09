@@ -55,7 +55,7 @@ var ResultView = {
         return h('div.list-group',
             viewModel.competencies.map(function (competency) {
                 return h('a.list-group-item.d-flex.justify-content-between.align-items-center.list-group-item-action', competency.name,
-                    h('span.badge.badge-primary.badge-pill', competency.rating)
+                    h('span.badge.badge-primary.badge-pill', competency.ratingPercent+'%')
                 )
             })
         );

@@ -9,11 +9,15 @@ const testPageViewFactory = require('./components/testPage/View');
 const resultsControllerFactory = require('./components/resultsPage/Controller');
 const resultsViewFactory = require('./components/resultsPage/View');
 
+const notFoundControllerFactory = require('./components/notFoundPage/Controller');
+const notFoundViewFactory = require('./components/notFoundPage/View');
+
 const professionsFactory = require('./models/Professions');
 const answersFactory = require('./models/Answers');
 const coursesFactory = require('./models/Courses');
 
 const configFactory = require('./classes/Config');
+const trackerFactory = require('./classes/GTagTracker');
 
 const jss = require('jss');
 const jsspreset = require('jss-preset-default').default;
@@ -40,11 +44,13 @@ function initAndGoToRoute() {
     var rootElement = document.body;
 
     var config = configFactory();
+    var tracker = trackerFactory(gtag, config);
     var professionsModel = professionsFactory({}, config);
     var answersModel = answersFactory({}, config);
     var coursesModel = coursesFactory({}, config);
 
     page('/', function () {
+        tracker.trackPageview('/');
         var indexView = indexPageViewFactory(rootElement, stylesManager);
         var indexController = indexPageControllerFactory(indexView, professionsModel);
 
@@ -52,6 +58,7 @@ function initAndGoToRoute() {
     });
 
     page('/test/:professionCode/:competencyCode?', function (context) {
+        tracker.trackPageview(context.pathname);
         /**
          * @param {RouteContextHash} context
          */
@@ -62,10 +69,21 @@ function initAndGoToRoute() {
     });
 
     page('/results', function () {
+        tracker.trackPageview('/results');
         var resultsView = resultsViewFactory(rootElement, stylesManager);
-        var resultsController = resultsControllerFactory(resultsView, professionsModel, answersModel, coursesModel);
+        var xhr = undefined;
+        var resultsController = resultsControllerFactory(resultsView, professionsModel, answersModel, coursesModel, xhr, tracker);
 
         resultsController.loadDataAndRenderIndexPage();
+    });
+
+    page('*', function (context) {
+        tracker.trackPageview(context.pathname);
+
+        var view = notFoundViewFactory(rootElement, stylesManager);
+        var controller = notFoundControllerFactory(view);
+
+        controller.renderNotFoundPage();
     });
 
     page();

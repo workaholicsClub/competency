@@ -3,11 +3,11 @@ const resultsViewFactory = require('./View');
 const professionsFactory = require('../../models/Professions');
 const answersFactory = require('../../models/Answers');
 const coursesFactory = require('../../models/Courses');
+const trackerFactory = require('../../classes/GTagTracker');
 const professionsMockData = require('../../mocks/professions.json');
 const jss = require('jss');
 const jsspreset = require('jss-preset-default').default;
 const configMock = require('../../mocks/Config');
-const getXHRMock = require('../../mocks/getXHRMock.fn');
 
 function getViewInstance() {
     var rootElement = document.createElement('div');
@@ -16,7 +16,7 @@ function getViewInstance() {
     return resultsViewFactory(rootElement, stylesManager);
 }
 
-function getControllerInstance(xhr) {
+function getControllerInstance(xhr, gtag) {
     var view = getViewInstance();
     var professionsModel = professionsFactory(professionsMockData);
 
@@ -27,7 +27,13 @@ function getControllerInstance(xhr) {
 
     var coursesModel = coursesFactory({}, configMock());
 
-    return resultsControllerFactory(view, professionsModel, answersModel, coursesModel, xhr);
+    if (!gtag) {
+        gtag = jest.fn();
+    }
+
+    var tracker = trackerFactory(gtag, configMock());
+
+    return resultsControllerFactory(view, professionsModel, answersModel, coursesModel, xhr, tracker);
 }
 
 test('ResultsController.interface', function () {
@@ -47,4 +53,15 @@ test('ResultsController.getViewModel', function () {
     expect(viewModel.competencies[0]).toHaveProperty('rating');
     expect(viewModel.competencies[0].code).toEqual('codeQuality');
     expect(viewModel.competencies[0].rating).toEqual(4);
+});
+
+test('ResultsController.trackSaveResults', function () {
+    var gtag = jest.fn();
+    var initCallCount = 2;
+
+    var resultsController = getControllerInstance(undefined, gtag);
+    expect(gtag).toHaveBeenCalledTimes(initCallCount);
+
+    resultsController.trackSaveResults();
+    expect(gtag).toHaveBeenCalledTimes(initCallCount+1);
 });

@@ -1,23 +1,28 @@
 {
     "status": 200,
     "course": [
-    {
-        "id": 19,
-        "code": "stepic-probability",
-        "name": "Теория вероятностей - наука о случайности",
-        "url": "https://stepik.org/course/2911",
-        "price": 0,
-        "weeks": 3,
-        "lessons": 3,
-        "competencies": [
-            {
-                "code": "probabiltyBasics",
-                "name": "Основы теории вероятности",
-                "startLevel": 0.25,
-                "increment": 4.25,
-                "realIncrement": 4
-            }
-        ],
-        "totalIncrement": 4
-    }]
+        {
+            "id": 29,
+            "code": "geekbrains-it-english",
+            "name": "Английский для IT-специалистов",
+            "url": "https://geekbrains.ru/courses/98",
+            "price": 1098,
+            "weeks": 2,
+            "lessons": 10,
+            "competencies": [
+                {
+                    "code": "foreignLanguages",
+                    "name": "Знание иностранных языков",
+                    "startLevel": 0.5,
+                    "startLevelPercent": 13,
+                    "increment": 1,
+                    "incrementPercent": 25,
+                    "realIncrement": 0.75,
+                    "realIncrementPercent": 19
+                }
+            ],
+            "totalIncrement": 0.75,
+            "totalIncrementPercent": 19
+        }
+    ]
 }

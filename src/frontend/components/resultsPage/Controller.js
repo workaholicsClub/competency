@@ -2,7 +2,7 @@ const BaseController = require('../base/Controller');
 const recommendationsViewFactory = require('./RecommendationsView');
 
 var ResultsController = {
-    init: function (pageView, recommendationsView, professionsModel, answersModel, coursesModel, xhr) {
+    init: function (pageView, recommendationsView, professionsModel, answersModel, coursesModel, xhr, tracker) {
         this.pageView = pageView;
         this.recommendationsView = recommendationsView;
         this.professionsModel = professionsModel;
@@ -10,6 +10,7 @@ var ResultsController = {
         this.coursesModel = coursesModel;
         this.element = pageView.getRootElement();
         this.xhr = xhr;
+        this.tracker = tracker;
         this.events = [];
     },
 
@@ -56,10 +57,15 @@ var ResultsController = {
             var competency = this.professionsModel.getAnyProfessionCompetency(competencyCode);
 
             if (competency) {
+                var rating = competencyRatings[competencyCode];
+                var maxRating = 4;
+                var ratingPercent = Math.round(rating/maxRating*100);
+
                 competenciesWithRatings.push({
                     name: competency.name,
                     code: competency.code,
-                    rating: competencyRatings[competencyCode]
+                    rating: rating,
+                    ratingPercent: ratingPercent
                 });
             }
         }, this);
@@ -84,6 +90,12 @@ var ResultsController = {
         this.coursesModel.loadRecommendations();
     },
 
+    trackSaveResults: function () {
+        if (this.tracker) {
+            this.tracker.trackSaveResults();
+        }
+    },
+
     /**
      * @param {Event} event
      */
@@ -95,6 +107,7 @@ var ResultsController = {
     },
 
     saveSuccess: function (event) {
+        this.trackSaveResults();
         this.pageView.showSuccessModal();
     }
 };
@@ -107,9 +120,10 @@ ResultsController = Object.assign(Object.create(BaseController), ResultsControll
  * @param {AnswersModel} answersModel
  * @param {CoursesModel} coursesModel
  * @param {XMLHttpRequest} xhr
+ * @param {GTagTracker} tracker
  * @returns {ResultsController}
  */
-module.exports = function (pageView, professionsModel, answersModel, coursesModel, xhr) {
+module.exports = function (pageView, professionsModel, answersModel, coursesModel, xhr, tracker) {
     var instance = Object.create(ResultsController);
     var recommendationsView = recommendationsViewFactory();
 
@@ -117,7 +131,7 @@ module.exports = function (pageView, professionsModel, answersModel, coursesMode
         xhr = new XMLHttpRequest();
     }
 
-    instance.init(pageView, recommendationsView, professionsModel, answersModel, coursesModel, xhr);
+    instance.init(pageView, recommendationsView, professionsModel, answersModel, coursesModel, xhr, tracker);
 
     return instance;
 };

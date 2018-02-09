@@ -4,7 +4,10 @@ var Config = {
     init: function (incomingConfig) {
         var config = incomingConfig || {
             staticUrl: __STATIC_URL__,
-            apiUrl: __API_URL__
+            apiUrl: __API_URL__,
+            gaTrackingId: __GA_TRACKING_ID__,
+            awCampaignId: __AW_CAMPAIGN_ID__,
+            awGoogleConversionId: __AW_GOOGLE_CONVERSION_ID__
         };
 
         this.initProps(config);

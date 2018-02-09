@@ -70,6 +70,7 @@ class CourseModel
     public function getRecommendations($competencyRatings) {
         $mapper = $this->getMapper();
         $competencyCodes = array_keys($competencyRatings);
+        $maxLevel = 4;
 
         /**
          * @var CourseEntity[] $courseEntities
@@ -83,11 +84,14 @@ class CourseModel
         $courses = [];
 
         foreach ($courseEntities as $courseEntity) {
+
             $competencyData = [
                 'code'       => $courseEntity->get('competencyCode'),
                 'name'       => $courseEntity->get('competencyName'),
                 'startLevel' => floatval($courseEntity->get('startLevel')),
-                'increment'  => floatval($courseEntity->get('increment'))
+                'startLevelPercent' => floatval(round($courseEntity->get('startLevel')/$maxLevel*100)),
+                'increment'  => floatval($courseEntity->get('increment')),
+                'incrementPercent' => floatval(round($courseEntity->get('increment')/$maxLevel*100)),
             ];
 
             $courseCode = $courseEntity->get('code');
@@ -128,8 +132,12 @@ class CourseModel
                     : 0;
 
                 $course['competencies'][$competencyIndex]['realIncrement'] = $competencyIncrement;
+                $course['competencies'][$competencyIndex]['realIncrementPercent'] =
+                    round($competencyIncrement/$maxLevel*100);
                 $course['totalIncrement'] += $competencyIncrement;
             }
+
+            $course['totalIncrementPercent'] = round($course['totalIncrement']/$maxLevel * 100);
 
             if ($competenciesFit && $course['totalIncrement'] > 0) {
                 $recommendedCourses[] = $course;

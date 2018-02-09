@@ -6,7 +6,10 @@ var ConfigMock = Object.assign(Object.create(configFactory.class), {
 
         var config = {
             staticUrl: staticUrl,
-            apiUrl: '//test.api.url'
+            apiUrl: '//test.api.url',
+            gaTrackingId: 'UA-12345-6',
+            awCampaignId: 'AW-123456789',
+            awGoogleConversionId: 'AW-123456789/xyz'
         };
 
         this.initProps(config);

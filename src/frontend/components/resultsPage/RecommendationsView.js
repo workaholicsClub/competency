@@ -8,11 +8,11 @@ var RecommendationsView = {
     createCompetenciesList: function (competencies, totalIncrement) {
         return h('ul.list-group.list-group-flush',
             h('li.list-group-item.list-group-item-success.d-flex.justify-content-between.align-items-center.list-group-item-action', "Общая полезность",
-                h('span.badge.badge-primary.badge-pill', '+' + totalIncrement)
+                h('span.badge.badge-primary.badge-pill', '+' + totalIncrement+'%')
             ),
             competencies.map(function (competency) {
                 return h('li.list-group-item.d-flex.justify-content-between.align-items-center.list-group-item-action', competency.name,
-                    h('span.badge.badge-primary.badge-pill', '+' + competency.realIncrement)
+                    h('span.badge.badge-primary.badge-pill', '+' + competency.realIncrementPercent+'%')
                 );
             })
         );
@@ -41,7 +41,7 @@ var RecommendationsView = {
                             h('a', {href: recommendation.url, target:'_blank'}, recommendation.name)
                         )
                     ),
-                    this.createCompetenciesList(recommendation.competencies, recommendation.totalIncrement),
+                    this.createCompetenciesList(recommendation.competencies, recommendation.totalIncrementPercent),
                     h('div.card-footer', courseParams)
                 )
             }, this)
