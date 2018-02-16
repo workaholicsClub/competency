@@ -28,7 +28,7 @@ class CourseModelTest extends TestCase
         $instance = CourseModel::make($locator);
 
         $this->assertEquals($instance->countCoursesForProfession('webDeveloper'), 9);
-        $this->assertEquals($instance->countCoursesForProfession('tester'), 7);
+        $this->assertEquals($instance->countCoursesForProfession('tester'), 9);
     }
 
     public function testGetRecommendations() {
