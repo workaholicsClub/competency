@@ -4,7 +4,9 @@
         "vlucas/spot2": "~2.0",
         "mailgun/mailgun-php": "^2.4",
         "php-http/guzzle6-adapter": "^1.1",
-        "lcobucci/jwt": "^3.2"
+        "lcobucci/jwt": "^3.2",
+        "webmozart/console": "~1.0@beta",
+        "php-http/mock-client": "^1.1"
     },
     "autoload": {
         "psr-4": {

@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+
+use Competencies\Command\ParseConfig;
+use Webmozart\Console\ConsoleApplication;
+
+require_once ('vendor/autoload.php');
+
+$cli = new ConsoleApplication(new ParseConfig());
+$cli->run();
+

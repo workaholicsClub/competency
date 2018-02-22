@@ -103,6 +103,11 @@ class CompetencyModel
             $groupEntity = $competencyEntity->relation('group');
             $groupCode = $groupEntity->get('code');
 
+            $skills = [];
+            foreach ($competencyEntity->relation('skills') as $skillEntity) {
+                $skills[] = $skillEntity->toArray();
+            }
+
             /**
              * @var ProfessionEntity $professionEntity
              */
@@ -138,8 +143,11 @@ class CompetencyModel
                     $professions[$professionIndex]['groups'][$groupIndex] = $groupEntity->toArray();
                 }
 
+                $competencyData = $competencyEntity->toArray();
+                $competencyData['skills'] = $skills;
+
                 $professions[$professionIndex]['groups'][$groupIndex]['competencies'][] =
-                    $competencyEntity->toArray();
+                    $competencyData;
                 $professions[$professionIndex]['competencyCount']++;
             }
 

@@ -128,15 +128,21 @@ test('ProfessionsModel.getProfessions', function () {
     var expectedList = [{
         code: "webDeveloper",
         name: "Веб-разработчик (PHP)",
-        competencyCount: 25,
-        courseCount: 8,
-        timeToFill: 38
+        competencyCount: 24,
+        courseCount: 9,
+        timeToFill: 36
     }, {
         code: "tester",
         name: "Тестировщик (Python)",
-        competencyCount: 6,
-        courseCount: 7,
-        timeToFill: 9
+        competencyCount: 7,
+        courseCount: 9,
+        timeToFill: 11
+    }, {
+        "code": "webProjectManager",
+        "name": "Менеджер web-проектов",
+        "competencyCount": 24,
+        "courseCount": 3,
+        "timeToFill": 36
     }];
 
     var professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
@@ -194,8 +200,8 @@ test('ProfessionsModel.getProfession (с данными из свойств)', f
 test('ProfessionsModel.getTimeToFillProfession', function () {
     var professionsModel = professionsModelFactory(professionsMockData);
 
-    expect(professionsModel.getTimeToFillProfession('webDeveloper')).toEqual(38);
-    expect(professionsModel.getTimeToFillProfession('tester')).toEqual(9);
+    expect(professionsModel.getTimeToFillProfession('webDeveloper')).toEqual(36);
+    expect(professionsModel.getTimeToFillProfession('tester')).toEqual(11);
 });
 
 
@@ -208,7 +214,7 @@ test('ProfessionsModel.getCompetencies', function () {
             var competencies = professionsModel.getCompetencies('tester');
 
             try {
-                expect(competencies).toHaveLength(6);
+                expect(competencies).toHaveLength(7);
 
                 var competency = competencies[0];
                 expect(competency).toHaveProperty('code');
@@ -237,7 +243,7 @@ test('ProfessionsModel.getCompetency', function () {
     var professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
     var professionCode = 'tester';
     var expectedCompetencyCode = 'operatingSystems';
-    var expectedCompetencyIndex = 2;
+    var expectedCompetencyIndex = 3;
 
     return new Promise(function (resolve, reject) {
         professionsModel.addEventListener('load', function () {

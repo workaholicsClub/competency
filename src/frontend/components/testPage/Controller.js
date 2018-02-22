@@ -21,7 +21,8 @@ var TestController = {
 
     initViewEvents: function () {
         var additionalEvents = [
-            {types: ['change'], target: this.view.getAllLevelSelects(), handler: this.markLevelCompletedAndUpdateAnswer}
+            {types: ['change'], target: this.view.getAllLevelSelects(), handler: this.markLevelCompletedAndUpdateAnswer},
+            {types: ['input'], target: this.view.getAllSkillSliders(), handler: this.changeSliderDescriptionTextAndUpdateAnswer}
         ];
 
         this.events = this.events.concat(additionalEvents);
@@ -40,6 +41,26 @@ var TestController = {
         }
     },
 
+    getCompetencyCode: function () {
+        var competencyCode = this.competencyCode;
+        if (!competencyCode) {
+            var competencies = this.professionsModel.getCompetencies(this.professionCode);
+            var firstCompetency = competencies[0];
+            competencyCode = firstCompetency ? firstCompetency.code : false;
+        }
+
+        return competencyCode;
+    },
+
+    changeSliderDescriptionTextAndUpdateAnswer: function (event) {
+        var sliderElement = event.currentTarget;
+        var levelTexts = this.answersModel.getSkillLevelsText();
+        this.view.updateSkillText(sliderElement, levelTexts);
+
+        var answers = this.view.getLevelSkillAnswers();
+        this.answersModel.set(this.getCompetencyCode(), answers);
+    },
+
     /**
      * @param {Event} event
      */
@@ -48,15 +69,7 @@ var TestController = {
         this.view.markLevelCompleted(selectElement);
 
         var answers = this.view.getLevelAnswers();
-
-        var competencyCode = this.competencyCode;
-        if (!competencyCode) {
-            var competencies = this.professionsModel.getCompetencies(this.professionCode);
-            var firstCompetency = competencies[0];
-            competencyCode = firstCompetency ? firstCompetency.code : false;
-        }
-
-        this.answersModel.set(competencyCode, answers);
+        this.answersModel.set(this.getCompetencyCode(), answers);
     },
 
     getViewModel: function () {
@@ -78,6 +91,25 @@ var TestController = {
             });
         }
 
+        var skills = [];
+        var skillAnswersText = this.answersModel.getSkillLevelsText();
+        currentCompetency.skills.forEach(function (skill, index) {
+            var answer = answers ? (answers[index] || false) : false;
+            var answerForSlider = answer !== false
+                ? parseInt(answer).toString()
+                : '0';
+
+            skills.push({
+                answer: answerForSlider,
+                answerText: answer > 0
+                    ? skillAnswersText[answer]
+                    : skillAnswersText[0],
+                isAnswered: answer > 0,
+                text: skill.text,
+                additionalDescription: skill.additionalDescription
+            });
+        });
+
         return {
             'profession': profession,
             'competencies': competencies,
@@ -89,12 +121,14 @@ var TestController = {
             'resultsLink': '/results',
             'competencyIndex': competencyIndex,
             'competencyGroup': group,
-            'levels': levels
+            'levels': levels,
+            'skills': skills
         };
     },
 
     renderIndexPageAfterLoad: function () {
-        this.view.render(this.getViewModel());
+        var useSkills = true;
+        this.view.render(this.getViewModel(), useSkills);
         this.initViewEvents();
     }
 };

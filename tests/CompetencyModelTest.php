@@ -41,7 +41,6 @@ class CompetencyModelTest extends TestCase
     public function testLoadProfessions() {
         $locator = Database::getTest();
 
-
         $courseModel = CourseModel::make($locator);
         $model = CompetencyModel::make($locator, $courseModel);
         $result = $model->loadProfessions();
@@ -71,6 +70,10 @@ class CompetencyModelTest extends TestCase
         $this->assertArrayHasKey('code', $result[0]['groups'][0]);
         $this->assertEquals('programmingPractice', $result[1]['groups'][0]['code']);
         $this->assertArrayHasKey('competencies', $result[1]['groups'][0]);
+
+        $sampleCompetency = $result[0]['groups'][1]['competencies'][0];
+        $this->assertArrayHasKey('skills', $sampleCompetency);
+        $this->assertCount(19, $sampleCompetency['skills']);
     }
 
 }

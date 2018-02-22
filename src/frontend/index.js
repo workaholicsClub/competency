@@ -13,7 +13,7 @@ const notFoundControllerFactory = require('./components/notFoundPage/Controller'
 const notFoundViewFactory = require('./components/notFoundPage/View');
 
 const professionsFactory = require('./models/Professions');
-const answersFactory = require('./models/Answers');
+const answersFactory = require('./models/SkillAnswers');
 const coursesFactory = require('./models/Courses');
 
 const configFactory = require('./classes/Config');

@@ -79,7 +79,6 @@ var AnswersModel = {
     },
 
     /**
-     *
      * @param event
      */
     saveAnswers: function (event) {
@@ -119,6 +118,16 @@ var AnswersModel = {
         else {
             this.dispatchModelEvent('saveError');
         }
+    },
+
+    getSkillLevelsText: function() {
+        return [
+            'Не знаю',
+            'Ознакомлен',
+            'Действую повторением',
+            'Действую на автомате, отношусь критически',
+            'Использую в творческой деятельности'
+        ];
     }
 };
 
@@ -150,3 +159,5 @@ module.exports = function (props, config, xhr, storage) {
 
     return answers;
 };
+
+module.exports.class = AnswersModel;

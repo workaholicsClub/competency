@@ -42,9 +42,10 @@ test('TestController.getViewModel', function () {
     var expectedNextCompetencyCode = 'probabiltyBasics';
     var expectedGroupCode = 'environment';
     var expectedLink = '/test/'+expectedProfessionCode+'/'+expectedNextCompetencyCode;
-    var expectedCompetenciesCount = 6;
-    var expectedCompetencyIndex = 2;
+    var expectedCompetenciesCount = 7;
+    var expectedCompetencyIndex = 3;
     var expectedLevelsCount = 4;
+    var expectedSkillsCount = 22;
 
     var testController = getControllerInstance(expectedProfessionCode, expectedCompetencyCode);
     var viewModel = testController.getViewModel();
@@ -59,6 +60,7 @@ test('TestController.getViewModel', function () {
     expect(viewModel).toHaveProperty('competencyIndex');
     expect(viewModel).toHaveProperty('competencyGroup');
     expect(viewModel).toHaveProperty('levels');
+    expect(viewModel).toHaveProperty('skills');
 
     expect(viewModel.profession.code).toEqual(expectedProfessionCode);
     expect(viewModel.competencies).toHaveLength(expectedCompetenciesCount);
@@ -68,8 +70,16 @@ test('TestController.getViewModel', function () {
     expect(viewModel.nextCompetencyLink).toEqual(expectedLink);
     expect(viewModel.competencyIndex).toEqual(expectedCompetencyIndex);
     expect(viewModel.competencyGroup.code).toEqual(expectedGroupCode);
+
     expect(viewModel.levels).toHaveLength(expectedLevelsCount);
     expect(viewModel.levels[0]).toHaveProperty('answer');
     expect(viewModel.levels[0]).toHaveProperty('isAnswered');
     expect(viewModel.levels[0]).toHaveProperty('text');
+
+    expect(viewModel.skills).toHaveLength(expectedSkillsCount);
+    expect(viewModel.skills[0]).toHaveProperty('answer');
+    expect(viewModel.skills[0]).toHaveProperty('answerText');
+    expect(viewModel.skills[0]).toHaveProperty('isAnswered');
+    expect(viewModel.skills[0]).toHaveProperty('text');
+    expect(viewModel.skills[0]).toHaveProperty('additionalDescription');
 });

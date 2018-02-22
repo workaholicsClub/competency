@@ -2,6 +2,7 @@
 
 namespace Competencies\Competency;
 
+use Competencies\Skill\SkillEntity;
 use Spot\Entity;
 use Spot\EntityInterface;
 use Spot\MapperInterface;
@@ -26,6 +27,7 @@ class CompetencyEntity extends Entity
     public static function relations(MapperInterface $mapper, EntityInterface $entity) {
         return [
             'group'       => $mapper->belongsTo($entity, CompetencyGroupEntity::class, 'competencyGroupId'),
+            'skills'      => $mapper->hasMany($entity, SkillEntity::class, 'competencyId'),
             'professions' => $mapper->hasManyThrough($entity, ProfessionEntity::class,
                 CompetencyProfessionEntity::class, 'professionId', 'competencyId'),
         ];

@@ -30,10 +30,28 @@ var TestView = {
     },
 
     /**
+     * @param {Element} sliderInput
+     */
+    updateSkillText: function (sliderInput, levelTexts) {
+        var rowElement = sliderInput.closest('tr');
+        var textElement = rowElement.querySelector('span');
+        var newText = levelTexts[ sliderInput.value ];
+
+        textElement.innerHTML = newText;
+    },
+
+    /**
      * @returns {NodeList}
      */
     getAllLevelSelects: function () {
         return this.element.querySelectorAll('.level-select');
+    },
+
+    /**
+     * @returns {NodeList}
+     */
+    getAllSkillSliders: function () {
+        return this.element.querySelectorAll('input[type=range]');
     },
 
     getLevelAnswers: function () {
@@ -41,6 +59,16 @@ var TestView = {
 
         this.getAllLevelSelects().forEach(function (selectElement) {
             answers.push( parseInt(selectElement.value) );
+        });
+
+        return answers;
+    },
+
+    getLevelSkillAnswers: function () {
+        var answers = [];
+
+        this.getAllSkillSliders().forEach(function (sliderElement) {
+            answers.push( parseInt(sliderElement.value) );
         });
 
         return answers;
@@ -88,6 +116,44 @@ var TestView = {
         });
     },
 
+    createSkillsTable: function (viewModel) {
+        //['осведомленность', 'умение', 'экспертиза', 'лидерство']
+        //['знаю', 'умею', 'имею навык', 'могу обучать']
+        //['ознакомительный', 'воспроизводственный', 'реконструктивный', 'творческий']
+        //['Ознакомлен', 'Повторяю чьи-то действия', 'Осмысляю, отношусь критически', 'Занимаюсь творчеством'];
+
+        return h('div.table-responsive-sm.col-md-12',
+            h('table.table.table-bordered.table-hover',
+                h('thead',
+                    h('tr.d-flex',
+                        h('th.col-6', {attrs: {scope: 'col'}}, 'Навык'),
+                        h('th.col-6', {attrs: {scope: 'col', colspan: '2'}}, 'Уровень владения')
+                    )
+                ),
+                h('tbody',
+                    viewModel.skills.map(function (skill, index) {
+                        return h('tr#skill'+index+'.d-flex',
+                            h('td.col-6', {attrs: {scope: 'row'}}, skill.text, h('br'),
+                                h('small.text-muted', skill.additionalDescription)
+                            ),
+                            h('td.col-3',
+                                h('input', {name: 'skill'+index, type: 'range', attrs: {
+                                    min: '0',
+                                    max: '4',
+                                    value: skill.answer,
+                                    step: '1'
+                                }})
+                            ),
+                            h('td.col-3',
+                                h('span', skill.answerText)
+                            )
+                        );
+                    })
+                )
+            )
+        );
+    },
+
     createProgressBar: function (viewModel) {
         var humanIndex = viewModel.competencyIndex+1;
 
@@ -109,7 +175,7 @@ var TestView = {
             ];
     },
 
-    createDOM: function (viewModel) {
+    createDOM: function (viewModel, evaluationBlock) {
         var footerView = footerViewFactory(this.stylesManager);
         return h('div#page.container-fluid.mt-3',
                     h('div#head.row',
@@ -122,7 +188,7 @@ var TestView = {
                     ),
                     this.createProgressBar(viewModel),
                     h('div#content.row',
-                        this.createLevels(viewModel)
+                        evaluationBlock
                     ),
                     h('div#buttons.row.mt-5',
                         h('div.col.text-left',
@@ -134,8 +200,12 @@ var TestView = {
                 );
     },
 
-    render: function (viewModel) {
-        var moduleElement = this.createDOM(viewModel);
+    render: function (viewModel, useSkills) {
+        var evaluationBlock = useSkills
+            ? this.createSkillsTable(viewModel)
+            : this.createLevels(viewModel);
+
+        var moduleElement = this.createDOM(viewModel, evaluationBlock);
         this.element.innerHTML = moduleElement.outerHTML;
     }
 };
