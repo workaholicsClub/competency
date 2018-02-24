@@ -1,0 +1,22 @@
+<?php
+return [
+    'id'                    => 1240,
+    'section'               => 141,
+    'lesson'                => 6433,
+    'assignments'           => [7545, 7557, 7558, 7559, 7560, 7561, 7640, 63004,],
+    'position'              => 1,
+    'progress'              => null,
+    'begin_date'            => null,
+    'end_date'              => null,
+    'soft_deadline'         => null,
+    'hard_deadline'         => null,
+    'grading_policy'        => 'halved',
+    'begin_date_source'     => null,
+    'end_date_source'       => null,
+    'soft_deadline_source'  => null,
+    'hard_deadline_source'  => null,
+    'grading_policy_source' => null,
+    'is_active'             => true,
+    'create_date'           => null,
+    'update_date'           => '2017-10-26T11:14:36Z',
+];
