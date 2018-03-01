@@ -30,6 +30,17 @@ class Course
     private $skills;
 
     /**
+     * @var mixed
+     */
+    private $externalRequirements;
+
+    /**
+     * @var mixed
+     */
+    private $externalSkills;
+
+
+    /**
      * @param $courseProps
      * @return Course
      */
@@ -56,7 +67,19 @@ class Course
             $instance->setSkills($courseProps['skills']);
         }
 
+        if (isset($courseProps['externalRequirements'])) {
+            $instance->setExternalRequirements($courseProps['externalRequirements']);
+        }
+
+        if (isset($courseProps['externalSkills'])) {
+            $instance->setExternalSkills($courseProps['externalSkills']);
+        }
+
         return $instance;
+    }
+
+    public static function __set_state(array $courseProps) {
+        return self::fromArray($courseProps);
     }
 
     /**
@@ -135,5 +158,33 @@ class Course
 
     public function isEqualTo(Course $course) {
         return $this->getExternalId() == $course->getExternalId();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExternalRequirements() {
+        return $this->externalRequirements;
+    }
+
+    /**
+     * @param mixed $externalRequirements
+     */
+    public function setExternalRequirements($externalRequirements) {
+        $this->externalRequirements = $externalRequirements;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExternalSkills() {
+        return $this->externalSkills;
+    }
+
+    /**
+     * @param mixed $externalSkills
+     */
+    public function setExternalSkills($externalSkills) {
+        $this->externalSkills = $externalSkills;
     }
 }

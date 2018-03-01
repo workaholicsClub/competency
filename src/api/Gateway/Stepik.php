@@ -3,11 +3,13 @@
 namespace Competencies\Gateway;
 
 use Competencies\Course\Course;
+use Competencies\CourseLoaderInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Http\Adapter\Guzzle6\Client;
+use Http\Client\Exception;
 
-class Stepik
+class Stepik implements CourseLoaderInterface
 {
     private $client;
     private $stepikUrl = 'https://stepik.org';
@@ -56,7 +58,7 @@ class Stepik
     /**
      * @param $courseIds
      * @return mixed
-     * @throws \Http\Client\Exception
+     * @throws Exception
      */
     public function getCourseDetails($courseIds) {
         return $this->getStepikObjectByIds('courses', $courseIds);
@@ -101,7 +103,7 @@ class Stepik
     /**
      * @param $query
      * @return array
-     * @throws \Http\Client\Exception
+     * @throws Exception
      */
     public function findCourseIds($query) {
         $searchParams = [
@@ -128,40 +130,17 @@ class Stepik
         return $courseIds;
     }
 
-    public function getMatchingSkills($courseProps, $ourSkills) {
-        $lessonTitles = $this->getLessonTitles($courseProps);
-        $similarityThreshold = 70;
-
-        $matchedSkills = [];
-
-        foreach ($ourSkills as $ourSkill) {
-            $similarities = [];
-
-            foreach ($lessonTitles as $lessonTitle) {
-                similar_text($ourSkill, $lessonTitle, $percent);
-                $similarities[] = $percent;
-            }
-
-            if (max($similarities) > $similarityThreshold) {
-                $maxSimilarLessonIndex = array_search(max($similarities), $similarities);
-                $maxSimilarLesson = $lessonTitles[ $maxSimilarLessonIndex ];
-
-                $matchedSkills[$ourSkill] = $maxSimilarLesson;
-            }
-        }
-
-        return $matchedSkills;
-    }
-
     /**
      * @param string $query
-     * @param array $ourSkills
-     * @return array
-     * @throws \Http\Client\Exception
+     * @return Course[]|bool
      */
-    public function findCourses($query, array $ourSkills = []) {
-        $matchingCourseIds = $this->findCourseIds($query);
-        $courseDetails = $this->getCourseDetails($matchingCourseIds);
+    public function findCourses($query) {
+        try {
+            $matchingCourseIds = $this->findCourseIds($query);
+            $courseDetails = $this->getCourseDetails($matchingCourseIds);
+        } catch (Exception $exception) {
+            return false;
+        }
 
         $foundCourses = [];
         foreach ($courseDetails as $courseProps) {
@@ -171,16 +150,15 @@ class Stepik
              */
 
             $matchingSkills = [];
-            if ($ourSkills) {
-                $matchingSkills = $this->getMatchingSkills($courseProps, $ourSkills);
-            }
 
             $course = Course::fromArray([
-                'externalId'  => $courseProps['id'],
-                'name'        => $courseProps['title'],
-                'description' => $courseProps['summary'],
-                'url'         => $this->stepikUrl . '/course/' . $courseProps['id'],
-                'skills'      => $matchingSkills,
+                'externalId'           => $courseProps['id'],
+                'name'                 => $courseProps['title'],
+                'description'          => $courseProps['summary'],
+                'url'                  => $this->stepikUrl . '/course/' . $courseProps['id'],
+                'skills'               => $matchingSkills,
+                'externalRequirements' => $courseProps['requirements'],
+                'externalSkills'       => $this->getLessonTitles($courseProps),
             ]);
 
             $foundCourses[] = $course;

@@ -9,6 +9,7 @@ class Database
 {
     /**
      * @return Locator
+     * @throws \Spot\Exception
      */
     public static function getReal() {
         $testDatabaseDsn = 'mysql://toor:queiKu5a@tcp(127.0.0.1:33060)/self_competency?charset=UTF8';
@@ -18,12 +19,17 @@ class Database
     }
 
     /**
-     * @return Locator
+     * @return bool|Locator
      */
     public static function getTest() {
         $testDatabaseDsn = 'sqlite::memory:';
         $ormConfig = new Config();
-        $ormConfig->addConnection('mysql', $testDatabaseDsn);
+        try {
+            $ormConfig->addConnection('mysql', $testDatabaseDsn);
+        } catch (\Spot\Exception $exception) {
+            return false;
+        }
+
         $orm = new Locator($ormConfig);
         $mapper = $orm->mapper(\Spot\Entity::class);
 
@@ -40,6 +46,4 @@ class Database
 
         return $orm;
     }
-
-
 }

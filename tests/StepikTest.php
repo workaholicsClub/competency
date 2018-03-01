@@ -91,13 +91,7 @@ class StepikTest extends TestCase
     public function testFindCourses() {
         $gateway = $this->makeStepikGateway();
 
-        $pythonCompetency = $this->makePythonCompetency();
-        $pythonSkills = [];
-        foreach ($pythonCompetency->relation('skills') as $skillEntity) {
-            $pythonSkills[] = $skillEntity->get('text');
-        }
-
-        $courses = $gateway->findCourses('Python', $pythonSkills);
+        $courses = $gateway->findCourses('Python');
         $defaultStepikResponseLimit = 20;
 
         $this->assertCount($defaultStepikResponseLimit, $courses);
