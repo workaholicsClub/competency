@@ -17,7 +17,7 @@ CREATE TABLE `atomicSkills` (
   `competencyId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=390 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 INSERT INTO `atomicSkills` (`text`, `additionalDescription`, `competencyId`) VALUES ('Базовые алгоритмы', 'Линейный поиск, сортировка и бинарный поиск, обход многомерного массива', '1');

@@ -1,13 +1,10 @@
 const BaseController = require('../base/Controller');
-const recommendationsViewFactory = require('./RecommendationsView');
 
 var ResultsController = {
-    init: function (pageView, recommendationsView, professionsModel, answersModel, coursesModel, xhr, tracker) {
+    init: function (pageView, professionsModel, answersModel, xhr, tracker) {
         this.pageView = pageView;
-        this.recommendationsView = recommendationsView;
-        this.professionsModel = professionsModel;
+        this.filterModel = professionsModel;
         this.answersModel = answersModel;
-        this.coursesModel = coursesModel;
         this.element = pageView.getRootElement();
         this.xhr = xhr;
         this.tracker = tracker;
@@ -16,7 +13,7 @@ var ResultsController = {
 
     initEvents: function () {
         this.events = [
-            {types: ['load'], target: this.professionsModel, handler: this.renderIndexPageAfterLoad}
+            {types: ['load'], target: this.filterModel, handler: this.renderIndexPageAfterLoad}
         ];
 
         if (this.xhr) {
@@ -28,7 +25,6 @@ var ResultsController = {
 
     initViewEvents: function () {
         var additionalEvents = [
-            {types: ['load'], target: this.coursesModel, handler: this.renderRecommendations},
             {types: ['save'], target: this.answersModel, handler: this.saveSuccess},
             {types: ['click'], target: this.pageView.getSaveButton(), handler: this.saveResults}
         ];
@@ -41,11 +37,11 @@ var ResultsController = {
     loadDataAndRenderIndexPage: function () {
         this.initEvents();
 
-        if (this.professionsModel.isLoaded()) {
+        if (this.filterModel.isLoaded()) {
             this.renderIndexPageAfterLoad();
         }
         else {
-            this.professionsModel.load();
+            this.filterModel.load();
         }
     },
 
@@ -54,7 +50,7 @@ var ResultsController = {
         var competenciesWithRatings = [];
 
         Object.keys(competencyRatings).forEach(function (competencyCode) {
-            var competency = this.professionsModel.getAnyProfessionCompetency(competencyCode);
+            var competency = this.filterModel.getAnyProfessionCompetency(competencyCode);
 
             if (competency) {
                 var rating = competencyRatings[competencyCode];
@@ -72,22 +68,13 @@ var ResultsController = {
 
         return {
             'pollUrl': 'https://11713.typeform.com/to/oe9WIB',
-            'competencies': competenciesWithRatings,
-            'recommendations': this.coursesModel.getRecommendations()
+            'allCompetencies': competenciesWithRatings
         };
-    },
-
-    renderRecommendations: function () {
-        var viewModel = this.getViewModel();
-        var recommendationsDOM = this.recommendationsView.createDOM(viewModel);
-        this.pageView.getRecomendationsContainer().innerHTML = recommendationsDOM.outerHTML;
     },
 
     renderIndexPageAfterLoad: function () {
         this.pageView.render(this.getViewModel());
         this.initViewEvents();
-        this.coursesModel.setRatings( this.answersModel.getAllRatings() );
-        this.coursesModel.loadRecommendations();
     },
 
     trackSaveResults: function () {
@@ -118,20 +105,18 @@ ResultsController = Object.assign(Object.create(BaseController), ResultsControll
  * @param pageView
  * @param {ProfessionsModel} professionsModel
  * @param {AnswersModel} answersModel
- * @param {CoursesModel} coursesModel
  * @param {XMLHttpRequest} xhr
  * @param {GTagTracker} tracker
  * @returns {ResultsController}
  */
-module.exports = function (pageView, professionsModel, answersModel, coursesModel, xhr, tracker) {
+module.exports = function (pageView, professionsModel, answersModel, xhr, tracker) {
     var instance = Object.create(ResultsController);
-    var recommendationsView = recommendationsViewFactory();
 
     if (!xhr) {
         xhr = new XMLHttpRequest();
     }
 
-    instance.init(pageView, recommendationsView, professionsModel, answersModel, coursesModel, xhr, tracker);
+    instance.init(pageView, professionsModel, answersModel, xhr, tracker);
 
     return instance;
 };

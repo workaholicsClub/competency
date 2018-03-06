@@ -31,12 +31,13 @@ const deepClone = require('../classes/deepClone.fn');
  * @property {GroupHash[]} groups
  */
 
-var ProfessionsModel = {
-    init: function (props, config, xhr) {
+let ProfessionsModel = {
+    init: function (props, config, xhr, professionCode) {
         this.initPropsAndEvents(props);
         this.initXhr(xhr);
         this.config = config;
         this.url = '/profession';
+        this.professionCode = professionCode;
 
         /**
          * @property {ProfessionHash[]} professions
@@ -186,6 +187,14 @@ var ProfessionsModel = {
     getCompetencyIndex: function (professionCode, competencyCode) {
         var competencyAndIndex = this.getCompetencyAndIndex(professionCode, competencyCode);
         return competencyAndIndex.index;
+    },
+
+    setProfessionCode: function (professionCode) {
+        this.professionCode = professionCode;
+    },
+
+    getProfessionCode: function () {
+        return this.professionCode;
     }
 };
 
@@ -193,12 +202,13 @@ ProfessionsModel = Object.assign(Object.create(BaseModel), ProfessionsModel);
 ProfessionsModel = Object.assign(ProfessionsModel, XhrModelMixin);
 
 /**
- * @param props
- * @param config
- * @param xhr
+ * @param {Object} props
+ * @param {Config} config
+ * @param {XMLHttpRequest} xhr
+ * @param {string} professionCode
  * @returns {ProfessionsModel}
  */
-module.exports = function (props, config, xhr) {
+module.exports = function (props, config, xhr, professionCode) {
     if (!props) {
         props = {};
     }
@@ -208,7 +218,7 @@ module.exports = function (props, config, xhr) {
     }
 
     var professions = Object.create(ProfessionsModel);
-    professions.init(props, config, xhr);
+    professions.init(props, config, xhr, professionCode);
 
     return professions;
 };

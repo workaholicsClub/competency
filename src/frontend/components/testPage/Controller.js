@@ -3,7 +3,7 @@ const BaseController = require('../base/Controller');
 var TestController = {
     init: function (view, professionsModel, answersModel, professionCode, competencyCode) {
         this.view = view;
-        this.professionsModel = professionsModel;
+        this.filterModel = professionsModel;
         this.answersModel = answersModel;
         this.professionCode = professionCode;
         this.competencyCode = competencyCode;
@@ -13,7 +13,7 @@ var TestController = {
 
     initEvents: function () {
         this.events = [
-            {types: ['load'], target: this.professionsModel, handler: this.renderIndexPageAfterLoad}
+            {types: ['load'], target: this.filterModel, handler: this.renderIndexPageAfterLoad}
         ];
 
         this.bindEvents();
@@ -33,18 +33,18 @@ var TestController = {
     loadDataAndRenderIndexPage: function () {
         this.initEvents();
 
-        if (this.professionsModel.isLoaded()) {
+        if (this.filterModel.isLoaded()) {
             this.renderIndexPageAfterLoad();
         }
         else {
-            this.professionsModel.load();
+            this.filterModel.load();
         }
     },
 
     getCompetencyCode: function () {
         var competencyCode = this.competencyCode;
         if (!competencyCode) {
-            var competencies = this.professionsModel.getCompetencies(this.professionCode);
+            var competencies = this.filterModel.getCompetencies(this.professionCode);
             var firstCompetency = competencies[0];
             competencyCode = firstCompetency ? firstCompetency.code : false;
         }
@@ -73,10 +73,10 @@ var TestController = {
     },
 
     getViewModel: function () {
-        var profession = this.professionsModel.getProfession(this.professionCode);
-        var competencies = this.professionsModel.getCompetencies(this.professionCode);
-        var currentCompetency = this.professionsModel.getCompetency(this.professionCode, this.competencyCode) || competencies[0];
-        var competencyIndex = this.professionsModel.getCompetencyIndex(this.professionCode, this.competencyCode) || 0;
+        var profession = this.filterModel.getProfession(this.professionCode);
+        var competencies = this.filterModel.getCompetencies(this.professionCode);
+        var currentCompetency = this.filterModel.getCompetency(this.professionCode, this.competencyCode) || competencies[0];
+        var competencyIndex = this.filterModel.getCompetencyIndex(this.professionCode, this.competencyCode) || 0;
         var nextCompetency = competencyIndex < competencies.length - 1 ? competencies[competencyIndex+1] : false;
         var group = currentCompetency.group;
 

@@ -9,7 +9,7 @@ test('NotFoundView.createDOM', function () {
     expect(viewDOM).toBeInstanceOf(HTMLElement);
 });
 
-test('IndexView.render', function () {
+test('NotFoundView.render', function () {
     var DOMelement = document.createElement('div');
     var view = notFoundViewFactory(DOMelement, jss);
 

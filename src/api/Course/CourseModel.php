@@ -155,4 +155,8 @@ class CourseModel
 
         return $recommendedCourses;
     }
+
+    public function find(array $filter = []) {
+        return [];
+    }
 }

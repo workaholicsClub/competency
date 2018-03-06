@@ -3,7 +3,7 @@ const jss = require('jss').default;
 
 function getViewModel() {
     return {
-        'competencies': [{
+        'allCompetencies': [{
             code: 'codeQuality',
             name: 'Качество кода',
             rating: 4
@@ -12,11 +12,11 @@ function getViewModel() {
 }
 
 test('ResultView.render и createDOM', function () {
-    var DOMElement = document.createElement('div');
-    var viewModel = getViewModel();
+    let DOMElement = document.createElement('div');
+    let viewModel = getViewModel();
 
-    var resultView = resultFactory(DOMElement, jss);
-    var resultDOM = resultView.createDOM(viewModel);
+    let resultView = resultFactory(DOMElement, jss);
+    let resultDOM = resultView.createDOM(viewModel);
     resultView.render(viewModel);
 
     expect(resultDOM).toBeInstanceOf(HTMLElement);
@@ -25,18 +25,16 @@ test('ResultView.render и createDOM', function () {
     expect(DOMElement.innerHTML.indexOf('Качество кода')).toBeGreaterThan(0);
 });
 
-test('ResultView.getRecomendationsContainer', function () {
-    var DOMElement = document.createElement('div');
-    var viewModel = getViewModel();
+test('ResultView.getters', function () {
+    let DOMElement = document.createElement('div');
+    let viewModel = getViewModel();
 
-    var resultView = resultFactory(DOMElement, jss);
+    let resultView = resultFactory(DOMElement, jss);
     resultView.render(viewModel);
 
-    var container = resultView.getRecomendationsContainer();
-    var saveButton = resultView.getSaveButton();
-    var subscribeForm = resultView.getSubscribeForm();
+    let saveButton = resultView.getSaveButton();
+    let subscribeForm = resultView.getSubscribeForm();
 
-    expect(container).toBeInstanceOf(HTMLElement);
     expect(saveButton).toBeInstanceOf(HTMLElement);
     expect(subscribeForm).toBeInstanceOf(HTMLFormElement);
 });

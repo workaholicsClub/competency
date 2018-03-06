@@ -19,13 +19,6 @@ var ResultView = {
     /**
      * @returns {HTMLElement}
      */
-    getRecomendationsContainer: function () {
-        return this.element.querySelector('#recomendationsContainer');
-    },
-
-    /**
-     * @returns {HTMLElement}
-     */
     getSaveButton: function () {
         return this.element.querySelector('#saveResult');
     },
@@ -48,12 +41,12 @@ var ResultView = {
     },
 
     createResults: function (viewModel) {
-        if (viewModel.competencies.length === 0) {
+        if (viewModel.allCompetencies.length === 0) {
             return this.noResults();
         }
 
         return h('div.list-group',
-            viewModel.competencies.map(function (competency) {
+            viewModel.allCompetencies.map(function (competency) {
                 return h('a.list-group-item.d-flex.justify-content-between.align-items-center.list-group-item-action', competency.name,
                     h('span.badge.badge-primary.badge-pill', competency.ratingPercent+'%')
                 )
@@ -62,7 +55,7 @@ var ResultView = {
     },
 
     createHiddenInputs: function (viewModel) {
-        return viewModel.competencies.map(function (competency) {
+        return viewModel.allCompetencies.map(function (competency) {
             return h('input', {name: 'competency[' + competency.code + ']', type: 'hidden', attrs: {value: competency.rating}})
         });
     },
@@ -153,12 +146,6 @@ var ResultView = {
                 h('div.col-md-12',
                     h('h2.display-6', 'Навыки'),
                     this.createResults(viewModel)
-                )
-            ),
-            h('div#recomendations.row.mt-5',
-                h('div.col-md-12',
-                    h('h2.display-6', 'Рекомендуемые курсы'),
-                    h('div#recomendationsContainer')
                 )
             ),
             this.createSaveSuccessModal(viewModel),

@@ -284,3 +284,16 @@ test('ProfessionsModel.getCompetency', function () {
         professionsModel.load();
     });
 });
+
+test('ProfessionsModel.professionCode', function () {
+    var professionCode = 'webDeveloper';
+
+    var profession = professionsModelFactory({}, configMockFactory());
+    expect(profession.getProfessionCode()).toBeUndefined();
+
+    profession.setProfessionCode(professionCode);
+    expect(profession.getProfessionCode()).toEqual(professionCode);
+
+    var professionWithCode = professionsModelFactory({}, configMockFactory(), null, professionCode);
+    expect(professionWithCode.getProfessionCode()).toEqual(professionCode);
+});

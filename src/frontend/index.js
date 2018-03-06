@@ -9,12 +9,20 @@ const testPageViewFactory = require('./components/testPage/View');
 const resultsControllerFactory = require('./components/resultsPage/Controller');
 const resultsViewFactory = require('./components/resultsPage/View');
 
+const coursesControllerFactory = require('./components/coursesPage/Controller');
+const coursesViewFactory = require('./components/coursesPage/View');
+const coursesListFactory = require('./components/coursesPage/CoursesListView');
+
+const filterControllerFactory = require('./components/filter/Controller');
+const filterViewFactory = require('./components/filter/View');
+
 const notFoundControllerFactory = require('./components/notFoundPage/Controller');
 const notFoundViewFactory = require('./components/notFoundPage/View');
 
 const professionsFactory = require('./models/Professions');
 const answersFactory = require('./models/SkillAnswers');
 const coursesFactory = require('./models/Courses');
+const filterFactory = require('./models/Filter');
 
 const configFactory = require('./classes/Config');
 const trackerFactory = require('./classes/GTagTracker');
@@ -40,19 +48,21 @@ const polyfillsFactory = require('./classes/Polyfills');
 function initAndGoToRoute() {
     polyfillsFactory();
 
-    var stylesManager = jss.create(jsspreset());
-    var rootElement = document.body;
+    let stylesManager = jss.create(jsspreset());
+    let rootElement = document.body;
 
-    var config = configFactory();
-    var tracker = trackerFactory(gtag, config);
-    var professionsModel = professionsFactory({}, config);
-    var answersModel = answersFactory({}, config);
-    var coursesModel = coursesFactory({}, config);
+    let config = configFactory();
+    let tracker = trackerFactory(gtag, config);
+    let professionsModel = professionsFactory({}, config);
+    let answersModel = answersFactory({}, config);
+    let coursesModel = coursesFactory({}, config);
+
+    let coursesFilter = filterFactory({});
 
     page('/', function () {
         tracker.trackPageview('/');
-        var indexView = indexPageViewFactory(rootElement, stylesManager);
-        var indexController = indexPageControllerFactory(indexView, professionsModel);
+        let indexView = indexPageViewFactory(rootElement, stylesManager);
+        let indexController = indexPageControllerFactory(indexView, professionsModel);
 
         indexController.loadDataAndRenderIndexPage();
     });
@@ -62,26 +72,39 @@ function initAndGoToRoute() {
         /**
          * @param {RouteContextHash} context
          */
-        var testView = testPageViewFactory(rootElement, stylesManager);
-        var testController = testPageControllerFactory(testView, professionsModel, answersModel, context.params.professionCode, context.params.competencyCode);
+        let testView = testPageViewFactory(rootElement, stylesManager);
+        let testController = testPageControllerFactory(testView, professionsModel, answersModel, context.params.professionCode, context.params.competencyCode);
 
         testController.loadDataAndRenderIndexPage();
     });
 
     page('/results', function () {
         tracker.trackPageview('/results');
-        var resultsView = resultsViewFactory(rootElement, stylesManager);
-        var xhr = undefined;
-        var resultsController = resultsControllerFactory(resultsView, professionsModel, answersModel, coursesModel, xhr, tracker);
+        let resultsView = resultsViewFactory(rootElement, stylesManager);
+        let xhr = undefined;
+        let resultsController = resultsControllerFactory(resultsView, professionsModel, answersModel, xhr, tracker);
 
         resultsController.loadDataAndRenderIndexPage();
+    });
+
+    page('/courses', function () {
+        tracker.trackPageview('/courses');
+        let coursesView = coursesViewFactory(rootElement, stylesManager);
+        let listView = coursesListFactory(stylesManager);
+        let filterView = filterViewFactory(false, stylesManager);
+        let xhr = undefined;
+
+        let filterController = filterControllerFactory(filterView, coursesFilter);
+
+        let coursesController = coursesControllerFactory(coursesView, listView, filterController, professionsModel, answersModel, coursesModel, xhr, tracker);
+        coursesController.loadDataAndRenderIndexPage();
     });
 
     page('*', function (context) {
         tracker.trackPageview(context.pathname);
 
-        var view = notFoundViewFactory(rootElement, stylesManager);
-        var controller = notFoundControllerFactory(view);
+        let view = notFoundViewFactory(rootElement, stylesManager);
+        let controller = notFoundControllerFactory(view);
 
         controller.renderNotFoundPage();
     });

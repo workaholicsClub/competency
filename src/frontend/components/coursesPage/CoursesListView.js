@@ -1,6 +1,6 @@
 const h = require('hyperscript');
 
-var RecommendationsView = {
+var CoursesListView = {
     init: function (stylesManager) {
         this.stylesManager = stylesManager;
     },
@@ -51,10 +51,10 @@ var RecommendationsView = {
 
 /**
  * @param stylesManager
- * @returns {RecommendationsView}
+ * @returns {CoursesListView}
  */
 module.exports = function (stylesManager) {
-    var instance = Object.create(RecommendationsView);
+    var instance = Object.create(CoursesListView);
     instance.init(stylesManager);
 
     return instance;

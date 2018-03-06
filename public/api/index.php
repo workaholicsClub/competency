@@ -95,6 +95,19 @@ $app->get('/courses/recommend', function (Request $request, Response $response) 
     ]);
 });
 
+$app->get('/courses/search', function (Request $request, Response $response) {
+    $filter = $request->getQueryParams();
+    $courseModel = CourseModel::make($this->get('dbLocator'));
+
+    $foundCourses = $courseModel->find($filter);
+
+    return $response->withJson([
+        'status' => 200,
+        "course" => $foundCourses
+    ]);
+});
+
+
 $app->post('/results/save', function (Request $request, Response $response) {
     $email = $request->getParsedBodyParam('email');
     $pollResults = $request->getParsedBodyParam('competency');
