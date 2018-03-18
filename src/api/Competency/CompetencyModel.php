@@ -2,8 +2,7 @@
 
 namespace Competencies\Competency;
 
-use Competencies\Course\CourseEntity;
-use Competencies\Course\CourseModel;
+use Competencies\Course\CourseMapper;
 use Spot\Entity\Collection;
 use Spot\Locator;
 
@@ -17,11 +16,11 @@ class CompetencyModel
 
     /**
      * @param Locator|null $locator
-     * @param null         $courseModel
+     * @param CourseMapper $courseModel
      * @return CompetencyModel
      * @internal param null|string $email
      */
-    public static function make($locator = null, $courseModel = null) {
+    public static function make($locator = null, CourseMapper $courseModel = null) {
         $instance = new self();
         $instance->setLocator($locator);
         $instance->setCourseModel($courseModel);
@@ -52,14 +51,14 @@ class CompetencyModel
     }
 
     /**
-     * @return CourseModel|null
+     * @return CourseMapper|null
      */
     public function getCourseModel() {
         return $this->courseModel;
     }
 
     /**
-     * @param CourseModel $courseModel
+     * @param CourseMapper $courseModel
      */
     public function setCourseModel($courseModel) {
         $this->courseModel = $courseModel;

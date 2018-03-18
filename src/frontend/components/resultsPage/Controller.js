@@ -3,7 +3,7 @@ const BaseController = require('../base/Controller');
 var ResultsController = {
     init: function (pageView, professionsModel, answersModel, xhr, tracker) {
         this.pageView = pageView;
-        this.filterModel = professionsModel;
+        this.professionsModel = professionsModel;
         this.answersModel = answersModel;
         this.element = pageView.getRootElement();
         this.xhr = xhr;
@@ -13,7 +13,7 @@ var ResultsController = {
 
     initEvents: function () {
         this.events = [
-            {types: ['load'], target: this.filterModel, handler: this.renderIndexPageAfterLoad}
+            {types: ['load'], target: this.professionsModel, handler: this.renderIndexPageAfterLoad}
         ];
 
         if (this.xhr) {
@@ -37,11 +37,11 @@ var ResultsController = {
     loadDataAndRenderIndexPage: function () {
         this.initEvents();
 
-        if (this.filterModel.isLoaded()) {
+        if (this.professionsModel.isLoaded()) {
             this.renderIndexPageAfterLoad();
         }
         else {
-            this.filterModel.load();
+            this.professionsModel.load();
         }
     },
 
@@ -50,7 +50,7 @@ var ResultsController = {
         var competenciesWithRatings = [];
 
         Object.keys(competencyRatings).forEach(function (competencyCode) {
-            var competency = this.filterModel.getAnyProfessionCompetency(competencyCode);
+            var competency = this.professionsModel.getAnyProfessionCompetency(competencyCode);
 
             if (competency) {
                 var rating = competencyRatings[competencyCode];

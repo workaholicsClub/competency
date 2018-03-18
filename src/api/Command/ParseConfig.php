@@ -39,7 +39,7 @@ class ParseConfig extends DefaultApplicationConfig
             ->beginCommand('competency')
                 ->setDescription('Загружает курсы')
                 ->addArgument('provider', Argument::REQUIRED, 'Платформа для загрузки')
-                ->addArgument('competencyCode', Argument::REQUIRED, 'Код компетенции для загрузки курсов')
+                ->addArgument('competencyCode', Argument::OPTIONAL, 'Код компетенции для загрузки курсов')
                 ->setHandler( new Parser($gatewayFactory, $locator, $courses, $fileManager) )
             ->end();
     }

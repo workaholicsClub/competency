@@ -3,7 +3,7 @@ const BaseController = require('../base/Controller');
 let FilterController = {
     init: function (view, filterModel, fieldsData) {
         this.view = view;
-        this.filterModel = filterModel;
+        this.professionsModel = filterModel;
         this.element = view.getRootElement();
         this.events = [];
 
@@ -34,7 +34,7 @@ let FilterController = {
         let code = changedField.getAttribute('data-code');
         let value = this.view.getFieldValue(code);
 
-        this.filterModel.set(code, value);
+        this.professionsModel.set(code, value);
     },
 
     renderFilter: function (rootElement) {

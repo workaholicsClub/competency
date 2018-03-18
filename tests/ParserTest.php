@@ -8,6 +8,7 @@ use Competencies\FileManagerInterface;
 use Competencies\Gateway\GatewayFactory;
 use Competencies\GatewayFactoryInterface;
 use Competencies\Mocks\Database;
+use Competencies\Skill\Skill;
 use Competencies\Skill\SkillEntity;
 use PHPUnit\Framework\TestCase;
 use Spot\Locator;
@@ -159,6 +160,7 @@ class ParserTest extends TestCase
         $expectedOutput = "=================
 Номер: 1
 Курс: IT-интенсив (Python)
+URL: https://stepik.org/course/6075
 Описание:
 Интенсивный вводный курс в программирование на языке Python учащий эффективно решать задачи из реальной жизни. 
 
@@ -181,6 +183,7 @@ class ParserTest extends TestCase
         $expectedFirstCourseOutput = "=================
 Номер: 1
 Курс: IT-интенсив (Python)
+URL: https://stepik.org/course/6075
 Описание:
 Интенсивный вводный курс в программирование на языке Python учащий эффективно решать задачи из реальной жизни. 
 
@@ -194,6 +197,7 @@ class ParserTest extends TestCase
         $expectedSecondCourseOutput = "=================
 Номер: 2
 Курс: Рубежная работа по программированию на Python
+URL: https://stepik.org/course/4777
 Описание:
 Курс предназначен для проведения итоговых 
  и зачетных работ по программированию
@@ -224,6 +228,7 @@ class ParserTest extends TestCase
         $expectedLastCourseOutput = "=================
 Номер: 3
 Курс: Информатика. 8 класс
+URL: https://stepik.org/course/3577
 Описание:
 Этот курс будет пока представлять набор задач на основе УМК Людмилы Леонидовны Босовой \"Информатика. 8 класс\". Больше информации смотрите в самом УМК и на сайте http://новиков-дм.рф/
 Требования:
@@ -235,6 +240,7 @@ class ParserTest extends TestCase
         $expectedSecondCourseOutput = "=================
 Номер: 2
 Курс: Рубежная работа по программированию на Python
+URL: https://stepik.org/course/4777
 Описание:
 Курс предназначен для проведения итоговых 
  и зачетных работ по программированию
@@ -265,6 +271,7 @@ class ParserTest extends TestCase
         $expectedSecondCourseOutput = "=================
 Номер: 2
 Курс: Рубежная работа по программированию на Python
+URL: https://stepik.org/course/4777
 Описание:
 Курс предназначен для проведения итоговых 
  и зачетных работ по программированию
@@ -289,6 +296,7 @@ class ParserTest extends TestCase
         $expectedOutput = "=================
 Номер: 2
 Курс: Рубежная работа по программированию на Python
+URL: https://stepik.org/course/4777
 Описание:
 Курс предназначен для проведения итоговых 
  и зачетных работ по программированию
@@ -359,37 +367,118 @@ class ParserTest extends TestCase
         $parser->processSkills();
         $errorOutput = $this->getErrorFromIo($io);
 
+        $parser->processSkills($testCompetencyCode);
+        $skillsOutput = $this->getOutputFromIo($io);
+
+        $io = new BufferedIO();
+        $parser->setIo($io);
         $parser->setCompetency($testCompetencyCode);
         $parser->processSkills();
+        $competencySkillsOutput = $this->getOutputFromIo($io);
 
-        $skillsOutput = $this->getOutputFromIo($io);
         $this->assertEquals($extectedSkillsOutput, $skillsOutput);
+        $this->assertEquals($extectedSkillsOutput, $competencySkillsOutput);
         $this->assertEquals($expectedErrorOutput, $errorOutput);
+    }
+
+    public function testProcessCourseSkills() {
+        $expectedErrorOutput = "Курсы не загружены\n";
+        $expectedOutput = "=================
+Номер: 1
+Курс: IT-интенсив (Python)
+URL: https://stepik.org/course/6075
+Описание:
+Интенсивный вводный курс в программирование на языке Python учащий эффективно решать задачи из реальной жизни. 
+
+Студенты курса получат фундаментальные знания о том, как компьютеры хранят и оперируют данными на примере проектов различной сложности: от простых консольных игр до настоящих автоматизированных решений. 
+Требования:
+
+Навыки:
+Парсинг веб-сайтов, Работа с Excel, Word и PDF документами, Логика и условные команды, Массивы и циклы, Условия. Циклы., Функции. ООП, Основные понятия, Работа с API, Telegram-боты
+=================
+Навык добавлен: Базовый синтаксис языка [knowledge]
+Навык добавлен: Синтаксис функций [ability]
+Курс: IT-интенсив (Python)
+Добавленные навыки:
+Базовый синтаксис языка [knowledge]
+Синтаксис функций [ability]
+";
+
+        $noCoursesIo = new BufferedIO();
+        $withCoursesIo = new BufferedIO();
+        $parserNoCourses = $this->makeParser([], $noCoursesIo);
+        $parserWithCourses = $this->makeParser( $this->makeCourses(), $withCoursesIo );
+
+        $parserNoCourses->processCourseSkills(1);
+        $errorOutput = $this->getErrorFromIo($noCoursesIo);
+
+        $parserWithCourses->processGo(1);
+        $parserWithCourses->processAddSkill(354, Skill::LEVEL_KNOWLEDGE);
+        $parserWithCourses->processAddSkill(355, Skill::LEVEL_ABILITY);
+        $parserWithCourses->processCourseSkills(1);
+        $output = $this->getOutputFromIo($withCoursesIo);
+
+        $this->assertEquals($expectedErrorOutput, $errorOutput);
+        $this->assertEquals($expectedOutput, $output);
+    }
+
+    public function testProcessCourseRequirements() {
+        $expectedErrorOutput = "Курсы не загружены\n";
+        $expectedOutput = "=================
+Номер: 1
+Курс: IT-интенсив (Python)
+URL: https://stepik.org/course/6075
+Описание:
+Интенсивный вводный курс в программирование на языке Python учащий эффективно решать задачи из реальной жизни. 
+
+Студенты курса получат фундаментальные знания о том, как компьютеры хранят и оперируют данными на примере проектов различной сложности: от простых консольных игр до настоящих автоматизированных решений. 
+Требования:
+
+Навыки:
+Парсинг веб-сайтов, Работа с Excel, Word и PDF документами, Логика и условные команды, Массивы и циклы, Условия. Циклы., Функции. ООП, Основные понятия, Работа с API, Telegram-боты
+=================
+Требование добавлено: Базовый синтаксис языка [knowledge]
+Требование добавлено: Синтаксис функций [ability]
+Курс: IT-интенсив (Python)
+Добавленные требования:
+Базовый синтаксис языка [knowledge]
+Синтаксис функций [ability]
+";
+
+        $noCoursesIo = new BufferedIO();
+        $withCoursesIo = new BufferedIO();
+        $parserNoCourses = $this->makeParser([], $noCoursesIo);
+        $parserWithCourses = $this->makeParser( $this->makeCourses(), $withCoursesIo );
+
+        $parserNoCourses->processCourseSkills(1);
+        $errorOutput = $this->getErrorFromIo($noCoursesIo);
+
+        $parserWithCourses->processGo(1);
+        $parserWithCourses->processAddRequirement(354, Skill::LEVEL_KNOWLEDGE);
+        $parserWithCourses->processAddRequirement(355, Skill::LEVEL_ABILITY);
+        $parserWithCourses->processCourseRequirements(1);
+        $output = $this->getOutputFromIo($withCoursesIo);
+
+        $this->assertEquals($expectedErrorOutput, $errorOutput);
+        $this->assertEquals($expectedOutput, $output);
     }
 
     public function testGetSkillById() {
         $skillId = 355;
         $skillName = "Синтаксис функций";
-        $expectedErrorOutput = "Компетенция не установлена\n";
-        $testCompetencyCode = "python";
 
         $io = new BufferedIO();
         $parser = $this->makeParser([], $io);
-        $parser->getSkillById($skillId);
-        $errorOutput = $this->getErrorFromIo($io);
-
-        $parser->setCompetency($testCompetencyCode);
         $skill = $parser->getSkillById($skillId);
 
         $this->assertInstanceOf(SkillEntity::class, $skill);
         $this->assertEquals($skillName, $skill->get('text'));
-        $this->assertEquals($expectedErrorOutput, $errorOutput);
     }
 
     public function testProcessAddSkill() {
         $skillId = 355;
-        $competencyCode = "python";
-        $expectedOutput = "Навык добавлен: Синтаксис функций\n";
+        $secondSkillId = 120;
+        $expectedOutput = "Навык добавлен: Синтаксис функций [ability]\nНавык добавлен: A/B тестирование [none]\n";
         $expectedError = "Курсы не загружены\n";
 
         $io = new BufferedIO();
@@ -400,13 +489,42 @@ class ParserTest extends TestCase
         $errorOutput = $this->getErrorFromIo($errorIo);
 
         $parser = $this->makeParser( $this->makeCourses(), $io );
-        $parser->setCompetency($competencyCode);
-        $parser->processAddSkill($skillId);
+        $parser->processAddSkill($skillId, Skill::LEVEL_ABILITY);
+        $parser->processAddSkill($secondSkillId);
         $course = $parser->getCurrentCourse();
-        $courseSkillIds = $course->getSkills();
+        $courseSkills = $course->getSkills();
         $output = $this->getOutputFromIo($io);
 
-        $this->assertEquals([$skillId], $courseSkillIds);
+        $this->assertEquals(2, count($courseSkills));
+        $this->assertInstanceOf(Skill::class, $courseSkills[0]);
+        $this->assertEquals($skillId, $courseSkills[0]->getId());
+        $this->assertEquals($expectedOutput, $output);
+        $this->assertEquals($expectedError, $errorOutput);
+    }
+
+    public function testProcessAddRequirement() {
+        $skillId = 355;
+        $secondSkillId = 120;
+        $expectedOutput = "Требование добавлено: Синтаксис функций [ability]\nТребование добавлено: A/B тестирование [none]\n";
+        $expectedError = "Курсы не загружены\n";
+
+        $io = new BufferedIO();
+        $errorIo = new BufferedIO();
+
+        $emptyParser = $this->makeParser([], $errorIo);
+        $emptyParser->processAddSkill($skillId);
+        $errorOutput = $this->getErrorFromIo($errorIo);
+
+        $parser = $this->makeParser( $this->makeCourses(), $io );
+        $parser->processAddRequirement($skillId, Skill::LEVEL_ABILITY);
+        $parser->processAddRequirement($secondSkillId);
+        $course = $parser->getCurrentCourse();
+        $courseRequirements = $course->getRequirements();
+        $output = $this->getOutputFromIo($io);
+
+        $this->assertEquals(2, count($courseRequirements));
+        $this->assertInstanceOf(Skill::class, $courseRequirements[0]);
+        $this->assertEquals($skillId, $courseRequirements[0]->getId());
         $this->assertEquals($expectedOutput, $output);
         $this->assertEquals($expectedError, $errorOutput);
     }
@@ -486,6 +604,47 @@ class ParserTest extends TestCase
         $parser->processQueryProvider($expectedQuery);
         $output = $this->getOutputFromIo($io);
 
+        $this->assertEquals($expectedOutput, $output);
+    }
+
+    public function testProcessSave() {
+        $expectedOutput = "Курс добавлен\nВыбранные курсы успешно сохранены\n";
+
+        $io = new BufferedIO();
+        $parser = $this->makeParser( $this->makeCourses(), $io );
+        $parser->processTake(1);
+        $parser->processSave();
+
+        $output = $this->getOutputFromIo($io);
+
+        $this->assertEquals($expectedOutput, $output);
+    }
+
+    public function testProcessHelp() {
+        $expectedOutput = 'Доступные команды:
+next
+prev
+go: humanCourseIndex
+show
+skills: competencyCode
+courseSkills: humanCourseIndex
+courseRequirements: humanCourseIndex
+addSkill: skillId, level
+addRequirement: skillId, level
+take: humanCourseIndex
+save
+showTaken
+saveData: fileName
+loadData: fileName
+queryProvider: query
+help
+';
+
+        $helpIo = new BufferedIO();
+        $parser = $this->makeParser( $this->makeCourses(), $helpIo );
+        $parser->processHelp();
+
+        $output = $this->getOutputFromIo($helpIo);
         $this->assertEquals($expectedOutput, $output);
     }
 }

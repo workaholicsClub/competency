@@ -23,6 +23,3 @@ INSERT INTO `eduProviders` (`code`, `name`, `url`) VALUES ('javarush', 'JavaRush
 INSERT INTO `eduProviders` (`code`, `name`, `url`) VALUES ('newprolab', 'New Professions Lab', 'http://newprolab.com/ru/');
 INSERT INTO `eduProviders` (`code`, `name`, `url`) VALUES ('tceh', '#tceh', 'http://tceh.com/edu/');
 INSERT INTO `eduProviders` (`code`, `name`, `url`) VALUES ('skillfactory', 'SkillFactory', 'http://skillfactory.ru/');
-
-ALTER TABLE `polls` ADD COLUMN `sessionId` VARCHAR(36) NULL AFTER `userId`;
-

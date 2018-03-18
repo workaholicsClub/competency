@@ -3,13 +3,18 @@
 namespace Competencies\Mocks;
 
 use Spot\Config;
+use Spot\Entity;
+use Spot\Exception;
 use Spot\Locator;
+use Spot\Mapper;
 
 class Database
 {
+    const TEST_DSN = 'sqlite::memory:';
+
     /**
      * @return Locator
-     * @throws \Spot\Exception
+     * @throws Exception
      */
     public static function getReal() {
         $testDatabaseDsn = 'mysql://toor:queiKu5a@tcp(127.0.0.1:33060)/self_competency?charset=UTF8';
@@ -18,23 +23,13 @@ class Database
         return new Locator($ormConfig);
     }
 
-    /**
-     * @return bool|Locator
-     */
-    public static function getTest() {
-        $testDatabaseDsn = 'sqlite::memory:';
-        $ormConfig = new Config();
-        try {
-            $ormConfig->addConnection('mysql', $testDatabaseDsn);
-        } catch (\Spot\Exception $exception) {
-            return false;
-        }
+    public static function loadDatabaseDump(string $filename): array {
+        $queries = explode(";", file_get_contents($filename));
+        return $queries;
+    }
 
-        $orm = new Locator($ormConfig);
-        $mapper = $orm->mapper(\Spot\Entity::class);
-
-        $dumpQueries = explode(";", file_get_contents(__DIR__.'/../../etc/database/dump.sqlite'));
-        foreach ($dumpQueries as $query) {
+    public static function populateDatabase(Mapper $mapper, array $queries) {
+        foreach ($queries as $query) {
             $query = trim($query);
             $isComment = strpos($query, '--') === 0 || strpos($query, '/*') === 0;
             $isExecutable = !$isComment && !empty($query);
@@ -43,6 +38,31 @@ class Database
                 $mapper->query($query);
             }
         }
+    }
+
+    public static function setupTest() {
+        putenv('MYSQL_DSN='.self::TEST_DSN);
+        self::getTest();
+    }
+
+    /**
+     * @return bool|Locator
+     */
+    public static function getTest() {
+        $testDatabaseDsn = self::TEST_DSN;
+        $ormConfig = new Config();
+        try {
+            $ormConfig->addConnection('mysql', $testDatabaseDsn);
+        } catch (Exception $exception) {
+            return false;
+        }
+
+        $orm = new Locator($ormConfig);
+        $mapper = $orm->mapper(Entity::class);
+
+        $dumpFilename = __DIR__.'/../../etc/database/dump.sqlite';
+        $populateQueries = self::loadDatabaseDump($dumpFilename);
+        self::populateDatabase($mapper, $populateQueries);
 
         return $orm;
     }

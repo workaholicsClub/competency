@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.2.11-MariaDB, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.21, for Linux (x86_64)
 --
--- Host: localhost    Database: self_competency
+-- Host: 127.0.0.1    Database: self_competency
 -- ------------------------------------------------------
--- Server version	10.2.11-MariaDB-10.2.11+maria~jessie
+-- Server version	5.5.5-10.2.11-MariaDB-10.2.11+maria~jessie
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -702,12 +702,21 @@ DROP TABLE IF EXISTS `courses`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `courses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `externalId` varchar(36) DEFAULT NULL,
+  `eduProviderId` int(11) DEFAULT NULL,
   `code` varchar(45) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
   `url` text DEFAULT NULL,
   `price` float(10,2) DEFAULT NULL,
   `weeks` int(11) DEFAULT NULL,
   `lessons` int(11) DEFAULT NULL,
+  `modeOfStudy` varchar(20) DEFAULT NULL,
+  `courseForm` varchar(20) DEFAULT NULL,
+  `schedule` varchar(20) DEFAULT NULL,
+  `certificate` int(1) NOT NULL DEFAULT 0,
+  `tasksType` varchar(20) DEFAULT NULL,
+  `lengthDays` int(11) DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `code_UNIQUE` (`code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
@@ -719,21 +728,117 @@ CREATE TABLE `courses` (
 
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
-INSERT INTO `courses` VALUES (1,'netology-html-verstka','HTML-верстка: с нуля до первого макета','https://netology.ru/programs/html-verstka',23900.00,6,16);
-INSERT INTO `courses` VALUES (2,'netology-html-javascript','JavaScript в браузере: создаем интерактивные веб-страницы','https://netology.ru/programs/html-javascript',20900.00,8,18);
-INSERT INTO `courses` VALUES (3,'netology-adaptive-mobile-layout','Адаптивная и мобильная верстка','https://netology.ru/programs/adaptive-mobile-layout',20900.00,4,10);
-INSERT INTO `courses` VALUES (4,'netology-html-css-base','HTML и CSS с нуля','https://netology.ru/programs/html-css-base',0.00,6,7);
-INSERT INTO `courses` VALUES (5,'netology-javascript','JavaScript: основы и современныe возможности языка','https://netology.ru/programs/javascript',20900.00,9,18);
-INSERT INTO `courses` VALUES (6,'netology-php-sql','PHP/SQL: back-end разработка и базы данных','https://netology.ru/programs/php-sql',20900.00,9,19);
-INSERT INTO `courses` VALUES (7,'netology-python-base','Python: программирование на каждый день и сверхбыстрое прототипирование','https://netology.ru/programs/python-base',20900.00,13,26);
-INSERT INTO `courses` VALUES (8,'netology-react','Библиотека React: построй свою любовь к интерактивным веб-интерфейсам','https://netology.ru/programs/react',20900.00,6,13);
-INSERT INTO `courses` VALUES (9,'netology-node','Node, AngularJS и MongoDB: разработка полноценных веб-приложений','https://netology.ru/programs/node',20900.00,10,20);
-INSERT INTO `courses` VALUES (10,'stepic-probability','Теория вероятностей - наука о случайности','https://stepik.org/course/2911',0.00,3,3);
-INSERT INTO `courses` VALUES (11,'stepic-python','Программирование на Python','https://stepik.org/course/67',0.00,7,7);
-INSERT INTO `courses` VALUES (12,'otus-head-of-development','Руководитель разработки','https://otus.ru/lessons/rukovoditel-razrabotki/',26000.00,4,32);
-INSERT INTO `courses` VALUES (13,'geekbrains-it-english','Английский для IT-специалистов','https://geekbrains.ru/courses/98',1098.00,2,10);
-INSERT INTO `courses` VALUES (14,'stepic-pm-basics','Основы управления проектами','https://stepik.org/course/2376',0.00,1,1);
+INSERT INTO `courses` VALUES (1,NULL,NULL,'netology-html-verstka','HTML-верстка: с нуля до первого макета',NULL,'https://netology.ru/programs/html-verstka',23900.00,6,16,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (2,NULL,NULL,'netology-html-javascript','JavaScript в браузере: создаем интерактивные веб-страницы',NULL,'https://netology.ru/programs/html-javascript',20900.00,8,18,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (3,NULL,NULL,'netology-adaptive-mobile-layout','Адаптивная и мобильная верстка',NULL,'https://netology.ru/programs/adaptive-mobile-layout',20900.00,4,10,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (4,NULL,NULL,'netology-html-css-base','HTML и CSS с нуля',NULL,'https://netology.ru/programs/html-css-base',0.00,6,7,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (5,NULL,NULL,'netology-javascript','JavaScript: основы и современныe возможности языка',NULL,'https://netology.ru/programs/javascript',20900.00,9,18,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (6,NULL,NULL,'netology-php-sql','PHP/SQL: back-end разработка и базы данных',NULL,'https://netology.ru/programs/php-sql',20900.00,9,19,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (7,NULL,NULL,'netology-python-base','Python: программирование на каждый день и сверхбыстрое прототипирование',NULL,'https://netology.ru/programs/python-base',20900.00,13,26,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (8,NULL,NULL,'netology-react','Библиотека React: построй свою любовь к интерактивным веб-интерфейсам',NULL,'https://netology.ru/programs/react',20900.00,6,13,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (9,NULL,NULL,'netology-node','Node, AngularJS и MongoDB: разработка полноценных веб-приложений',NULL,'https://netology.ru/programs/node',20900.00,10,20,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (10,NULL,NULL,'stepic-probability','Теория вероятностей - наука о случайности',NULL,'https://stepik.org/course/2911',0.00,3,3,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (11,NULL,NULL,'stepic-python','Программирование на Python',NULL,'https://stepik.org/course/67',0.00,7,7,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (12,NULL,NULL,'otus-head-of-development','Руководитель разработки',NULL,'https://otus.ru/lessons/rukovoditel-razrabotki/',26000.00,4,32,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (13,NULL,NULL,'geekbrains-it-english','Английский для IT-специалистов',NULL,'https://geekbrains.ru/courses/98',1098.00,2,10,NULL,NULL,NULL,0,NULL,0);
+INSERT INTO `courses` VALUES (14,NULL,NULL,'stepic-pm-basics','Основы управления проектами',NULL,'https://stepik.org/course/2376',0.00,1,1,NULL,NULL,NULL,0,NULL,0);
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `coursesRequirements`
+--
+
+DROP TABLE IF EXISTS `coursesRequirements`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `coursesRequirements` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `courseId` int(11) NOT NULL,
+  `atomicSkillId` int(11) NOT NULL,
+  `level` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `courseId` (`courseId`),
+  KEY `atomicSkillId` (`atomicSkillId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `coursesRequirements`
+--
+
+LOCK TABLES `coursesRequirements` WRITE;
+/*!40000 ALTER TABLE `coursesRequirements` DISABLE KEYS */;
+/*!40000 ALTER TABLE `coursesRequirements` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `coursesSkills`
+--
+
+DROP TABLE IF EXISTS `coursesSkills`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `coursesSkills` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `courseId` int(11) NOT NULL,
+  `atomicSkillId` int(11) NOT NULL,
+  `level` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `courseId` (`courseId`),
+  KEY `atomicSkillId` (`atomicSkillId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `coursesSkills`
+--
+
+LOCK TABLES `coursesSkills` WRITE;
+/*!40000 ALTER TABLE `coursesSkills` DISABLE KEYS */;
+/*!40000 ALTER TABLE `coursesSkills` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `eduProviders`
+--
+
+DROP TABLE IF EXISTS `eduProviders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `eduProviders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(25) DEFAULT NULL,
+  `name` varchar(150) DEFAULT NULL,
+  `url` varchar(150) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `eduProviders`
+--
+
+LOCK TABLES `eduProviders` WRITE;
+/*!40000 ALTER TABLE `eduProviders` DISABLE KEYS */;
+INSERT INTO `eduProviders` VALUES (1,'stepik','Stepik','http://welcome.stepik.org/ru');
+INSERT INTO `eduProviders` VALUES (2,'netology','Нетология','https://netology.ru/');
+INSERT INTO `eduProviders` VALUES (3,'otus','Otus','https://otus.ru/');
+INSERT INTO `eduProviders` VALUES (4,'hexlet','Hexlet','https://ru.hexlet.io/');
+INSERT INTO `eduProviders` VALUES (5,'coursera','Coursera','https://www.coursera.org/');
+INSERT INTO `eduProviders` VALUES (6,'udemy','Udemy','https://www.udemy.com/');
+INSERT INTO `eduProviders` VALUES (7,'geekbrains','GeekBrains','https://geekbrains.ru/');
+INSERT INTO `eduProviders` VALUES (8,'moscoding','Moscow Coding School','https://moscoding.ru/');
+INSERT INTO `eduProviders` VALUES (9,'intuit','Intuit','http://www.intuit.ru/');
+INSERT INTO `eduProviders` VALUES (10,'htmlacademy','HtmlAcademy','https://htmlacademy.ru/');
+INSERT INTO `eduProviders` VALUES (11,'lektorium','Лекториум','https://www.lektorium.tv/');
+INSERT INTO `eduProviders` VALUES (12,'openedu','Открытое образование','https://openedu.ru/');
+INSERT INTO `eduProviders` VALUES (13,'javarush','JavaRush','https://javarush.ru/');
+INSERT INTO `eduProviders` VALUES (14,'newprolab','New Professions Lab','http://newprolab.com/ru/');
+INSERT INTO `eduProviders` VALUES (15,'tceh','#tceh','http://tceh.com/edu/');
+INSERT INTO `eduProviders` VALUES (16,'skillfactory','SkillFactory','http://skillfactory.ru/');
+/*!40000 ALTER TABLE `eduProviders` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -775,6 +880,7 @@ CREATE TABLE `polls` (
   `date` datetime DEFAULT NULL,
   `professionId` int(11) DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
+  `sessionId` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `professionId` (`professionId`),
   KEY `userId` (`userId`)
@@ -814,7 +920,7 @@ LOCK TABLES `professions` WRITE;
 /*!40000 ALTER TABLE `professions` DISABLE KEYS */;
 INSERT INTO `professions` VALUES (1,'webDeveloper','Веб-разработчик (PHP)');
 INSERT INTO `professions` VALUES (2,'tester','Тестировщик (Python)');
-INSERT INTO `professions` VALUES (3,'webProjectManager','Менеджер интернет проектов');
+INSERT INTO `professions` VALUES (3,'webProjectManager','Менеджер web-проектов');
 /*!40000 ALTER TABLE `professions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -843,7 +949,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'2017-12-18 11:45:36',NULL,'ap@mailinator.com',NULL,'all');
+INSERT INTO `users` VALUES (1,'2017-12-18 11:45:36',NULL,'ap@mailinator.com',NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -856,4 +962,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-02-16 15:36:25
+-- Dump completed on 2018-03-15 20:10:22

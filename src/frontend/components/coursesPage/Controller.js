@@ -101,21 +101,28 @@ let ResultsController = {
                     {name: "Только бесплатные", code: "free"}
                 ]},
             //{code: 'dateStart', label: 'Дата начала', type: 'date', value: ''},
-            {code: 'form', label: 'Форма обучения', type: 'multiCheckbox', value: '', variants: [
-                    {name: "Видео курс", code: "video"},
+            {code: 'modeOfStudy', label: 'Форма обучения', type: 'multiCheckbox', value: '', variants: [
+                    {name: "Очная", code: "inPerson", info: "Аудиторные занятия с преподавателями"},
+                    {name: "Дистанционная", code: "longDistance", info: "Периодическое взаимодействие с преподавателями по электропочте, skype для получения образовательных материалов и задач, обсуждения их выполнения"},
+                    {name: "Онлайн", code: "online", info: "Работа с образовательными материалами и преподавателями в режиме онлайн"},
+                    {name: "Очная и онлайн", code: "inPersonOnline", info: "Совмещение аудиторных и онлайн занятий"},
+                    {name: "Самостоятельное обучение", code: "selfStudy", info: "Самостоятнельное изучение материалов без участия преподавателя или куратора"}
+                ]},
+            {code: 'courseForm', label: 'Вид обучения', type: 'multiCheckbox', value: '', variants: [
+                    {name: "Видеокурс", code: "video"},
                     {name: "Текстовый курс", code: "text"},
                     {name: "Интерактивный курс", code: "interactive"},
-                    {name: "Аудиторная", code: "auditory"},
-                    {name: "Интенсив", code: "intensive"}
+                    {name: "Интенсив", code: "crashCourse"},
+                    {name: "Тренинг", code: "training"}
                 ]},
-            {code: 'time', label: 'Время проведения занятий', type: 'multiCheckbox', value: '', variants: [
+            {code: 'schedule', label: 'Время проведения занятий', type: 'multiCheckbox', value: '', variants: [
                     {name: "Свободный график", code: "free"},
                     {name: "Дневные занятия", code: "day"},
                     {name: "Вечерние занятия", code: "evening"},
                     {name: "По выходным", code: "weekends"}
                 ]},
             {code: 'certificate', label: 'Выдается сертификат', type: 'checkbox', value: false},
-            {code: 'homework', label: 'Задания', type: 'multiCheckbox', value: '', variants: [
+            {code: 'tasksType', label: 'Задания', type: 'multiCheckbox', value: '', variants: [
                     {name: "Без заданий", code: "noTasks"},
                     {name: "Проверка преподавателем", code: "teacherCheck"},
                     {name: "Автоматизированная проверка", code: "autoCheck"},

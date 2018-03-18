@@ -131,6 +131,47 @@ class Stepik implements CourseLoaderInterface
     }
 
     /**
+     * @param array $courseProps
+     * @return Course
+     */
+    public function convertCourseProps(array $courseProps): Course {
+        /**
+         * @var array $courseProps
+         * @see https://stepik.org/api/docs/#!/courses/Course_list
+         */
+
+        $matchingSkills = [];
+        $matchingRequirements = [];
+
+        $courseHasCertificate = !empty($courseProps['certificate']);
+        $isSelfStudyCourse = $courseProps['is_self_paced'];
+
+        $secondsInADay = 86400;
+        $lengthDays = round($courseProps['time_to_complete']/$secondsInADay);
+
+        $course = Course::fromArray([
+            'externalId'           => $courseProps['id'],
+            'name'                 => $courseProps['title'],
+            'description'          => $courseProps['summary'],
+            'url'                  => $this->stepikUrl . '/course/' . $courseProps['id'],
+            'skills'               => $matchingSkills,
+            'externalSkills'       => $this->getLessonTitles($courseProps),
+            'requirements'         => $matchingRequirements,
+            'externalRequirements' => $courseProps['requirements'],
+            'modeOfStudy'          => $isSelfStudyCourse
+                ? Course::MODE_OF_STUDY_SELF_STUDY
+                : Course::MODE_OF_STUDY_ONLINE,
+            'courseForm'           => Course::COURSE_FORM_VIDEO,
+            'schedule'             => Course::SCHEDULE_FREE,
+            'certificate'          => $courseHasCertificate,
+            'tasksType'            => Course::TASKS_AUTO_CHECK,
+            'lengthDays'           => $lengthDays,
+        ]);
+
+        return $course;
+    }
+
+    /**
      * @param string $query
      * @return Course[]|bool
      */
@@ -144,24 +185,7 @@ class Stepik implements CourseLoaderInterface
 
         $foundCourses = [];
         foreach ($courseDetails as $courseProps) {
-            /**
-             * @var array $courseProps
-             * @see https://stepik.org/api/docs/#!/courses/Course_list
-             */
-
-            $matchingSkills = [];
-
-            $course = Course::fromArray([
-                'externalId'           => $courseProps['id'],
-                'name'                 => $courseProps['title'],
-                'description'          => $courseProps['summary'],
-                'url'                  => $this->stepikUrl . '/course/' . $courseProps['id'],
-                'skills'               => $matchingSkills,
-                'externalRequirements' => $courseProps['requirements'],
-                'externalSkills'       => $this->getLessonTitles($courseProps),
-            ]);
-
-            $foundCourses[] = $course;
+            $foundCourses[] = $this->convertCourseProps($courseProps);
         }
 
         return $foundCourses;

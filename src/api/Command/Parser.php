@@ -3,9 +3,12 @@ namespace Competencies\Command;
 
 use Competencies\Competency\CompetencyModel;
 use Competencies\Course\Course;
+use Competencies\Course\CourseEntity;
+use Competencies\Course\CourseMapper;
 use Competencies\FileManagerInterface;
 use Competencies\Gateway\GatewayFactory;
 use Competencies\GatewayFactoryInterface;
+use Competencies\Skill\Skill;
 use Competencies\Skill\SkillEntity;
 use Spot\Locator;
 use Webmozart\Console\Api\Args\Args;
@@ -87,10 +90,15 @@ class Parser
         return $this->competency;
     }
 
-    public function getCurrentCourse() {
+    public function getCourseByIndex($courseIndex) {
         return !empty($this->courses)
-            ? $this->courses[$this->courseIndex]
+            ? $this->courses[$courseIndex]
             : false;
+
+    }
+
+    public function getCurrentCourse() {
+        return $this->getCourseByIndex($this->courseIndex);
     }
 
     public function showCurrentCourse() {
@@ -115,6 +123,7 @@ class Parser
         $this->io->writeLine('=================');
         $this->io->writeLine('<b>Номер</b>: '.$humanIndex);
         $this->io->writeLine('<b>Курс</b>: '.$course->getName());
+        $this->io->writeLine('<b>URL</b>: '.$course->getUrl());
         $this->io->writeLine('<b>Описание</b>:');
         $this->io->writeLine($course->getDescription());
         $this->io->writeLine('<b>Требования</b>:');
@@ -149,13 +158,19 @@ class Parser
         $this->showCurrentCourse();
     }
 
-    public function processSkills() {
-        if (!$this->competency) {
+    public function processSkills($competencyCode = "") {
+        if (!$this->competency && !$competencyCode) {
             $this->io->errorLine('Компетенция не установлена');
             return;
         }
 
-        foreach ($this->competency->relation('skills') as $index => $skillEntity) {
+        $competency = $this->competency;
+
+        if ($competencyCode) {
+            $competency = $this->loadCompetency($competencyCode);
+        }
+
+        foreach ($competency->relation('skills') as $index => $skillEntity) {
             $humanIndex = $index+1;
             $skillName = $skillEntity->get('text');
             $skillId = $skillEntity->get('id');
@@ -166,35 +181,79 @@ class Parser
         }
     }
 
+    public function processCourseSkills($humanCourseIndex) {
+        $course = $this->getCourseByIndex($humanCourseIndex - 1);
+        if (!$course) {
+            $this->io->errorLine('Курсы не загружены');
+            return;
+        }
+
+        $this->io->writeLine('<b>Курс</b>: '.$course->getName());
+        $this->io->writeLine('Добавленные навыки:');
+        foreach ($course->getSkills() as $skill) {
+            $this->io->writeLine($skill->getText().' ['.$skill->getLevel().']');
+        }
+    }
+
+    public function processCourseRequirements($humanCourseIndex) {
+        $course = $this->getCourseByIndex($humanCourseIndex - 1);
+        if (!$course) {
+            $this->io->errorLine('Курсы не загружены');
+            return;
+        }
+
+        $this->io->writeLine('<b>Курс</b>: '.$course->getName());
+        $this->io->writeLine('Добавленные требования:');
+        foreach ($course->getRequirements() as $skill) {
+            $this->io->writeLine($skill->getText().' ['.$skill->getLevel().']');
+        }
+    }
+
     /**
      * @param $skillId
      * @return bool|SkillEntity
      */
     public function getSkillById($skillId) {
-        if (!$this->competency) {
-            $this->io->errorLine('Компетенция не установлена');
-            return false;
-        }
+        $locator = $this->getDatabaseLocator();
+        $mapper = $locator->mapper(SkillEntity::class);
+        $skillEntity = $mapper->where(['id' => $skillId])->first();
 
-        foreach ($this->competency->relation('skills') as $skillEntity) {
-            if ($skillEntity->get('id') == $skillId) {
-                return $skillEntity;
-            }
-        }
-
-        return false;
+        return $skillEntity;
     }
 
-    public function processAddSkill($skillId) {
+    public function processAddSkill($skillId, $level = "") {
         if (empty($this->courses)) {
             $this->io->errorLine('Курсы не загружены');
             return;
         }
 
-        $skill = $this->getSkillById($skillId);
-        if ($skill) {
-            $this->courses[$this->courseIndex]->addSkill($skill->get('id'));
-            $this->io->writeLine('Навык добавлен: '.$skill->get('text'));
+        $skillEntity = $this->getSkillById($skillId);
+        if ($skillEntity) {
+            $skill = Skill::fromEntity($skillEntity);
+            if ($level) {
+                $skill->setLevel($level);
+            }
+
+            $this->courses[$this->courseIndex]->addSkill($skill);
+            $this->io->writeLine('Навык добавлен: '.$skill->getText().' ['.$skill->getLevel().']');
+        }
+    }
+
+    public function processAddRequirement($skillId, $level = "") {
+        if (empty($this->courses)) {
+            $this->io->errorLine('Курсы не загружены');
+            return;
+        }
+
+        $skillEntity = $this->getSkillById($skillId);
+        if ($skillEntity) {
+            $skill = Skill::fromEntity($skillEntity);
+            if ($level) {
+                $skill->setLevel($level);
+            }
+
+            $this->courses[$this->courseIndex]->addRequirement($skill);
+            $this->io->writeLine('Требование добавлено: '.$skill->getText().' ['.$skill->getLevel().']');
         }
     }
 
@@ -211,6 +270,27 @@ class Parser
         $this->takenCourses[] = $courseIndex;
         $this->takenCourses = array_unique($this->takenCourses);
         $this->io->writeLine('Курс добавлен');
+    }
+
+    public function processSave() {
+        /**
+         * @var CourseMapper $mapper
+         */
+        $mapper = $this->getDatabaseLocator()->mapper(CourseEntity::class);
+
+        $saveSuccess = true;
+        foreach ($this->takenCourses as $courseIndex) {
+            $course = $this->courses[$courseIndex];
+            $courseSaveSuccess = $mapper->saveCourse($course);
+            $saveSuccess = $saveSuccess && $courseSaveSuccess;
+        }
+
+        if ($saveSuccess) {
+            $this->io->writeLine('Выбранные курсы успешно сохранены');
+        }
+        else {
+            $this->io->errorLine('При сохранении курсов возникла ошибка');
+        }
     }
 
     public function processShowTaken() {
@@ -255,6 +335,28 @@ class Parser
         $this->io->writeLine('Загружено курсов: '.count($this->courses));
     }
 
+    public function processHelp() {
+        $this->io->writeLine('Доступные команды:');
+        $classReflection = new \ReflectionClass($this);
+        foreach ($classReflection->getMethods() as $method) {
+            $isCommand = strpos($method->getName(), 'process') === 0;
+
+            if ($isCommand) {
+                $commandName = lcfirst( str_replace('process', '', $method->getName()) );
+                $commandArgs = [];
+                foreach ($method->getParameters() as $parameter) {
+                    $commandArgs[] = $parameter->getName();
+                }
+
+                $helpLine = count($commandArgs) > 0
+                    ? "<b>$commandName</b>: ".implode(', ', $commandArgs)
+                    : "<b>$commandName</b>";
+
+                $this->io->writeLine($helpLine);
+            }
+        }
+    }
+
     public function setProvider($providerCode) {
         $this->gateway = $this->gatewayFactory::make($providerCode);
     }
@@ -266,10 +368,12 @@ class Parser
         $this->io = $io;
 
         $io->writeLine('Платформа: '.$providerCode);
-        $io->writeLine('Компетенция: '.$competencyCode);
-
         $this->setProvider($providerCode);
-        $this->setCompetency($competencyCode);
+
+        if ($competencyCode) {
+            $io->writeLine('Компетенция: ' . $competencyCode);
+            $this->setCompetency($competencyCode);
+        }
 
         $command = false;
         while ($command !== 'exit') {
@@ -292,7 +396,7 @@ class Parser
                 call_user_func_array([$this, $functionName], $commandArgs);
             }
             else {
-                $io->writeLine('Нераспознанная комманда: '.$command);
+                $io->writeLine('Нераспознанная команда: '.$command);
             }
         }
 

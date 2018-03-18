@@ -53,10 +53,10 @@ class PollModel
     /**
      * @param array           $results
      * @param UserEntity      $userEntity
-     * @param CompetencyModel $competencyModel
+     * @param CompetencyModel $competencyMapper
      * @return bool
      */
-    public function save($results = [], $userEntity, $competencyModel) {
+    public function save($results = [], $userEntity, $competencyMapper): bool {
         $competencyCodes = array_keys($results);
 
         if (empty($competencyCodes)) {
@@ -74,7 +74,7 @@ class PollModel
             return false;
         }
 
-        $competencies = $competencyModel->loadMultiple($competencyCodes);
+        $competencies = $competencyMapper->loadMultiple($competencyCodes);
         $allResultsSuccess = true;
         $resultsMapper = $this->getMapper(PollResultEntity::class);
 

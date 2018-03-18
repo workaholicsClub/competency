@@ -2,7 +2,7 @@
 
 use Competencies\Competency\CompetencyEntity;
 use Competencies\Competency\CompetencyModel;
-use Competencies\Course\CourseModel;
+use Competencies\Course\CourseEntity;
 use Competencies\Mocks\Database;
 use PHPUnit\Framework\TestCase;
 use Spot\Entity\Collection;
@@ -41,8 +41,8 @@ class CompetencyModelTest extends TestCase
     public function testLoadProfessions() {
         $locator = Database::getTest();
 
-        $courseModel = CourseModel::make($locator);
-        $model = CompetencyModel::make($locator, $courseModel);
+        $courseMapper = $locator->mapper(CourseEntity::class);
+        $model = CompetencyModel::make($locator, $courseMapper);
         $result = $model->loadProfessions();
 
         $this->assertArrayHasKey('0', $result);

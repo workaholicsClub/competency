@@ -3,14 +3,14 @@ const BaseController = require('../base/Controller');
 var IndexController = {
     init: function (view, professionsModel) {
         this.view = view;
-        this.filterModel = professionsModel;
+        this.professionsModel = professionsModel;
         this.element = view.getRootElement();
         this.events = [];
     },
 
     initEvents: function () {
         this.events = [
-            {types: ['load'], target: this.filterModel, handler: this.renderIndexPageAfterLoad}
+            {types: ['load'], target: this.professionsModel, handler: this.renderIndexPageAfterLoad}
         ];
 
         this.bindEvents();
@@ -19,18 +19,18 @@ var IndexController = {
     loadDataAndRenderIndexPage: function () {
         this.initEvents();
 
-        if (this.filterModel.isLoaded()) {
+        if (this.professionsModel.isLoaded()) {
             this.renderIndexPageAfterLoad();
         }
         else {
             this.view.startLoadProgress();
-            this.filterModel.load();
+            this.professionsModel.load();
         }
     },
 
     renderIndexPageAfterLoad: function () {
         var modelView = {
-            'professions': this.filterModel.getProfessions()
+            'professions': this.professionsModel.getProfessions()
         };
 
         this.view.stopLoadProgress();
