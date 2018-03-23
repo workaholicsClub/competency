@@ -114,7 +114,7 @@ class Routes
          * @var CourseMapper $courseMapper
          */
         $courseMapper = $this->getLocator($request)->mapper(CourseEntity::class);
-        $foundCourses = [];
+        $foundCourses = $courseMapper->searchByFilter($filter);
 
         return $response->withJson([
             'status' => 200,

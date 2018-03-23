@@ -272,4 +272,14 @@ class CourseMapper extends Mapper
 
         return $syncResult;
     }
+
+    /**
+     * @param array $filter
+     * @return Course[]
+     */
+    public function searchByFilter(array $filter = []): array {
+        $result = [];
+
+        return $result;
+    }
 }

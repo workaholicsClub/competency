@@ -48,7 +48,7 @@ class CourseMapperTest extends TestCase
     }
 
     public function testLoadByCode() {
-        $testCode = 'stepic-probability';
+        $testCode = 'osnovy-statistiki';
         $locator = Database::getTest();
         /**
          * @var CourseMapper $instance
@@ -67,8 +67,8 @@ class CourseMapperTest extends TestCase
          */
         $instance = $locator->mapper(CourseEntity::class);
 
-        $this->assertEquals($instance->countCoursesForProfession('webDeveloper'), 9);
-        $this->assertEquals($instance->countCoursesForProfession('tester'), 9);
+        $this->assertEquals(9, $instance->countCoursesForProfession('webDeveloper'));
+        $this->assertEquals(9, $instance->countCoursesForProfession('tester'));
     }
 
     public function testGetRecommendations() {
@@ -109,11 +109,11 @@ class CourseMapperTest extends TestCase
         $this->assertArrayHasKey('code', $recommendations[1]);
         $this->assertArrayHasKey('code', $recommendations[2]);
 
-        $this->assertEquals('netology-html-javascript', $recommendations[0]['code']);
+        $this->assertEquals('html-javascript', $recommendations[0]['code']);
         $this->assertEquals(4.5, $recommendations[0]['totalIncrement']);
-        $this->assertEquals('netology-node', $recommendations[1]['code']);
+        $this->assertEquals('node', $recommendations[1]['code']);
         $this->assertEquals(0.5, $recommendations[1]['totalIncrement']);
-        $this->assertEquals('netology-html-verstka', $recommendations[2]['code']);
+        $this->assertEquals('html-verstka', $recommendations[2]['code']);
         $this->assertEquals(0.25, $recommendations[2]['totalIncrement']);
     }
 
@@ -349,5 +349,10 @@ class CourseMapperTest extends TestCase
         }
 
         $this->assertEquals($expectedRequirementIds, $savedRequirementIds);
+    }
+
+    public function testSearchByFilter() {
+        $locator = Database::getTest();
+
     }
 }

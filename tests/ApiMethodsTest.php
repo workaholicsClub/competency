@@ -90,7 +90,7 @@ class ApiMethodsTest extends TestCase
         $this->assertEquals(200, $response['status']);
         $this->assertEquals(1, count($response['course']));
         $this->assertEquals(19, $courseParams['id']);
-        $this->assertEquals('stepic-probability', $courseParams['code']);
+        $this->assertEquals('osnovy-statistiki', $courseParams['code']);
         $this->assertArrayHasKey('competencies', $courseParams);
         $this->assertEquals(1, count($courseParams['competencies']));
         $this->assertEquals('probabiltyBasics', $courseParams['competencies'][0]['code']);
