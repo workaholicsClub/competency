@@ -357,8 +357,10 @@ class Course
 
     public function getCode(): string {
         $translit = \Transliterator::create('Cyrillic-Latin')->transliterate($this->getName());
-        $translit = preg_replace('#[ _]+#','-', $translit);
-        $translit = strtolower($translit);
-        return $translit;
+        $specialCharsToDash = preg_replace('#[ _:()\.,]+#','-', $translit);
+        $noDuplicates = preg_replace('#-+#', '-', $specialCharsToDash);
+        $lowerCase = strtolower($noDuplicates);
+
+        return $lowerCase;
     }
 }

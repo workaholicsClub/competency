@@ -261,7 +261,7 @@ class CourseMapper extends Mapper
         $entity = $this->convertCourseToEntity($course);
         $saveResult = $this->save($entity);
 
-        if (!$saveResult) {
+        if ($saveResult === false) {
             return false;
         }
 

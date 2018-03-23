@@ -203,7 +203,6 @@ INSERT INTO `atomicSkills` VALUES (194,'Резервное копировани�
 INSERT INTO `atomicSkills` VALUES (195,'Основы систем контроля версий','Фиксация изменений, ветвления, отправка и получение данных',12);
 INSERT INTO `atomicSkills` VALUES (196,'Прочие операции','Перемещение и слияние кода, изменение и удаление коммитов, работа с несколькими репозиториями',12);
 INSERT INTO `atomicSkills` VALUES (197,'Способы совместной работы','Централизованная работа, feature branch, gitflow, forking workflow',12);
-INSERT INTO `atomicSkills` VALUES (198,'Работа с разными системами контроля версий','CVS, SVN, Git, Mercurial, Fossil',12);
 INSERT INTO `atomicSkills` VALUES (199,'Хуки','',12);
 INSERT INTO `atomicSkills` VALUES (200,'Интеграция с внешними скриптами','',12);
 INSERT INTO `atomicSkills` VALUES (201,'Ручная минификация и оптимизация файлов','',13);
@@ -395,6 +394,11 @@ INSERT INTO `atomicSkills` VALUES (386,'Мультипроцессное про�
 INSERT INTO `atomicSkills` VALUES (387,'Мультипоточное программирование','',26);
 INSERT INTO `atomicSkills` VALUES (388,'Специализированные библиотеки','NumPy, SciPy, SQLAlchemy',26);
 INSERT INTO `atomicSkills` VALUES (389,'«Великодушный пожизненный диктатор»','',26);
+INSERT INTO `atomicSkills` VALUES (390, 'CVS', null, 12);
+INSERT INTO `atomicSkills` VALUES (391, 'SVN', null, 12);
+INSERT INTO `atomicSkills` VALUES (392, 'Git', null, 12);
+INSERT INTO `atomicSkills` VALUES (393, 'Mercurial', null, 12);
+INSERT INTO `atomicSkills` VALUES (394, 'Fossil', null, 12);
 
 DROP TABLE IF EXISTS `compentencyGroups`;
 CREATE TABLE `compentencyGroups` (
@@ -590,7 +594,7 @@ CREATE TABLE `courses` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   `externalId` varchar(36) DEFAULT NULL,
   `eduProviderId` int(11) DEFAULT NULL,
-  `code` varchar(45) DEFAULT NULL,
+  `code` varchar(60) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `url` text,

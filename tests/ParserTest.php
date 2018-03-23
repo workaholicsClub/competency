@@ -422,6 +422,39 @@ URL: https://stepik.org/course/6075
         $this->assertEquals($expectedOutput, $output);
     }
 
+    public function testAddMultipleSkills() {
+        $expectedOutput = "=================
+Номер: 1
+Курс: IT-интенсив (Python)
+URL: https://stepik.org/course/6075
+Описание:
+Интенсивный вводный курс в программирование на языке Python учащий эффективно решать задачи из реальной жизни. 
+
+Студенты курса получат фундаментальные знания о том, как компьютеры хранят и оперируют данными на примере проектов различной сложности: от простых консольных игр до настоящих автоматизированных решений. 
+Требования:
+
+Навыки:
+Парсинг веб-сайтов, Работа с Excel, Word и PDF документами, Логика и условные команды, Массивы и циклы, Условия. Циклы., Функции. ООП, Основные понятия, Работа с API, Telegram-боты
+=================
+Навык добавлен: Базовый синтаксис языка [knowledge]
+Навык добавлен: Синтаксис функций [knowledge]
+Курс: IT-интенсив (Python)
+Добавленные навыки:
+Базовый синтаксис языка [knowledge]
+Синтаксис функций [knowledge]
+";
+
+        $io = new BufferedIO();
+        $parser = $this->makeParser( $this->makeCourses(), $io );
+
+        $parser->processGo(1);
+        $parser->processAddSkill("354,355", Skill::LEVEL_KNOWLEDGE);
+        $parser->processCourseSkills(1);
+        $output = $this->getOutputFromIo($io);
+
+        $this->assertEquals($expectedOutput, $output);
+    }
+
     public function testProcessCourseRequirements() {
         $expectedErrorOutput = "Курсы не загружены\n";
         $expectedOutput = "=================
@@ -460,6 +493,39 @@ URL: https://stepik.org/course/6075
         $output = $this->getOutputFromIo($withCoursesIo);
 
         $this->assertEquals($expectedErrorOutput, $errorOutput);
+        $this->assertEquals($expectedOutput, $output);
+    }
+
+    public function testAddMultipleRequirements() {
+        $expectedOutput = "=================
+Номер: 1
+Курс: IT-интенсив (Python)
+URL: https://stepik.org/course/6075
+Описание:
+Интенсивный вводный курс в программирование на языке Python учащий эффективно решать задачи из реальной жизни. 
+
+Студенты курса получат фундаментальные знания о том, как компьютеры хранят и оперируют данными на примере проектов различной сложности: от простых консольных игр до настоящих автоматизированных решений. 
+Требования:
+
+Навыки:
+Парсинг веб-сайтов, Работа с Excel, Word и PDF документами, Логика и условные команды, Массивы и циклы, Условия. Циклы., Функции. ООП, Основные понятия, Работа с API, Telegram-боты
+=================
+Требование добавлено: Базовый синтаксис языка [knowledge]
+Требование добавлено: Синтаксис функций [knowledge]
+Курс: IT-интенсив (Python)
+Добавленные требования:
+Базовый синтаксис языка [knowledge]
+Синтаксис функций [knowledge]
+";
+
+        $io = new BufferedIO();
+        $parser = $this->makeParser( $this->makeCourses(), $io );
+
+        $parser->processGo(1);
+        $parser->processAddRequirement("354,355", Skill::LEVEL_KNOWLEDGE);
+        $parser->processCourseRequirements(1);
+        $output = $this->getOutputFromIo($io);
+
         $this->assertEquals($expectedOutput, $output);
     }
 
@@ -629,8 +695,8 @@ show
 skills: competencyCode
 courseSkills: humanCourseIndex
 courseRequirements: humanCourseIndex
-addSkill: skillId, level
-addRequirement: skillId, level
+addSkill: skillsInput, level
+addRequirement: skillsInput, level
 take: humanCourseIndex
 save
 showTaken

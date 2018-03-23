@@ -221,39 +221,59 @@ class Parser
         return $skillEntity;
     }
 
-    public function processAddSkill($skillId, $level = "") {
+    public function processAddSkill($skillsInput, $level = "") {
         if (empty($this->courses)) {
             $this->io->errorLine('Курсы не загружены');
             return;
         }
 
-        $skillEntity = $this->getSkillById($skillId);
-        if ($skillEntity) {
-            $skill = Skill::fromEntity($skillEntity);
-            if ($level) {
-                $skill->setLevel($level);
-            }
+        if (strpos($skillsInput, ",") !== false) {
+            $skillIds = explode(",", $skillsInput);
+        } else
+        {
+            $skillId = $skillsInput;
+            $skillIds = [$skillId];
+        }
 
-            $this->courses[$this->courseIndex]->addSkill($skill);
-            $this->io->writeLine('Навык добавлен: '.$skill->getText().' ['.$skill->getLevel().']');
+        foreach ($skillIds as $skillId) {
+            $skillEntity = $this->getSkillById($skillId);
+            if ($skillEntity) {
+                $skill = Skill::fromEntity($skillEntity);
+                if ($level) {
+                    $skill->setLevel($level);
+                }
+
+                $this->courses[$this->courseIndex]->addSkill($skill);
+                $this->io->writeLine('Навык добавлен: ' . $skill->getText() . ' [' . $skill->getLevel() . ']');
+            }
         }
     }
 
-    public function processAddRequirement($skillId, $level = "") {
+    public function processAddRequirement($skillsInput, $level = "") {
         if (empty($this->courses)) {
             $this->io->errorLine('Курсы не загружены');
             return;
         }
 
-        $skillEntity = $this->getSkillById($skillId);
-        if ($skillEntity) {
-            $skill = Skill::fromEntity($skillEntity);
-            if ($level) {
-                $skill->setLevel($level);
-            }
+        if (strpos($skillsInput, ",") !== false) {
+            $skillIds = explode(",", $skillsInput);
+        } else
+        {
+            $skillId = $skillsInput;
+            $skillIds = [$skillId];
+        }
 
-            $this->courses[$this->courseIndex]->addRequirement($skill);
-            $this->io->writeLine('Требование добавлено: '.$skill->getText().' ['.$skill->getLevel().']');
+        foreach ($skillIds as $skillId) {
+            $skillEntity = $this->getSkillById($skillId);
+            if ($skillEntity) {
+                $skill = Skill::fromEntity($skillEntity);
+                if ($level) {
+                    $skill->setLevel($level);
+                }
+
+                $this->courses[$this->courseIndex]->addRequirement($skill);
+                $this->io->writeLine('Требование добавлено: ' . $skill->getText() . ' [' . $skill->getLevel() . ']');
+            }
         }
     }
 
