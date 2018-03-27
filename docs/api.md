@@ -19,3 +19,17 @@
 [http://127.0.0.1:8080/api/courses/recommend?competency[probabiltyBasics]=0.5](http://127.0.0.1:8080/api/courses/recommend?competency[probabiltyBasics]=0.5)
 
 В массиве `competency` - компетенции с рейтингами, по которым будут даваться рекомендации. Рекомендации по курсам отдаются в порядке уменьшения возможного прироста компетенций (`totalIncrement`).
+
+## Поиск курсов
+[http://127.0.0.1:8080/api/courses/search?modeOfStudy=selfStudy&courseForm=video&certificate=1&skills[354]=knowledge&skills[380]=skill&requirements[361]=knowledge](http://127.0.0.1:8080/api/courses/search?modeOfStudy=selfStudy&courseForm=video&certificate=1&skills[354]=knowledge&skills[380]=skill&requirements[361]=knowledge)
+
+В массивах `skills` и `requirements` - id навыков из таблицы `atomicSkills`.
+В результатах курса будут те, у которых `skills` выше или равны запрошенным (т.е. они дают знаний столько же или больше, чем просит пользователь) и
+и `requirements` меньше или равны запрошенным (т.е. знаний для них нужно меньше или столько же, чем есть у пользователя).
+Возможные значения уровней по навыкам и требованиям перечислены в `api/Skill/Skill.php`, а доступные варианты по прочим полям фильтра
+перечислены в `api/Course/Course.php`.
+
+[http://127.0.0.1:8080/api/courses/search?modeOfStudy=selfStudy&courseForm=video&certificate=1&userSkills[354]=knowledge&userSkills[380]=skill](http://127.0.0.1:8080/api/courses/search?modeOfStudy=selfStudy&courseForm=video&certificate=1&userSkills[354]=knowledge&userSkills[380]=skill)
+Если заполнен массив `userSkills`, то поиск осуществляется по указанным навыкам пользователя. Т.е. подбираются такие курсы,
+которые дадут знаний больше чем есть, но требуют меньше, чем есть. Технически заполнение этого массива эквивалентно заполнению
+массивов `skills` и `requirements` одинаковым набором навыков. 

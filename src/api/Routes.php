@@ -103,7 +103,7 @@ class Routes
         $recommendedCourses = $courseMapper->getRecommendations($competencyRatings);
 
         return $response->withJson([
-            'status' => 200,
+            "status" => 200,
             "course" => $recommendedCourses
         ]);
     }
@@ -115,10 +115,14 @@ class Routes
          */
         $courseMapper = $this->getLocator($request)->mapper(CourseEntity::class);
         $foundCourses = $courseMapper->searchByFilter($filter);
+        $coursesJson = [];
+        foreach ($foundCourses as $course) {
+            $coursesJson[] = $course->toArray();
+        }
 
         return $response->withJson([
-            'status' => 200,
-            "course" => $foundCourses
+            "status" => 200,
+            "course" => $coursesJson
         ]);
     }
 
@@ -144,8 +148,8 @@ class Routes
         }
 
         return $response->withJson([
-            'status'  => 200,
-            'success' => $success
+            "status"  => 200,
+            "success" => $success
         ]);
     }
 }

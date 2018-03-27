@@ -139,6 +139,28 @@ class Course
         return self::fromArray($courseProps);
     }
 
+    public static function fromEntity(CourseEntity $entity) {
+        $skillLinks = $entity->relation('skillLinks')->execute();
+        $requirementLinks = $entity->relation('requirementLinks')->execute();
+
+        $skills = [];
+        foreach ($skillLinks as $skillLink) {
+            $skills[] = Skill::fromLinkEntity($skillLink);
+        }
+
+        $requirements = [];
+        foreach ($requirementLinks as $requirementLink) {
+            $requirements[] = Skill::fromLinkEntity($requirementLink);
+        }
+
+        $props = $entity->toArray();
+        $props['skills'] = $skills;
+        $props['requirements'] = $requirements;
+
+        $instance = self::fromArray($props);
+        return $instance;
+    }
+
     public static function makeEmpty(): Course {
         $instance = new Course();
         return $instance;
@@ -362,5 +384,103 @@ class Course
         $lowerCase = strtolower($noDuplicates);
 
         return $lowerCase;
+    }
+
+    /**
+     * @param int $skillId
+     * @return bool|Skill
+     */
+    public function getSkillById(int $skillId) {
+        $skillFound = false;
+
+        foreach ($this->getSkills() as $skill) {
+            if ($skill->getId() == $skillId) {
+                $skillFound = $skill;
+            }
+        }
+
+        return $skillFound;
+    }
+
+    /**
+     * @param int $requirementId
+     * @return bool|Skill
+     */
+    public function getRequirementById(int $requirementId) {
+        $requirementFound = false;
+
+        foreach ($this->getRequirements() as $requirement) {
+            if ($requirement->getId() == $requirementId) {
+                $requirementFound = $requirement;
+            }
+        }
+
+        return $requirementFound;
+    }
+
+    public function hasSkillId(int $skillId): bool {
+        $skill = $this->getSkillById($skillId);
+        $skillFound = $skill !== false;
+
+        return $skillFound;
+    }
+
+    public function hasRequirementId(int $requirementId): bool {
+        $requirement = $this->getRequirementById($requirementId);
+        $requirementFound = $requirement !== false;
+
+        return $requirementFound;
+    }
+
+    public function givesSkillHigherThan(int $skillId, string $level) {
+        $skill = $this->getSkillById($skillId);
+
+        if ($skill === false) {
+            return false;
+        }
+
+        return $skill->isLevelGreaterOrEquals($level);
+    }
+
+    public function requiresSkillLessThan(int $requirementId, string $level) {
+        $requirement = $this->getRequirementById($requirementId);
+
+        if ($requirement === false) {
+            return true;
+        }
+
+        return $requirement->isLevelLessOrEquals($level);
+    }
+
+    public function toArray(): array {
+        $fieldGetters = [
+            'externalId'           => 'getExternalId',
+            'name'                 => 'getName',
+            'description'          => 'getDescription',
+            'url'                  => 'getUrl',
+            'modeOfStudy'          => 'getModeOfStudy',
+            'courseForm'           => 'getCourseForm',
+            'schedule'             => 'getSchedule',
+            'certificate'          => 'hasCertificate',
+            'tasksType'            => 'getTasksType',
+            'lengthDays'           => 'getLengthDays',
+        ];
+
+        $resultArray = [];
+        foreach ($fieldGetters as $fieldName => $getterName) {
+            $resultArray[$fieldName] = $this->$getterName();
+        }
+
+        $resultArray['skills'] = [];
+        foreach ($this->getSkills() as $skill) {
+            $resultArray['skills'][] = $skill->toArray();
+        }
+
+        $resultArray['requirements'] = [];
+        foreach ($this->getRequirements() as $requirement) {
+            $resultArray['requirements'][] = $requirement->toArray();
+        }
+
+        return $resultArray;
     }
 }

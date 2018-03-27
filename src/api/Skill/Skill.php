@@ -2,7 +2,8 @@
 
 namespace Competencies\Skill;
 
-use Spot\Locator;
+use Competencies\Course\CourseRequirementEntity;
+use Competencies\Course\CourseSkillEntity;
 
 class Skill
 {
@@ -87,6 +88,21 @@ class Skill
     }
 
     /**
+     * @param CourseSkillEntity|CourseRequirementEntity $linkEntity
+     * @return Skill
+     */
+    public static function fromLinkEntity($linkEntity): Skill {
+        /**
+         * @var SkillEntity $skillEntity
+         */
+        $skillEntity = $linkEntity->relation('skill')->execute();
+        $instance = self::fromEntity($skillEntity);
+        $instance->setLevel($linkEntity->get('level'));
+
+        return $instance;
+    }
+
+    /**
      * @param array $props
      * @return Skill
      */
@@ -100,6 +116,26 @@ class Skill
     public static function makeEmpty(): Skill {
         $instance = new Skill();
         return $instance;
+    }
+
+    private static function getAllLevels() {
+        return [Skill::LEVEL_NONE, Skill::LEVEL_KNOWLEDGE, Skill::LEVEL_SKILL, Skill::LEVEL_ABILITY];
+    }
+
+    public static function getLevelIndex(string $level): int {
+        $allLevels = self::getAllLevels();
+        return array_search($level, $allLevels);
+    }
+
+    public static function getLevelsEnum(string $fromLevel = self::LEVEL_NONE, string $toLevel = self::LEVEL_ABILITY): array {
+        $allLevels = self::getAllLevels();
+        $fromIndex = array_search($fromLevel, $allLevels);
+        $toIndex = array_search($toLevel, $allLevels);
+        $itemsCount = $toIndex - $fromIndex + 1;
+
+        $filteredLevels = array_slice($allLevels, $fromIndex, $itemsCount);
+
+        return $filteredLevels;
     }
 
     /**
@@ -158,5 +194,27 @@ class Skill
         $this->level = $level;
     }
 
+    public function isLevelGreaterOrEquals(string $skillLevel): bool {
+        return self::getLevelIndex($this->getLevel()) >= self::getLevelIndex($skillLevel);
+    }
 
+    public function isLevelLessOrEquals(string $skillLevel): bool {
+        return self::getLevelIndex($this->getLevel()) <= self::getLevelIndex($skillLevel);
+    }
+
+    public function toArray(): array {
+        $fieldGetters = [
+            'id'          => 'getId',
+            'text'        => 'getText',
+            'description' => 'getDescription',
+            'level'       => 'getLevel',
+        ];
+
+        $resultArray = [];
+        foreach ($fieldGetters as $fieldName => $getterName) {
+            $resultArray[$fieldName] = $this->$getterName();
+        }
+
+        return $resultArray;
+    }
 }

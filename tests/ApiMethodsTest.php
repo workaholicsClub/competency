@@ -24,9 +24,10 @@ class ApiMethodsTest extends TestCase
         $response = $client->sendRequest($request);
 
         $decodeAssoc = true;
-        $json = json_decode($response->getBody(), $decodeAssoc);
+        $responseBody = (string) $response->getBody();
+        $json = json_decode($responseBody, $decodeAssoc);
 
-        return $json;
+        return $json ? $json : [];
     }
 
     public function makeTestRequest(string $uri, array $queryParams, string $type = 'GET'): array {
@@ -97,8 +98,53 @@ class ApiMethodsTest extends TestCase
     }
 
     public function testCoursesSearch() {
-        $response = $this->makeTestRequest('/courses/search', []);
+        $expectedCourseFields = [
+            'externalId',
+            'name',
+            'description',
+            'url',
+            'modeOfStudy',
+            'courseForm',
+            'schedule',
+            'certificate',
+            'tasksType',
+            'lengthDays',
+            'skills',
+            'requirements'
+        ];
+
+        $response = $this->makeTestRequest('/courses/search', [
+            "modeOfStudy" => "selfStudy",
+            "courseForm"  => "video",
+            "certificate" => "1",
+            "skills"      => [
+                "354" => "knowledge",
+                "380" => "skill",
+            ],
+            "requirements" => [
+                "361" => "knowledge"
+            ]
+        ]);
+
         $this->assertEquals(200, $response['status']);
+        $this->assertEquals(2, count($response['course']));
+        $this->assertEquals($expectedCourseFields, array_keys($response['course'][0]));
+        $this->assertEquals($expectedCourseFields, array_keys($response['course'][1]));
+
+        $response = $this->makeTestRequest('/courses/search', [
+            "modeOfStudy" => "selfStudy",
+            "courseForm"  => "video",
+            "certificate" => "1",
+            "userSkills"      => [
+                "354" => "knowledge",
+                "380" => "skill",
+            ],
+        ]);
+
+        $this->assertEquals(200, $response['status']);
+        $this->assertEquals(1, count($response['course']));
+        $this->assertEquals($expectedCourseFields, array_keys($response['course'][0]));
+
     }
 
     /**

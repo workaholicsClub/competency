@@ -7,6 +7,7 @@ use Spot\Entity;
 use Spot\Exception;
 use Spot\Mapper;
 use Spot\MapperInterface;
+use Spot\Query;
 
 class CourseMapper extends Mapper
 {
@@ -273,12 +274,137 @@ class CourseMapper extends Mapper
         return $syncResult;
     }
 
+    private function getCourseIds(Entity\Collection $courses) {
+        $courseIds = [];
+        foreach ($courses as $courseRow) {
+            /**
+             * @var Entity $courseRow
+             */
+            $courseIds[] = $courseRow->get('courseId');
+        }
+
+        return array_unique($courseIds);
+    }
+
+    private function makeLevelsCondition(int $skillId, array $skillLevels): string {
+        $skillLevelsSql = "'".implode("','", $skillLevels)."'";
+        return "atomicSkillId = {$skillId} AND level IN ({$skillLevelsSql})";
+    }
+
+    private function makeLessThanOrEqualsLevelCondition(int $skillId, string $skillLevel): string {
+        $skillLevels = Skill::getLevelsEnum(Skill::LEVEL_NONE, $skillLevel);
+        return $this->makeLevelsCondition($skillId, $skillLevels);
+    }
+
+    private function makeGreaterThanOrEqualsLevelCondition(int $skillId, string $skillLevel): string {
+        $skillLevels = Skill::getLevelsEnum($skillLevel);
+        return $this->makeLevelsCondition($skillId, $skillLevels);
+    }
+
+    private function addSkillFilterToQuery(Query $query, array $skillLevelsHash): Query {
+        if (empty($skillLevelsHash)) {
+            return $query;
+        }
+
+        //spot не поддерживает joinы
+        $queryConditions = "";
+        foreach ($skillLevelsHash as $skillId => $level) {
+            $hasConditions = $queryConditions !== "";
+            $conjunction = $hasConditions ? "OR" : "";
+            $condition = $this->makeGreaterThanOrEqualsLevelCondition($skillId, $level);
+            $queryConditions .= " {$conjunction} ({$condition})";
+        }
+
+        $courseResults = $this->query(
+            "SELECT courseId FROM coursesSkills WHERE {$queryConditions}"
+        );
+
+        if ($courseResults instanceof Entity\Collection) {
+            $courseIds = $this->getCourseIds($courseResults);
+            $query->andWhere(['id' => $courseIds]);
+        }
+
+        return $query;
+    }
+
+    private function addRequirementsFilterToQuery(Query $query, array $requirementLevelsHash): Query {
+        if (empty($requirementLevelsHash)) {
+            return $query;
+        }
+
+        $queryConditions = "";
+        foreach ($requirementLevelsHash as $skillId => $level) {
+            $hasConditions = $queryConditions !== "";
+            $conjunction = $hasConditions ? "AND" : "";
+            $condition = $this->makeLessThanOrEqualsLevelCondition($skillId, $level);
+            $queryConditions .= " {$conjunction} ({$condition})";
+        }
+
+        $courseResults = $this->query(
+            "SELECT DISTINCT c.id AS courseId FROM courses c
+                      LEFT JOIN coursesRequirements cr ON c.id = cr.courseId
+                      WHERE {$queryConditions} OR atomicSkillId IS NULL"
+        );
+
+        if ($courseResults instanceof Entity\Collection) {
+            $courseIds = $this->getCourseIds($courseResults);
+            $query->andWhere(['id' => $courseIds]);
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param Entity\Collection $entities
+     * @return Course[]
+     */
+    private function convertEntityCollectionToCourses(Entity\Collection $entities): array {
+        $result = [];
+
+        foreach ($entities as $entity) {
+            $result[] = Course::fromEntity($entity);
+        }
+
+        return $result;
+    }
+
     /**
      * @param array $filter
      * @return Course[]
      */
     public function searchByFilter(array $filter = []): array {
-        $result = [];
+        /**
+         * @var CourseEntity $entity
+         */
+        $entity = $this->entity();
+        $allowedFields = array_keys( $entity::fields() );
+
+        if ( isset($filter['userSkills']) ) {
+            foreach ($filter['userSkills'] as $skillId => $level) {
+                $filter['skills'][$skillId] = $level;
+                $filter['requirements'][$skillId] = $level;
+            }
+        }
+
+        $query = $this->select();
+        foreach ($filter as $field => $value) {
+            if ($field == "skills") {
+                $skillLevelsHash = $value;
+                $query = $this->addSkillFilterToQuery($query, $skillLevelsHash);
+            }
+            else if ($field == "requirements") {
+                $requirementLevelsHash = $value;
+                $query = $this->addRequirementsFilterToQuery($query, $requirementLevelsHash);
+            }
+            else {
+                if ( in_array($field, $allowedFields) ) {
+                    $query->andWhere([$field => $value]);
+                }
+            }
+        }
+
+        $entityCollection = $query->execute();
+        $result = $this->convertEntityCollectionToCourses($entityCollection);
 
         return $result;
     }

@@ -353,6 +353,89 @@ class CourseMapperTest extends TestCase
 
     public function testSearchByFilter() {
         $locator = Database::getTest();
+        $filter = [
+            "modeOfStudy" => "selfStudy",
+            "courseForm"  => "video",
+            "certificate" => "1",
+            "skills"      => [
+                "354" => "knowledge",
+                "380" => "skill",
+            ],
+            "requirements" => [
+                "361" => "knowledge"
+            ]
+        ];
 
+        /**
+         * @var CourseMapper $courseMapper
+         */
+        $courseMapper = $locator->mapper(CourseEntity::class);
+        $courses = $courseMapper->searchByFilter($filter);
+
+        $filterHasCertificate = boolval($filter['certificate']);
+        $this->assertNotEmpty($courses);
+        $this->assertEquals(2, count($courses));
+        foreach ($courses as $course) {
+            $hasAnySkill = $course->hasSkillId(354) || $course->hasSkillId(380);
+            $satisfiesRequirements = $course->hasRequirementId(361) || count($course->getRequirements()) === 0;
+
+            $this->assertEquals($filter['modeOfStudy'], $course->getModeOfStudy());
+            $this->assertEquals($filter['courseForm'], $course->getCourseForm());
+            $this->assertEquals($filterHasCertificate, $course->hasCertificate());
+            $this->assertTrue($hasAnySkill);
+            $this->assertTrue($satisfiesRequirements);
+        }
+    }
+
+    public function testSearchByFilterSkillsRequirements() {
+        $locator = Database::getTest();
+        $filter = [
+            "skills"      => [
+                "354" => "knowledge",
+                "380" => "knowledge",
+            ],
+            "requirements" => [
+                "361" => "knowledge"
+            ]
+        ];
+
+        /**
+         * @var CourseMapper $courseMapper
+         */
+        $courseMapper = $locator->mapper(CourseEntity::class);
+        $courses = $courseMapper->searchByFilter($filter);
+
+        foreach ($courses as $course) {
+            $givesFirstSkill = $course->givesSkillHigherThan(354, $filter['skills'][354]);
+            $givesSecondSkill = $course->givesSkillHigherThan(380, $filter['skills'][380]);
+            $givesRequestedSkills = $givesFirstSkill || $givesSecondSkill;
+            $this->assertTrue( $givesRequestedSkills );
+            $this->assertTrue( $course->requiresSkillLessThan(361, $filter['requirements'][361]) );
+        }
+    }
+
+    public function testUserSkills() {
+        $locator = Database::getTest();
+        $filter = [
+            "userSkills"      => [
+                "354" => "knowledge",
+                "380" => "knowledge",
+            ]
+        ];
+
+        /**
+         * @var CourseMapper $courseMapper
+         */
+        $courseMapper = $locator->mapper(CourseEntity::class);
+        $courses = $courseMapper->searchByFilter($filter);
+
+        foreach ($courses as $course) {
+            $givesFirstSkill = $course->givesSkillHigherThan(354, $filter['userSkills'][354]);
+            $givesSecondSkill = $course->givesSkillHigherThan(380, $filter['userSkills'][380]);
+            $givesRequestedSkills = $givesFirstSkill || $givesSecondSkill;
+            $this->assertTrue( $givesRequestedSkills );
+            $this->assertTrue( $course->requiresSkillLessThan(354, $filter['userSkills'][354]) );
+            $this->assertTrue( $course->requiresSkillLessThan(380, $filter['userSkills'][380]) );
+        }
     }
 }
