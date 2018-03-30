@@ -26,7 +26,9 @@ function getControllerInstance(xhr, gtag) {
     let view = getViewInstance();
     let stylesManager = getStylesManager();
     let coursesList = listViewFactory(stylesManager);
-    let filterView = filterViewFactory(stylesManager);
+
+    let rootElement = document.createElement('div');
+    let filterView = filterViewFactory(rootElement, stylesManager);
 
     let professionsModel = professionsFactory(professionsMockData);
 

@@ -1,5 +1,9 @@
+/**
+ * @type FilterView
+ */
 const filterViewFactory = require('./View');
 const testFieldsData = require('../../mocks/filterFieldsData');
+const polyfillsFactory = require('../../classes/Polyfills');
 
 const h = require('hyperscript');
 const jss = require('jss').default;
@@ -8,7 +12,7 @@ test('FilterView createDOM, render', function () {
     let rootElement = document.createElement('div');
     let view = filterViewFactory(null, jss);
     let viewWithElement = filterViewFactory(rootElement, jss);
-    let fieldsData = testFieldsData;
+    let fieldsData = testFieldsData(['skillB']);
 
     let viewDOM = view.createDOM(fieldsData);
     let viewHTML = viewDOM.outerHTML;
@@ -64,6 +68,51 @@ test('FilterView.createCompetencyField', function () {
 
     let input = inputDOM.querySelector('input');
     expect(input).toBeInstanceOf(HTMLElement);
+});
+
+test('FilterView.createAltCompetencyField', function () {
+    let view = filterViewFactory(null, jss);
+    let fieldData = {
+        code: 'neededCompetencies',
+        label: 'Желаемые навыки',
+        type: 'competency',
+        value: ['skillB'],
+        variants: [
+            {name: "Навык А", code: "skillA"},
+            {name: "Навык Б", code: "skillB"},
+            {name: "Навык В", code: "skillC"}
+        ]
+    };
+    let fieldDOM = view.createAltCompetencyField(fieldData);
+    let labelDOM = fieldDOM.querySelector('label');
+    let inputDOM = fieldDOM.querySelector('select');
+
+    expect(labelDOM).toBeInstanceOf(HTMLElement);
+    expect(inputDOM).toBeInstanceOf(HTMLElement);
+    expect(fieldDOM.getAttribute('data-type')).toEqual('competency');
+    expect(fieldDOM.getAttribute('data-code')).toEqual(fieldData.code);
+    expect(inputDOM.getAttribute('data-type')).toEqual('competency');
+    expect(inputDOM.getAttribute('data-code')).toEqual(fieldData.code);
+
+    let selectOptions = inputDOM.querySelectorAll('option');
+    let selectedOptions = fieldDOM.querySelectorAll('.selectedItem');
+    let selectedSkillNameElement = selectedOptions[0].querySelector('.skillName');
+    let labelHTML = labelDOM.outerHTML;
+
+    expect(labelHTML).toEqual(expect.stringContaining(fieldData.label));
+
+    expect(selectOptions).toBeInstanceOf(NodeList);
+    expect(selectedOptions).toBeInstanceOf(NodeList);
+    expect(selectOptions).toHaveLength(3); //+Не выбрано
+    expect(selectedOptions).toHaveLength(1);
+
+    expect(selectOptions[1].getAttribute('value')).toEqual('skillA');
+    expect(selectOptions[1].textContent).toEqual('Навык А');
+    expect(selectOptions[2].getAttribute('value')).toEqual('skillC');
+    expect(selectOptions[2].textContent).toEqual('Навык В');
+
+    expect(selectedSkillNameElement.textContent).toEqual('Навык Б');
+
 });
 
 test('FilterView.createCheckboxField', function () {
@@ -235,18 +284,18 @@ test('FilterView.createSelectField', function () {
     expect(options[3].getAttribute('selected')).toBeNull();
 });
 
-test('FieldsView getAllFields', function () {
+test('FilterView getAllFields', function () {
     let testFieldsCount = 6;
     let rootElement = h('div');
 
     let view = filterViewFactory(rootElement, jss);
-    view.render(testFieldsData);
+    view.render(testFieldsData());
 
     let renderedFields = view.getAllFields();
     expect(renderedFields).toHaveLength(testFieldsCount);
 });
 
-test('FieldsView fieldValues', function () {
+test('FilterView fieldValues', function () {
     let expectedSelectValue = 'webDeveloper';
     let expectedCompetencyValue = ['skillB'];
     let expectedCheckboxValue = true;
@@ -254,7 +303,7 @@ test('FieldsView fieldValues', function () {
     let expectedDateValue = dateValue.toString();
     let expectedMultiCheckboxValue = ['offline'];
 
-    let fieldsData = JSON.parse(JSON.stringify(testFieldsData));
+    let fieldsData = testFieldsData();
 
     fieldsData[0].value = expectedSelectValue;
     fieldsData[1].value = expectedCompetencyValue;
@@ -271,4 +320,126 @@ test('FieldsView fieldValues', function () {
     expect( view.getFieldValue(fieldsData[2].code) ).toEqual(expectedCheckboxValue);
     expect( view.getFieldValue(fieldsData[3].code) ).toEqual(expectedDateValue);
     expect( view.getFieldValue(fieldsData[4].code) ).toEqual(expectedMultiCheckboxValue);
+});
+
+test('FilterView getAllCompetencyFieldSelectors', function () {
+    let fieldsData = testFieldsData();
+    let rootElement = h('div');
+    let view = filterViewFactory(rootElement, jss);
+    view.render(fieldsData);
+
+    let competencyFields = view.getAllCompetencyFieldSelectors();
+    expect(competencyFields).toBeInstanceOf(NodeList);
+    expect(competencyFields).toHaveLength(1);
+});
+
+test('FilterView getAllSkillsRemoveButtons', function () {
+    let fieldsData = testFieldsData(['skillA']);
+    let rootElement = h('div');
+    let view = filterViewFactory(rootElement, jss);
+    view.render(fieldsData);
+
+    let removeButtons = view.getAllSkillsRemoveButtons();
+    expect(removeButtons).toBeInstanceOf(NodeList);
+    expect(removeButtons).toHaveLength(1);
+});
+
+test('FilterView getSkillCodeByRemoveButton, getFieldCodeByRemoveButton', function () {
+    polyfillsFactory();
+
+    let testSkillCode = 'skillB';
+    let testFieldCode = 'requiredCompetencies';
+
+    let fieldsData = testFieldsData([testSkillCode]);
+    let rootElement = h('div');
+    let view = filterViewFactory(rootElement, jss);
+    view.render(fieldsData);
+
+    let removeButton = view.getAllSkillsRemoveButtons()[0];
+    expect(removeButton).toBeInstanceOf(HTMLElement);
+
+    let recievedSelectedSkillCode = view.getSkillCodeByRemoveButton(removeButton);
+    let recievedFieldCode = view.getFieldCodeByRemoveButton(removeButton);
+    expect(recievedSelectedSkillCode).toEqual(testSkillCode);
+    expect(recievedFieldCode).toEqual(testFieldCode);
+});
+
+test('FilterView getSkillCodeBySelect, getFieldCodeBySelect', function () {
+    polyfillsFactory();
+
+    let testSkillCode = 'skillB';
+    let testFieldCode = 'requiredCompetencies';
+
+    let fieldsData = testFieldsData();
+    let rootElement = h('div');
+    let view = filterViewFactory(rootElement, jss);
+    view.render(fieldsData);
+
+    let selectElement = view.queryField(testFieldCode).querySelector('select');
+    selectElement.value = testSkillCode;
+
+    let recievedSelectedSkillCode = view.getSkillCodeBySelect(selectElement);
+    let recievedFieldCode = view.getFieldCodeBySelect(selectElement);
+    expect(recievedSelectedSkillCode).toEqual(testSkillCode);
+    expect(recievedFieldCode).toEqual(testFieldCode);
+});
+
+test('FilterView moveSelectedCompetency', function () {
+    let fieldsData = testFieldsData();
+    let rootElement = h('div');
+    let view = filterViewFactory(rootElement, jss);
+    view.render(fieldsData);
+
+    let fieldCode = 'requiredCompetencies';
+    let select = view.queryField(fieldCode).querySelector('select');
+    select.value = 'skillA';
+
+    view.moveSelectedCompetency(fieldCode);
+
+    let fieldDOM = view.queryField(fieldCode);
+    let options = select.querySelectorAll('option');
+    let selectedItems = fieldDOM.querySelectorAll('.selectedItem');
+
+    expect( selectedItems ).toBeInstanceOf(NodeList);
+    expect( selectedItems ).toHaveLength(1);
+
+    expect( options ).toBeInstanceOf(NodeList);
+    expect( options ).toHaveLength(3);//+Не выбрано
+});
+
+test('FilterView removeSelectedCompetency', function () {
+    polyfillsFactory();
+
+    let testSkillCode = 'skillB';
+    let fieldCode = 'requiredCompetencies';
+    let fieldsData = testFieldsData(['skillA', 'skillB']);
+    let rootElement = h('div');
+    let view = filterViewFactory(rootElement, jss);
+    view.render(fieldsData);
+
+    let fieldElement = view.queryField(fieldCode);
+    let selectedItems = fieldElement.querySelectorAll('.selectedItem');
+    let skillName = selectedItems[1].querySelector('.skillName').textContent;
+    expect(selectedItems).toHaveLength(2);
+
+    view.removeSelectedCompetency(fieldCode, testSkillCode);
+
+    selectedItems = fieldElement.querySelectorAll('.selectedItem');
+    expect(selectedItems).toHaveLength(1);
+
+    let newOption = fieldElement.querySelector('option[value='+testSkillCode+']');
+    expect(newOption).toBeInstanceOf(HTMLElement);
+    expect(newOption.textContent).toEqual(skillName);
+});
+
+test('FilterView getSkillRemoveButton', function () {
+    let testSkillCode = 'skillB';
+    let fieldCode = 'requiredCompetencies';
+    let fieldsData = testFieldsData([testSkillCode]);
+    let rootElement = h('div');
+    let view = filterViewFactory(rootElement, jss);
+    view.render(fieldsData);
+
+    let removeButton = view.getSkillRemoveButton(fieldCode, testSkillCode);
+    expect(removeButton).toBeInstanceOf(HTMLElement);
 });

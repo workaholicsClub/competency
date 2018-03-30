@@ -9,7 +9,7 @@ function answersMockFactory(props, config, xhr) {
 }
 
 test('AnswersModel.interface', function () {
-    var answersModel = answersMockFactory({});
+    let answersModel = answersMockFactory({});
 
     expect(BaseModel.isPrototypeOf(answersModel)).toBeTruthy();
     expect(answersModel.addEventListener).toBeInstanceOf(Function);
@@ -20,7 +20,7 @@ test('AnswersModel.interface', function () {
 });
 
 test('AnswersModel.getCompetencyRating', function () {
-    var answers = answersMockFactory({});
+    let answers = answersMockFactory({});
 
     answers.set('competencyA', [4, 4, 3, 2]);
     answers.set('competencyB', [3, 4, 4, 2]);
@@ -49,8 +49,8 @@ test('AnswersModel.getCompetencyRating', function () {
 });
 
 test('AnswersModel.getAllRatings', function () {
-    var answers = answersMockFactory({});
-    var expectedRatings = {
+    let answers = answersMockFactory({});
+    let expectedRatings = {
         "competencyA": 3.25,
         "competencyB": 3.25,
         "competencyC": 1,
@@ -72,13 +72,13 @@ test('AnswersModel.getAllRatings', function () {
 });
 
 test('AnswersModel.changeHandler', function () {
-    var storageMock = {
+    let storageMock = {
         init: jest.fn(),
         save: jest.fn(),
         load: jest.fn()
     };
 
-    var answers = answersFactory({}, configMockFactory(), false, storageMock);
+    let answers = answersFactory({}, configMockFactory(), false, storageMock);
 
     expect(storageMock.load).toHaveBeenCalledTimes(1);
     expect(storageMock.save).not.toHaveBeenCalled();
@@ -88,8 +88,8 @@ test('AnswersModel.changeHandler', function () {
 });
 
 test('AnswersModel.saveResults', function () {
-    var xhrMock = getXHRMock(JSON.stringify({status: 200, success: true}));
-    var answers = answersFactory({}, configMockFactory(), xhrMock);
+    let xhrMock = getXHRMock(JSON.stringify({status: 200, success: true}));
+    let answers = answersFactory({}, configMockFactory(), xhrMock);
 
     return new Promise(function (resolve, reject) {
         answers.addEventListener('save', function () {
@@ -106,6 +106,6 @@ test('AnswersModel.saveResults', function () {
 });
 
 test('AnswersModel.getSkillLevelsText', function () {
-    var answers = answersFactory({}, configMockFactory());
-    expect(answers.getSkillLevelsText()).toHaveLength(5);
+    let answers = answersFactory({}, configMockFactory());
+    expect(answers.getSkillLevelsText()).toHaveLength(4);
 });

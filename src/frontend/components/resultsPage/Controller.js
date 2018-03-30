@@ -1,6 +1,6 @@
 const BaseController = require('../base/Controller');
 
-var ResultsController = {
+let ResultsController = {
     init: function (pageView, professionsModel, answersModel, xhr, tracker) {
         this.pageView = pageView;
         this.professionsModel = professionsModel;
@@ -24,7 +24,7 @@ var ResultsController = {
     },
 
     initViewEvents: function () {
-        var additionalEvents = [
+        let additionalEvents = [
             {types: ['save'], target: this.answersModel, handler: this.saveSuccess},
             {types: ['click'], target: this.pageView.getSaveButton(), handler: this.saveResults}
         ];
@@ -46,16 +46,16 @@ var ResultsController = {
     },
 
     getViewModel: function () {
-        var competencyRatings = this.answersModel.getAllRatings();
-        var competenciesWithRatings = [];
+        let competencyRatings = this.answersModel.getAllRatings();
+        let competenciesWithRatings = [];
 
         Object.keys(competencyRatings).forEach(function (competencyCode) {
-            var competency = this.professionsModel.getAnyProfessionCompetency(competencyCode);
+            let competency = this.professionsModel.getAnyProfessionCompetency(competencyCode);
 
             if (competency) {
-                var rating = competencyRatings[competencyCode];
-                var maxRating = 4;
-                var ratingPercent = Math.round(rating/maxRating*100);
+                let rating = competencyRatings[competencyCode];
+                let maxRating = 4;
+                let ratingPercent = Math.round(rating/maxRating*100);
 
                 competenciesWithRatings.push({
                     name: competency.name,
@@ -88,8 +88,8 @@ var ResultsController = {
      */
     saveResults: function (event) {
         event.preventDefault();
-        var subscribeForm = this.pageView.getSubscribeForm();
-        var data = new FormData(subscribeForm);
+        let subscribeForm = this.pageView.getSubscribeForm();
+        let data = new FormData(subscribeForm);
         this.answersModel.saveResults(data);
     },
 
@@ -110,7 +110,7 @@ ResultsController = Object.assign(Object.create(BaseController), ResultsControll
  * @returns {ResultsController}
  */
 module.exports = function (pageView, professionsModel, answersModel, xhr, tracker) {
-    var instance = Object.create(ResultsController);
+    let instance = Object.create(ResultsController);
 
     if (!xhr) {
         xhr = new XMLHttpRequest();

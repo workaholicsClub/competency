@@ -25,6 +25,30 @@ let FilterView = {
         this.element = element;
         this.stylesManager = stylesManager;
         this.selectivityInstances = {};
+        this.styles = this.createStyles();
+    },
+
+    createStyles: function () {
+        let styles = {
+            buttons: {
+                'float': 'right'
+            },
+            levelTrigger: {
+                'color': '#fff',
+                'text-decoration': 'none',
+                'border-bottom': '1px dashed #fff',
+                '&:hover': {
+                    'color': '#fff',
+                    'text-decoration': 'none',
+                    'border-bottom': '1px dashed #fff',
+                },
+                '&:visited': {
+                    'color': '#fff'
+                }
+            }
+        };
+
+        return this.stylesManager.createStyleSheet(styles).attach();
     },
 
     setRootElement: function (newRootElement) {
@@ -86,6 +110,108 @@ let FilterView = {
             h('label', {attrs: {for: fieldData.code}}, fieldData.label),
             fieldContainer
         ];
+    },
+
+    /**
+     * @param {string} variantCode
+     * @param {string} variantText
+     * @returns {HTMLElement}
+     */
+    createSelectedCompetencyPill: function (variantCode, variantText) {
+        let classes = this.styles.classes;
+
+        let removeButton = h('button.close.text-white',
+            h('span', '\u00d7')
+        );
+
+        let skillText = h('span.font-weight-bold.mb-0.skillName', variantText);
+        let buttons = h('div.buttons.' + classes.buttons,
+            removeButton
+        );
+        let header = h('p.mb-0',
+            skillText,
+            buttons
+        );
+
+        let levelText = h('small.mb-0',
+            h('p.mb-0', 'Уровень владения: '),
+            h('a.'+classes.levelTrigger, {href: '#'}, 'определить')
+        );
+
+        let skillPill = h('div.bg-primary.text-white.p-2.mt-2.selectedItem', {attrs: {'data-item-code': variantCode}},
+            header,
+            levelText
+        );
+
+        return skillPill;
+    },
+
+    createCometencySelectOption: function (variantCode, variantText) {
+        return h('option', {value: variantCode}, variantText);
+    },
+
+    /**
+     * @param {FieldData} fieldData
+     * @returns {HTMLElement[]}
+     */
+    createAltCompetencyField: function (fieldData) {
+        let selectedSkills = fieldData.variants.reduce(function (accumulator, variant) {
+            let isSelected = fieldData.value.indexOf(variant.code) !== -1;
+            if (isSelected) {
+                accumulator.push(variant);
+            }
+            return accumulator;
+        }, []);
+
+        let notSelectedSkills = fieldData.variants.reduce(function (accumulator, variant) {
+            let notSelected = fieldData.value.indexOf(variant.code) === -1;
+            if (notSelected) {
+                accumulator.push(variant);
+            }
+            return accumulator;
+        }, []);
+
+        let view = this;
+
+        return h('div', {attrs: {'data-type': 'competency', 'data-code': fieldData.code}},
+            h('label', {attrs: {for: fieldData.code}}, fieldData.label),
+            h('select#'+fieldData.code+'.form-control', {name: fieldData.code, attrs: {'data-type': 'competency', 'data-code': fieldData.code}},
+                h('option', {value: ''}, 'Не выбрано'),
+                notSelectedSkills.map(function (variant) {
+                    return view.createCometencySelectOption(variant.code, variant.name);
+                })
+            ),
+            h('div.selectedContainer',
+                selectedSkills.map(function (variant) {
+                    return view.createSelectedCompetencyPill(variant.code, variant.name);
+                })
+            )
+        );
+    },
+
+    getFieldCodeBySubElement: function (element) {
+        let fieldElement = element.closest('[data-type=competency]');
+        return fieldElement.getAttribute('data-code');
+    },
+
+    /**
+     * @param {HTMLElement} buttonElement
+     */
+    getSkillCodeByRemoveButton: function (buttonElement) {
+        let skillElement = buttonElement.closest('.selectedItem');
+        return skillElement.getAttribute('data-item-code');
+    },
+
+    getSkillCodeBySelect: function (selectElement) {
+        return selectElement.value;
+    },
+
+    getFieldCodeByRemoveButton: function (buttonElement) {
+        return this.getFieldCodeBySubElement(buttonElement);
+    },
+
+    getFieldCodeBySelect: function (selectElement) {
+        return this.getFieldCodeBySubElement(selectElement);
     },
 
     /**
@@ -185,7 +311,7 @@ let FilterView = {
 
         switch (fieldData.type.toLowerCase()) {
             case 'competency':
-                input = this.createCompetencyField(fieldData);
+                input = this.createAltCompetencyField(fieldData);
             break;
             case 'checkbox':
                 input = this.createCheckboxField(fieldData);
@@ -227,7 +353,7 @@ let FilterView = {
      * @returns {any | NodeListOf<Element> | *}
      */
     getAllFields: function () {
-        return this.element.querySelectorAll('[data-type]');
+        return this.element.querySelectorAll('input[data-type], select[data-type], text[data-type]');
     },
 
     /**
@@ -256,6 +382,21 @@ let FilterView = {
         }, []);
 
         return selectedIds;
+    },
+
+    getAltCompetencyFieldValue: function (fieldCode, fieldElement) {
+        if (!fieldElement) {
+            fieldElement = this.queryField(fieldCode);
+        }
+
+        let selectedItems = fieldElement.querySelectorAll('.selectedItem');
+        let value = [];
+        for (let index = 0; index < selectedItems.length; index++) {
+            let selectedItem = selectedItems[index];
+            value.push(selectedItem.getAttribute('data-item-code'));
+        }
+
+        return value;
     },
 
     /**
@@ -321,7 +462,7 @@ let FilterView = {
 
         switch (fieldType) {
             case 'competency':
-                fieldValue = this.getCompetencyFieldValue(fieldCode, fieldElement);
+                fieldValue = this.getAltCompetencyFieldValue(fieldCode, fieldElement);
             break;
             case 'checkbox':
                 fieldValue = this.getCheckboxFieldValue(fieldCode, fieldElement);
@@ -338,10 +479,64 @@ let FilterView = {
         }
 
         return fieldValue;
+    },
+
+    /**
+     * @returns {NodeList}
+     */
+    getAllCompetencyFieldSelectors: function () {
+        return this.element.querySelectorAll('[data-type=competency] select');
+    },
+
+    /**
+     * @returns {NodeList}
+     */
+    getAllSkillsRemoveButtons: function () {
+        return this.element.querySelectorAll('[data-type=competency] .selectedItem .close');
+    },
+
+    /**
+     * @returns {HTMLElement}
+     */
+    getSkillRemoveButton: function (fieldCode, skillCode) {
+        return this.element.querySelector('[data-type=competency][data-code='+fieldCode+'] .selectedItem[data-item-code='+skillCode+'] .close');
+    },
+
+    getClickedSkillCode: function (fieldCode) {
+        let fieldElement = this.queryField(fieldCode);
+        let selectElement = fieldElement.querySelector('select');
+        return this.getSkillCodeBySelect(selectElement);
+    },
+
+    moveSelectedCompetency: function (fieldCode) {
+        let fieldElement = this.queryField(fieldCode);
+        let selectedContainer = fieldElement.querySelector('.selectedContainer');
+
+        let skillCode = this.getClickedSkillCode(fieldCode);
+        let selectedOption = fieldElement.querySelector('option[value='+skillCode+']');
+        let selectedDOM = this.createSelectedCompetencyPill(selectedOption.value, selectedOption.textContent);
+
+        selectedOption.remove();
+        selectedContainer.appendChild(selectedDOM);
+    },
+
+    removeSelectedCompetency: function (fieldCode, skillCode) {
+        let competencyElement = this.queryField(fieldCode);
+        let select = competencyElement.querySelector('select');
+        let selectedElement = competencyElement.querySelector('.selectedItem[data-item-code='+skillCode+']');
+        let skillNameElement = selectedElement.querySelector('.skillName');
+
+        let variantCode = selectedElement.getAttribute('data-item-code');
+        let variantText = skillNameElement.textContent;
+
+        let selectOption = this.createCometencySelectOption(variantCode, variantText);
+        select.appendChild(selectOption);
+        selectedElement.remove();
     }
 };
 
 /**
+ * @param {HTMLElement} element
  * @param stylesManager
  * @returns {FilterView}
  */

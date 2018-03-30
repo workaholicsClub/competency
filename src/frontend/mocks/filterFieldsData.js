@@ -23,4 +23,11 @@ let fieldsData = [
     {code: 'type', label: 'Тип', type: 'multiCheckbox', value: '', variants: types}
 ];
 
-module.exports = fieldsData;
+module.exports = function (skills) {
+    let newInstance = JSON.parse(JSON.stringify(fieldsData));
+    if (skills) {
+        newInstance[1].value = skills;
+    }
+
+    return newInstance;
+};

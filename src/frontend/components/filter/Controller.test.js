@@ -3,13 +3,20 @@ const filterViewFactory = require('./View');
 const filterModelFactory = require('../../models/Filter');
 const testFieldsData = require('../../mocks/filterFieldsData');
 
+const jss = require('jss');
+const jsspreset = require('jss-preset-default').default;
+
+function getStylesManager() {
+    return jss.create(jsspreset());
+}
+
 function getFilterControllerInstance(fieldsData, rootElement) {
     if (!rootElement) {
         rootElement = document.createElement('div');
     }
 
     let filterModel = filterModelFactory({});
-    let stylesManager = {};
+    let stylesManager = getStylesManager();
 
     let view = filterViewFactory(rootElement, stylesManager);
     let controller = filterControllerFactory(view, filterModel, fieldsData);
