@@ -2,10 +2,13 @@ const coursesControllerFactory = require('./Controller');
 const coursesViewFactory = require('./View');
 const listViewFactory = require('./CoursesListView');
 const filterViewFactory = require('../filter/View');
+const filterControllerFactory = require('../filter/Controller');
 const professionsFactory = require('../../models/Professions');
 const answersFactory = require('../../models/Answers');
+const filterFactory = require('../../models/Filter');
 const coursesFactory = require('../../models/Courses');
 const trackerFactory = require('../../classes/GTagTracker');
+const filterFieldsMockData = require('../../mocks/filterFieldsData')();
 const professionsMockData = require('../../mocks/professions.json');
 const jss = require('jss');
 const jsspreset = require('jss-preset-default').default;
@@ -22,20 +25,28 @@ function getViewInstance() {
     return coursesViewFactory(rootElement, stylesManager);
 }
 
-function getControllerInstance(xhr, gtag) {
+function getControllerInstance(xhr, gtag, rootElement, professionCode) {
     let view = getViewInstance();
     let stylesManager = getStylesManager();
     let coursesList = listViewFactory(stylesManager);
 
-    let rootElement = document.createElement('div');
-    let filterView = filterViewFactory(rootElement, stylesManager);
-
-    let professionsModel = professionsFactory(professionsMockData);
+    if (!rootElement) {
+        rootElement = document.createElement('div');
+    }
 
     let answersModel = answersFactory({'codeQuality': [5, 5, 5, 5]}, configMock());
     answersModel.isLoaded = function () {
         return true;
     };
+
+    let filterView = filterViewFactory(rootElement, stylesManager);
+    let filterModel = filterFactory();
+    let filterController = filterControllerFactory(filterView, filterModel, answersModel, filterFieldsMockData);
+
+    let professionsModel = professionsFactory(professionsMockData);
+    if (professionCode) {
+        professionsModel.setProfessionCode(professionCode);
+    }
 
     let coursesModel = coursesFactory({}, configMock());
 
@@ -45,19 +56,19 @@ function getControllerInstance(xhr, gtag) {
 
     let tracker = trackerFactory(gtag, configMock());
 
-    return coursesControllerFactory(view, coursesList, filterView, professionsModel, answersModel, coursesModel, xhr, tracker);
+    return coursesControllerFactory(view, coursesList, filterController, professionsModel, answersModel, coursesModel, xhr, tracker);
 }
 
-test('ResultsController.interface', function () {
-    let resultsController = getControllerInstance();
+test('CoursesController.interface', function () {
+    let controller = getControllerInstance();
 
-    expect(resultsController.handleEvent).toBeInstanceOf(Function);
-    expect(resultsController.bindEvents).toBeInstanceOf(Function);
+    expect(controller.handleEvent).toBeInstanceOf(Function);
+    expect(controller.bindEvents).toBeInstanceOf(Function);
 });
 
-test('ResultsController.getViewModel', function () {
-    let resultsController = getControllerInstance();
-    let viewModel = resultsController.getViewModel();
+test('CoursesController.getViewModel', function () {
+    let controller = getControllerInstance();
+    let viewModel = controller.getViewModel();
 
     expect(viewModel).toHaveProperty('allCompetencies');
     expect(viewModel.allCompetencies).toHaveLength(1);
@@ -65,4 +76,19 @@ test('ResultsController.getViewModel', function () {
     expect(viewModel.allCompetencies[0]).toHaveProperty('rating');
     expect(viewModel.allCompetencies[0].code).toEqual('codeQuality');
     expect(viewModel.allCompetencies[0].rating).toEqual(4);
+});
+
+test('CoursesController.renderFilter', function () {
+    let rootElement = document.createElement('div');
+    let professionCode = 'tester';
+    let controller = getControllerInstance(undefined, undefined, rootElement, professionCode);
+
+    controller.renderFilter();
+
+    let userCompetenciesSelect = rootElement.querySelector('[data-code=userCompetencies] select');
+    expect( userCompetenciesSelect ).toBeInstanceOf(HTMLElement);
+
+    let userCompetenciesOptions = userCompetenciesSelect.querySelectorAll('option');
+    expect( userCompetenciesOptions ).toBeInstanceOf(NodeList);
+    expect( userCompetenciesOptions ).toHaveLength(8); //7 компетенций + "Не выбрано"
 });

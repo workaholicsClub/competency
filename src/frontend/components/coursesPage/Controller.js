@@ -1,6 +1,6 @@
 const BaseController = require('../base/Controller');
 
-let ResultsController = {
+let CoursesController = {
     init: function (pageView, coursesListView, filterController, professionsModel, answersModel, coursesModel, xhr, tracker) {
         this.pageView = pageView;
         this.coursesListView = coursesListView;
@@ -90,13 +90,11 @@ let ResultsController = {
             }
         });
 
+        let professionCompetencies = this.professionsModel.getCompetencies();
+
         let fieldsData = [
             {code: 'professionCode', label: 'Профессия', type: 'select', value: '', variants: professions},
-            {code: 'userCompetencies', label: 'Навыки', type: 'competency', value: [], variants: [
-                    {name: "Навык А", code: "skillA"},
-                    {name: "Навык Б", code: "skillB"},
-                    {name: "Навык В", code: "skillC"}
-                ]},
+            {code: 'userCompetencies', label: 'Навыки', type: 'competency', value: [], variants: professionCompetencies},
             {code: 'price', label: 'Стоимость', type: 'multiCheckbox', value: '', variants: [
                     {name: "Только бесплатные", code: "free"}
                 ]},
@@ -162,7 +160,7 @@ let ResultsController = {
     }
 };
 
-ResultsController = Object.assign(Object.create(BaseController), ResultsController);
+CoursesController = Object.assign(Object.create(BaseController), CoursesController);
 
 /**
  * @param pageView
@@ -173,10 +171,10 @@ ResultsController = Object.assign(Object.create(BaseController), ResultsControll
  * @param {CoursesModel} coursesModel
  * @param {XMLHttpRequest} xhr
  * @param {GTagTracker} tracker
- * @returns {ResultsController}
+ * @returns {CoursesController}
  */
 module.exports = function (pageView, coursesListView, filterController, professionsModel, answersModel, coursesModel, xhr, tracker) {
-    let instance = Object.create(ResultsController);
+    let instance = Object.create(CoursesController);
 
     if (!xhr) {
         xhr = new XMLHttpRequest();

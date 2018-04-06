@@ -67,7 +67,7 @@ let ProfessionsModel = {
             return false;
         }
 
-        var professionsModel = this;
+        let professionsModel = this;
 
         return this.professions.reduce(function (accumulator, currentProfession) {
             /**
@@ -91,9 +91,12 @@ let ProfessionsModel = {
      * @returns {ProfessionHash|boolean}
      */
     getProfession: function (professionCode) {
-        var profession;
+        let profession;
+        if (!professionCode) {
+            professionCode = this.getProfessionCode();
+        }
 
-        for (var index = 0; index < this.professions.length; index++) {
+        for (let index = 0; index < this.professions.length; index++) {
             profession = this.professions[index];
             if (profession.code === professionCode) {
                 return deepClone(profession);
@@ -104,23 +107,23 @@ let ProfessionsModel = {
     },
 
     getTimeToFillProfession: function (professionCode) {
-        var profession = this.getProfession(professionCode);
+        let profession = this.getProfession(professionCode);
         if (!profession) {
             return false;
         }
 
-        var minutesToFillCompetency = 1.5;
-        var minutesToFill = Math.round(profession.competencyCount * minutesToFillCompetency);
+        let minutesToFillCompetency = 1.5;
+        let minutesToFill = Math.round(profession.competencyCount * minutesToFillCompetency);
 
         return minutesToFill;
     },
 
     /**
-     * @param {string} professionCode
+     * @param {string=} professionCode
      * @returns {CompetencyHash[]|boolean}
      */
     getCompetencies: function (professionCode) {
-        var profession = this.getProfession(professionCode);
+        let profession = this.getProfession(professionCode);
         if (!profession) {
             return false;
         }
@@ -137,10 +140,10 @@ let ProfessionsModel = {
      * @returns {*}
      */
     getCompetencyAndIndex: function (professionCode, competencyCode) {
-        var competencies = this.getCompetencies(professionCode);
-        var competency;
+        let competencies = this.getCompetencies(professionCode);
+        let competency;
 
-        for (var index = 0; index < competencies.length; index++) {
+        for (let index = 0; index < competencies.length; index++) {
             competency = competencies[index];
             if (competency.code === competencyCode) {
                 return {competency: deepClone(competency), index: index};
@@ -156,7 +159,7 @@ let ProfessionsModel = {
      * @returns {CompetencyHash}
      */
     getCompetency: function (professionCode, competencyCode) {
-        var competencyAndIndex = this.getCompetencyAndIndex(professionCode, competencyCode);
+        let competencyAndIndex = this.getCompetencyAndIndex(professionCode, competencyCode);
         return competencyAndIndex.competency;
     },
 
@@ -165,12 +168,12 @@ let ProfessionsModel = {
      * @returns {CompetencyHash|boolean}
      */
     getAnyProfessionCompetency: function (competencyCode) {
-        var professions = this.getProfessions();
+        let professions = this.getProfessions();
 
-        for (var index in professions) {
-            var profession = professions[index];
+        for (let index in professions) {
+            let profession = professions[index];
 
-            var competency = this.getCompetency(profession.code, competencyCode);
+            let competency = this.getCompetency(profession.code, competencyCode);
             if (competency) {
                 return competency;
             }
@@ -185,7 +188,7 @@ let ProfessionsModel = {
      * @returns {number}
      */
     getCompetencyIndex: function (professionCode, competencyCode) {
-        var competencyAndIndex = this.getCompetencyAndIndex(professionCode, competencyCode);
+        let competencyAndIndex = this.getCompetencyAndIndex(professionCode, competencyCode);
         return competencyAndIndex.index;
     },
 
@@ -217,7 +220,7 @@ module.exports = function (props, config, xhr, professionCode) {
         xhr = new XMLHttpRequest();
     }
 
-    var professions = Object.create(ProfessionsModel);
+    let professions = Object.create(ProfessionsModel);
     professions.init(props, config, xhr, professionCode);
 
     return professions;

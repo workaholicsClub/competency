@@ -5,7 +5,7 @@ const professionsMockData = require('../mocks/professions.json');
 const getXHRMock = require('../mocks/getXHRMock.fn');
 
 test('ProfessionsModel.interface', function () {
-    var professionsModel = professionsModelFactory({});
+    let professionsModel = professionsModelFactory({});
 
     expect(BaseModel.isPrototypeOf(professionsModel)).toBeTruthy();
     expect(professionsModel.addEventListener).toBeInstanceOf(Function);
@@ -17,19 +17,19 @@ test('ProfessionsModel.interface', function () {
 });
 
 test('ProfessionsModel.makeRequestUrl', function () {
-    var professionsModel = professionsModelFactory({}, configMockFactory());
+    let professionsModel = professionsModelFactory({}, configMockFactory());
 
-    var expectedUrl = '//test.api.url/profession';
+    let expectedUrl = '//test.api.url/profession';
     expect(professionsModel.makeRequestUrl()).toEqual(expectedUrl);
 });
 
 test('ProfessionsModel.load', function () {
-    var loadHandler = jest.fn();
-    var errorHandler = jest.fn();
-    var props = {};
-    var xhrMock = getXHRMock('{"test": "123"}');
+    let loadHandler = jest.fn();
+    let errorHandler = jest.fn();
+    let props = {};
+    let xhrMock = getXHRMock('{"test": "123"}');
 
-    var professionsModel = professionsModelFactory(props, configMockFactory(), xhrMock);
+    let professionsModel = professionsModelFactory(props, configMockFactory(), xhrMock);
     professionsModel.addEventListener('load', loadHandler);
     professionsModel.addEventListener('loadError', errorHandler);
 
@@ -43,12 +43,12 @@ test('ProfessionsModel.load', function () {
 });
 
 test('ProfessionsModel.load (двойной вызов)', function () {
-    var loadHandler = jest.fn();
-    var props = {};
-    var xhrMock = getXHRMock('{"test": "123"}', true);
-    var waitLoadMs = 150;
+    let loadHandler = jest.fn();
+    let props = {};
+    let xhrMock = getXHRMock('{"test": "123"}', true);
+    let waitLoadMs = 150;
 
-    var professionsModel = professionsModelFactory(props, configMockFactory(), xhrMock);
+    let professionsModel = professionsModelFactory(props, configMockFactory(), xhrMock);
     professionsModel.addEventListener('load', loadHandler);
     xhrMock.responseType = 'load';
 
@@ -69,10 +69,10 @@ test('ProfessionsModel.load (двойной вызов)', function () {
 });
 
 test('ProfessionsModel.loadAndSetFields', function () {
-    var expectedValue = '321abc123';
-    var xhrMock = getXHRMock('{"testField": "' + expectedValue + '"}');
+    let expectedValue = '321abc123';
+    let xhrMock = getXHRMock('{"testField": "' + expectedValue + '"}');
 
-    var professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
+    let professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
 
     return new Promise(function (resolve, reject) {
         professionsModel.addEventListener('load', function () {
@@ -90,9 +90,9 @@ test('ProfessionsModel.loadAndSetFields', function () {
 });
 
 test('ProfessionsModel.isLoaded', function () {
-    var xhrMock = getXHRMock(JSON.stringify(professionsMockData));
+    let xhrMock = getXHRMock(JSON.stringify(professionsMockData));
 
-    var professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
+    let professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
     expect( professionsModel.isLoaded() ).toBeFalsy();
 
     return new Promise(function (resolve, reject) {
@@ -111,10 +111,10 @@ test('ProfessionsModel.isLoaded', function () {
 });
 
 test('ProfessionsModel.setProps', function () {
-    var changeHandler = jest.fn();
-    var testValue = '123def321';
+    let changeHandler = jest.fn();
+    let testValue = '123def321';
 
-    var professionsModel = professionsModelFactory({});
+    let professionsModel = professionsModelFactory({});
     professionsModel.addEventListener('change', changeHandler);
 
     professionsModel.setProps({'testField': testValue});
@@ -124,8 +124,8 @@ test('ProfessionsModel.setProps', function () {
 });
 
 test('ProfessionsModel.getProfessions', function () {
-    var xhrMock = getXHRMock(JSON.stringify(professionsMockData));
-    var expectedList = [{
+    let xhrMock = getXHRMock(JSON.stringify(professionsMockData));
+    let expectedList = [{
         code: "webDeveloper",
         name: "Веб-разработчик (PHP)",
         competencyCount: 24,
@@ -145,11 +145,11 @@ test('ProfessionsModel.getProfessions', function () {
         "timeToFill": 36
     }];
 
-    var professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
+    let professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
 
     return new Promise(function (resolve, reject) {
         professionsModel.addEventListener('load', function () {
-            var recievedList = professionsModel.getProfessions();
+            let recievedList = professionsModel.getProfessions();
 
             try {
                 expect(recievedList).toEqual(expectedList);
@@ -164,12 +164,12 @@ test('ProfessionsModel.getProfessions', function () {
 });
 
 test('ProfessionsModel.getProfession', function () {
-    var xhrMock = getXHRMock(JSON.stringify(professionsMockData));
-    var professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
+    let xhrMock = getXHRMock(JSON.stringify(professionsMockData));
+    let professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
 
     return new Promise(function (resolve, reject) {
         professionsModel.addEventListener('load', function () {
-            var profession = professionsModel.getProfession('tester');
+            let profession = professionsModel.getProfession('tester');
 
             try {
                 expect(profession).toHaveProperty('code');
@@ -188,8 +188,8 @@ test('ProfessionsModel.getProfession', function () {
 });
 
 test('ProfessionsModel.getProfession (с данными из свойств)', function () {
-    var professionsModel = professionsModelFactory(professionsMockData);
-    var profession = professionsModel.getProfession('tester');
+    let professionsModel = professionsModelFactory(professionsMockData);
+    let profession = professionsModel.getProfession('tester');
 
     expect(profession).toHaveProperty('code');
     expect(profession).toHaveProperty('name');
@@ -198,34 +198,45 @@ test('ProfessionsModel.getProfession (с данными из свойств)', f
 });
 
 test('ProfessionsModel.getTimeToFillProfession', function () {
-    var professionsModel = professionsModelFactory(professionsMockData);
+    let professionsModel = professionsModelFactory(professionsMockData);
 
     expect(professionsModel.getTimeToFillProfession('webDeveloper')).toEqual(36);
     expect(professionsModel.getTimeToFillProfession('tester')).toEqual(11);
 });
 
 
+function testComptency(competency) {
+    expect(competency).toHaveProperty('code');
+    expect(competency).toHaveProperty('name');
+    expect(competency).toHaveProperty('level1');
+    expect(competency).toHaveProperty('level2');
+    expect(competency).toHaveProperty('level3');
+    expect(competency).toHaveProperty('level4');
+    expect(competency).toHaveProperty('group');
+    expect(competency.group).toHaveProperty('code');
+    expect(competency.group).toHaveProperty('name');
+}
+
 test('ProfessionsModel.getCompetencies', function () {
-    var xhrMock = getXHRMock(JSON.stringify(professionsMockData));
-    var professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
+    let xhrMock = getXHRMock(JSON.stringify(professionsMockData));
+    let professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
 
     return new Promise(function (resolve, reject) {
         professionsModel.addEventListener('load', function () {
-            var competencies = professionsModel.getCompetencies('tester');
+            let competencies = professionsModel.getCompetencies('tester');
+            let noProfessionCompetencies = professionsModel.getCompetencies();
+
+            professionsModel.setProfessionCode('tester');
+            let setProfessionCompetencies = professionsModel.getCompetencies();
 
             try {
                 expect(competencies).toHaveLength(7);
+                testComptency( competencies[0] );
 
-                var competency = competencies[0];
-                expect(competency).toHaveProperty('code');
-                expect(competency).toHaveProperty('name');
-                expect(competency).toHaveProperty('level1');
-                expect(competency).toHaveProperty('level2');
-                expect(competency).toHaveProperty('level3');
-                expect(competency).toHaveProperty('level4');
-                expect(competency).toHaveProperty('group');
-                expect(competency.group).toHaveProperty('code');
-                expect(competency.group).toHaveProperty('name');
+                expect(noProfessionCompetencies).toBeFalsy();
+
+                expect(setProfessionCompetencies).toHaveLength(7);
+                testComptency( setProfessionCompetencies[0] );
 
                 resolve();
             }
@@ -239,24 +250,24 @@ test('ProfessionsModel.getCompetencies', function () {
 });
 
 test('ProfessionsModel.getCompetency', function () {
-    var xhrMock = getXHRMock(JSON.stringify(professionsMockData));
-    var professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
-    var professionCode = 'tester';
-    var expectedCompetencyCode = 'operatingSystems';
-    var expectedCompetencyIndex = 3;
+    let xhrMock = getXHRMock(JSON.stringify(professionsMockData));
+    let professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
+    let professionCode = 'tester';
+    let expectedCompetencyCode = 'operatingSystems';
+    let expectedCompetencyIndex = 3;
 
     return new Promise(function (resolve, reject) {
         professionsModel.addEventListener('load', function () {
 
             try {
-                var competencyAndIndex = professionsModel.getCompetencyAndIndex(professionCode, expectedCompetencyCode);
-                var competency = professionsModel.getCompetency(professionCode, expectedCompetencyCode);
-                var competencyIndex = professionsModel.getCompetencyIndex(professionCode, expectedCompetencyCode);
-                var nonExistantCompetency = professionsModel.getCompetency('tester', 'dataScience');
-                var nonExistantProfession = professionsModel.getCompetency('dancer', 'operatingSystems');
+                let competencyAndIndex = professionsModel.getCompetencyAndIndex(professionCode, expectedCompetencyCode);
+                let competency = professionsModel.getCompetency(professionCode, expectedCompetencyCode);
+                let competencyIndex = professionsModel.getCompetencyIndex(professionCode, expectedCompetencyCode);
+                let nonExistantCompetency = professionsModel.getCompetency('tester', 'dataScience');
+                let nonExistantProfession = professionsModel.getCompetency('dancer', 'operatingSystems');
 
-                var anyCompetencyDeveloper = professionsModel.getAnyProfessionCompetency('codeQuality');
-                var anyCompetencyTester = professionsModel.getAnyProfessionCompetency('probabiltyBasics');
+                let anyCompetencyDeveloper = professionsModel.getAnyProfessionCompetency('codeQuality');
+                let anyCompetencyTester = professionsModel.getAnyProfessionCompetency('probabiltyBasics');
 
                 expect(nonExistantCompetency).toBeFalsy();
                 expect(nonExistantProfession).toBeFalsy();
@@ -286,14 +297,17 @@ test('ProfessionsModel.getCompetency', function () {
 });
 
 test('ProfessionsModel.professionCode', function () {
-    var professionCode = 'webDeveloper';
+    let professionCode = 'webDeveloper';
 
-    var profession = professionsModelFactory({}, configMockFactory());
+    /**
+     * @type {ProfessionsModel} profession
+     */
+    let profession = professionsModelFactory({}, configMockFactory());
     expect(profession.getProfessionCode()).toBeUndefined();
 
     profession.setProfessionCode(professionCode);
     expect(profession.getProfessionCode()).toEqual(professionCode);
 
-    var professionWithCode = professionsModelFactory({}, configMockFactory(), null, professionCode);
+    let professionWithCode = professionsModelFactory({}, configMockFactory(), null, professionCode);
     expect(professionWithCode.getProfessionCode()).toEqual(professionCode);
 });

@@ -1,4 +1,5 @@
 const h = require('hyperscript');
+const bsn = require('bootstrap.native/dist/bootstrap-native-v4');
 
 const Selectivity = require('selectivity');
 require('selectivity/dropdown');
@@ -20,12 +21,16 @@ require('selectivity/templates');
  * @property {string} text
  */
 
+/**
+ * @class
+ */
 let FilterView = {
     init: function (element, stylesManager) {
         this.element = element;
         this.stylesManager = stylesManager;
         this.selectivityInstances = {};
         this.styles = this.createStyles();
+        this.skillModalInstance = false;
     },
 
     createStyles: function () {
@@ -33,10 +38,14 @@ let FilterView = {
             buttons: {
                 'float': 'right'
             },
+            skillModal: {
+                'max-width': '75%'
+            },
             levelTrigger: {
                 'color': '#fff',
                 'text-decoration': 'none',
                 'border-bottom': '1px dashed #fff',
+                'cursor': 'pointer',
                 '&:hover': {
                     'color': '#fff',
                     'text-decoration': 'none',
@@ -112,12 +121,36 @@ let FilterView = {
         ];
     },
 
+    createLevelText: function(levelPercent) {
+        let classes = this.styles.classes;
+
+        let levelText = h('small.mb-0',
+            h('p.mb-0',
+                h('span', 'Уровень владения: '),
+                h('span.levelText', '-')
+            ),
+            h('span.levelTrigger.'+classes.levelTrigger, {href: '#'}, 'определить')
+        );
+
+        if (levelPercent) {
+            levelText = h('small.mb-0',
+                h('p.mb-0',
+                    h('span', 'Уровень владения: '),
+                    h('span.levelText.levelTrigger.'+classes.levelTrigger, levelPercent+'%')
+                )
+            );
+        }
+
+        return levelText;
+    },
+
     /**
      * @param {string} variantCode
      * @param {string} variantText
+     * @param {string} levelPercent
      * @returns {HTMLElement}
      */
-    createSelectedCompetencyPill: function (variantCode, variantText) {
+    createSelectedCompetencyPill: function (variantCode, variantText, levelPercent) {
         let classes = this.styles.classes;
 
         let removeButton = h('button.close.text-white',
@@ -133,14 +166,9 @@ let FilterView = {
             buttons
         );
 
-        let levelText = h('small.mb-0',
-            h('p.mb-0', 'Уровень владения: '),
-            h('a.'+classes.levelTrigger, {href: '#'}, 'определить')
-        );
-
         let skillPill = h('div.bg-primary.text-white.p-2.mt-2.selectedItem', {attrs: {'data-item-code': variantCode}},
             header,
-            levelText
+            h('div.levelTextContainer', this.createLevelText(levelPercent))
         );
 
         return skillPill;
@@ -183,7 +211,7 @@ let FilterView = {
             ),
             h('div.selectedContainer',
                 selectedSkills.map(function (variant) {
-                    return view.createSelectedCompetencyPill(variant.code, variant.name);
+                    return view.createSelectedCompetencyPill(variant.code, variant.name, variant.ratingPercent);
                 })
             )
         );
@@ -195,15 +223,26 @@ let FilterView = {
     },
 
     /**
+     * @param {HTMLElement} element
+     */
+    getSkillCodeBySubElement: function (element) {
+        let skillElement = element.closest('.selectedItem');
+        return skillElement.getAttribute('data-item-code');
+    },
+
+    /**
      * @param {HTMLElement} buttonElement
      */
     getSkillCodeByRemoveButton: function (buttonElement) {
-        let skillElement = buttonElement.closest('.selectedItem');
-        return skillElement.getAttribute('data-item-code');
+        return this.getSkillCodeBySubElement(buttonElement);
     },
 
     getSkillCodeBySelect: function (selectElement) {
         return selectElement.value;
+    },
+
+    getSkillCodeByLevelTrigger: function (triggerElement) {
+        return this.getSkillCodeBySubElement(triggerElement);
     },
 
     getFieldCodeByRemoveButton: function (buttonElement) {
@@ -212,6 +251,10 @@ let FilterView = {
 
     getFieldCodeBySelect: function (selectElement) {
         return this.getFieldCodeBySubElement(selectElement);
+    },
+
+    getFieldCodeByLevelTrigger: function (triggerElement) {
+        return this.getFieldCodeBySubElement(triggerElement);
     },
 
     /**
@@ -336,7 +379,8 @@ let FilterView = {
      */
     createDOM: function (fields) {
         return h('form#filter',
-            fields.map(this.createFieldGroup, this)
+            fields.map(this.createFieldGroup, this),
+            this.createSkillModal()
         );
     },
 
@@ -347,6 +391,8 @@ let FilterView = {
     render: function (fields) {
         let filterDOM = this.createDOM(fields);
         this.element.appendChild(filterDOM);
+
+        this.skillModalInstance = new bsn.Modal(this.getSkillModal());
     },
 
     /**
@@ -496,10 +542,24 @@ let FilterView = {
     },
 
     /**
+     * @returns {NodeList}
+     */
+    getAllSkillLevelTriggers: function () {
+        return this.element.querySelectorAll('[data-type=competency] .levelTrigger');
+    },
+
+    /**
      * @returns {HTMLElement}
      */
     getSkillRemoveButton: function (fieldCode, skillCode) {
         return this.element.querySelector('[data-type=competency][data-code='+fieldCode+'] .selectedItem[data-item-code='+skillCode+'] .close');
+    },
+
+    /**
+     * @returns {HTMLElement}
+     */
+    getSkillLevelTrigger: function (fieldCode, skillCode) {
+        return this.element.querySelector('[data-type=competency][data-code='+fieldCode+'] .selectedItem[data-item-code='+skillCode+'] .levelTrigger');
     },
 
     getClickedSkillCode: function (fieldCode) {
@@ -508,13 +568,13 @@ let FilterView = {
         return this.getSkillCodeBySelect(selectElement);
     },
 
-    moveSelectedCompetency: function (fieldCode) {
+    moveSelectedCompetency: function (fieldCode, ratingPercent) {
         let fieldElement = this.queryField(fieldCode);
         let selectedContainer = fieldElement.querySelector('.selectedContainer');
 
         let skillCode = this.getClickedSkillCode(fieldCode);
         let selectedOption = fieldElement.querySelector('option[value='+skillCode+']');
-        let selectedDOM = this.createSelectedCompetencyPill(selectedOption.value, selectedOption.textContent);
+        let selectedDOM = this.createSelectedCompetencyPill(selectedOption.value, selectedOption.textContent, ratingPercent);
 
         selectedOption.remove();
         selectedContainer.appendChild(selectedDOM);
@@ -532,6 +592,83 @@ let FilterView = {
         let selectOption = this.createCometencySelectOption(variantCode, variantText);
         select.appendChild(selectOption);
         selectedElement.remove();
+    },
+
+    updateCompetencyRating: function (fieldCode, competencies) {
+        let competencyRatingsPercent = competencies.reduce(function (accumulator, competency) {
+            accumulator[competency.code] = competency.ratingPercent;
+            return accumulator;
+        }, {});
+
+        let competencyElement = this.queryField(fieldCode);
+        let selectedCompetencyElements = competencyElement.querySelectorAll('.selectedItem');
+
+        selectedCompetencyElements.forEach(function (competencyElement) {
+            let competencyCode = competencyElement.getAttribute('data-item-code');
+            let competencyRating = competencyRatingsPercent[competencyCode];
+
+            let levelText = this.createLevelText(competencyRating);
+            let levelTextContainer = competencyElement.querySelector('.levelTextContainer');
+            levelTextContainer.innerHTML = levelText.outerHTML;
+        }, this);
+    },
+
+    updateAllCompetencyRatings: function (fieldsData) {
+        fieldsData.map(function (fieldData) {
+            if (fieldData.type === 'competency') {
+                let fieldCompetencies = fieldData.variants;
+                let fieldCode = fieldData.code;
+
+                this.updateCompetencyRating(fieldCode, fieldCompetencies);
+            }
+        }, this);
+    },
+
+    createSkillModal: function () {
+        let classes = this.styles.classes;
+
+        return h('div#skillModal.modal.fade',
+            h('div.modal-dialog.'+classes.skillModal,
+                h('div.modal-content',
+                    h('div.modal-header',
+                        h('h5.modal-title', 'Определение уровня владения навыком'),
+                        h('button.close', {attrs: {'data-dismiss': 'modal', 'aria-label': 'Закрыть'}},
+                            h('span', {attrs: {'aria-hidden': 'true'}}, '\u00d7')
+                        )
+                    ),
+                    h('div.modal-body.skillContainer')
+                )
+            )
+        );
+    },
+
+    getSkillModal: function () {
+        return this.element.querySelector('#skillModal');
+    },
+
+    getSkillTitleContainer: function () {
+        return this.getSkillModal().querySelector('.modal-title')
+    },
+
+    getSkillContainer: function () {
+        return this.getSkillModal().querySelector('.skillContainer');
+    },
+
+    setSkillModalTitle: function (skillName) {
+        let titleElement = this.getSkillTitleContainer();
+        titleElement.innerHTML = skillName;
+    },
+
+    setSkillSelectors: function (skillViewDOM) {
+        let skillContainer = this.getSkillContainer();
+        skillContainer.innerHTML = '';
+        skillContainer.appendChild(skillViewDOM);
+    },
+
+    showSkillModal: function (skillName, skillViewDOM) {
+        this.setSkillModalTitle(skillName);
+        this.setSkillSelectors(skillViewDOM);
+        this.skillModalInstance.show();
     }
 };
 

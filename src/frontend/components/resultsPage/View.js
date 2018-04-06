@@ -2,7 +2,7 @@ const h = require('hyperscript');
 const footerViewFactory = require('../footer/View');
 const bsn = require('bootstrap.native/dist/bootstrap-native-v4');
 
-var ResultView = {
+let ResultView = {
     init: function (element, stylesManager) {
         this.element = element;
         this.stylesManager = stylesManager;
@@ -130,7 +130,7 @@ var ResultView = {
     },
 
     createDOM: function (viewModel) {
-        var footerView = footerViewFactory(this.stylesManager);
+        let footerView = footerViewFactory(this.stylesManager);
         return h('div#page.container-fluid.mt-3',
             h('div#head.row',
                 h('div.col-md-12',
@@ -154,7 +154,7 @@ var ResultView = {
     },
 
     render: function (viewModel) {
-        var moduleElement = this.createDOM(viewModel);
+        let moduleElement = this.createDOM(viewModel);
         this.element.innerHTML = moduleElement.outerHTML;
 
         this.successModalInstance = new bsn.Modal(this.getSuccessModal());
@@ -162,7 +162,7 @@ var ResultView = {
 };
 
 module.exports = function (element, stylesManager) {
-    var instance = Object.create(ResultView);
+    let instance = Object.create(ResultView);
     instance.init(element, stylesManager);
     return instance;
 };

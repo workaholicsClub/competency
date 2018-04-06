@@ -1,28 +1,32 @@
 const AnswersModel = require('./Answers').class;
 const cookieStorageFactory = require('../classes/CookieStorage');
 
-var SkillAnswersModel = {
+let SkillAnswersModel = {
     /**
      * @param {string} competencyCode
      * @returns {number|boolean}
      */
     getCompetencyRating: function (competencyCode) {
-        var answers = this.get(competencyCode);
+        let answers = this.get(competencyCode);
 
         if ( !(answers instanceof Array) ) {
             return false;
         }
 
-        var answersSum = answers.reduce(function (arraySum, current) {
+        if (answers.length === 0) {
+            return false;
+        }
+
+        let answersSum = answers.reduce(function (arraySum, current) {
             return arraySum + current;
-        });
+        }, 0);
 
-        var maxAnswers = answers.length * 4;
-        var rating = answersSum / maxAnswers;
-        var maxRatingCompat = 4;
-        var ratingCompat = rating * maxRatingCompat;
+        let maxAnswers = answers.length * 4;
+        let rating = answersSum / maxAnswers;
+        let maxRatingCompat = 4;
+        let ratingCompat = rating * maxRatingCompat;
 
-        var humanRating = parseFloat( ratingCompat.toFixed(2) );
+        let humanRating = parseFloat( ratingCompat.toFixed(2) );
 
         return humanRating;
     }
@@ -50,7 +54,7 @@ module.exports = function (props, config, xhr, storage) {
         storage = cookieStorageFactory('skillAnswers');
     }
 
-    var answers = Object.create(SkillAnswersModel);
+    let answers = Object.create(SkillAnswersModel);
     answers.init(props, config, xhr, storage);
 
     return answers;

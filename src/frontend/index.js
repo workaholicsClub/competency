@@ -13,6 +13,9 @@ const coursesControllerFactory = require('./components/coursesPage/Controller');
 const coursesViewFactory = require('./components/coursesPage/View');
 const coursesListFactory = require('./components/coursesPage/CoursesListView');
 
+const skillControllerFactory = require('./components/skillLevel/Controller');
+const skillViewFactory = require('./components/skillLevel/View');
+
 const filterControllerFactory = require('./components/filter/Controller');
 const filterViewFactory = require('./components/filter/View');
 
@@ -53,6 +56,9 @@ function initAndGoToRoute() {
 
     let config = configFactory();
     let tracker = trackerFactory(gtag, config);
+    /**
+     * @type {ProfessionsModel} professionsModel
+     */
     let professionsModel = professionsFactory({}, config);
     let answersModel = answersFactory({}, config);
     let coursesModel = coursesFactory({}, config);
@@ -68,12 +74,15 @@ function initAndGoToRoute() {
     });
 
     page('/test/:professionCode/:competencyCode?', function (context) {
-        tracker.trackPageview(context.pathname);
         /**
          * @param {RouteContextHash} context
          */
+        tracker.trackPageview(context.pathname);
+        let skillView = skillViewFactory(false, stylesManager);
+        let skillController = skillControllerFactory(skillView, answersModel);
+
         let testView = testPageViewFactory(rootElement, stylesManager);
-        let testController = testPageControllerFactory(testView, professionsModel, answersModel, context.params.professionCode, context.params.competencyCode);
+        let testController = testPageControllerFactory(testView, professionsModel, answersModel, context.params.professionCode, context.params.competencyCode, skillController);
 
         testController.loadDataAndRenderIndexPage();
     });
@@ -87,14 +96,21 @@ function initAndGoToRoute() {
         resultsController.loadDataAndRenderIndexPage();
     });
 
-    page('/courses', function () {
-        tracker.trackPageview('/courses');
+    page('/courses/:professionCode?', function (context) {
+        tracker.trackPageview(context.pathname);
         let coursesView = coursesViewFactory(rootElement, stylesManager);
         let listView = coursesListFactory(stylesManager);
         let filterView = filterViewFactory(false, stylesManager);
+        let skillView = skillViewFactory(false, stylesManager);
         let xhr = undefined;
 
-        let filterController = filterControllerFactory(filterView, coursesFilter);
+        if (context.params.professionCode) {
+            professionsModel.setProfessionCode(context.params.professionCode);
+        }
+
+        let skillController = skillControllerFactory(skillView, answersModel);
+        let fieldsData = [];
+        let filterController = filterControllerFactory(filterView, coursesFilter, answersModel, fieldsData, skillController);
 
         let coursesController = coursesControllerFactory(coursesView, listView, filterController, professionsModel, answersModel, coursesModel, xhr, tracker);
         coursesController.loadDataAndRenderIndexPage();

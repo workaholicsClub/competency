@@ -2,7 +2,7 @@ const BaseModel = require('./Base');
 const XhrModelMixin = require('./XhrModelMixin');
 const cookieStorageFactory = require('../classes/CookieStorage');
 
-var AnswersModel = {
+let AnswersModel = {
     init: function (props, config, xhr, storage) {
         this.initPropsAndEvents(props);
         this.initXhr(xhr);
@@ -18,8 +18,8 @@ var AnswersModel = {
      * @returns {number|boolean}
      */
     getCompetencyRating: function (competencyCode) {
-        var answers = this.get(competencyCode);
-        var maxLevelRating = 4;
+        let answers = this.get(competencyCode);
+        let maxLevelRating = 4;
 
         if ( !(answers instanceof Array) ) {
             return false;
@@ -29,8 +29,8 @@ var AnswersModel = {
             return false;
         }
 
-        var answersAllMissed = answers.reduce(function (allMissedAccumulator, current) {
-            var isMissedAnswer = current === false || current === 0;
+        let answersAllMissed = answers.reduce(function (allMissedAccumulator, current) {
+            let isMissedAnswer = current === false || current === 0;
             allMissedAccumulator = allMissedAccumulator && isMissedAnswer;
 
             return allMissedAccumulator;
@@ -40,9 +40,9 @@ var AnswersModel = {
             return false;
         }
 
-        var normalizedAnswers = answers.map(function (answer) {
-            var noAnswer = 0;
-            var notMatchingAnswer = 1;
+        let normalizedAnswers = answers.map(function (answer) {
+            let noAnswer = 0;
+            let notMatchingAnswer = 1;
 
             if (answer === noAnswer) {
                 answer = notMatchingAnswer;
@@ -51,18 +51,18 @@ var AnswersModel = {
             return (answer-1)/maxLevelRating;
         });
 
-        var rating = normalizedAnswers.reduce(function (arraySum, current) {
+        let rating = normalizedAnswers.reduce(function (arraySum, current) {
             return arraySum + current;
         });
 
-        var humanRating = parseFloat( rating.toFixed(2) );
+        let humanRating = parseFloat( rating.toFixed(2) );
 
         return (!answersAllMissed) ? humanRating : false;
     },
 
     getAllRatings: function () {
-        var competencyCodes = Object.keys(this.props);
-        var ratings = {};
+        let competencyCodes = Object.keys(this.props);
+        let ratings = {};
 
         competencyCodes.forEach(function (competencyCode) {
             ratings[competencyCode] = this.getCompetencyRating(competencyCode);
@@ -72,7 +72,7 @@ var AnswersModel = {
     },
 
     bindChangeHandlers: function () {
-        var model = this;
+        let model = this;
         this.addEventListener('change', function (event) {
             model.saveAnswers.call(model, event);
         });
@@ -89,7 +89,7 @@ var AnswersModel = {
 
     loadAnswers: function () {
         if (this.storage) {
-            var savedAnswers = this.storage.load();
+            let savedAnswers = this.storage.load();
 
             if (savedAnswers) {
                 this.setPropsWithoutEvent(savedAnswers);
@@ -101,7 +101,7 @@ var AnswersModel = {
      * @param {FormData} formData
      */
     saveResults: function (formData) {
-        var saveUrl = '/api/results/save';
+        let saveUrl = '/api/results/save';
 
         this.xhr.open("POST", saveUrl);
         this.xhr.send(formData);
@@ -121,6 +121,11 @@ var AnswersModel = {
     },
 
     getSkillLevelsText: function() {
+        //['осведомленность', 'умение', 'экспертиза', 'лидерство']
+        //['знаю', 'умею', 'имею навык', 'могу обучать']
+        //['ознакомительный', 'воспроизводственный', 'реконструктивный', 'творческий']
+        //['Ознакомлен', 'Повторяю чьи-то действия', 'Осмысляю, отношусь критически', 'Занимаюсь творчеством'];
+
         return [
             'Не знаю',
             'Знаю',
@@ -153,7 +158,7 @@ module.exports = function (props, config, xhr, storage) {
         storage = cookieStorageFactory('answers');
     }
 
-    var answers = Object.create(AnswersModel);
+    let answers = Object.create(AnswersModel);
     answers.init(props, config, xhr, storage);
 
     return answers;

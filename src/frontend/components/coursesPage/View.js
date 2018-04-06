@@ -1,7 +1,7 @@
 const h = require('hyperscript');
 const footerViewFactory = require('../footer/View');
 
-var CoursesView = {
+let CoursesView = {
     init: function (element, stylesManager) {
         this.element = element;
         this.stylesManager = stylesManager;
@@ -26,7 +26,7 @@ var CoursesView = {
     },
 
     createDOM: function (viewModel) {
-        var footerView = footerViewFactory(this.stylesManager);
+        let footerView = footerViewFactory(this.stylesManager);
         return h('div#page.container-fluid.mt-3',
             h('div#head.row',
                 h('div.col-md-12',
@@ -48,13 +48,13 @@ var CoursesView = {
     },
 
     render: function (viewModel) {
-        var moduleElement = this.createDOM(viewModel);
+        let moduleElement = this.createDOM(viewModel);
         this.element.innerHTML = moduleElement.outerHTML;
     }
 };
 
 module.exports = function (element, stylesManager) {
-    var instance = Object.create(CoursesView);
+    let instance = Object.create(CoursesView);
     instance.init(element, stylesManager);
     return instance;
 };

@@ -1,14 +1,24 @@
 const BaseController = require('../base/Controller');
 
-var TestController = {
-    init: function (view, professionsModel, answersModel, professionCode, competencyCode) {
+let TestController = {
+    init: function (view, professionsModel, answersModel, professionCode, competencyCode, skillLevelController) {
         this.view = view;
         this.professionsModel = professionsModel;
         this.answersModel = answersModel;
-        this.professionCode = professionCode;
-        this.competencyCode = competencyCode;
+        this.skillLevelController = skillLevelController;
         this.element = view.getRootElement();
         this.events = [];
+
+        this.setProfessionCode(professionCode);
+        this.setCompetencyCode(competencyCode);
+    },
+
+    setProfessionCode: function (professionCode) {
+        this.professionCode = professionCode;
+    },
+
+    setCompetencyCode: function (competencyCode) {
+        this.competencyCode = competencyCode;
     },
 
     initEvents: function () {
@@ -17,17 +27,6 @@ var TestController = {
         ];
 
         this.bindEvents();
-    },
-
-    initViewEvents: function () {
-        var additionalEvents = [
-            {types: ['change'], target: this.view.getAllLevelSelects(), handler: this.markLevelCompletedAndUpdateAnswer},
-            {types: ['input'], target: this.view.getAllSkillSliders(), handler: this.changeSliderDescriptionTextAndUpdateAnswer}
-        ];
-
-        this.events = this.events.concat(additionalEvents);
-
-        this.bindEvents(additionalEvents);
     },
 
     loadDataAndRenderIndexPage: function () {
@@ -42,10 +41,10 @@ var TestController = {
     },
 
     getCompetencyCode: function () {
-        var competencyCode = this.competencyCode;
+        let competencyCode = this.competencyCode;
         if (!competencyCode) {
-            var competencies = this.professionsModel.getCompetencies(this.professionCode);
-            var firstCompetency = competencies[0];
+            let competencies = this.professionsModel.getCompetencies(this.professionCode);
+            let firstCompetency = competencies[0];
             competencyCode = firstCompetency ? firstCompetency.code : false;
         }
 
@@ -53,11 +52,11 @@ var TestController = {
     },
 
     changeSliderDescriptionTextAndUpdateAnswer: function (event) {
-        var sliderElement = event.currentTarget;
-        var levelTexts = this.answersModel.getSkillLevelsText();
+        let sliderElement = event.currentTarget;
+        let levelTexts = this.answersModel.getSkillLevelsText();
         this.view.updateSkillText(sliderElement, levelTexts);
 
-        var answers = this.view.getLevelSkillAnswers();
+        let answers = this.view.getLevelSkillAnswers();
         this.answersModel.set(this.getCompetencyCode(), answers);
     },
 
@@ -65,37 +64,21 @@ var TestController = {
      * @param {Event} event
      */
     markLevelCompletedAndUpdateAnswer: function (event) {
-        var selectElement = event.currentTarget;
+        let selectElement = event.currentTarget;
         this.view.markLevelCompleted(selectElement);
 
-        var answers = this.view.getLevelAnswers();
+        let answers = this.view.getLevelAnswers();
         this.answersModel.set(this.getCompetencyCode(), answers);
     },
 
-    getViewModel: function () {
-        var profession = this.professionsModel.getProfession(this.professionCode);
-        var competencies = this.professionsModel.getCompetencies(this.professionCode);
-        var currentCompetency = this.professionsModel.getCompetency(this.professionCode, this.competencyCode) || competencies[0];
-        var competencyIndex = this.professionsModel.getCompetencyIndex(this.professionCode, this.competencyCode) || 0;
-        var nextCompetency = competencyIndex < competencies.length - 1 ? competencies[competencyIndex+1] : false;
-        var group = currentCompetency.group;
+    getViewSkills: function (currentCompetency) {
+        let skills = [];
+        let skillAnswersText = this.answersModel.getSkillLevelsText();
+        let answers = this.answersModel.get(currentCompetency.code) || false;
 
-        var levels = [];
-        var answers = this.answersModel.get(currentCompetency.code) || false;
-        for (var humanIndex = 1; humanIndex <= 4; humanIndex++) {
-            var answer = answers ? answers[humanIndex-1] : false;
-            levels.push({
-                answer: answer,
-                isAnswered: answer > 0,
-                text: currentCompetency['level'+humanIndex]
-            });
-        }
-
-        var skills = [];
-        var skillAnswersText = this.answersModel.getSkillLevelsText();
         currentCompetency.skills.forEach(function (skill, index) {
-            var answer = answers ? (answers[index] || false) : false;
-            var answerForSlider = answer !== false
+            let answer = answers ? (answers[index] || false) : false;
+            let answerForSlider = answer !== false
                 ? parseInt(answer).toString()
                 : '0';
 
@@ -109,6 +92,35 @@ var TestController = {
                 additionalDescription: skill.additionalDescription
             });
         });
+
+        return skills;
+    },
+
+    getCurrentCompetency: function () {
+        let competencies = this.professionsModel.getCompetencies(this.professionCode);
+        return this.professionsModel.getCompetency(this.professionCode, this.competencyCode) || competencies[0];
+    },
+
+    getViewModel: function () {
+        let profession = this.professionsModel.getProfession(this.professionCode);
+        let competencies = this.professionsModel.getCompetencies(this.professionCode);
+        let currentCompetency = this.getCurrentCompetency();
+        let competencyIndex = this.professionsModel.getCompetencyIndex(this.professionCode, this.competencyCode) || 0;
+        let nextCompetency = competencyIndex < competencies.length - 1 ? competencies[competencyIndex+1] : false;
+        let group = currentCompetency.group;
+
+        let levels = [];
+        let answers = this.answersModel.get(currentCompetency.code) || false;
+        for (let humanIndex = 1; humanIndex <= 4; humanIndex++) {
+            let answer = answers ? answers[humanIndex-1] : false;
+            levels.push({
+                answer: answer,
+                isAnswered: answer > 0,
+                text: currentCompetency['level'+humanIndex]
+            });
+        }
+
+        let skills = this.getViewSkills(currentCompetency);
 
         return {
             'profession': profession,
@@ -127,10 +139,15 @@ var TestController = {
     },
 
     renderIndexPageAfterLoad: function () {
-        var useSkills = true;
-        this.view.render(this.getViewModel(), useSkills);
-        this.initViewEvents();
+        let rootElement = document.createElement('div');
+        this.skillLevelController.setCurrentCompetency( this.getCurrentCompetency() );
+        this.skillLevelController.renderSkills(rootElement);
+
+        let evaluationBlock = rootElement.firstChild;
+
+        this.view.render(this.getViewModel(), evaluationBlock);
     }
+
 };
 
 TestController = Object.assign(Object.create(BaseController), TestController);
@@ -141,11 +158,12 @@ TestController = Object.assign(Object.create(BaseController), TestController);
  * @param {AnswersModel} answersModel
  * @param {string} professionCode
  * @param {string} competencyCode
+ * @param {SkillLevelController} skillLevelController
  * @returns {TestController}
  */
-module.exports = function (view, professionsModel, answersModel, professionCode, competencyCode) {
-    var instance = Object.create(TestController);
-    instance.init(view, professionsModel, answersModel, professionCode, competencyCode);
+module.exports = function (view, professionsModel, answersModel, professionCode, competencyCode, skillLevelController) {
+    let instance = Object.create(TestController);
+    instance.init(view, professionsModel, answersModel, professionCode, competencyCode, skillLevelController);
 
     return instance;
 };

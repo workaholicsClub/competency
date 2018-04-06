@@ -3,33 +3,54 @@ const testPageViewFactory = require('./View');
 const professionsFactory = require('../../models/Professions');
 const answersFactory = require('../../models/Answers');
 const professionsMockData = require('../../mocks/professions.json');
+const polyfillsFactory = require('../../classes/Polyfills');
+
+const skillControllerFactory = require('../skillLevel/Controller');
+const skillViewFactory = require('../skillLevel/View');
+
+const jss = require('jss');
+const jsspreset = require('jss-preset-default').default;
+
+function getStylesManager() {
+    return jss.create(jsspreset());
+}
 
 function getViewInstance() {
-    var rootElement = document.createElement('div');
-    var stylesManager = {};
+    let rootElement = document.createElement('div');
+    let stylesManager = getStylesManager();
 
     return testPageViewFactory(rootElement, stylesManager);
 }
 
-function getControllerInstance(professionCode, competencyCode) {
-    var view = getViewInstance();
-    var professionsModel = professionsFactory(professionsMockData);
-    var answersModel = answersFactory();
-    return testControllerFactory(view, professionsModel, answersModel, professionCode, competencyCode);
+function getControllerInstance(professionCode, competencyCode, view, answersModel) {
+    if (!view) {
+        view = getViewInstance();
+    }
+
+    if (!answersModel) {
+        answersModel = answersFactory();
+    }
+
+    let professionsModel = professionsFactory(professionsMockData);
+    let competency = professionsModel.getCompetency(professionCode, competencyCode);
+    let skillView = skillViewFactory(undefined, getStylesManager());
+    let skillController = skillControllerFactory(skillView, answersModel, competency);
+
+    return testControllerFactory(view, professionsModel, answersModel, professionCode, competencyCode, skillController);
 }
 
 test('TestController.interface', function () {
-    var testController = getControllerInstance();
+    let testController = getControllerInstance();
 
     expect(testController.handleEvent).toBeInstanceOf(Function);
     expect(testController.bindEvents).toBeInstanceOf(Function);
 });
 
 test('TestController.codes', function () {
-    var expectedProfessionCode = 'tester';
-    var expectedCompetencyCode = 'operatingSystems';
+    let expectedProfessionCode = 'tester';
+    let expectedCompetencyCode = 'operatingSystems';
 
-    var testController = getControllerInstance(expectedProfessionCode, expectedCompetencyCode);
+    let testController = getControllerInstance(expectedProfessionCode, expectedCompetencyCode);
     expect(testController).toHaveProperty('professionCode');
     expect(testController).toHaveProperty('competencyCode');
     expect(testController.professionCode).toEqual(expectedProfessionCode);
@@ -37,18 +58,18 @@ test('TestController.codes', function () {
 });
 
 test('TestController.getViewModel', function () {
-    var expectedProfessionCode = 'tester';
-    var expectedCompetencyCode = 'operatingSystems';
-    var expectedNextCompetencyCode = 'probabiltyBasics';
-    var expectedGroupCode = 'environment';
-    var expectedLink = '/test/'+expectedProfessionCode+'/'+expectedNextCompetencyCode;
-    var expectedCompetenciesCount = 7;
-    var expectedCompetencyIndex = 3;
-    var expectedLevelsCount = 4;
-    var expectedSkillsCount = 22;
+    let expectedProfessionCode = 'tester';
+    let expectedCompetencyCode = 'operatingSystems';
+    let expectedNextCompetencyCode = 'probabiltyBasics';
+    let expectedGroupCode = 'environment';
+    let expectedLink = '/test/'+expectedProfessionCode+'/'+expectedNextCompetencyCode;
+    let expectedCompetenciesCount = 7;
+    let expectedCompetencyIndex = 3;
+    let expectedLevelsCount = 4;
+    let expectedSkillsCount = 22;
 
-    var testController = getControllerInstance(expectedProfessionCode, expectedCompetencyCode);
-    var viewModel = testController.getViewModel();
+    let testController = getControllerInstance(expectedProfessionCode, expectedCompetencyCode);
+    let viewModel = testController.getViewModel();
 
     expect(viewModel).toHaveProperty('profession');
     expect(viewModel).toHaveProperty('competencies');
@@ -82,4 +103,38 @@ test('TestController.getViewModel', function () {
     expect(viewModel.skills[0]).toHaveProperty('isAnswered');
     expect(viewModel.skills[0]).toHaveProperty('text');
     expect(viewModel.skills[0]).toHaveProperty('additionalDescription');
+});
+
+test('TestController skills render and change', function () {
+    polyfillsFactory();
+
+    let professionCode = 'tester';
+    let competencyCode = 'operatingSystems';
+
+    let view = getViewInstance();
+    let rootElement = view.getRootElement();
+    let answersModel = answersFactory();
+    let skillLevels = answersModel.getSkillLevelsText();
+
+    let testController = getControllerInstance(professionCode, competencyCode, view, answersModel);
+    testController.renderIndexPageAfterLoad();
+
+    let skillSlider = rootElement.querySelector('#skill0 .skillInput');
+    let skillElement = rootElement.querySelector('#skill0');
+    let skillLabel = skillElement.querySelector('.skillName');
+    let skillLevel = skillElement.querySelector('.skillAnswer');
+
+    expect(skillSlider).toBeInstanceOf(HTMLInputElement);
+    expect(skillLabel).toBeInstanceOf(HTMLElement);
+    expect(skillLabel.textContent).toContain('Работа с ОС на уровне пользователя');
+    expect(skillLevel.textContent).toContain(skillLevels[0]);
+
+    let expectedSkillValue = 1;
+    let changeEvent = new Event('input');
+    skillSlider.value = expectedSkillValue;
+    skillSlider.dispatchEvent(changeEvent);
+
+    let expectedAnswers = [expectedSkillValue, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    expect(skillLevel.textContent).toEqual(skillLevels[expectedSkillValue]);
+    expect(answersModel.get(competencyCode)).toEqual(expectedAnswers);
 });

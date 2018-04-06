@@ -57,7 +57,8 @@ test('AnswersModel.getAllRatings', function () {
         "competencyD": 0.5,
         "competencyE": 1.25,
         "competencyF": 0,
-        "competencyG": false
+        "competencyG": false,
+        "competencyH": false
     };
 
     answers.set('competencyA', [4, 4, 3, 2]);
@@ -67,6 +68,7 @@ test('AnswersModel.getAllRatings', function () {
     answers.set('competencyE', [1, 2, 1, 1]);
     answers.set('competencyF', [0, 0, 0, 0]);
     answers.set('competencyG', false);
+    answers.set('competencyH', []);
 
     expect(answers.getAllRatings()).toEqual(expectedRatings);
 });

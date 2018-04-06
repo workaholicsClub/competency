@@ -297,7 +297,7 @@ test('FilterView getAllFields', function () {
 
 test('FilterView fieldValues', function () {
     let expectedSelectValue = 'webDeveloper';
-    let expectedCompetencyValue = ['skillB'];
+    let expectedCompetencyValue = ['oopProgramming'];
     let expectedCheckboxValue = true;
     let dateValue = new Date(2018, 11, 3);
     let expectedDateValue = dateValue.toString();
@@ -334,7 +334,7 @@ test('FilterView getAllCompetencyFieldSelectors', function () {
 });
 
 test('FilterView getAllSkillsRemoveButtons', function () {
-    let fieldsData = testFieldsData(['skillA']);
+    let fieldsData = testFieldsData(['functionalProgramming']);
     let rootElement = h('div');
     let view = filterViewFactory(rootElement, jss);
     view.render(fieldsData);
@@ -344,10 +344,21 @@ test('FilterView getAllSkillsRemoveButtons', function () {
     expect(removeButtons).toHaveLength(1);
 });
 
+test('FilterView getAllSkillLevelTriggers', function () {
+    let fieldsData = testFieldsData(['functionalProgramming']);
+    let rootElement = h('div');
+    let view = filterViewFactory(rootElement, jss);
+    view.render(fieldsData);
+
+    let removeButtons = view.getAllSkillLevelTriggers();
+    expect(removeButtons).toBeInstanceOf(NodeList);
+    expect(removeButtons).toHaveLength(1);
+});
+
 test('FilterView getSkillCodeByRemoveButton, getFieldCodeByRemoveButton', function () {
     polyfillsFactory();
 
-    let testSkillCode = 'skillB';
+    let testSkillCode = 'oopProgramming';
     let testFieldCode = 'requiredCompetencies';
 
     let fieldsData = testFieldsData([testSkillCode]);
@@ -367,7 +378,7 @@ test('FilterView getSkillCodeByRemoveButton, getFieldCodeByRemoveButton', functi
 test('FilterView getSkillCodeBySelect, getFieldCodeBySelect', function () {
     polyfillsFactory();
 
-    let testSkillCode = 'skillB';
+    let testSkillCode = 'oopProgramming';
     let testFieldCode = 'requiredCompetencies';
 
     let fieldsData = testFieldsData();
@@ -384,6 +395,25 @@ test('FilterView getSkillCodeBySelect, getFieldCodeBySelect', function () {
     expect(recievedFieldCode).toEqual(testFieldCode);
 });
 
+test('FilterView getSkillCodeByLevelTrigger, getFieldCodeByLevelTrigger', function () {
+    polyfillsFactory();
+
+    let testSkillCode = 'oopProgramming';
+    let testFieldCode = 'requiredCompetencies';
+
+    let fieldsData = testFieldsData([testSkillCode]);
+    let rootElement = h('div');
+    let view = filterViewFactory(rootElement, jss);
+    view.render(fieldsData);
+
+    let triggerElement = view.queryField(testFieldCode).querySelector('.levelTrigger');
+
+    let recievedSelectedSkillCode = view.getSkillCodeByLevelTrigger(triggerElement);
+    let recievedFieldCode = view.getFieldCodeByLevelTrigger(triggerElement);
+    expect(recievedSelectedSkillCode).toEqual(testSkillCode);
+    expect(recievedFieldCode).toEqual(testFieldCode);
+});
+
 test('FilterView moveSelectedCompetency', function () {
     let fieldsData = testFieldsData();
     let rootElement = h('div');
@@ -392,7 +422,7 @@ test('FilterView moveSelectedCompetency', function () {
 
     let fieldCode = 'requiredCompetencies';
     let select = view.queryField(fieldCode).querySelector('select');
-    select.value = 'skillA';
+    select.value = 'functionalProgramming';
 
     view.moveSelectedCompetency(fieldCode);
 
@@ -404,15 +434,15 @@ test('FilterView moveSelectedCompetency', function () {
     expect( selectedItems ).toHaveLength(1);
 
     expect( options ).toBeInstanceOf(NodeList);
-    expect( options ).toHaveLength(3);//+Не выбрано
+    expect( options ).toHaveLength(5);//+Не выбрано
 });
 
 test('FilterView removeSelectedCompetency', function () {
     polyfillsFactory();
 
-    let testSkillCode = 'skillB';
+    let testSkillCode = 'oopProgramming';
     let fieldCode = 'requiredCompetencies';
-    let fieldsData = testFieldsData(['skillA', 'skillB']);
+    let fieldsData = testFieldsData(['functionalProgramming', 'oopProgramming']);
     let rootElement = h('div');
     let view = filterViewFactory(rootElement, jss);
     view.render(fieldsData);
@@ -432,8 +462,8 @@ test('FilterView removeSelectedCompetency', function () {
     expect(newOption.textContent).toEqual(skillName);
 });
 
-test('FilterView getSkillRemoveButton', function () {
-    let testSkillCode = 'skillB';
+test('FilterView getSkillRemoveButton getSkillLevelTrigger', function () {
+    let testSkillCode = 'oopProgramming';
     let fieldCode = 'requiredCompetencies';
     let fieldsData = testFieldsData([testSkillCode]);
     let rootElement = h('div');
@@ -441,5 +471,67 @@ test('FilterView getSkillRemoveButton', function () {
     view.render(fieldsData);
 
     let removeButton = view.getSkillRemoveButton(fieldCode, testSkillCode);
+    let skillLevelTrigger = view.getSkillLevelTrigger(fieldCode, testSkillCode);
+
     expect(removeButton).toBeInstanceOf(HTMLElement);
+    expect(skillLevelTrigger).toBeInstanceOf(HTMLElement);
+});
+
+test('FilterView updateAllCompetencyRatings', function () {
+    polyfillsFactory();
+
+    let fieldCode = 'requiredCompetencies';
+    let fieldsData = testFieldsData(['oopProgramming']);
+    let rootElement = h('div');
+    let view = filterViewFactory(rootElement, jss);
+    view.render(fieldsData);
+
+    let fieldElement = view.queryField(fieldCode);
+    let selectedItem = fieldElement.querySelector('.selectedItem');
+    let skillLevel = selectedItem.querySelector('.levelText').textContent;
+
+    expect(skillLevel).toEqual('-');
+
+    let competencyRatings = {'oopProgramming': {rating: 1, ratingPercent: 100}};
+    let fieldsDataWithRatings = testFieldsData(['oopProgramming'], competencyRatings);
+    view.updateAllCompetencyRatings(fieldsDataWithRatings);
+    skillLevel = selectedItem.querySelector('.levelText').textContent;
+
+    expect(skillLevel).toEqual('100%');
+});
+
+test('FilterView skillsModal', function () {
+    let rootElement = h('div');
+    let view = filterViewFactory(rootElement, jss);
+    let fieldsData = testFieldsData(['oopProgramming']);
+    view.render(fieldsData);
+
+    expect(view.getSkillModal()).toBeInstanceOf(HTMLElement);
+    expect(view.getSkillTitleContainer()).toBeInstanceOf(HTMLElement);
+    expect(view.getSkillContainer()).toBeInstanceOf(HTMLElement);
+
+    let skillDOM = h('div.testSkillDOM');
+    let modal = view.getSkillModal();
+
+    return new Promise(function (resolve, reject) {
+        modal.addEventListener('shown.bs.modal', function() {
+
+            let titleElement = view.getSkillTitleContainer();
+            let skillContainer = view.getSkillContainer();
+            let isShown = modal.getAttribute('aria-hidden') === 'false';
+
+            try {
+                expect(isShown).toBeTruthy();
+                expect(titleElement.textContent).toEqual('Тестовый навык');
+                expect(skillContainer.querySelector('.testSkillDOM')).toBeInstanceOf(HTMLElement);
+
+                resolve();
+            }
+            catch (exception) {
+                reject(exception);
+            }
+        }, false);
+
+        view.showSkillModal('Тестовый навык', skillDOM);
+    });
 });

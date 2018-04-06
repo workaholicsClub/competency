@@ -1,4 +1,4 @@
-var BaseController = {
+let BaseController = {
     init: function (view, model) {
         this.view = view;
         this.model = model;
@@ -6,7 +6,7 @@ var BaseController = {
     },
 
     handleEvent: function (incomingEvent) {
-        var contextForEventHandler = this;
+        let contextForEventHandler = this;
 
         this.events.forEach(function (controllerEvent) {
             /**
@@ -16,12 +16,12 @@ var BaseController = {
              * @param {Function} controllerEvent.handler
              */
 
-            var controllerEventHasType = controllerEvent.types.indexOf(incomingEvent.type) !== -1;
-            var isModelEvent = incomingEvent instanceof CustomEvent;
-            var controllerEventHasSameTarget = false;
+            let controllerEventHasType = controllerEvent.types.indexOf(incomingEvent.type) !== -1;
+            let isModelEvent = incomingEvent instanceof CustomEvent;
+            let controllerEventHasSameTarget = false;
 
             if (isModelEvent) {
-                var targetModel = incomingEvent.detail;
+                let targetModel = incomingEvent.detail;
                 controllerEventHasSameTarget = targetModel === controllerEvent.target;
             }
             else {
@@ -42,10 +42,10 @@ var BaseController = {
     },
 
     /**
-     * @param {EventTarget[]} events
+     * @param {EventTarget[]=} events
      */
     bindEvents: function (events) {
-        var eventListener = this;
+        let eventListener = this;
 
         if (!events) {
             events = this.events;
@@ -72,6 +72,44 @@ var BaseController = {
 
             });
         });
+    },
+
+    /**
+     * @param {int} eventIndex
+     * @param {boolean} removeListenerOnly
+     */
+    removeEvent: function (eventIndex, removeListenerOnly) {
+        let eventListener = this;
+
+        if (typeof (removeListenerOnly) !== 'boolean') {
+            removeListenerOnly = false;
+        }
+
+        let removeEventFromArray = !removeListenerOnly;
+        let oldEvent = this.events[eventIndex];
+
+        oldEvent.types.forEach(function (type) {
+            if (oldEvent.target instanceof NodeList || oldEvent.target instanceof Array) {
+                oldEvent.target.forEach(function (target) {
+                    target.removeEventListener(type, eventListener);
+                });
+            }
+            else {
+                oldEvent.target.removeEventListener(type, eventListener);
+            }
+        });
+
+        if (removeEventFromArray) {
+            this.events.splice(eventIndex, 1);
+        }
+    },
+
+    replaceEvent: function (eventIndex, newEvent) {
+        let removeListenerOnly = true;
+        this.removeEvent(eventIndex, removeListenerOnly);
+
+        this.events[eventIndex] = newEvent;
+        this.bindEvents([newEvent]);
     }
 };
 
