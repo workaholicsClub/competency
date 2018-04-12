@@ -23,51 +23,6 @@ test('ProfessionsModel.makeRequestUrl', function () {
     expect(professionsModel.makeRequestUrl()).toEqual(expectedUrl);
 });
 
-test('ProfessionsModel.load', function () {
-    let loadHandler = jest.fn();
-    let errorHandler = jest.fn();
-    let props = {};
-    let xhrMock = getXHRMock('{"test": "123"}');
-
-    let professionsModel = professionsModelFactory(props, configMockFactory(), xhrMock);
-    professionsModel.addEventListener('load', loadHandler);
-    professionsModel.addEventListener('loadError', errorHandler);
-
-    xhrMock.responseType = 'load';
-    professionsModel.load();
-    expect(loadHandler).toHaveBeenCalledTimes(1);
-
-    xhrMock.responseType = 'error';
-    professionsModel.load();
-    expect(errorHandler).toHaveBeenCalledTimes(1);
-});
-
-test('ProfessionsModel.load (двойной вызов)', function () {
-    let loadHandler = jest.fn();
-    let props = {};
-    let xhrMock = getXHRMock('{"test": "123"}', true);
-    let waitLoadMs = 150;
-
-    let professionsModel = professionsModelFactory(props, configMockFactory(), xhrMock);
-    professionsModel.addEventListener('load', loadHandler);
-    xhrMock.responseType = 'load';
-
-    return new Promise(function (resolve, reject) {
-        professionsModel.load();
-        professionsModel.load();
-
-        setTimeout(function () {
-            try {
-                expect(loadHandler).toHaveBeenCalledTimes(1);
-                resolve();
-            }
-            catch (exception) {
-                reject(exception);
-            }
-        }, waitLoadMs);
-    });
-});
-
 test('ProfessionsModel.loadAndSetFields', function () {
     let expectedValue = '321abc123';
     let xhrMock = getXHRMock('{"testField": "' + expectedValue + '"}');

@@ -4,8 +4,20 @@ const configMockFactory = require('../mocks/Config');
 const storageMockFactory = require('../mocks/Storage');
 const getXHRMock = require('../mocks/getXHRMock.fn');
 
-function answersMockFactory(props, config, xhr) {
-    return answersFactory(props, config, xhr, storageMockFactory());
+const professionsFactory = require('./Professions');
+const professionsMockData = require('../mocks/professions.json');
+
+function answersMockFactory(props, config, xhr, storage, autoload) {
+    if (!storage) {
+        storage = storageMockFactory();
+    }
+
+    return answersFactory(props, config, xhr, storage, autoload);
+}
+
+function getCompetency(professionCode, competencyCode) {
+    let professionsModel = professionsFactory(professionsMockData);
+    return professionsModel.getCompetency(professionCode, competencyCode);
 }
 
 test('AnswersModel.interface', function () {
@@ -17,6 +29,13 @@ test('AnswersModel.interface', function () {
     expect(answersModel.dispatchEvent).toBeInstanceOf(Function);
     expect(answersModel.set).toBeInstanceOf(Function);
     expect(answersModel.get).toBeInstanceOf(Function);
+    expect(answersModel.getCompetencyRating).toBeInstanceOf(Function);
+    expect(answersModel.getAllRatings).toBeInstanceOf(Function);
+    expect(answersModel.saveResults).toBeInstanceOf(Function);
+    expect(answersModel.saveAnswers).toBeInstanceOf(Function);
+    expect(answersModel.loadAnswers).toBeInstanceOf(Function);
+    expect(answersModel.getSkillLevelsText).toBeInstanceOf(Function);
+    expect(answersModel.getAnsweredSkills).toBeInstanceOf(Function);
 });
 
 test('AnswersModel.getCompetencyRating', function () {
@@ -100,4 +119,80 @@ test('AnswersModel.saveResults', function () {
 test('AnswersModel.getSkillLevelsText', function () {
     let answers = answersFactory({}, configMockFactory());
     expect(answers.getSkillLevelsText()).toHaveLength(4);
+});
+
+test('AnswersModel.getAnsweredSkills', function () {
+    let professionCode = 'tester';
+    let competencyCode = 'operatingSystems';
+    let skillAnswers = [1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0];
+    let expectedSkills = [
+        {
+            answer: '1',
+            answerText: 'Знаю',
+            isAnswered: true,
+            text: 'Работа с ОС на уровне пользователя',
+            additionalDescription: ''
+        },
+        {
+            answer: '2',
+            answerText: 'Осознанно применяю',
+            isAnswered: true,
+            text: 'Установка и удаление программ',
+            additionalDescription: ''
+        },
+        {
+            answer: '3',
+            answerText: 'Применяю автоматически',
+            isAnswered: true,
+            text: 'Подключение к сетям',
+            additionalDescription: ''
+        },
+        {
+            answer: '0',
+            answerText: 'Не знаю',
+            isAnswered: false,
+            text: 'Консоль',
+            additionalDescription: ''
+        },
+    ];
+
+    let expectedSkillWithDescription = {
+        answer: '2',
+        answerText: 'Осознанно применяю',
+        isAnswered: true,
+        text: 'Сетевые коммуникационные протоколы',
+        additionalDescription: 'IPv4, IPv6, TCP, UDP, POP, IMAP, SMTP, HTTP, SMB'
+    };
+
+    let competency = getCompetency(professionCode, competencyCode);
+    let answers = answersFactory({}, configMockFactory());
+    answers.set(competencyCode, skillAnswers);
+
+    let skills = answers.getAnsweredSkills(competency);
+    expect(skills[0]).toEqual(expectedSkills[0]);
+    expect(skills[1]).toEqual(expectedSkills[1]);
+    expect(skills[2]).toEqual(expectedSkills[2]);
+    expect(skills[3]).toEqual(expectedSkills[3]);
+    expect(skills[14]).toEqual(expectedSkillWithDescription);
+});
+
+test('AnswersModel saveAnswers и loadAnswers', function () {
+    let xhrMock = undefined;
+    let storage = storageMockFactory('answers');
+    let answers = answersFactory({}, configMockFactory(), xhrMock, storage);
+
+    let expectedValue = [1, 2, 3];
+    let expectedStorageData = {"test": expectedValue};
+    answers.setWithoutEvent('test', expectedValue);
+
+    expect(storage.load()).toBeFalsy();
+    answers.saveAnswers();
+    expect(storage.load()).toEqual(expectedStorageData);
+
+    let autoload = false;
+    answers = answersFactory({}, configMockFactory(), xhrMock, storage, autoload);
+    expect(answers.get('test')).toBeNull();
+
+    answers.loadAnswers();
+    expect(answers.get('test')).toEqual(expectedValue);
 });

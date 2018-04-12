@@ -38,10 +38,11 @@ SkillAnswersModel = Object.assign(Object.create(AnswersModel), SkillAnswersModel
  * @param props
  * @param config
  * @param xhr
- * @param storage
+ * @param {Storage} storage
+ * @param {boolean} autoload
  * @returns {SkillAnswersModel}
  */
-module.exports = function (props, config, xhr, storage) {
+module.exports = function (props, config, xhr, storage, autoload) {
     if (!props) {
         props = {};
     }
@@ -54,8 +55,12 @@ module.exports = function (props, config, xhr, storage) {
         storage = cookieStorageFactory('skillAnswers');
     }
 
+    if (typeof (autoload) === 'undefined') {
+        autoload = true;
+    }
+
     let answers = Object.create(SkillAnswersModel);
-    answers.init(props, config, xhr, storage);
+    answers.init(props, config, xhr, storage, autoload);
 
     return answers;
 };

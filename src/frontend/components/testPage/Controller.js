@@ -40,60 +40,8 @@ let TestController = {
         }
     },
 
-    getCompetencyCode: function () {
-        let competencyCode = this.competencyCode;
-        if (!competencyCode) {
-            let competencies = this.professionsModel.getCompetencies(this.professionCode);
-            let firstCompetency = competencies[0];
-            competencyCode = firstCompetency ? firstCompetency.code : false;
-        }
-
-        return competencyCode;
-    },
-
-    changeSliderDescriptionTextAndUpdateAnswer: function (event) {
-        let sliderElement = event.currentTarget;
-        let levelTexts = this.answersModel.getSkillLevelsText();
-        this.view.updateSkillText(sliderElement, levelTexts);
-
-        let answers = this.view.getLevelSkillAnswers();
-        this.answersModel.set(this.getCompetencyCode(), answers);
-    },
-
-    /**
-     * @param {Event} event
-     */
-    markLevelCompletedAndUpdateAnswer: function (event) {
-        let selectElement = event.currentTarget;
-        this.view.markLevelCompleted(selectElement);
-
-        let answers = this.view.getLevelAnswers();
-        this.answersModel.set(this.getCompetencyCode(), answers);
-    },
-
     getViewSkills: function (currentCompetency) {
-        let skills = [];
-        let skillAnswersText = this.answersModel.getSkillLevelsText();
-        let answers = this.answersModel.get(currentCompetency.code) || false;
-
-        currentCompetency.skills.forEach(function (skill, index) {
-            let answer = answers ? (answers[index] || false) : false;
-            let answerForSlider = answer !== false
-                ? parseInt(answer).toString()
-                : '0';
-
-            skills.push({
-                answer: answerForSlider,
-                answerText: answer > 0
-                    ? skillAnswersText[answer]
-                    : skillAnswersText[0],
-                isAnswered: answer > 0,
-                text: skill.text,
-                additionalDescription: skill.additionalDescription
-            });
-        });
-
-        return skills;
+        return this.answersModel.getAnsweredSkills(currentCompetency);
     },
 
     getCurrentCompetency: function () {
@@ -130,7 +78,7 @@ let TestController = {
             'isAnswered': answers !== false,
             'nextCompetency': nextCompetency,
             'nextCompetencyLink': nextCompetency ? '/test/'+profession.code+'/'+nextCompetency.code : false,
-            'resultsLink': '/results',
+            'resultsLink': '/test/'+profession.code,
             'competencyIndex': competencyIndex,
             'competencyGroup': group,
             'levels': levels,
@@ -139,13 +87,11 @@ let TestController = {
     },
 
     renderIndexPageAfterLoad: function () {
-        let rootElement = document.createElement('div');
+        this.view.render(this.getViewModel());
+        let evaluationBlock = this.view.getEvaluationContainer();
+
         this.skillLevelController.setCurrentCompetency( this.getCurrentCompetency() );
-        this.skillLevelController.renderSkills(rootElement);
-
-        let evaluationBlock = rootElement.firstChild;
-
-        this.view.render(this.getViewModel(), evaluationBlock);
+        this.skillLevelController.renderSkills(evaluationBlock);
     }
 
 };

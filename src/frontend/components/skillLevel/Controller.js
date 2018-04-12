@@ -43,27 +43,8 @@ let SkillLevelController = {
     },
 
     getViewModel: function () {
-        let skills = [];
-        let skillAnswersText = this.answersModel.getSkillLevelsText();
         let currentCompetency = this.getCurrentCompetency();
-        let answers = this.answersModel.get(currentCompetency.code) || false;
-
-        currentCompetency.skills.forEach(function (skill, index) {
-            let answer = answers ? (answers[index] || false) : false;
-            let answerForSlider = answer !== false
-                ? parseInt(answer).toString()
-                : '0';
-
-            skills.push({
-                answer: answerForSlider,
-                answerText: answer > 0
-                    ? skillAnswersText[answer]
-                    : skillAnswersText[0],
-                isAnswered: answer > 0,
-                text: skill.text,
-                additionalDescription: skill.additionalDescription
-            });
-        });
+        let skills = this.answersModel.getAnsweredSkills(currentCompetency);
 
         return {
             'skills': skills

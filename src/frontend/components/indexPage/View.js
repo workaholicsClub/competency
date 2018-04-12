@@ -1,7 +1,7 @@
 const h = require('hyperscript');
 const footerViewFactory = require('../footer/View');
 
-var IndexView = {
+let IndexView = {
     init: function (element, stylesManager, intervalInterface) {
         this.element = element;
         this.stylesManager = stylesManager;
@@ -20,12 +20,12 @@ var IndexView = {
     },
 
     startLoadProgress: function () {
-        var loadingTickMs = 1000;
-        var ticker = 0;
-        var view = this;
+        let loadingTickMs = 1000;
+        let ticker = 0;
+        let view = this;
 
         this.loadingIntervalId = this.intervalInterface.setInterval(function () {
-            var progressElement = view.getRootElement();
+            let progressElement = view.getRootElement();
             progressElement.innerHTML = ticker;
             ticker++;
         }, loadingTickMs);
@@ -45,10 +45,9 @@ var IndexView = {
                     h('div.card-header', profession.name),
                     h('ul.list-group.list-group-flush',
                         h('li.list-group-item', 'Компетенций: '+profession.competencyCount),
-                        h('li.list-group-item', 'Курсов: '+profession.courseCount)
                     ),
                     h('div.card-body',
-                        h('a.btn.btn-primary', {href: '/test/'+profession.code}, 'Пройти самопроверку (~' +
+                        h('a.btn.btn-primary', {href: '/test/'+profession.code}, 'Пройти (~' +
                             profession.timeToFill + ' мин)')
                     )
                 )
@@ -56,9 +55,25 @@ var IndexView = {
         });
     },
 
+    createCourseSearchCards: function (viewModel) {
+        return viewModel.professions.map(function (profession) {
+            return h('div.col-sm',
+                h('div.card',
+                    h('div.card-header', profession.name),
+                    h('ul.list-group.list-group-flush',
+                        h('li.list-group-item', 'Курсов: '+profession.courseCount)
+                    ),
+                    h('div.card-body',
+                        h('a.btn.btn-primary', {href: '/courses/'+profession.code}, 'Подобрать курсы')
+                    )
+                )
+            )
+        });
+    },
+
     createDOM: function (viewModel) {
-        //var styles = this.createStyles();
-        var footerView = footerViewFactory(this.stylesManager);
+        let footerView = footerViewFactory(this.stylesManager);
+        let footer = footerView.createDOM();
 
         return h('div#page.container-fluid.mt-3',
                     h('div#head.jumbotron.jumbotron-fluid',
@@ -67,21 +82,27 @@ var IndexView = {
                             h('p.lead', 'Сначала мы поможем понять свой уровень, а потом поможем стать лучше'),
                             h('hr.my-4'),
                             h('p', 'Здесь вы можете следить за развитием собственных компетенций и получать персональные' +
-                                ' рекомендации по подходящим онлайн-курсам.'),
-                            h('p', 'Выберите профессию, пройдите тестирование, получите рекомендации')
+                                ' рекомендации по подходящим онлайн-курсам.')
                         )
                     ),
                     h('div#content.container-fluid.mt-3',
+                        h('div.row', h('h2.display-5', 'Поиск курсов')),
+                        h('div.row',
+                            this.createCourseSearchCards(viewModel)
+                        )
+                    ),
+                    h('div#content.container-fluid.mt-3',
+                        h('div.row', h('h2.display-5', 'Проверка навыков')),
                         h('div.row',
                             this.createProfessionCards(viewModel)
                         )
                     ),
-                    footerView.createDOM()
+                    footer
                 );
     },
 
     render: function (viewModel) {
-        var moduleElement = this.createDOM(viewModel);
+        let moduleElement = this.createDOM(viewModel);
         this.element.innerHTML = moduleElement.outerHTML;
     }
 };
@@ -97,7 +118,7 @@ module.exports = function (DOMelement, stylesManager, intervalInterface) {
         intervalInterface = global;
     }
 
-    var instance = Object.create(IndexView);
+    let instance = Object.create(IndexView);
     instance.init(DOMelement, stylesManager, intervalInterface);
 
     return instance;

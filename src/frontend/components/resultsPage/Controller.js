@@ -1,9 +1,10 @@
 const BaseController = require('../base/Controller');
 
 let ResultsController = {
-    init: function (pageView, professionsModel, answersModel, xhr, tracker) {
+    init: function (pageView, professionsModel, answersModel, xhr, tracker, professionCode) {
         this.pageView = pageView;
         this.professionsModel = professionsModel;
+        this.professionCode = professionCode;
         this.answersModel = answersModel;
         this.element = pageView.getRootElement();
         this.xhr = xhr;
@@ -45,7 +46,7 @@ let ResultsController = {
         }
     },
 
-    getViewModel: function () {
+    getAnsweredCompetencies: function () {
         let competencyRatings = this.answersModel.getAllRatings();
         let competenciesWithRatings = [];
 
@@ -54,8 +55,7 @@ let ResultsController = {
 
             if (competency) {
                 let rating = competencyRatings[competencyCode];
-                let maxRating = 4;
-                let ratingPercent = Math.round(rating/maxRating*100);
+                let ratingPercent = this.answersModel.getRatingPercent(rating);
 
                 competenciesWithRatings.push({
                     name: competency.name,
@@ -66,9 +66,64 @@ let ResultsController = {
             }
         }, this);
 
+        return competenciesWithRatings;
+    },
+
+    getRatingAverage: function (competency, rating) {
+        let lowerRating = 1;
+        let upperRating = 2;
+        let averageRating = 1.5;
+
+        let diff = false;
+
+        if (rating !== false) {
+            diff = rating < lowerRating
+                ? rating - lowerRating
+                : (rating > upperRating
+                        ? rating - upperRating
+                        : 0
+                );
+        }
+
         return {
-            'pollUrl': 'https://11713.typeform.com/to/oe9WIB',
-            'allCompetencies': competenciesWithRatings
+            lower: this.answersModel.getRatingPercent(lowerRating),
+            upper: this.answersModel.getRatingPercent(upperRating),
+            average: this.answersModel.getRatingPercent(averageRating),
+            diff: diff !== false ? this.answersModel.getRatingPercent(diff) : false
+        }
+    },
+
+    getProfessionCompetenciesWithAnswers: function () {
+        let competencyRatings = this.answersModel.getAllRatings();
+        let professionCompetencies = this.professionsModel.getCompetencies(this.professionCode);
+        let competenciesWithRatings = [];
+
+        professionCompetencies.forEach(function (competency) {
+            let rating = competencyRatings[competency.code] || false;
+            let ratingPercent = rating ? this.answersModel.getRatingPercent(rating) : false;
+            let evaluateLink = '/test/'+this.professionCode+'/'+competency.code;
+
+            competenciesWithRatings.push({
+                name: competency.name,
+                code: competency.code,
+                average: this.getRatingAverage(competency, rating),
+                link: evaluateLink,
+                rating: rating,
+                ratingPercent: ratingPercent
+            });
+        }, this);
+
+        return competenciesWithRatings;
+    },
+
+    getViewModel: function () {
+        let profession = this.professionsModel.getProfession(this.professionCode);
+
+        return {
+            'allCompetencies': this.getAnsweredCompetencies(),
+            'professionName': profession.name,
+            'coursesLink': '/courses/'+profession.code,
+            'professionCompetencies': this.getProfessionCompetenciesWithAnswers()
         };
     },
 
@@ -107,16 +162,17 @@ ResultsController = Object.assign(Object.create(BaseController), ResultsControll
  * @param {AnswersModel} answersModel
  * @param {XMLHttpRequest} xhr
  * @param {GTagTracker} tracker
+ * @param {string} professionCode
  * @returns {ResultsController}
  */
-module.exports = function (pageView, professionsModel, answersModel, xhr, tracker) {
+module.exports = function (pageView, professionsModel, answersModel, xhr, tracker, professionCode) {
     let instance = Object.create(ResultsController);
 
     if (!xhr) {
         xhr = new XMLHttpRequest();
     }
 
-    instance.init(pageView, professionsModel, answersModel, xhr, tracker);
+    instance.init(pageView, professionsModel, answersModel, xhr, tracker, professionCode);
 
     return instance;
 };

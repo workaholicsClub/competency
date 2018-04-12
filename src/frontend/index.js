@@ -30,8 +30,7 @@ const filterFactory = require('./models/Filter');
 const configFactory = require('./classes/Config');
 const trackerFactory = require('./classes/GTagTracker');
 
-const jss = require('jss');
-const jsspreset = require('jss-preset-default').default;
+const stylesManager = require('./classes/stylesManager');
 
 const polyfillsFactory = require('./classes/Polyfills');
 
@@ -51,7 +50,6 @@ const polyfillsFactory = require('./classes/Polyfills');
 function initAndGoToRoute() {
     polyfillsFactory();
 
-    let stylesManager = jss.create(jsspreset());
     let rootElement = document.body;
 
     let config = configFactory();
@@ -63,7 +61,7 @@ function initAndGoToRoute() {
     let answersModel = answersFactory({}, config);
     let coursesModel = coursesFactory({}, config);
 
-    let coursesFilter = filterFactory({});
+    let coursesFilter = filterFactory({}, 'coursesFilter');
 
     page('/', function () {
         tracker.trackPageview('/');
@@ -78,22 +76,25 @@ function initAndGoToRoute() {
          * @param {RouteContextHash} context
          */
         tracker.trackPageview(context.pathname);
-        let skillView = skillViewFactory(false, stylesManager);
-        let skillController = skillControllerFactory(skillView, answersModel);
+        let professionCode = context.params.professionCode;
+        let competencyCode = context.params.competencyCode;
 
-        let testView = testPageViewFactory(rootElement, stylesManager);
-        let testController = testPageControllerFactory(testView, professionsModel, answersModel, context.params.professionCode, context.params.competencyCode, skillController);
+        if (competencyCode) {
+            let skillView = skillViewFactory(false, stylesManager);
+            let skillController = skillControllerFactory(skillView, answersModel);
 
-        testController.loadDataAndRenderIndexPage();
-    });
+            let testView = testPageViewFactory(rootElement, stylesManager);
+            let testController = testPageControllerFactory(testView, professionsModel, answersModel, professionCode, competencyCode, skillController);
 
-    page('/results', function () {
-        tracker.trackPageview('/results');
-        let resultsView = resultsViewFactory(rootElement, stylesManager);
-        let xhr = undefined;
-        let resultsController = resultsControllerFactory(resultsView, professionsModel, answersModel, xhr, tracker);
+            testController.loadDataAndRenderIndexPage();
+        }
+        else {
+            let resultsView = resultsViewFactory(rootElement, stylesManager);
+            let xhr = undefined;
+            let resultsController = resultsControllerFactory(resultsView, professionsModel, answersModel, xhr, tracker, professionCode);
 
-        resultsController.loadDataAndRenderIndexPage();
+            resultsController.loadDataAndRenderIndexPage();
+        }
     });
 
     page('/courses/:professionCode?', function (context) {

@@ -1,15 +1,15 @@
 const BaseModel = require('./Base');
-const answersFactory = require('./SkillAnswers');
+const skillAnswersFactory = require('./SkillAnswers');
 const configMockFactory = require('../mocks/Config');
 const storageMockFactory = require('../mocks/Storage');
 const getXHRMock = require('../mocks/getXHRMock.fn');
 
-function answersMockFactory(props, config, xhr) {
-    return answersFactory(props, config, xhr, storageMockFactory());
+function skillAnswersMockFactory(props, config, xhr) {
+    return skillAnswersFactory(props, config, xhr, storageMockFactory());
 }
 
-test('AnswersModel.interface', function () {
-    let answersModel = answersMockFactory({});
+test('SkillAnswersModel.interface', function () {
+    let answersModel = skillAnswersMockFactory({});
 
     expect(BaseModel.isPrototypeOf(answersModel)).toBeTruthy();
     expect(answersModel.addEventListener).toBeInstanceOf(Function);
@@ -19,8 +19,8 @@ test('AnswersModel.interface', function () {
     expect(answersModel.get).toBeInstanceOf(Function);
 });
 
-test('AnswersModel.getCompetencyRating', function () {
-    let answers = answersMockFactory({});
+test('SkillAnswersModel.getCompetencyRating', function () {
+    let answers = skillAnswersMockFactory({});
 
     answers.set('competencyA', [4, 4, 3, 2]);
     answers.set('competencyB', [3, 4, 4, 2]);
@@ -48,8 +48,8 @@ test('AnswersModel.getCompetencyRating', function () {
     expect(answers.getCompetencyRating('competencyZ')).toBeFalsy();
 });
 
-test('AnswersModel.getAllRatings', function () {
-    let answers = answersMockFactory({});
+test('SkillAnswersModel.getAllRatings', function () {
+    let answers = skillAnswersMockFactory({});
     let expectedRatings = {
         "competencyA": 3.25,
         "competencyB": 3.25,
@@ -73,14 +73,14 @@ test('AnswersModel.getAllRatings', function () {
     expect(answers.getAllRatings()).toEqual(expectedRatings);
 });
 
-test('AnswersModel.changeHandler', function () {
+test('SkillAnswersModel.changeHandler', function () {
     let storageMock = {
         init: jest.fn(),
         save: jest.fn(),
         load: jest.fn()
     };
 
-    let answers = answersFactory({}, configMockFactory(), false, storageMock);
+    let answers = skillAnswersFactory({}, configMockFactory(), false, storageMock);
 
     expect(storageMock.load).toHaveBeenCalledTimes(1);
     expect(storageMock.save).not.toHaveBeenCalled();
@@ -89,9 +89,9 @@ test('AnswersModel.changeHandler', function () {
     expect(storageMock.save).toHaveBeenCalledTimes(1);
 });
 
-test('AnswersModel.saveResults', function () {
+test('SkillAnswersModel.saveResults', function () {
     let xhrMock = getXHRMock(JSON.stringify({status: 200, success: true}));
-    let answers = answersFactory({}, configMockFactory(), xhrMock);
+    let answers = skillAnswersFactory({}, configMockFactory(), xhrMock);
 
     return new Promise(function (resolve, reject) {
         answers.addEventListener('save', function () {
@@ -107,7 +107,7 @@ test('AnswersModel.saveResults', function () {
     });
 });
 
-test('AnswersModel.getSkillLevelsText', function () {
-    let answers = answersFactory({}, configMockFactory());
+test('SkillAnswersModel.getSkillLevelsText', function () {
+    let answers = skillAnswersFactory({}, configMockFactory());
     expect(answers.getSkillLevelsText()).toHaveLength(4);
 });

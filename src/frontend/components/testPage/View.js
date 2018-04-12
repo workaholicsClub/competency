@@ -35,6 +35,10 @@ let TestView = {
             ];
     },
 
+    getEvaluationContainer: function () {
+        return this.element.querySelector('#content');
+    },
+
     createDOM: function (viewModel, evaluationBlock) {
         let footerView = footerViewFactory(this.stylesManager);
         return h('div#page.container-fluid.mt-3',
@@ -47,9 +51,7 @@ let TestView = {
                         )
                     ),
                     this.createProgressBar(viewModel),
-                    h('div#content.row',
-                        evaluationBlock
-                    ),
+                    h('div#content.row'),
                     h('div#buttons.row.mt-5',
                         h('div.col.text-left',
                             h('a.btn.btn-outline-secondary.btn-sm', 'К списку компетенций', {href: viewModel.resultsLink})
@@ -60,8 +62,8 @@ let TestView = {
                 );
     },
 
-    render: function (viewModel, evaluationBlock) {
-        let moduleElement = this.createDOM(viewModel, evaluationBlock);
+    render: function (viewModel) {
+        let moduleElement = this.createDOM(viewModel);
         this.element.innerHTML = '';
         this.element.appendChild(moduleElement);
     }

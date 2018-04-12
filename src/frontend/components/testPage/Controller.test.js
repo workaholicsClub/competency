@@ -8,14 +8,13 @@ const polyfillsFactory = require('../../classes/Polyfills');
 const skillControllerFactory = require('../skillLevel/Controller');
 const skillViewFactory = require('../skillLevel/View');
 
-const jss = require('jss');
-const jsspreset = require('jss-preset-default').default;
+const styleManager = require('../../classes/stylesManager');
 
 function getStylesManager() {
-    return jss.create(jsspreset());
+    return styleManager;
 }
 
-function getViewInstance() {
+function getTestViewInstance() {
     let rootElement = document.createElement('div');
     let stylesManager = getStylesManager();
 
@@ -24,7 +23,7 @@ function getViewInstance() {
 
 function getControllerInstance(professionCode, competencyCode, view, answersModel) {
     if (!view) {
-        view = getViewInstance();
+        view = getTestViewInstance();
     }
 
     if (!answersModel) {
@@ -111,30 +110,19 @@ test('TestController skills render and change', function () {
     let professionCode = 'tester';
     let competencyCode = 'operatingSystems';
 
-    let view = getViewInstance();
+    let view = getTestViewInstance();
     let rootElement = view.getRootElement();
     let answersModel = answersFactory();
-    let skillLevels = answersModel.getSkillLevelsText();
 
     let testController = getControllerInstance(professionCode, competencyCode, view, answersModel);
     testController.renderIndexPageAfterLoad();
 
     let skillSlider = rootElement.querySelector('#skill0 .skillInput');
-    let skillElement = rootElement.querySelector('#skill0');
-    let skillLabel = skillElement.querySelector('.skillName');
-    let skillLevel = skillElement.querySelector('.skillAnswer');
-
-    expect(skillSlider).toBeInstanceOf(HTMLInputElement);
-    expect(skillLabel).toBeInstanceOf(HTMLElement);
-    expect(skillLabel.textContent).toContain('Работа с ОС на уровне пользователя');
-    expect(skillLevel.textContent).toContain(skillLevels[0]);
-
     let expectedSkillValue = 1;
     let changeEvent = new Event('input');
     skillSlider.value = expectedSkillValue;
     skillSlider.dispatchEvent(changeEvent);
 
     let expectedAnswers = [expectedSkillValue, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    expect(skillLevel.textContent).toEqual(skillLevels[expectedSkillValue]);
     expect(answersModel.get(competencyCode)).toEqual(expectedAnswers);
 });

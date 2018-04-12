@@ -1,6 +1,6 @@
 const BaseController = require('../base/Controller');
 
-var IndexController = {
+let IndexController = {
     init: function (view, professionsModel) {
         this.view = view;
         this.professionsModel = professionsModel;
@@ -29,7 +29,7 @@ var IndexController = {
     },
 
     renderIndexPageAfterLoad: function () {
-        var modelView = {
+        let modelView = {
             'professions': this.professionsModel.getProfessions()
         };
 
@@ -46,7 +46,7 @@ IndexController = Object.assign(Object.create(BaseController), IndexController);
  * @returns {IndexController}
  */
 module.exports = function (view, professionsModel) {
-    var instance = Object.create(IndexController);
+    let instance = Object.create(IndexController);
     instance.init(view, professionsModel);
 
     return instance;

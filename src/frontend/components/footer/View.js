@@ -1,7 +1,7 @@
 const h = require('hyperscript');
 const menuViewFactory = require('../menu/View');
 
-var FooterView = {
+let FooterView = {
     init: function (stylesManager) {
         this.stylesManager = stylesManager;
     },
@@ -19,18 +19,19 @@ var FooterView = {
     },
 
     createBottomMenu: function () {
-        var menuView = menuViewFactory(null, this.stylesManager, this.theme);
+        let menuView = menuViewFactory(null, this.stylesManager, this.theme);
 
-        var menuItems = [
+        let menuItems = [
             {href: '/', text: 'Главная'},
-            {href: 'https://github.com/workaholicsClub/competency/', text: 'GitHub', target: '_blank'}
+            {href: 'https://github.com/workaholicsClub/competency/', text: 'GitHub', target: '_blank'},
+            {href: 'https://11713.typeform.com/to/oe9WIB', text: 'Помогите нам пройдя небольшой опрос (~2 мин)'},
         ];
 
         return menuView.createDOM({type: 'horizontal', menuItems: menuItems});
     },
 
     createDOM: function (viewModel) {
-        var styles = this.createStyles();
+        let styles = this.createStyles();
         return h('div#footer.row.'+styles.classes.footer, this.createBottomMenu());
     }
 };
@@ -40,7 +41,7 @@ var FooterView = {
  * @returns {FooterView}
  */
 module.exports = function (stylesManager) {
-    var instance = Object.create(FooterView);
+    let instance = Object.create(FooterView);
     instance.init(stylesManager);
 
     return instance;

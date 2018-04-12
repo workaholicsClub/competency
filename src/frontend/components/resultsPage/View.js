@@ -9,6 +9,22 @@ let ResultView = {
         this.successModalInstance = false;
     },
 
+    createStyles: function () {
+        let styles = {
+            evaluateLink: {
+                'text-decoration': 'none',
+                'border-bottom': '1px dashed #007bff',
+                'cursor': 'pointer',
+                '&:hover': {
+                    'text-decoration': 'none',
+                    'border-bottom': '1px dashed #0056b3',
+                }
+            }
+        };
+
+        return this.stylesManager.createStyleSheet(styles).attach();
+    },
+
     /**
      * @returns {HTMLElement}
      */
@@ -40,7 +56,7 @@ let ResultView = {
         );
     },
 
-    createResults: function (viewModel) {
+    createResults: function (viewModel, styles) {
         if (viewModel.allCompetencies.length === 0) {
             return this.noResults();
         }
@@ -54,13 +70,57 @@ let ResultView = {
         );
     },
 
-    createHiddenInputs: function (viewModel) {
+    createCompetenciesTable: function (viewModel, styles) {
+        return h('table.table.table-striped.table-bordered',
+            h('thead',
+                h('tr',
+                    h('th', 'Компетенции', {attrs: {scope: "col"}}),
+                    h('th', 'Средние значения', {attrs: {scope: "col"}}),
+                    h('th', 'Результат самооценки', {attrs: {scope: "col"}}),
+                    h('th', 'Отклонение', {attrs: {scope: "col"}}),
+                ),
+            ),
+            h('tbody',
+                viewModel.professionCompetencies.map(function (competency) {
+                    let averageData = competency.average;
+                    let averageText = averageData.average + ' (' + averageData.lower + '-' + averageData.upper + ')';
+
+                    let ratingText = competency.ratingPercent !== false
+                        ? competency.ratingPercent+'%'
+                        : 'оценить';
+
+                    let sign = averageData.diff > 0 ? '+' : '';
+                    let diffText = (averageData.diff > 0 || averageData.diff < 0)
+                        ? sign+averageData.diff+'%'
+                        : 'нет';
+
+                    let badgeClass = averageData.diff > 0
+                        ? '.badge.badge-pill.badge-success'
+                        : (averageData.diff < 0
+                            ? '.badge.badge-pill.badge-danger'
+                            : ''
+                        );
+
+                    let diffPill = h('span'+badgeClass, diffText);
+
+                    return h('tr',
+                        h('td', h('a.'+styles.classes.evaluateLink, competency.name, {href: competency.link}), {attrs: {scope: "row"}}),
+                        h('td', averageText),
+                        h('td', h('a.'+styles.classes.evaluateLink, ratingText, {href: competency.link})),
+                        h('td', diffPill)
+                    );
+                })
+            )
+        );
+    },
+
+    createHiddenInputs: function (viewModel, styles) {
         return viewModel.allCompetencies.map(function (competency) {
             return h('input', {name: 'competency[' + competency.code + ']', type: 'hidden', attrs: {value: competency.rating}})
         });
     },
 
-    createSubscribeForm: function (viewModel) {
+    createSubscribeForm: function (viewModel, styles) {
         return h('form#subscribeForm',
             this.createHiddenInputs(viewModel),
             h('div.form-row.align-items-center',
@@ -98,16 +158,11 @@ let ResultView = {
                 h('div.col-auto',
                     h('button#saveResult.btn.btn-primary.mb-2', {type: 'submit'}, 'Сохранить результат')
                 )
-            ),
-            h('div.form-row.align-items-center',
-                h('div.col-auto',
-                    h('p', h('a', {href: viewModel.pollUrl, target: '_blank'}, 'Помогите нам пройдя небольшой опрос (~2 мин)'))
-                )
             )
         );
     },
 
-    createSaveSuccessModal: function (viewModel) {
+    createSaveSuccessModal: function (viewModel, styles) {
         return h('div#successModal.modal.fade',
             h('div.modal-dialog',
                 h('div.modal-content',
@@ -130,25 +185,30 @@ let ResultView = {
     },
 
     createDOM: function (viewModel) {
+        let styles = this.createStyles();
         let footerView = footerViewFactory(this.stylesManager);
+        let pageTitle = viewModel.professionName + ': компетенции';
+
         return h('div#page.container-fluid.mt-3',
             h('div#head.row',
                 h('div.col-md-12',
                     h('div.page-header',
-                        h('h1.display-4', 'Результаты самооценки')
+                        h('h1.display-4', pageTitle)
                     )
                 )
             ),
-            h('div#buttons.row.mt-3',
-                h('div.col-md-12.text-centered', this.createSubscribeForm(viewModel))
-            ),
             h('div#content.row.mt-5',
                 h('div.col-md-12',
-                    h('h2.display-6', 'Навыки'),
-                    this.createResults(viewModel)
+                    this.createCompetenciesTable(viewModel, styles)
                 )
             ),
-            this.createSaveSuccessModal(viewModel),
+            h('div#buttons.row.mt-3',
+                h('div.col-md-12.text-right', h('a#courses.btn.btn-primary.mb-2', {href: viewModel.coursesLink}, 'Подобрать курсы'))
+            ),
+            h('div#save.row.mt-3',
+                h('div.col-md-12.text-centered', this.createSubscribeForm(viewModel, styles))
+            ),
+            this.createSaveSuccessModal(viewModel, styles),
             footerView.createDOM()
         );
     },

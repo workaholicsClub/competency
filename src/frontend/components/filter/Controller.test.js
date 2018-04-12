@@ -31,7 +31,7 @@ function getFilterControllerInstance(fieldsData, view, answers) {
     }
 
     if (!answers) {
-        answers = {'functionalProgramming': [5, 5, 5, 5]};
+        answers = {'functionalProgramming': [4, 4, 4, 4]};
     }
 
     let filterModel = filterModelFactory({});
@@ -105,7 +105,7 @@ test('FilterController getViewModel', function () {
 
     expect(testVariant.code).toEqual('functionalProgramming');
     expect(testVariant.name).toEqual('Функциональное программирование');
-    expect(testVariant.rating).toEqual(4);
+    expect(testVariant.rating).toEqual(3);
     expect(testVariant.ratingPercent).toEqual(100);
 });
 
@@ -114,7 +114,7 @@ test('FilterController addRatingToCompetencies', function () {
     let view = getFilterView();
     let competencies = testFields[1].variants;
 
-    let answers = {'functionalProgramming': [5, 5, 5, 5]};
+    let answers = {'functionalProgramming': [4, 4, 4, 4]};
     let controller = getFilterControllerInstance(testFields, view, answers);
 
     let competenciesWithRatings = controller.addRatingToCompetencies(competencies);
@@ -132,7 +132,7 @@ test('FilterController addRatingToCompetencies', function () {
     expect(competencies[0].code).toEqual(competenciesWithRatings[0].code);
     expect(competencies[0].name).toEqual(competenciesWithRatings[0].name);
     expect(competencies[0].skills).toEqual(competenciesWithRatings[0].skills);
-    expect(competenciesWithRatings[0].rating).toEqual(4);
+    expect(competenciesWithRatings[0].rating).toEqual(3);
     expect(competenciesWithRatings[0].ratingPercent).toEqual(100);
 
     expect(competencies[1].code).toEqual(competenciesWithRatings[1].code);
@@ -203,7 +203,7 @@ test('FilterController updateSkillLevels', function () {
 
             try {
                 expect(skillLevelTextBefore).toEqual('-');
-                expect(skillLevelTextAfter).toEqual('19%');
+                expect(skillLevelTextAfter).toEqual('25%');
             }
             catch (exception) {
                 reject(exception);

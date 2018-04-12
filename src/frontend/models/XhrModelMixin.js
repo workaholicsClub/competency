@@ -1,10 +1,10 @@
-var XhrModelMixin = {
+let XhrModelMixin = {
     load: function () {
         if (this.isLoading || this.isLoaded()) {
             return;
         }
 
-        var absoluteUrl = this.makeRequestUrl();
+        let absoluteUrl = this.makeRequestUrl();
 
         this.isLoading = true;
         this.xhr.open("GET", absoluteUrl);
@@ -21,8 +21,8 @@ var XhrModelMixin = {
     },
 
     bindXhrEvents: function () {
-        var model = this;
-        var xhr = this.xhr;
+        let model = this;
+        let xhr = this.xhr;
 
         this.xhr.addEventListener("load", function (event) {
             model.handleLoad.call(model, xhr, event);
@@ -38,11 +38,11 @@ var XhrModelMixin = {
     },
 
     handleLoad: function (xhr, event) {
-        var model = this;
+        let model = this;
         this.isLoading = false;
 
         try {
-            var response = JSON.parse(xhr.responseText);
+            let response = JSON.parse(xhr.responseText);
             if (this.afterLoad && this.afterLoad instanceof Function) {
                 this.afterLoad.call(this, xhr, event, response);
             }

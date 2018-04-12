@@ -56,8 +56,7 @@ let CoursesController = {
 
             if (competency) {
                 let rating = competencyRatings[competencyCode];
-                let maxRating = 4;
-                let ratingPercent = Math.round(rating/maxRating*100);
+                let ratingPercent = this.answersModel.getRatingPercent(rating);
 
                 competenciesWithRatings.push({
                     name: competency.name,
@@ -93,7 +92,7 @@ let CoursesController = {
         let professionCompetencies = this.professionsModel.getCompetencies();
 
         let fieldsData = [
-            {code: 'professionCode', label: 'Профессия', type: 'select', value: '', variants: professions},
+            //{code: 'professionCode', label: 'Профессия', type: 'select', value: '', variants: professions},
             {code: 'userCompetencies', label: 'Навыки', type: 'competency', value: [], variants: professionCompetencies},
             {code: 'price', label: 'Стоимость', type: 'multiCheckbox', value: '', variants: [
                     {name: "Только бесплатные", code: "free"}

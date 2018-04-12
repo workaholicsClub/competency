@@ -173,13 +173,7 @@ let FilterController = {
 
     getCompetencyRatingPercent: function (competencyCode) {
         let rating = this.getCompetencyRating(competencyCode);
-
-        if (!rating) {
-            return false;
-        }
-
-        let maxRating = 4;
-        return Math.round(rating / maxRating * 100);
+        return this.answersModel.getRatingPercent(rating);
     },
 
     addRatingToCompetencies: function (competencies) {

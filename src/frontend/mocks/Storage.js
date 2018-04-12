@@ -1,12 +1,12 @@
 const StateMixin = require('../models/StateMixin');
-var MemoryStorage = {
+let MemoryStorage = {
     init: function (cookieName) {
         this.cookieName = cookieName;
         this.initProps({});
     },
 
     save: function (data) {
-        this.set(this.cookieName, data);
+        this.setWithoutEvent(this.cookieName, data);
     },
 
     load: function () {
@@ -16,8 +16,12 @@ var MemoryStorage = {
 
 MemoryStorage = Object.assign(MemoryStorage, StateMixin);
 
+/**
+ * @param cookieName
+ * @returns {Storage}
+ */
 module.exports = function (cookieName) {
-    var instance = Object.create(MemoryStorage);
+    let instance = Object.create(MemoryStorage);
     instance.init(cookieName);
 
     return instance;

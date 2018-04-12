@@ -65,8 +65,8 @@ test('SkillLevelController skills render and change', function () {
     let answersModel = answersFactory();
     let skillLevels = answersModel.getSkillLevelsText();
 
-    let testController = getControllerInstance(view, answersModel);
-    testController.renderSkills();
+    let skillController = getControllerInstance(view, answersModel);
+    skillController.renderSkills();
 
     let skillSlider = view.getAllSkillSliders()[0];
     let skillElement = rootElement.querySelector('#skill0');

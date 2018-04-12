@@ -1,4 +1,4 @@
-var EventMixin = {
+let EventMixin = {
     initEvents: function () {
         this.fakeElement = document.createTextNode(null);
     },
@@ -16,7 +16,7 @@ var EventMixin = {
     },
 
     dispatchModelEvent: function (type) {
-        var event = new CustomEvent(type, {detail: this});
+        let event = new CustomEvent(type, {detail: this});
         return this.fakeElement.dispatchEvent.call(this.fakeElement, event);
     }
 };

@@ -4,15 +4,15 @@ const jss = require('jss').default;
 const sleep = require('../../mocks/sleep.fn.js');
 
 test('IndexView.loadingInterval', function () {
-    var DOMelement = document.createElement('div');
-    var milisecondsToCatchOneTick = 1000;
-    var testIntervalId = 1;
-    var intervalInterface = {
+    let DOMelement = document.createElement('div');
+    let milisecondsToCatchOneTick = 1000;
+    let testIntervalId = 1;
+    let intervalInterface = {
         setInterval: jest.fn().mockReturnValue(testIntervalId),
         clearInterval: jest.fn()
     };
 
-    var indexView = indexViewFactory(DOMelement, jss, intervalInterface);
+    let indexView = indexViewFactory(DOMelement, jss, intervalInterface);
     indexView.startLoadProgress();
 
     sleep(milisecondsToCatchOneTick);
@@ -27,28 +27,25 @@ test('IndexView.loadingInterval', function () {
 });
 
 test('IndexView.createDOM', function () {
-    var DOMelement = document.createElement('div');
-    var indexView = indexViewFactory(DOMelement, jss);
-    var viewModel = {
+    let DOMelement = document.createElement('div');
+    let indexView = indexViewFactory(DOMelement, jss);
+    let viewModel = {
         professions: []
     };
 
-    var indexViewDOM = indexView.createDOM(viewModel);
+    let indexViewDOM = indexView.createDOM(viewModel);
     expect(indexViewDOM).toBeInstanceOf(HTMLElement);
 });
 
 test('IndexView.render', function () {
-    var DOMelement = document.createElement('div');
-    var indexView = indexViewFactory(DOMelement, jss);
-    var viewModel = {
+    let DOMelement = document.createElement('div');
+    let indexView = indexViewFactory(DOMelement, jss);
+    let viewModel = {
         professions: []
     };
 
     indexView.render(viewModel);
 
     expect(indexView.getRootElement()).toBe(DOMelement);
-    //expect(mainView.queryVehicleDataElement()).toBeInstanceOf(HTMLElement);
-    //expect(mainView.queryNumberInput()).toBeInstanceOf(HTMLInputElement);
-
     expect(DOMelement.innerHTML.indexOf('null')).toBe(-1);
 });

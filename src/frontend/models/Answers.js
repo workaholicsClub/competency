@@ -1,15 +1,18 @@
 const BaseModel = require('./Base');
 const XhrModelMixin = require('./XhrModelMixin');
+const StorageMixin = require('./StorageMixin');
 const cookieStorageFactory = require('../classes/CookieStorage');
 
 let AnswersModel = {
-    init: function (props, config, xhr, storage) {
+    init: function (props, config, xhr, storage, autoload) {
         this.initPropsAndEvents(props);
         this.initXhr(xhr);
+        this.initStorage(storage);
         this.config = config;
-        this.storage = storage;
 
-        this.loadAnswers();
+        if (autoload) {
+            this.loadAnswers();
+        }
         this.bindChangeHandlers();
     },
 
@@ -82,19 +85,11 @@ let AnswersModel = {
      * @param event
      */
     saveAnswers: function (event) {
-        if (this.storage) {
-            this.storage.save(this.getProps());
-        }
+        this.saveData(event);
     },
 
     loadAnswers: function () {
-        if (this.storage) {
-            let savedAnswers = this.storage.load();
-
-            if (savedAnswers) {
-                this.setPropsWithoutEvent(savedAnswers);
-            }
-        }
+        this.loadData();
     },
 
     /**
@@ -132,20 +127,58 @@ let AnswersModel = {
             'Осознанно применяю',
             'Применяю автоматически'
         ];
+    },
+
+    getRatingPercent: function (rating) {
+        if (!rating) {
+            return rating === 0 ? 0 : false;
+        }
+
+        let maxRating = this.getSkillLevelsText().length-1;
+        return Math.round(rating/maxRating*100);
+    },
+
+    getAnsweredSkills: function (competency) {
+        let competencyCode = competency.code;
+        let competencySkills = competency.skills;
+        let answers = this.get(competencyCode) || false;
+        let skillAnswersText = this.getSkillLevelsText();
+
+        let skills = [];
+        competencySkills.forEach(function (skill, index) {
+            let answer = answers ? (answers[index] || false) : false;
+            let answerValue = answer !== false
+                ? parseInt(answer).toString()
+                : '0';
+
+            skills.push({
+                answer: answerValue,
+                answerText: answer > 0
+                    ? skillAnswersText[answer]
+                    : skillAnswersText[0],
+                isAnswered: answer > 0,
+                text: skill.text,
+                additionalDescription: skill.additionalDescription
+            });
+        });
+
+        return skills;
     }
 };
 
 AnswersModel = Object.assign(Object.create(BaseModel), AnswersModel);
 AnswersModel = Object.assign(AnswersModel, XhrModelMixin);
+AnswersModel = Object.assign(AnswersModel, StorageMixin);
 
 /**
  * @param props
  * @param config
  * @param xhr
- * @param storage
+ * @param {Storage} storage
+ * @param {boolean} autoload
  * @returns {AnswersModel}
  */
-module.exports = function (props, config, xhr, storage) {
+module.exports = function (props, config, xhr, storage, autoload) {
     if (!props) {
         props = {};
     }
@@ -158,8 +191,12 @@ module.exports = function (props, config, xhr, storage) {
         storage = cookieStorageFactory('answers');
     }
 
+    if (typeof (autoload) === 'undefined') {
+        autoload = true;
+    }
+
     let answers = Object.create(AnswersModel);
-    answers.init(props, config, xhr, storage);
+    answers.init(props, config, xhr, storage, autoload);
 
     return answers;
 };
