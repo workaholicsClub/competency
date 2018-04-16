@@ -184,7 +184,7 @@ let FilterView = {
      */
     createAltCompetencyField: function (fieldData) {
         let selectedSkills = fieldData.variants.reduce(function (accumulator, variant) {
-            let isSelected = fieldData.value.indexOf(variant.code) !== -1;
+            let isSelected = fieldData.value && fieldData.value.indexOf(variant.code) !== -1;
             if (isSelected) {
                 accumulator.push(variant);
             }
@@ -192,7 +192,7 @@ let FilterView = {
         }, []);
 
         let notSelectedSkills = fieldData.variants.reduce(function (accumulator, variant) {
-            let notSelected = fieldData.value.indexOf(variant.code) === -1;
+            let notSelected = !fieldData.value || (fieldData.value && fieldData.value.indexOf(variant.code) === -1);
             if (notSelected) {
                 accumulator.push(variant);
             }
@@ -282,7 +282,7 @@ let FilterView = {
         let checkboxes = fieldData.variants.map(function (variant, index) {
             let humanIndex = index + 1;
             let fieldNameId = fieldData.code + '_' + humanIndex;
-            let isChecked = fieldData.value.indexOf(variant.code) !== -1;
+            let isChecked = fieldData.value && fieldData.value.indexOf(variant.code) !== -1;
             let inputAttrs = {
                 'data-type': 'multicheckbox',
                 'data-code': fieldData.code,

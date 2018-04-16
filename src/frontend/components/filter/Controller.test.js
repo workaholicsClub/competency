@@ -25,7 +25,7 @@ function getFilterView(rootElement) {
     return filterViewFactory(rootElement, stylesManager);
 }
 
-function getFilterControllerInstance(fieldsData, view, answers) {
+function getFilterControllerInstance(fieldsData, view, answers, filterValues) {
     if (!view) {
         view = getFilterView();
     }
@@ -34,7 +34,11 @@ function getFilterControllerInstance(fieldsData, view, answers) {
         answers = {'functionalProgramming': [4, 4, 4, 4]};
     }
 
-    let filterModel = filterModelFactory({});
+    if (!filterValues) {
+        filterValues = {};
+    }
+
+    let filterModel = filterModelFactory(filterValues);
     let answersModel = answersModelFactory(answers);
 
     let competency = undefined;
@@ -52,6 +56,7 @@ test('FilterController.interface', function () {
     expect(controller.handleEvent).toBeInstanceOf(Function);
     expect(controller.bindEvents).toBeInstanceOf(Function);
     expect(controller.renderFilter).toBeInstanceOf(Function);
+    expect(controller.getFieldValue).toBeInstanceOf(Function);
 });
 
 test('FilterController get/set fields data', function () {
@@ -62,6 +67,14 @@ test('FilterController get/set fields data', function () {
     expect(controller.getFieldsData()).toEqual({});
     controller.setFieldsData(getTestFieldsData());
     expect(controller.getFieldsData()).toEqual(getTestFieldsData());
+});
+
+test('FilterController getFieldValue', function () {
+    let answers = false;
+    let filterValues = {'free': 1};
+    let controller = getFilterControllerInstance(getTestFieldsData(), getFilterView(), answers, filterValues);
+
+    expect(controller.getFieldValue('free')).toEqual(1);
 });
 
 test('FilterController getFieldData, getCompetency', function () {

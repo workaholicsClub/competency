@@ -28,6 +28,10 @@ let FilterController = {
         return this.fieldsData;
     },
 
+    getFieldValue: function (code) {
+        return this.filterModel.get(code);
+    },
+
     /**
      * @param {string} fieldCode
      * @returns {FieldData|boolean}

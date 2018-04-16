@@ -47,6 +47,10 @@ let CoursesController = {
         }
     },
 
+    getFilterValue: function (code) {
+        return this.filterController.getFieldValue(code);
+    },
+
     getViewModel: function () {
         let competencyRatings = this.answersModel.getAllRatings();
         let competenciesWithRatings = [];
@@ -92,45 +96,45 @@ let CoursesController = {
         let professionCompetencies = this.professionsModel.getCompetencies();
 
         let fieldsData = [
-            //{code: 'professionCode', label: 'Профессия', type: 'select', value: '', variants: professions},
-            {code: 'userCompetencies', label: 'Навыки', type: 'competency', value: [], variants: professionCompetencies},
-            {code: 'price', label: 'Стоимость', type: 'multiCheckbox', value: '', variants: [
+            //{code: 'professionCode', label: 'Профессия', type: 'select', value: this.getFilterValue('professionCode'), variants: professions},
+            {code: 'userCompetencies', label: 'Навыки', type: 'competency', value: this.getFilterValue('userCompetencies'), variants: professionCompetencies},
+            {code: 'price', label: 'Стоимость', type: 'multiCheckbox', value: this.getFilterValue('price'), variants: [
                     {name: "Только бесплатные", code: "free"}
                 ]},
             //{code: 'dateStart', label: 'Дата начала', type: 'date', value: ''},
-            {code: 'modeOfStudy', label: 'Форма обучения', type: 'multiCheckbox', value: '', variants: [
+            {code: 'modeOfStudy', label: 'Форма обучения', type: 'multiCheckbox', value: this.getFilterValue('modeOfStudy'), variants: [
                     {name: "Очная", code: "inPerson", info: "Аудиторные занятия с преподавателями"},
                     {name: "Дистанционная", code: "longDistance", info: "Периодическое взаимодействие с преподавателями по электропочте, skype для получения образовательных материалов и задач, обсуждения их выполнения"},
                     {name: "Онлайн", code: "online", info: "Работа с образовательными материалами и преподавателями в режиме онлайн"},
                     {name: "Очная и онлайн", code: "inPersonOnline", info: "Совмещение аудиторных и онлайн занятий"},
                     {name: "Самостоятельное обучение", code: "selfStudy", info: "Самостоятельное изучение материалов без участия преподавателя или куратора"}
                 ]},
-            {code: 'courseForm', label: 'Вид обучения', type: 'multiCheckbox', value: '', variants: [
+            {code: 'courseForm', label: 'Вид обучения', type: 'multiCheckbox', value: this.getFilterValue('courseForm'), variants: [
                     {name: "Видеокурс", code: "video"},
                     {name: "Текстовый курс", code: "text"},
                     {name: "Интерактивный курс", code: "interactive"},
                     {name: "Интенсив", code: "crashCourse"},
                     {name: "Тренинг", code: "training"}
                 ]},
-            {code: 'schedule', label: 'Время проведения занятий', type: 'multiCheckbox', value: '', variants: [
+            {code: 'schedule', label: 'Время проведения занятий', type: 'multiCheckbox', value: this.getFilterValue('schedule'), variants: [
                     {name: "Свободный график", code: "free"},
                     {name: "Дневные занятия", code: "day"},
                     {name: "Вечерние занятия", code: "evening"},
                     {name: "По выходным", code: "weekends"}
                 ]},
-            {code: 'certificate', label: 'Выдается сертификат', type: 'checkbox', value: false},
-            {code: 'tasksType', label: 'Задания', type: 'multiCheckbox', value: '', variants: [
+            {code: 'certificate', label: 'Выдается сертификат', type: 'checkbox', value: this.getFilterValue('certificate')},
+            {code: 'tasksType', label: 'Задания', type: 'multiCheckbox', value: this.getFilterValue('tasksType'), variants: [
                     {name: "Без заданий", code: "noTasks"},
                     {name: "Проверка преподавателем", code: "teacherCheck"},
                     {name: "Автоматизированная проверка", code: "autoCheck"},
                     {name: "Самостоятельная проверка", code: "selfCheck"}
                 ]},
-            {code: 'length', label: 'Длительность', type: 'multiCheckbox', value: '', variants: [
+            {code: 'length', label: 'Длительность', type: 'multiCheckbox', value: this.getFilterValue('length'), variants: [
                     {name: "Краткосрочные", code: "short", info: "Не больше одного-двух дней"},
                     {name: "Средней длительности", code: "medium", info: "Несколько месяцев"},
                     {name: "Долгосрочные", code: "long", info: "Год и больше"},
                 ]},
-            {code: 'platform', label: 'Платформа', type: 'multiCheckbox', value: '', variants: [
+            {code: 'platform', label: 'Платформа', type: 'multiCheckbox', value: this.getFilterValue('platform'), variants: [
                     {name: "Stepik", code: "stepik"},
                     {name: "Нетология", code: "netology"},
                     {name: "Otus", code: "otus"},
