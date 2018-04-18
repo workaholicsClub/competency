@@ -24,7 +24,7 @@ const notFoundViewFactory = require('./components/notFoundPage/View');
 
 const professionsFactory = require('./models/Professions');
 const answersFactory = require('./models/SkillAnswers');
-const coursesFactory = require('./models/Courses');
+const coursesFactory = require('./models/CourseCollection');
 const filterFactory = require('./models/Filter');
 
 const configFactory = require('./classes/Config');
@@ -113,7 +113,7 @@ function initAndGoToRoute() {
         let fieldsData = [];
         let filterController = filterControllerFactory(filterView, coursesFilter, answersModel, fieldsData, skillController);
 
-        let coursesController = coursesControllerFactory(coursesView, listView, filterController, professionsModel, answersModel, coursesModel, xhr, tracker);
+        let coursesController = coursesControllerFactory(coursesView, listView, filterController, coursesFilter, professionsModel, answersModel, coursesModel, xhr, tracker);
         coursesController.loadDataAndRenderIndexPage();
     });
 

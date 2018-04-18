@@ -31,7 +31,7 @@ function getFilterControllerInstance(fieldsData, view, answers, filterValues) {
     }
 
     if (!answers) {
-        answers = {'functionalProgramming': [4, 4, 4, 4]};
+        answers = {'functionalProgramming': [3, 3, 3, 3]};
     }
 
     if (!filterValues) {
@@ -127,7 +127,7 @@ test('FilterController addRatingToCompetencies', function () {
     let view = getFilterView();
     let competencies = testFields[1].variants;
 
-    let answers = {'functionalProgramming': [4, 4, 4, 4]};
+    let answers = {'functionalProgramming': [3, 3, 3, 3]};
     let controller = getFilterControllerInstance(testFields, view, answers);
 
     let competenciesWithRatings = controller.addRatingToCompetencies(competencies);
@@ -216,7 +216,7 @@ test('FilterController updateSkillLevels', function () {
 
             try {
                 expect(skillLevelTextBefore).toEqual('-');
-                expect(skillLevelTextAfter).toEqual('25%');
+                expect(skillLevelTextAfter).toEqual('11%');
             }
             catch (exception) {
                 reject(exception);

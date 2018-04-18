@@ -1,14 +1,17 @@
 let XhrModelMixin = {
-    load: function () {
+    loadCustomUrl: function (absoluteUrl) {
         if (this.isLoading || this.isLoaded()) {
             return;
         }
 
-        let absoluteUrl = this.makeRequestUrl();
-
         this.isLoading = true;
         this.xhr.open("GET", absoluteUrl);
         this.xhr.send();
+    },
+
+    load: function () {
+        let absoluteUrl = this.makeRequestUrl();
+        this.loadCustomUrl(absoluteUrl);
     },
 
     initXhr: function (xhr) {

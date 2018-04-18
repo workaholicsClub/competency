@@ -28,6 +28,7 @@ class CourseTest extends TestCase
             'certificate'          => true,
             'tasksType'            => Course::TASKS_SELF_CHECK,
             'lengthDays'           => 36,
+            'price'                => 20100.54,
         ];
 
         $expectedCode = 'nazvanie-kursa';
@@ -48,6 +49,7 @@ class CourseTest extends TestCase
         $this->assertEquals($expectedProps['certificate'], $course->hasCertificate());
         $this->assertEquals($expectedProps['tasksType'], $course->getTasksType());
         $this->assertEquals($expectedProps['lengthDays'], $course->getLengthDays());
+        $this->assertEquals($expectedProps['price'], $course->getPrice());
 
         $particialProps = [
             'externalId' => '35',
@@ -70,6 +72,7 @@ class CourseTest extends TestCase
         $this->assertEmpty($course->hasCertificate());
         $this->assertEmpty($course->getTasksType());
         $this->assertEmpty($course->getLengthDays());
+        $this->assertEmpty($course->getPrice());
 
         $course = Course::makeEmpty();
 
@@ -87,6 +90,7 @@ class CourseTest extends TestCase
         $this->assertEmpty($course->hasCertificate());
         $this->assertEmpty($course->getTasksType());
         $this->assertEmpty($course->getLengthDays());
+        $this->assertEmpty($course->getPrice());
     }
 
     public function testFromEntity() {
@@ -106,6 +110,7 @@ class CourseTest extends TestCase
             'certificate'          => true,
             'tasksType'            => 'autoCheck',
             'lengthDays'           => 1,
+            'price'                => 0.00,
         ];
 
         $locator = Database::getTest();
@@ -130,6 +135,7 @@ class CourseTest extends TestCase
         $this->assertEquals($expectedProps['certificate'], $course->hasCertificate());
         $this->assertEquals($expectedProps['tasksType'], $course->getTasksType());
         $this->assertEquals($expectedProps['lengthDays'], $course->getLengthDays());
+        $this->assertEquals($expectedProps['price'], $course->getPrice());
     }
 
     public function testGettersSetters() {
@@ -170,6 +176,7 @@ class CourseTest extends TestCase
             'certificate'          => true,
             'tasksType'            => Course::TASKS_SELF_CHECK,
             'lengthDays'           => 36,
+            'price'                => 20100.54,
         ];
 
         $course = Course::__set_state($expectedProps);
@@ -188,6 +195,7 @@ class CourseTest extends TestCase
         $this->assertEquals($expectedProps['certificate'], $course->hasCertificate());
         $this->assertEquals($expectedProps['tasksType'], $course->getTasksType());
         $this->assertEquals($expectedProps['lengthDays'], $course->getLengthDays());
+        $this->assertEquals($expectedProps['price'], $course->getPrice());
     }
 
     public function testIsEqualTo() {
@@ -283,6 +291,7 @@ class CourseTest extends TestCase
             'certificate'          => true,
             'tasksType'            => Course::TASKS_SELF_CHECK,
             'lengthDays'           => 36,
+            'price'                => 25000.01,
         ];
 
         $constructProps = $expectedProps;

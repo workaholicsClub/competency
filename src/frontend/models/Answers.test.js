@@ -1,5 +1,6 @@
 const BaseModel = require('./Base');
 const answersFactory = require('./Answers');
+const skillCodes = require('./Answers').skillCodes;
 const configMockFactory = require('../mocks/Config');
 const storageMockFactory = require('../mocks/Storage');
 const getXHRMock = require('../mocks/getXHRMock.fn');
@@ -38,44 +39,48 @@ test('AnswersModel.interface', function () {
     expect(answersModel.getAnsweredSkills).toBeInstanceOf(Function);
 });
 
+test('AnswersModel skillCodes', function () {
+    expect(skillCodes).toBeInstanceOf(Array);
+    expect(skillCodes).toHaveLength(4);
+});
+
 test('AnswersModel.getCompetencyRating', function () {
     let answers = answersMockFactory({});
 
-    answers.set('competencyA', [5, 5, 4, 2]);
-    answers.set('competencyB', [3, 5, 5, 4]);
-    answers.set('competencyC', [1, 1, 1, 1]);
+    answers.set('competencyA', [3, 3, 2, 3]);
+    answers.set('competencyB', [2, 3]);
+    answers.set('competencyC', [1, 1, 1, 1, 1]);
     answers.set('competencyD', [0, 0, 0, 0]);
     answers.set('competencyE', [0, 0, 0]);
     answers.set('competencyF', 'z');
     answers.set('competencyG', false);
 
-    expect(answers.getCompetencyRating('competencyA')).toEqual(3);
-    expect(answers.getCompetencyRating('competencyB')).toEqual(3.25);
-    expect(answers.getCompetencyRating('competencyC')).toEqual(0);
-    expect(answers.getCompetencyRating('competencyD')).toBeFalsy();
-    expect(answers.getCompetencyRating('competencyE')).toBeFalsy();
+    expect(answers.getCompetencyRating('competencyA')).toEqual(2.75);
+    expect(answers.getCompetencyRating('competencyB')).toEqual(2.5);
+    expect(answers.getCompetencyRating('competencyC')).toEqual(1);
+    expect(answers.getCompetencyRating('competencyD')).toEqual(0);
+    expect(answers.getCompetencyRating('competencyE')).toEqual(0);
     expect(answers.getCompetencyRating('competencyF')).toBeFalsy();
     expect(answers.getCompetencyRating('competencyG')).toBeFalsy();
-    expect(answers.getCompetencyRating('competencyH')).toBeFalsy();
 });
 
 test('AnswersModel.getAllRatings', function () {
     let answers = answersMockFactory({});
     let expectedRatings = {
-        "competencyA": 3,
-        "competencyB": 3.25,
-        "competencyC": 0,
-        "competencyD": 0.25,
-        "competencyE": 0.25,
-        "competencyF": false,
+        "competencyA": 1.5,
+        "competencyB": 1.5,
+        "competencyC": 1,
+        "competencyD": 0.5,
+        "competencyE": 1.33,
+        "competencyF": 0,
         "competencyG": false
     };
 
-    answers.set('competencyA', [5, 5, 4, 2]);
-    answers.set('competencyB', [3, 5, 5, 4]);
-    answers.set('competencyC', [1, 1, 1, 1]);
+    answers.set('competencyA', [1, 2]);
+    answers.set('competencyB', [0, 1, 2, 3]);
+    answers.set('competencyC', [1, 1, 1, 1, 1]);
     answers.set('competencyD', [0, 2, 0, 0]);
-    answers.set('competencyE', [1, 2, 1, 1]);
+    answers.set('competencyE', [1, 2, 1]);
     answers.set('competencyF', [0, 0, 0, 0]);
     answers.set('competencyG', false);
 
@@ -116,9 +121,10 @@ test('AnswersModel.saveResults', function () {
     });
 });
 
-test('AnswersModel.getSkillLevelsText', function () {
+test('AnswersModel getSkillLevelsText и getSkillLevelsCode', function () {
     let answers = answersFactory({}, configMockFactory());
     expect(answers.getSkillLevelsText()).toHaveLength(4);
+    expect(answers.getSkillLevelsCode()).toHaveLength(4);
 });
 
 test('AnswersModel.getAnsweredSkills', function () {

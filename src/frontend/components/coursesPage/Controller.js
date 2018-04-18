@@ -1,10 +1,11 @@
 const BaseController = require('../base/Controller');
 
 let CoursesController = {
-    init: function (pageView, coursesListView, filterController, professionsModel, answersModel, coursesModel, xhr, tracker) {
+    init: function (pageView, coursesListView, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker) {
         this.pageView = pageView;
         this.coursesListView = coursesListView;
         this.filterController = filterController;
+        this.filterModel = filterModel;
         this.professionsModel = professionsModel;
         this.answersModel = answersModel;
         this.coursesModel = coursesModel;
@@ -16,7 +17,9 @@ let CoursesController = {
 
     initEvents: function () {
         this.events = [
-            {types: ['load'], target: this.professionsModel, handler: this.renderIndexPageAfterLoad}
+            {types: ['load'], target: this.professionsModel, handler: this.renderIndexPageAfterLoad},
+            {types: ['change'], target: this.answersModel, handler: this.updateCourses},
+            {types: ['change'], target: this.filterModel, handler: this.updateCourses}
         ];
 
         if (this.xhr) {
@@ -51,10 +54,8 @@ let CoursesController = {
         return this.filterController.getFieldValue(code);
     },
 
-    getViewModel: function () {
-        let competencyRatings = this.answersModel.getAllRatings();
+    getCompetenciesWithRatings: function (competencyRatings) {
         let competenciesWithRatings = [];
-
         Object.keys(competencyRatings).forEach(function (competencyCode) {
             let competency = this.professionsModel.getAnyProfessionCompetency(competencyCode);
 
@@ -71,11 +72,49 @@ let CoursesController = {
             }
         }, this);
 
+        return competenciesWithRatings;
+    },
+
+    getViewModel: function () {
+        let competencyRatings = this.answersModel.getAllRatings();
+        let competenciesWithRatings = this.getCompetenciesWithRatings(competencyRatings);
+
+        let courses = [];
+        this.coursesModel.getLoadedCourses().forEach(function (courseModel) {
+            let courseData = courseModel.getProps();
+            let competencies = this.professionsModel.getCompetencies();
+
+            let skillCompetenciesRatings = courseModel.getSkillsAsCompetencies(competencies);
+            let requirementCompetenciesRatings = courseModel.getRequirementsAsCompetencies(competencies);
+
+            courseData.skillCompetencies = this.getCompetenciesWithRatings(skillCompetenciesRatings);
+            courseData.requirementCompetencies = this.getCompetenciesWithRatings(requirementCompetenciesRatings);
+
+            courses.push(courseData);
+        }, this);
+
+        let fieldNames = this.getFilterFields().reduce(function (accumulator, filterField) {
+            accumulator[filterField.code] = filterField.label;
+            return accumulator;
+        }, {});
+
+        let fieldVariants = this.getFilterFields().reduce(function (accumulator, filterField) {
+            if (filterField.variants) {
+                accumulator[filterField.code] = filterField.variants.reduce(function (variantAccumulator, variant) {
+                    variantAccumulator[variant.code] = variant.name;
+                    return variantAccumulator;
+                }, {});
+            }
+
+            return accumulator;
+        }, {});
+
         return {
-            'pollUrl': 'https://11713.typeform.com/to/oe9WIB',
             'allCompetencies': competenciesWithRatings,
-            'recommendations': this.coursesModel.getRecommendations(),
-            'professions': this.professionsModel.getProfessions()
+            'courses': courses,
+            'professions': this.professionsModel.getProfessions(),
+            'fieldNames': fieldNames,
+            'fieldVariants': fieldVariants
         };
     },
 
@@ -85,7 +124,7 @@ let CoursesController = {
         this.pageView.getCoursesContainer().innerHTML = coursesListDOM.outerHTML;
     },
 
-    renderFilter: function () {
+    getFilterFields: function () {
         let professions = this.professionsModel.getProfessions().map(function (profession) {
             return {
                 name: profession.name,
@@ -95,9 +134,9 @@ let CoursesController = {
 
         let professionCompetencies = this.professionsModel.getCompetencies();
 
-        let fieldsData = [
+        return [
             //{code: 'professionCode', label: 'Профессия', type: 'select', value: this.getFilterValue('professionCode'), variants: professions},
-            {code: 'userCompetencies', label: 'Навыки', type: 'competency', value: this.getFilterValue('userCompetencies'), variants: professionCompetencies},
+            {code: 'userSkills', label: 'Навыки', type: 'competency', value: this.getFilterValue('userCompetencies'), variants: professionCompetencies},
             {code: 'price', label: 'Стоимость', type: 'multiCheckbox', value: this.getFilterValue('price'), variants: [
                     {name: "Только бесплатные", code: "free"}
                 ]},
@@ -148,18 +187,31 @@ let CoursesController = {
                 ]},
             //{code: '', label: '', type: '', value: '', variants: []},
         ];
+    },
 
+    renderFilter: function () {
+        let fieldsData = this.getFilterFields();
         let filterContainer = this.pageView.getFilterContainer();
+
         this.filterController.setFieldsData(fieldsData);
         this.filterController.renderFilter(filterContainer);
+    },
+
+    updateCourses: function() {
+        console.log('updateCourses');
+
+        let ratings = this.answersModel.getAllRatings();
+        let fieldsData = this.getFilterFields();
+
+        this.coursesModel.setRatings( ratings );
+        this.coursesModel.loadFilteredCourses(this.filterModel, this.answersModel, fieldsData);
     },
 
     renderIndexPageAfterLoad: function () {
         this.pageView.render(this.getViewModel());
         this.renderFilter();
         this.initViewEvents();
-        this.coursesModel.setRatings( this.answersModel.getAllRatings() );
-        this.coursesModel.loadRecommendations();
+        this.updateCourses();
     }
 };
 
@@ -169,21 +221,22 @@ CoursesController = Object.assign(Object.create(BaseController), CoursesControll
  * @param pageView
  * @param coursesListView
  * @param filterController
+ * @param {FilterModel} filterModel
  * @param {ProfessionsModel} professionsModel
  * @param {AnswersModel} answersModel
- * @param {CoursesModel} coursesModel
+ * @param {CourseCollection} coursesModel
  * @param {XMLHttpRequest} xhr
  * @param {GTagTracker} tracker
  * @returns {CoursesController}
  */
-module.exports = function (pageView, coursesListView, filterController, professionsModel, answersModel, coursesModel, xhr, tracker) {
+module.exports = function (pageView, coursesListView, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker) {
     let instance = Object.create(CoursesController);
 
     if (!xhr) {
         xhr = new XMLHttpRequest();
     }
 
-    instance.init(pageView, coursesListView, filterController, professionsModel, answersModel, coursesModel, xhr, tracker);
+    instance.init(pageView, coursesListView, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker);
 
     return instance;
 };

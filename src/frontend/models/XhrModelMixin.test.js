@@ -38,6 +38,7 @@ test('XhrMixin.interface', function () {
     expect(xhrModel.handleLoad).toBeInstanceOf(Function);
     expect(xhrModel.handleLoadError).toBeInstanceOf(Function);
     expect(xhrModel.load).toBeInstanceOf(Function);
+    expect(xhrModel.loadCustomUrl).toBeInstanceOf(Function);
 });
 
 test('XhrMixin.load', function () {
@@ -55,6 +56,32 @@ test('XhrMixin.load', function () {
     xhrMock.responseType = 'error';
     xhrModel.load();
     expect(errorHandler).toHaveBeenCalledTimes(1);
+});
+
+test('XhrMixin.loadCustomUrl', function () {
+    let loadHandler = jest.fn();
+    let errorHandler = jest.fn();
+    let expectedUrl = 'http://example.com/test';
+    let xhrMock = getXHRMock('{"test": "123"}');
+    xhrMock.open = jest.fn();
+    let xhrModel = getXhrModel(xhrMock);
+
+    xhrModel.addEventListener('load', loadHandler);
+    xhrModel.addEventListener('loadError', errorHandler);
+
+    xhrMock.responseType = 'load';
+    xhrModel.loadCustomUrl(expectedUrl);
+    expect(loadHandler).toHaveBeenCalledTimes(1);
+
+    xhrMock.responseType = 'error';
+    xhrModel.loadCustomUrl(expectedUrl);
+    expect(errorHandler).toHaveBeenCalledTimes(1);
+
+    expect(xhrMock.open).toHaveBeenCalledTimes(2);
+    expect(xhrMock.open.mock.calls[0][0]).toBe('GET');
+    expect(xhrMock.open.mock.calls[0][1]).toBe(expectedUrl);
+    expect(xhrMock.open.mock.calls[1][0]).toBe('GET');
+    expect(xhrMock.open.mock.calls[1][1]).toBe(expectedUrl);
 });
 
 test('XhrMixin.load (двойной вызов)', function () {

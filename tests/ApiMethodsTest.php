@@ -109,6 +109,7 @@ class ApiMethodsTest extends TestCase
             'certificate',
             'tasksType',
             'lengthDays',
+            'price',
             'skills',
             'requirements'
         ];

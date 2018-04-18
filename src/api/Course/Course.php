@@ -103,6 +103,11 @@ class Course
     private $lengthDays = 0;
 
     /**
+     * @var float
+     */
+    private $price = 0.00;
+
+    /**
      * @param $courseProps
      * @return Course
      */
@@ -124,6 +129,7 @@ class Course
             'certificate'          => 'setCertificate',
             'tasksType'            => 'setTasksType',
             'lengthDays'           => 'setLengthDays',
+            'price'                => 'setPrice',
         ];
 
         foreach ($fieldSetters as $fieldName => $setterName) {
@@ -464,6 +470,7 @@ class Course
             'certificate'          => 'hasCertificate',
             'tasksType'            => 'getTasksType',
             'lengthDays'           => 'getLengthDays',
+            'price'                => 'getPrice',
         ];
 
         $resultArray = [];
@@ -482,5 +489,19 @@ class Course
         }
 
         return $resultArray;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice(): float {
+        return $this->price;
+    }
+
+    /**
+     * @param float $price
+     */
+    public function setPrice(float $price) {
+        $this->price = $price;
     }
 }

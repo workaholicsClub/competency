@@ -6,7 +6,7 @@ const filterControllerFactory = require('../filter/Controller');
 const professionsFactory = require('../../models/Professions');
 const answersFactory = require('../../models/Answers');
 const filterFactory = require('../../models/Filter');
-const coursesFactory = require('../../models/Courses');
+const coursesFactory = require('../../models/CourseCollection');
 const trackerFactory = require('../../classes/GTagTracker');
 const filterFieldsMockData = require('../../mocks/filterFieldsData')();
 const professionsMockData = require('../../mocks/professions.json');
@@ -34,7 +34,7 @@ function getControllerInstance(xhr, gtag, rootElement, professionCode) {
         rootElement = document.createElement('div');
     }
 
-    let answersModel = answersFactory({'codeQuality': [5, 5, 5, 5]}, configMock());
+    let answersModel = answersFactory({'codeQuality': [3, 3, 3, 3]}, configMock());
     answersModel.isLoaded = function () {
         return true;
     };
@@ -56,7 +56,7 @@ function getControllerInstance(xhr, gtag, rootElement, professionCode) {
 
     let tracker = trackerFactory(gtag, configMock());
 
-    return coursesControllerFactory(view, coursesList, filterController, professionsModel, answersModel, coursesModel, xhr, tracker);
+    return coursesControllerFactory(view, coursesList, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker);
 }
 
 test('CoursesController.interface', function () {
@@ -71,11 +71,15 @@ test('CoursesController.getViewModel', function () {
     let viewModel = controller.getViewModel();
 
     expect(viewModel).toHaveProperty('allCompetencies');
+    expect(viewModel).toHaveProperty('courses');
+    expect(viewModel).toHaveProperty('professions');
+    expect(viewModel).toHaveProperty('fieldNames');
+    expect(viewModel).toHaveProperty('fieldVariants');
     expect(viewModel.allCompetencies).toHaveLength(1);
     expect(viewModel.allCompetencies[0]).toHaveProperty('code');
     expect(viewModel.allCompetencies[0]).toHaveProperty('rating');
     expect(viewModel.allCompetencies[0].code).toEqual('codeQuality');
-    expect(viewModel.allCompetencies[0].rating).toEqual(4);
+    expect(viewModel.allCompetencies[0].rating).toEqual(3);
 });
 
 test('CoursesController.renderFilter', function () {
@@ -85,7 +89,7 @@ test('CoursesController.renderFilter', function () {
 
     controller.renderFilter();
 
-    let userCompetenciesSelect = rootElement.querySelector('[data-code=userCompetencies] select');
+    let userCompetenciesSelect = rootElement.querySelector('[data-code=userSkills] select');
     expect( userCompetenciesSelect ).toBeInstanceOf(HTMLElement);
 
     let userCompetenciesOptions = userCompetenciesSelect.querySelectorAll('option');

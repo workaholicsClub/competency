@@ -21,7 +21,7 @@ function getControllerInstance(xhr, gtag) {
     let professionsModel = professionsFactory(professionsMockData);
 
     let answersModel = answersFactory({
-        'codeQuality': [4, 4, 4, 4],
+        'codeQuality': [3, 3, 3, 3],
         'operatingSystems': [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }, configMock());
     answersModel.isLoaded = function () {
@@ -71,8 +71,8 @@ test('ResultsController.getViewModel', function () {
     expect(testCompetency).toHaveProperty('average');
     expect(testCompetency).toHaveProperty('link');
     expect(testCompetency.code).toEqual('operatingSystems');
-    expect(testCompetency.rating).toEqual(0.25);
-    expect(testCompetency.ratingPercent).toEqual(8);
+    expect(testCompetency.rating).toEqual(0.14);
+    expect(testCompetency.ratingPercent).toEqual(5);
 
     let average = testCompetency.average;
     expect(average).toHaveProperty('lower');
@@ -82,7 +82,7 @@ test('ResultsController.getViewModel', function () {
     expect(average.lower).toEqual(33);
     expect(average.upper).toEqual(67);
     expect(average.average).toEqual(50);
-    expect(average.diff).toEqual(-25);
+    expect(average.diff).toEqual(-29);
 });
 
 test('ResultsController.getRatingAverage', function () {

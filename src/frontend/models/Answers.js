@@ -3,6 +3,20 @@ const XhrModelMixin = require('./XhrModelMixin');
 const StorageMixin = require('./StorageMixin');
 const cookieStorageFactory = require('../classes/CookieStorage');
 
+let skillCodes = [
+    'none',
+    'knowledge',
+    'skill',
+    'ability'
+];
+
+let skillTexts = [
+    'Не знаю',
+    'Знаю',
+    'Осознанно применяю',
+    'Применяю автоматически'
+];
+
 let AnswersModel = {
     init: function (props, config, xhr, storage, autoload) {
         this.initPropsAndEvents(props);
@@ -22,45 +36,23 @@ let AnswersModel = {
      */
     getCompetencyRating: function (competencyCode) {
         let answers = this.get(competencyCode);
-        let maxLevelRating = 4;
+
+        if (!answers) {
+            return false;
+        }
 
         if ( !(answers instanceof Array) ) {
             return false;
         }
 
-        if ( answers.length < 4 ) {
-            return false;
-        }
-
-        let answersAllMissed = answers.reduce(function (allMissedAccumulator, current) {
-            let isMissedAnswer = current === false || current === 0;
-            allMissedAccumulator = allMissedAccumulator && isMissedAnswer;
-
-            return allMissedAccumulator;
-        }, true);
-
-        if (answersAllMissed) {
-            return false;
-        }
-
-        let normalizedAnswers = answers.map(function (answer) {
-            let noAnswer = 0;
-            let notMatchingAnswer = 1;
-
-            if (answer === noAnswer) {
-                answer = notMatchingAnswer;
-            }
-
-            return (answer-1)/maxLevelRating;
-        });
-
-        let rating = normalizedAnswers.reduce(function (arraySum, current) {
+        let sum = answers.reduce(function (arraySum, current) {
             return arraySum + current;
         });
 
+        let rating = sum/answers.length;
         let humanRating = parseFloat( rating.toFixed(2) );
 
-        return (!answersAllMissed) ? humanRating : false;
+        return humanRating;
     },
 
     getAllRatings: function () {
@@ -121,12 +113,11 @@ let AnswersModel = {
         //['ознакомительный', 'воспроизводственный', 'реконструктивный', 'творческий']
         //['Ознакомлен', 'Повторяю чьи-то действия', 'Осмысляю, отношусь критически', 'Занимаюсь творчеством'];
 
-        return [
-            'Не знаю',
-            'Знаю',
-            'Осознанно применяю',
-            'Применяю автоматически'
-        ];
+        return skillTexts;
+    },
+
+    getSkillLevelsCode: function() {
+        return skillCodes;
     },
 
     getRatingPercent: function (rating) {
@@ -183,7 +174,7 @@ module.exports = function (props, config, xhr, storage, autoload) {
         props = {};
     }
 
-    if (!xhr) {
+    if (typeof (xhr) === 'undefined') {
         xhr = new XMLHttpRequest();
     }
 
@@ -201,4 +192,5 @@ module.exports = function (props, config, xhr, storage, autoload) {
     return answers;
 };
 
+module.exports.skillCodes = skillCodes;
 module.exports.class = AnswersModel;
