@@ -2,6 +2,7 @@
 
 namespace Competencies\Course;
 
+use Competencies\EduProvider\EduProvider;
 use Competencies\Skill\Skill;
 
 class Course
@@ -108,6 +109,11 @@ class Course
     private $price = 0.00;
 
     /**
+     * @var EduProvider
+     */
+    private $eduProvider;
+
+    /**
      * @param $courseProps
      * @return Course
      */
@@ -130,6 +136,7 @@ class Course
             'tasksType'            => 'setTasksType',
             'lengthDays'           => 'setLengthDays',
             'price'                => 'setPrice',
+            'eduProvider'          => 'setEduProvider',
         ];
 
         foreach ($fieldSetters as $fieldName => $setterName) {
@@ -162,6 +169,10 @@ class Course
         $props = $entity->toArray();
         $props['skills'] = $skills;
         $props['requirements'] = $requirements;
+
+        $eduProviderEntity = $entity->relation('eduProvider')->execute();
+        $eduProvider = EduProvider::fromEntity($eduProviderEntity);
+        $props['eduProvider'] = $eduProvider;
 
         $instance = self::fromArray($props);
         return $instance;
@@ -488,6 +499,9 @@ class Course
             $resultArray['requirements'][] = $requirement->toArray();
         }
 
+        $eduProvider = $this->getEduProvider();
+        $resultArray['eduProvider'] = $eduProvider->toArray();
+
         return $resultArray;
     }
 
@@ -503,5 +517,19 @@ class Course
      */
     public function setPrice(float $price) {
         $this->price = $price;
+    }
+
+    /**
+     * @return EduProvider
+     */
+    public function getEduProvider() {
+        return $this->eduProvider;
+    }
+
+    /**
+     * @param EduProvider $eduProvider
+     */
+    public function setEduProvider(EduProvider $eduProvider) {
+        $this->eduProvider = $eduProvider;
     }
 }

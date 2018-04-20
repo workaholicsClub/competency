@@ -111,7 +111,8 @@ class ApiMethodsTest extends TestCase
             'lengthDays',
             'price',
             'skills',
-            'requirements'
+            'requirements',
+            'eduProvider'
         ];
 
         $response = $this->makeTestRequest('/courses/search', [
@@ -128,9 +129,8 @@ class ApiMethodsTest extends TestCase
         ]);
 
         $this->assertEquals(200, $response['status']);
-        $this->assertEquals(2, count($response['course']));
+        $this->assertCount(2, $response['course']);
         $this->assertEquals($expectedCourseFields, array_keys($response['course'][0]));
-        $this->assertEquals($expectedCourseFields, array_keys($response['course'][1]));
 
         $response = $this->makeTestRequest('/courses/search', [
             "modeOfStudy" => "selfStudy",
@@ -143,7 +143,7 @@ class ApiMethodsTest extends TestCase
         ]);
 
         $this->assertEquals(200, $response['status']);
-        $this->assertEquals(1, count($response['course']));
+        $this->assertCount(2, $response['course']);
         $this->assertEquals($expectedCourseFields, array_keys($response['course'][0]));
 
     }

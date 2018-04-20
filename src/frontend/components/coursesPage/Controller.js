@@ -173,7 +173,7 @@ let CoursesController = {
                     {name: "Средней длительности", code: "medium", info: "Несколько месяцев"},
                     {name: "Долгосрочные", code: "long", info: "Год и больше"},
                 ]},
-            {code: 'platform', label: 'Платформа', type: 'multiCheckbox', value: this.getFilterValue('platform'), variants: [
+            {code: 'eduProvider', label: 'Платформа', type: 'multiCheckbox', value: this.getFilterValue('platform'), variants: [
                     {name: "Stepik", code: "stepik"},
                     {name: "Нетология", code: "netology"},
                     {name: "Otus", code: "otus"},
@@ -198,8 +198,6 @@ let CoursesController = {
     },
 
     updateCourses: function() {
-        console.log('updateCourses');
-
         let ratings = this.answersModel.getAllRatings();
         let fieldsData = this.getFilterFields();
 

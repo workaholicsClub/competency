@@ -9,7 +9,8 @@ let CoursesListView = {
     createStyles: function () {
         let styles = {
             courseCard: {
-                'min-width': '250px'
+                'min-width': '250px',
+                'max-width': '390px'
             }
         };
 
@@ -92,6 +93,7 @@ let CoursesListView = {
                         h('h5.card-title',
                             h('a', {href: course.url, target:'_blank'}, course.name)
                         ),
+                        h('small', course.eduProvider.name),
                         h('p.card-text', course.description)
                     ),
                     this.createBaseParams(course, viewModel),

@@ -2,6 +2,7 @@
 namespace Competencies\Course;
 
 use Competencies\Competency\CompetencyEntity;
+use Competencies\EduProvider\EduProviderEntity;
 use Competencies\Skill\SkillEntity;
 use Spot\Entity;
 use Spot\EntityInterface;
@@ -35,13 +36,14 @@ class CourseEntity extends Entity
 
     public static function relations(MapperInterface $mapper, EntityInterface $entity) {
         return [
-            'competencies' => $mapper->hasManyThrough($entity, CompetencyEntity::class,
+            'eduProvider'      => $mapper->BelongsTo($entity, EduProviderEntity::class, 'eduProviderId'),
+            'competencies'     => $mapper->hasManyThrough($entity, CompetencyEntity::class,
                 CourseCompetencyEntity::class, 'competencyId', 'courseId'),
-            'skillLinks' => $mapper->hasMany($entity, CourseSkillEntity::class, 'courseId'),
-            'skills' => $mapper->hasManyThrough($entity, SkillEntity::class,
+            'skillLinks'       => $mapper->hasMany($entity, CourseSkillEntity::class, 'courseId'),
+            'skills'           => $mapper->hasManyThrough($entity, SkillEntity::class,
                 CourseSkillEntity::class, 'atomicSkillId', 'courseId'),
             'requirementLinks' => $mapper->hasMany($entity, CourseRequirementEntity::class, 'courseId'),
-            'requirements' => $mapper->hasManyThrough($entity, SkillEntity::class,
+            'requirements'     => $mapper->hasManyThrough($entity, SkillEntity::class,
                 CourseRequirementEntity::class, 'atomicSkillId', 'courseId'),
         ];
     }

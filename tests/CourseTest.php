@@ -2,6 +2,7 @@
 
 use Competencies\Course\Course;
 use Competencies\Course\CourseEntity;
+use Competencies\EduProvider\EduProvider;
 use Competencies\Mocks\Database;
 use Competencies\Skill\Skill;
 use PHPUnit\Framework\TestCase;
@@ -29,6 +30,9 @@ class CourseTest extends TestCase
             'tasksType'            => Course::TASKS_SELF_CHECK,
             'lengthDays'           => 36,
             'price'                => 20100.54,
+            'eduProvider'          => EduProvider::fromArray([
+                "code" => "stepik"
+            ])
         ];
 
         $expectedCode = 'nazvanie-kursa';
@@ -50,6 +54,7 @@ class CourseTest extends TestCase
         $this->assertEquals($expectedProps['tasksType'], $course->getTasksType());
         $this->assertEquals($expectedProps['lengthDays'], $course->getLengthDays());
         $this->assertEquals($expectedProps['price'], $course->getPrice());
+        $this->assertEquals($expectedProps['eduProvider'], $course->getEduProvider());
 
         $particialProps = [
             'externalId' => '35',
@@ -73,6 +78,7 @@ class CourseTest extends TestCase
         $this->assertEmpty($course->getTasksType());
         $this->assertEmpty($course->getLengthDays());
         $this->assertEmpty($course->getPrice());
+        $this->assertEmpty($course->getEduProvider());
 
         $course = Course::makeEmpty();
 
@@ -91,6 +97,7 @@ class CourseTest extends TestCase
         $this->assertEmpty($course->getTasksType());
         $this->assertEmpty($course->getLengthDays());
         $this->assertEmpty($course->getPrice());
+        $this->assertEmpty($course->getEduProvider());
     }
 
     public function testFromEntity() {
@@ -111,6 +118,7 @@ class CourseTest extends TestCase
             'tasksType'            => 'autoCheck',
             'lengthDays'           => 1,
             'price'                => 0.00,
+            'eduProvider'          => 'stepik'
         ];
 
         $locator = Database::getTest();
@@ -136,6 +144,7 @@ class CourseTest extends TestCase
         $this->assertEquals($expectedProps['tasksType'], $course->getTasksType());
         $this->assertEquals($expectedProps['lengthDays'], $course->getLengthDays());
         $this->assertEquals($expectedProps['price'], $course->getPrice());
+        $this->assertEquals($expectedProps['eduProvider'], $course->getEduProvider()->getCode());
     }
 
     public function testGettersSetters() {
@@ -177,6 +186,9 @@ class CourseTest extends TestCase
             'tasksType'            => Course::TASKS_SELF_CHECK,
             'lengthDays'           => 36,
             'price'                => 20100.54,
+            'eduProvider'          => EduProvider::fromArray([
+                "code" => "stepik"
+            ])
         ];
 
         $course = Course::__set_state($expectedProps);
@@ -196,6 +208,7 @@ class CourseTest extends TestCase
         $this->assertEquals($expectedProps['tasksType'], $course->getTasksType());
         $this->assertEquals($expectedProps['lengthDays'], $course->getLengthDays());
         $this->assertEquals($expectedProps['price'], $course->getPrice());
+        $this->assertEquals($expectedProps['eduProvider'], $course->getEduProvider());
     }
 
     public function testIsEqualTo() {
@@ -292,11 +305,17 @@ class CourseTest extends TestCase
             'tasksType'            => Course::TASKS_SELF_CHECK,
             'lengthDays'           => 36,
             'price'                => 25000.01,
+            'eduProvider'          => [
+                'code' => 'stepik',
+                'name' => 'Stepik',
+                'url'  => 'http://welcome.stepik.org/ru',
+            ],
         ];
 
         $constructProps = $expectedProps;
         $constructProps['skills'][0] = Skill::fromArray($constructProps['skills'][0]);
         $constructProps['requirements'][0] = Skill::fromArray($constructProps['requirements'][0]);
+        $constructProps['eduProvider'] = EduProvider::fromArray($constructProps['eduProvider']);
         $course = Course::fromArray($constructProps);
 
         $this->assertEquals($expectedProps, $course->toArray());

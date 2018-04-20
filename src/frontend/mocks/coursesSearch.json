@@ -130,7 +130,12 @@
           "description": "",
           "level": "knowledge"
         }
-      ]
+      ],
+      "eduProvider": {
+        "code": "stepik",
+        "name": "Stepik",
+        "url": "http://welcome.stepik.org/ru"
+      }
     },
     {
       "externalId": "67",
@@ -188,7 +193,12 @@
           "level": "knowledge"
         }
       ],
-      "requirements": []
+      "requirements": [],
+      "eduProvider": {
+        "code": "stepik",
+        "name": "Stepik",
+        "url": "http://welcome.stepik.org/ru"
+      }
     },
     {
       "externalId": "3203",
@@ -307,7 +317,12 @@
           "description": "И инструкции управления потоком выполнения",
           "level": "knowledge"
         }
-      ]
+      ],
+      "eduProvider": {
+        "code": "netology",
+        "name": "Нетология",
+        "url": "https://netology.ru/"
+      }
     }
   ]
 }

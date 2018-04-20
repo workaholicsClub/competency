@@ -374,7 +374,7 @@ class CourseMapperTest extends TestCase
 
         $filterHasCertificate = boolval($filter['certificate']);
         $this->assertNotEmpty($courses);
-        $this->assertEquals(2, count($courses));
+        $this->assertCount(2, $courses);
         foreach ($courses as $course) {
             $hasAnySkill = $course->hasSkillId(354) || $course->hasSkillId(380);
             $satisfiesRequirements = $course->hasRequirementId(361) || count($course->getRequirements()) === 0;
@@ -414,10 +414,21 @@ class CourseMapperTest extends TestCase
         }
     }
 
+    public function checkCourseSkill(Course $course, array $skills) {
+        $givesAnyRequestedSkills = false;
+
+        foreach ($skills as $skillId => $level) {
+            $givesAnyRequestedSkills = $givesAnyRequestedSkills || $course->givesSkillHigherThan($skillId, $level);
+            $this->assertTrue( $course->requiresSkillLessThan($skillId, $level) );
+        }
+
+        $this->assertTrue( $givesAnyRequestedSkills );
+    }
+
     public function testUserSkills() {
         $locator = Database::getTest();
         $filter = [
-            "userSkills"      => [
+            "userSkills" => [
                 "354" => "knowledge",
                 "380" => "knowledge",
             ]
@@ -430,12 +441,60 @@ class CourseMapperTest extends TestCase
         $courses = $courseMapper->searchByFilter($filter);
 
         foreach ($courses as $course) {
-            $givesFirstSkill = $course->givesSkillHigherThan(354, $filter['userSkills'][354]);
-            $givesSecondSkill = $course->givesSkillHigherThan(380, $filter['userSkills'][380]);
-            $givesRequestedSkills = $givesFirstSkill || $givesSecondSkill;
-            $this->assertTrue( $givesRequestedSkills );
-            $this->assertTrue( $course->requiresSkillLessThan(354, $filter['userSkills'][354]) );
-            $this->assertTrue( $course->requiresSkillLessThan(380, $filter['userSkills'][380]) );
+            $this->checkCourseSkill($course, $filter['userSkills']);
         }
+
+        $databaseFilter = [
+            "userSkills" => [
+                "90"  => "knowledge",
+                "105" => "knowledge",
+            ],
+        ];
+
+        $databaseCourses = $courseMapper->searchByFilter($databaseFilter);
+        $this->assertCount(5, $databaseCourses);
+        foreach ($databaseCourses as $course) {
+            $this->checkCourseSkill($course, $databaseFilter['userSkills']);
+        }
+
+        $gitFilter = [
+            "userSkills" => [
+                "194" => "none",
+                "195" => "none",
+                "196" => "none",
+                "197" => "none",
+                "199" => "none",
+                "200" => "none",
+                "390" => "none",
+                "391" => "none",
+                "392" => "none",
+                "393" => "none",
+                "394" => "none",
+            ],
+        ];
+
+        $gitCourses = $courseMapper->searchByFilter($gitFilter);
+        $this->assertCount(2, $gitCourses);
+        foreach ($gitCourses as $course) {
+            $this->checkCourseSkill($course, $gitFilter['userSkills']);
+        }
+    }
+
+    public function testEduProvider() {
+        $locator = Database::getTest();
+        $filter = [
+            "eduProvider" => ["stepik"]
+        ];
+
+        /**
+         * @var CourseMapper $courseMapper
+         */
+        $courseMapper = $locator->mapper(CourseEntity::class);
+        $courses = $courseMapper->searchByFilter($filter);
+
+        foreach ($courses as $course) {
+            $this->assertEquals("stepik", $course->getEduProvider()->getCode());
+        }
+
     }
 }

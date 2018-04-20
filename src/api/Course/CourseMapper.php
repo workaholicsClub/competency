@@ -296,6 +296,12 @@ class CourseMapper extends Mapper
         return $this->makeLevelsCondition($skillId, $skillLevels);
     }
 
+    private function makeLessThanOrEqualsLevelRequirementCondition(int $skillId, string $skillLevel): string {
+        $skillLevels = Skill::getLevelsEnum(Skill::LEVEL_NONE, $skillLevel);
+        $skillLevelsSql = "'".implode("','", $skillLevels)."'";
+        return "cr{$skillId}.level IN ({$skillLevelsSql}) OR cr{$skillId}.level IS NULL";
+    }
+
     private function makeGreaterThanOrEqualsLevelCondition(int $skillId, string $skillLevel): string {
         $skillLevels = Skill::getLevelsEnum($skillLevel);
         return $this->makeLevelsCondition($skillId, $skillLevels);
@@ -332,23 +338,39 @@ class CourseMapper extends Mapper
             return $query;
         }
 
+        $querySql = "SELECT DISTINCT c.id AS courseId FROM courses c\n";
         $queryConditions = "";
         foreach ($requirementLevelsHash as $skillId => $level) {
             $hasConditions = $queryConditions !== "";
             $conjunction = $hasConditions ? "AND" : "";
-            $condition = $this->makeLessThanOrEqualsLevelCondition($skillId, $level);
+            $condition = $this->makeLessThanOrEqualsLevelRequirementCondition($skillId, $level);
             $queryConditions .= " {$conjunction} ({$condition})";
+
+            $querySql .= "LEFT JOIN coursesRequirements cr{$skillId} ON c.id = cr{$skillId}.courseId AND cr{$skillId}.atomicSkillId = {$skillId}\n";
         }
+        $querySql .= "WHERE {$queryConditions}";
 
-        $courseResults = $this->query(
-            "SELECT DISTINCT c.id AS courseId FROM courses c
-                      LEFT JOIN coursesRequirements cr ON c.id = cr.courseId
-                      WHERE {$queryConditions} OR atomicSkillId IS NULL"
-        );
-
+        $courseResults = $this->query($querySql);
         if ($courseResults instanceof Entity\Collection) {
             $courseIds = $this->getCourseIds($courseResults);
             $query->andWhere(['id' => $courseIds]);
+        }
+
+        return $query;
+    }
+
+    private function addEduProviderFilterToQuery(Query $query, array $providerCodes): Query {
+        $providerCodesSql = "'".implode("','", $providerCodes)."'";
+        $querySql = "SELECT DISTINCT id FROM eduProviders WHERE `code` IN ({$providerCodesSql})";
+
+        $providerResults = $this->query($querySql);
+        if ($providerResults instanceof Entity\Collection) {
+            $providerIds = [];
+            //Поскольку это CourseMapper, результаты получаются CourseEntity, хотя по факту там данные EduProviderов
+            foreach ($providerResults as $courseEntity) {
+                $providerIds[] = $courseEntity->get('id');
+            }
+            $query->andWhere(['eduProviderId' => $providerIds]);
         }
 
         return $query;
@@ -395,6 +417,12 @@ class CourseMapper extends Mapper
             else if ($field == "requirements") {
                 $requirementLevelsHash = $value;
                 $query = $this->addRequirementsFilterToQuery($query, $requirementLevelsHash);
+            }
+            else if ($field == "eduProvider") {
+                $query = $this->addEduProviderFilterToQuery($query, $value);
+            }
+            else if ($field == "price"){
+                $query->whereSql('price = 0 OR price IS NULL');
             }
             else {
                 if ( in_array($field, $allowedFields) ) {
