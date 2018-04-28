@@ -23,6 +23,14 @@ class UserModelTest extends TestCase
         $this->assertEquals($testEmail, $instance->getEmail());
     }
 
+    public function testMakeFromEntity() {
+        $locator = Database::getTest();
+
+        $userEntity = $locator->mapper(UserEntity::class)->first(['id' => '1']);
+        $instance = UserModel::makeFromEntity($userEntity);
+        $this->assertEquals($instance->getEmail(), 'ap@mailinator.com');
+    }
+
     public function testLoad() {
         $testEmail = 'ap@mailinator.com';
         $locator = Database::getTest();
@@ -35,19 +43,51 @@ class UserModelTest extends TestCase
     }
 
     public function testSaveNew() {
+        $testId = 'acb8f472-9f77-4bab-a43a-25201978e86b';
         $testEmail = 'ap2@mailinator.com';
         $locator = Database::getTest();
         $instance = UserModel::make($testEmail, $locator);
+        $instance->setUuid($testId);
 
         $saveResult = $instance->save();
+        $userEntity = $instance->load();
 
         $this->assertTrue($saveResult);
+        $this->assertEquals($userEntity->get('uuid'), $testId);
+        $this->assertEquals($userEntity->get('email'), $testEmail);
     }
 
-    public function testSaveExistant() {
+    public function testSaveNewEmailOnly() {
+        $testEmail = 'ap2@mailinator.com';
+        $locator = Database::getTest();
+
+        $onlyEmailInstance = UserModel::make($testEmail, $locator);
+        $saveResult = $onlyEmailInstance->save();
+        $userEntity = $onlyEmailInstance->load();
+        $this->assertTrue($saveResult);
+        $this->assertNull($userEntity->get('uuid'));
+        $this->assertEquals($userEntity->get('email'), $testEmail);
+    }
+
+    public function testSaveNewUuidOnly() {
+        $testId = 'acb8f472-9f77-4bab-a43a-25201978e86b';
+        $locator = Database::getTest();
+
+        $onlyUuidInstance = UserModel::make(null, $locator);
+        $onlyUuidInstance->setUuid($testId);
+        $saveResult = $onlyUuidInstance->save();
+        $userEntity = $onlyUuidInstance->load();
+        $this->assertTrue($saveResult);
+        $this->assertEquals($userEntity->get('uuid'), $testId);
+        $this->assertNull($userEntity->get('email'));
+    }
+
+    public function testSaveExistent() {
+        $testId = 'acb8f472-9f77-4bab-a43a-25201978e86b';
         $testEmail = 'ap@mailinator.com';
         $locator = Database::getTest();
         $instance = UserModel::make($testEmail, $locator);
+        $instance->setUuid($testId);
         $instance->setSubscribe( UserModel::SUBSCRIBE_COURSES );
         $instance->setRemindMonths(6);
 
@@ -56,6 +96,7 @@ class UserModelTest extends TestCase
         $this->assertTrue($saveResult);
         $userEntity = $instance->load();
 
+        $this->assertNull($userEntity->get('uuid'));
         $this->assertEquals($userEntity->get('remindMonths'), 6);
         $this->assertEquals($userEntity->get('subscribe'), UserModel::SUBSCRIBE_COURSES);
     }

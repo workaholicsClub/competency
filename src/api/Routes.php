@@ -8,6 +8,12 @@ use Competencies\Course\CourseMapper;
 use Competencies\Mail\MailgunMailer;
 use Competencies\Mocks\Database;
 use Competencies\Poll\PollModel;
+use Competencies\Session\Session;
+use Competencies\Session\SessionEntity;
+use Competencies\Session\SessionMapper;
+use Competencies\Skill\SkillEntity;
+use Competencies\Skill\SkillMapper;
+use Competencies\User\UserEntity;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -145,6 +151,48 @@ class Routes
 
             $userController = new UserController($userModel);
             $success = $userController->savePollResults($pollResults, $competencyModel, $pollModel);
+        }
+
+        return $response->withJson([
+            "status"  => 200,
+            "success" => $success
+        ]);
+    }
+
+    public function resultsSaveSession(Request $request, Response $response) {
+        $locator = $this->getLocator($request);
+        $userUuid = $request->getParsedBodyParam('userId');
+        $success = false;
+
+        if ($userUuid) {
+            $userMapper = $locator->mapper(UserEntity::class);
+            $userEntity = $userMapper->first(['uuid' => $userUuid]);
+            $user = UserModel::make();
+            if ($userEntity) {
+                $user = UserModel::makeFromEntity($userEntity);
+            }
+            else {
+                $user->setUuid($userUuid);
+            }
+
+            /**
+             * @var SkillMapper $skillMapper
+             */
+            $skillMapper = $locator->mapper(SkillEntity::class);
+            $skillsHash = $request->getParsedBodyParam('skills');
+            $sessionSkills = $skillMapper->makeSkillArrayFromHash($skillsHash);
+
+            /**
+             * @var SessionMapper $sessionMapper
+             */
+            $sessionMapper = $locator->mapper(SessionEntity::class);
+            $session = Session::fromArray([
+                'uuid'   => $request->getParsedBodyParam('sessionId'),
+                'user'   => $user,
+                'skills' => $sessionSkills,
+            ]);
+
+            $success = $sessionMapper->saveSession($session);
         }
 
         return $response->withJson([

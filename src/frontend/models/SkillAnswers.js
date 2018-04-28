@@ -40,9 +40,11 @@ SkillAnswersModel = Object.assign(Object.create(AnswersModel), SkillAnswersModel
  * @param xhr
  * @param {Storage} storage
  * @param {boolean} autoload
+ * @param {ProfessionsModel} [professionsModel]
+ * @param {UserModel} [user]
  * @returns {SkillAnswersModel}
  */
-module.exports = function (props, config, xhr, storage, autoload) {
+module.exports = function (props, config, xhr, storage, autoload, professionsModel, user) {
     if (!props) {
         props = {};
     }
@@ -60,7 +62,7 @@ module.exports = function (props, config, xhr, storage, autoload) {
     }
 
     let answers = Object.create(SkillAnswersModel);
-    answers.init(props, config, xhr, storage, autoload);
+    answers.init(props, config, xhr, storage, autoload, professionsModel, user);
 
     return answers;
 };

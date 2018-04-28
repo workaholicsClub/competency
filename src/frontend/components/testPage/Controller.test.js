@@ -65,7 +65,7 @@ test('TestController.getViewModel', function () {
     let expectedCompetenciesCount = 7;
     let expectedCompetencyIndex = 3;
     let expectedLevelsCount = 4;
-    let expectedSkillsCount = 22;
+    let expectedSkillsCount = 23;
 
     let testController = getControllerInstance(expectedProfessionCode, expectedCompetencyCode);
     let viewModel = testController.getViewModel();
@@ -123,6 +123,6 @@ test('TestController skills render and change', function () {
     skillSlider.value = expectedSkillValue;
     skillSlider.dispatchEvent(changeEvent);
 
-    let expectedAnswers = [expectedSkillValue, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let expectedAnswers = [expectedSkillValue, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     expect(answersModel.get(competencyCode)).toEqual(expectedAnswers);
 });

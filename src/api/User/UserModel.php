@@ -19,6 +19,7 @@ class UserModel implements UserModelInterface
     const SUBSCRIBE_STATS = 'stats';
     const SUBSCRIBE_ALL = 'all';
 
+    private $uuid;
     private $email;
     private $name;
     private $subscribe;
@@ -37,6 +38,17 @@ class UserModel implements UserModelInterface
         if ($email) {
             $instance->setEmail($email);
         }
+
+        return $instance;
+    }
+
+    public static function makeFromEntity(UserEntity $entity) {
+        $instance = new self();
+        $instance->setUuid($entity->get('uuid') ?? '');
+        $instance->setName($entity->get('name'));
+        $instance->setEmail($entity->get('email'));
+        $instance->setRemindMonths($entity->get('remindMonths'));
+        $instance->setSubscribe($entity->get('subscribe'));
 
         return $instance;
     }
@@ -116,8 +128,8 @@ class UserModel implements UserModelInterface
      * @throws Exception
      */
     public function save() {
-        if (!$this->getEmail()) {
-            throw new Exception('Email not set');
+        if (!$this->getEmail() && !$this->getUuid()) {
+            throw new Exception('Email or uuid not set');
         }
 
         $mapper = $this->getMapper();
@@ -137,10 +149,11 @@ class UserModel implements UserModelInterface
         }
         else {
             $entity = $mapper->build([
-                'name'  => $this->getName(),
-                'email' => $this->getEmail(),
+                'uuid'         => $this->getUuid(),
+                'name'         => $this->getName(),
+                'email'        => $this->getEmail(),
                 'remindMonths' => $this->getRemindMonths(),
-                'subscribe' => $this->getSubscribe(),
+                'subscribe'    => $this->getSubscribe(),
             ]);
         }
 
@@ -202,6 +215,20 @@ class UserModel implements UserModelInterface
         if (!empty($remindMonths)) {
             $this->remindMonths = $remindMonths;
         }
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUuid() {
+        return $this->uuid;
+    }
+
+    /**
+     * @param string $uuid
+     */
+    public function setUuid(string $uuid) {
+        $this->uuid = $uuid;
     }
 
 }

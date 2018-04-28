@@ -26,6 +26,7 @@ const professionsFactory = require('./models/Professions');
 const answersFactory = require('./models/SkillAnswers');
 const coursesFactory = require('./models/CourseCollection');
 const filterFactory = require('./models/Filter');
+const userFactory = require('./models/User');
 
 const configFactory = require('./classes/Config');
 const trackerFactory = require('./classes/GTagTracker');
@@ -58,10 +59,14 @@ function initAndGoToRoute() {
      * @type {ProfessionsModel} professionsModel
      */
     let professionsModel = professionsFactory({}, config);
-    let answersModel = answersFactory({}, config);
+    let userModel = userFactory({});
     let coursesModel = coursesFactory({}, config);
-
     let coursesFilter = filterFactory({}, 'coursesFilter');
+
+    let xhr = undefined;
+    let storage = undefined;
+    let autoload = undefined;
+    let answersModel = answersFactory({}, config, xhr, storage, autoload, professionsModel, userModel);
 
     page('/', function () {
         tracker.trackPageview('/');
@@ -78,6 +83,10 @@ function initAndGoToRoute() {
         tracker.trackPageview(context.pathname);
         let professionCode = context.params.professionCode;
         let competencyCode = context.params.competencyCode;
+
+        if (professionCode) {
+            professionsModel.setProfessionCode(context.params.professionCode);
+        }
 
         if (competencyCode) {
             let skillView = skillViewFactory(false, stylesManager);

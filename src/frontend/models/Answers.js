@@ -2,6 +2,7 @@ const BaseModel = require('./Base');
 const XhrModelMixin = require('./XhrModelMixin');
 const StorageMixin = require('./StorageMixin');
 const cookieStorageFactory = require('../classes/CookieStorage');
+const debounce = require('lodash.debounce');
 
 let skillCodes = [
     'none',
@@ -17,12 +18,39 @@ let skillTexts = [
     'Применяю автоматически'
 ];
 
+let saveUserResultsPauseMs = 500;
+
+function saveUserResults(user, professionsModel) {
+    let context = this;
+    let userResultsUrl = '/api/results/saveSession';
+    let formData = new FormData;
+
+    formData.append('userId', user.getId());
+    formData.append('sessionId', user.getSessionId());
+
+    let competencies = professionsModel.getCompetencies();
+    competencies.forEach(function (competency) {
+        let skills = this.getAnsweredSkills(competency);
+        skills.forEach(function (skill) {
+            if (skill.isAnswered) {
+                formData.append('skills[' + skill.id + ']', skill.answerCode);
+            }
+        }, context);
+    }, context);
+
+    this.xhr.open("POST", userResultsUrl);
+    this.xhr.send(formData);
+}
+
 let AnswersModel = {
-    init: function (props, config, xhr, storage, autoload) {
+    init: function (props, config, xhr, storage, autoload, professionsModel, user) {
         this.initPropsAndEvents(props);
         this.initXhr(xhr);
         this.initStorage(storage);
         this.config = config;
+
+        this.professionsModel = professionsModel;
+        this.user = user;
 
         if (autoload) {
             this.loadAnswers();
@@ -78,6 +106,7 @@ let AnswersModel = {
      */
     saveAnswers: function (event) {
         this.saveData(event);
+        this.saveUserResultsWithPause(this.user, this.professionsModel);
     },
 
     loadAnswers: function () {
@@ -94,13 +123,19 @@ let AnswersModel = {
         this.xhr.send(formData);
     },
 
+    saveUserResultsWithPause: debounce(saveUserResults, saveUserResultsPauseMs),
+
+    saveUserResults: saveUserResults,
+
     afterLoad: function (xhr, event, response) {
         this.saveSuccess(xhr, event, response)
     },
 
     saveSuccess: function (xhr, event, response) {
         if (response && response.success === true) {
-            this.dispatchModelEvent('save');
+            let isSaveSessionResponse = xhr.responseURL.indexOf('saveSession') > 0;
+            let eventType = isSaveSessionResponse ? 'saveSession' : 'save';
+            this.dispatchModelEvent(eventType);
         }
         else {
             this.dispatchModelEvent('saveError');
@@ -134,6 +169,7 @@ let AnswersModel = {
         let competencySkills = competency.skills;
         let answers = this.get(competencyCode) || false;
         let skillAnswersText = this.getSkillLevelsText();
+        let skillAnswersCode = this.getSkillLevelsCode();
 
         let skills = [];
         competencySkills.forEach(function (skill, index) {
@@ -143,10 +179,14 @@ let AnswersModel = {
                 : '0';
 
             skills.push({
+                id: skill.id,
                 answer: answerValue,
                 answerText: answer > 0
                     ? skillAnswersText[answer]
                     : skillAnswersText[0],
+                answerCode: answer > 0
+                    ? skillAnswersCode[answer]
+                    : skillAnswersCode[0],
                 isAnswered: answer > 0,
                 text: skill.text,
                 additionalDescription: skill.additionalDescription
@@ -164,12 +204,14 @@ AnswersModel = Object.assign(AnswersModel, StorageMixin);
 /**
  * @param props
  * @param config
- * @param xhr
- * @param {Storage} storage
- * @param {boolean} autoload
+ * @param [xhr]
+ * @param {Storage} [storage]
+ * @param {boolean} [autoload]
+ * @param {ProfessionsModel} [professionsModel]
+ * @param {UserModel} [user]
  * @returns {AnswersModel}
  */
-module.exports = function (props, config, xhr, storage, autoload) {
+module.exports = function (props, config, xhr, storage, autoload, professionsModel, user) {
     if (!props) {
         props = {};
     }
@@ -187,7 +229,7 @@ module.exports = function (props, config, xhr, storage, autoload) {
     }
 
     let answers = Object.create(AnswersModel);
-    answers.init(props, config, xhr, storage, autoload);
+    answers.init(props, config, xhr, storage, autoload, professionsModel, user);
 
     return answers;
 };

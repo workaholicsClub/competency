@@ -117,7 +117,7 @@ INSERT INTO `atomicSkills` VALUES (108,'Целенаправленная ден�
 INSERT INTO `atomicSkills` VALUES (109,'ACID','',7);
 INSERT INTO `atomicSkills` VALUES (110,'Теорема CAP','',7);
 INSERT INTO `atomicSkills` VALUES (111,'Реализации SQL','MySQL, PostgreSQL, MSSQL, Oracle',7);
-INSERT INTO `atomicSkills` VALUES (112,'Оптимизирование настроект серверов','',7);
+INSERT INTO `atomicSkills` VALUES (112,'Оптимизирование настроек серверов','',7);
 INSERT INTO `atomicSkills` VALUES (113,'Кластеризация и репликация данных','',7);
 INSERT INTO `atomicSkills` VALUES (114,'Колоночные базы данных','Hbase, Cassandra',7);
 INSERT INTO `atomicSkills` VALUES (115,'Документ-ориентированные базы данных','CouchDB, MongoDB',7);
@@ -978,6 +978,7 @@ INSERT INTO `professions` VALUES (3,'webProjectManager','Менеджер web-п
 
 CREATE TABLE `users` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  `uuid` varchar(36) DEFAULT NULL,
   `dateRegistered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `name` varchar(45) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
@@ -985,4 +986,228 @@ CREATE TABLE `users` (
   `subscribe` varchar(10) DEFAULT NULL
 );
 
-INSERT INTO `users` VALUES (1,'2017-12-18 11:45:36',NULL,'ap@mailinator.com', NULL, NULL);
+INSERT INTO `users` VALUES (1,NULL,'2017-12-18 11:45:36',NULL,'ap@mailinator.com', NULL, NULL);
+
+CREATE TABLE `sessions` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  `uuid` varchar(36) NULL,
+  `dateCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `userId` int(11) NULL
+);
+
+INSERT INTO `sessions` VALUES (1,'05313d2c-fcfc-4374-966c-59fe59ddbe02','2018-04-25 14:06:31',1);
+INSERT INTO `sessions` VALUES (2,'60cbb2b8-4407-42ae-8c7c-d937d49789ee','2018-04-27 13:01:57',1);
+INSERT INTO `sessions` VALUES (3,'1c93a89f-ec47-46e6-87c0-549d21171262','2018-04-27 13:49:34',1);
+INSERT INTO `sessions` VALUES (4,'b4343e7c-aa95-406a-ade5-6a78447c8ecf','2018-04-27 14:14:50',1);
+
+CREATE TABLE `sessionsSkills` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  `sessionId` int(11) NULL,
+  `atomicSkillId` int(11) NULL,
+  `level` varchar(20) NULL
+);
+
+INSERT INTO `sessionsSkills` VALUES (1,1,207,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (2,1,208,'skill');
+INSERT INTO `sessionsSkills` VALUES (3,1,209,'ability');
+INSERT INTO `sessionsSkills` VALUES (4,1,221,'skill');
+INSERT INTO `sessionsSkills` VALUES (5,2,1,'skill');
+INSERT INTO `sessionsSkills` VALUES (6,2,2,'ability');
+INSERT INTO `sessionsSkills` VALUES (7,2,3,'ability');
+INSERT INTO `sessionsSkills` VALUES (8,2,4,'ability');
+INSERT INTO `sessionsSkills` VALUES (9,2,5,'ability');
+INSERT INTO `sessionsSkills` VALUES (10,2,6,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (11,2,8,'skill');
+INSERT INTO `sessionsSkills` VALUES (12,2,9,'skill');
+INSERT INTO `sessionsSkills` VALUES (13,2,10,'ability');
+INSERT INTO `sessionsSkills` VALUES (14,2,11,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (15,2,12,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (16,2,13,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (17,2,14,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (18,2,15,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (19,2,16,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (20,2,17,'skill');
+INSERT INTO `sessionsSkills` VALUES (21,2,18,'skill');
+INSERT INTO `sessionsSkills` VALUES (22,2,19,'skill');
+INSERT INTO `sessionsSkills` VALUES (23,2,20,'skill');
+INSERT INTO `sessionsSkills` VALUES (24,2,21,'skill');
+INSERT INTO `sessionsSkills` VALUES (25,2,22,'skill');
+INSERT INTO `sessionsSkills` VALUES (26,2,75,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (27,2,90,'skill');
+INSERT INTO `sessionsSkills` VALUES (28,2,91,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (29,2,92,'ability');
+INSERT INTO `sessionsSkills` VALUES (30,2,96,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (31,2,195,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (32,2,207,'ability');
+INSERT INTO `sessionsSkills` VALUES (33,2,208,'ability');
+INSERT INTO `sessionsSkills` VALUES (34,2,209,'ability');
+INSERT INTO `sessionsSkills` VALUES (36,2,300,'skill');
+INSERT INTO `sessionsSkills` VALUES (38,2,301,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (39,2,302,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (40,2,304,'ability');
+INSERT INTO `sessionsSkills` VALUES (41,3,71,'skill');
+INSERT INTO `sessionsSkills` VALUES (42,3,72,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (43,3,73,'skill');
+INSERT INTO `sessionsSkills` VALUES (44,3,74,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (45,3,78,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (46,3,75,'skill');
+INSERT INTO `sessionsSkills` VALUES (47,3,76,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (48,3,77,'skill');
+INSERT INTO `sessionsSkills` VALUES (49,3,80,'skill');
+INSERT INTO `sessionsSkills` VALUES (50,3,82,'skill');
+INSERT INTO `sessionsSkills` VALUES (51,3,90,'skill');
+INSERT INTO `sessionsSkills` VALUES (52,3,91,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (53,3,92,'skill');
+INSERT INTO `sessionsSkills` VALUES (54,3,93,'skill');
+INSERT INTO `sessionsSkills` VALUES (55,3,94,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (56,3,95,'skill');
+INSERT INTO `sessionsSkills` VALUES (57,3,96,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (58,3,97,'skill');
+INSERT INTO `sessionsSkills` VALUES (59,3,98,'ability');
+INSERT INTO `sessionsSkills` VALUES (60,3,99,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (61,3,100,'skill');
+INSERT INTO `sessionsSkills` VALUES (62,3,101,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (63,3,102,'skill');
+INSERT INTO `sessionsSkills` VALUES (64,3,103,'ability');
+INSERT INTO `sessionsSkills` VALUES (65,3,104,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (66,3,105,'skill');
+INSERT INTO `sessionsSkills` VALUES (67,3,106,'ability');
+INSERT INTO `sessionsSkills` VALUES (68,3,107,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (69,3,108,'skill');
+INSERT INTO `sessionsSkills` VALUES (70,3,109,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (71,3,110,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (72,3,115,'skill');
+INSERT INTO `sessionsSkills` VALUES (73,3,352,'skill');
+INSERT INTO `sessionsSkills` VALUES (74,3,353,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (75,3,354,'skill');
+INSERT INTO `sessionsSkills` VALUES (76,3,357,'skill');
+INSERT INTO `sessionsSkills` VALUES (77,3,359,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (78,3,358,'ability');
+INSERT INTO `sessionsSkills` VALUES (79,3,362,'skill');
+INSERT INTO `sessionsSkills` VALUES (80,3,364,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (81,3,368,'skill');
+INSERT INTO `sessionsSkills` VALUES (82,3,373,'skill');
+INSERT INTO `sessionsSkills` VALUES (83,3,370,'ability');
+INSERT INTO `sessionsSkills` VALUES (84,3,375,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (85,3,379,'ability');
+INSERT INTO `sessionsSkills` VALUES (86,3,380,'skill');
+INSERT INTO `sessionsSkills` VALUES (87,3,382,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (88,3,383,'ability');
+INSERT INTO `sessionsSkills` VALUES (89,3,385,'skill');
+INSERT INTO `sessionsSkills` VALUES (90,3,386,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (91,3,388,'ability');
+INSERT INTO `sessionsSkills` VALUES (92,3,207,'skill');
+INSERT INTO `sessionsSkills` VALUES (93,3,209,'skill');
+INSERT INTO `sessionsSkills` VALUES (94,3,211,'ability');
+INSERT INTO `sessionsSkills` VALUES (95,3,213,'skill');
+INSERT INTO `sessionsSkills` VALUES (96,3,214,'skill');
+INSERT INTO `sessionsSkills` VALUES (97,3,216,'skill');
+INSERT INTO `sessionsSkills` VALUES (98,3,219,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (99,3,222,'skill');
+INSERT INTO `sessionsSkills` VALUES (100,3,223,'skill');
+INSERT INTO `sessionsSkills` VALUES (101,3,225,'skill');
+INSERT INTO `sessionsSkills` VALUES (102,3,226,'skill');
+INSERT INTO `sessionsSkills` VALUES (103,3,228,'skill');
+INSERT INTO `sessionsSkills` VALUES (104,3,307,'skill');
+INSERT INTO `sessionsSkills` VALUES (105,3,308,'ability');
+INSERT INTO `sessionsSkills` VALUES (106,3,309,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (107,3,310,'ability');
+INSERT INTO `sessionsSkills` VALUES (108,3,311,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (109,3,312,'ability');
+INSERT INTO `sessionsSkills` VALUES (110,3,313,'ability');
+INSERT INTO `sessionsSkills` VALUES (111,3,314,'skill');
+INSERT INTO `sessionsSkills` VALUES (112,3,315,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (113,3,316,'ability');
+INSERT INTO `sessionsSkills` VALUES (114,3,317,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (115,3,318,'skill');
+INSERT INTO `sessionsSkills` VALUES (116,3,319,'ability');
+INSERT INTO `sessionsSkills` VALUES (117,3,320,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (118,3,321,'skill');
+INSERT INTO `sessionsSkills` VALUES (119,3,322,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (120,3,323,'ability');
+INSERT INTO `sessionsSkills` VALUES (121,3,324,'skill');
+INSERT INTO `sessionsSkills` VALUES (122,3,325,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (123,3,329,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (124,3,330,'ability');
+INSERT INTO `sessionsSkills` VALUES (125,3,331,'skill');
+INSERT INTO `sessionsSkills` VALUES (126,3,332,'ability');
+INSERT INTO `sessionsSkills` VALUES (127,3,333,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (128,3,335,'ability');
+INSERT INTO `sessionsSkills` VALUES (129,3,336,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (130,3,337,'ability');
+INSERT INTO `sessionsSkills` VALUES (131,3,338,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (132,3,339,'skill');
+INSERT INTO `sessionsSkills` VALUES (133,3,340,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (134,3,342,'skill');
+INSERT INTO `sessionsSkills` VALUES (135,3,343,'ability');
+INSERT INTO `sessionsSkills` VALUES (136,3,344,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (137,3,345,'ability');
+INSERT INTO `sessionsSkills` VALUES (138,3,346,'skill');
+INSERT INTO `sessionsSkills` VALUES (139,3,347,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (140,3,349,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (141,4,71,'skill');
+INSERT INTO `sessionsSkills` VALUES (142,4,72,'skill');
+INSERT INTO `sessionsSkills` VALUES (143,4,73,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (144,4,74,'skill');
+INSERT INTO `sessionsSkills` VALUES (145,4,76,'skill');
+INSERT INTO `sessionsSkills` VALUES (146,4,80,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (147,4,78,'skill');
+INSERT INTO `sessionsSkills` VALUES (148,4,84,'skill');
+INSERT INTO `sessionsSkills` VALUES (149,4,86,'skill');
+INSERT INTO `sessionsSkills` VALUES (150,4,88,'skill');
+INSERT INTO `sessionsSkills` VALUES (151,4,90,'skill');
+INSERT INTO `sessionsSkills` VALUES (152,4,91,'ability');
+INSERT INTO `sessionsSkills` VALUES (153,4,92,'skill');
+INSERT INTO `sessionsSkills` VALUES (154,4,96,'skill');
+INSERT INTO `sessionsSkills` VALUES (155,4,100,'ability');
+INSERT INTO `sessionsSkills` VALUES (156,4,101,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (157,4,104,'skill');
+INSERT INTO `sessionsSkills` VALUES (158,4,106,'skill');
+INSERT INTO `sessionsSkills` VALUES (159,4,115,'ability');
+INSERT INTO `sessionsSkills` VALUES (160,4,352,'ability');
+INSERT INTO `sessionsSkills` VALUES (161,4,354,'skill');
+INSERT INTO `sessionsSkills` VALUES (162,4,356,'skill');
+INSERT INTO `sessionsSkills` VALUES (163,4,360,'skill');
+INSERT INTO `sessionsSkills` VALUES (164,4,364,'skill');
+INSERT INTO `sessionsSkills` VALUES (165,4,371,'skill');
+INSERT INTO `sessionsSkills` VALUES (166,4,367,'skill');
+INSERT INTO `sessionsSkills` VALUES (167,4,369,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (168,4,368,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (169,4,375,'skill');
+INSERT INTO `sessionsSkills` VALUES (170,4,376,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (171,4,380,'skill');
+INSERT INTO `sessionsSkills` VALUES (172,4,381,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (173,4,385,'skill');
+INSERT INTO `sessionsSkills` VALUES (174,4,209,'skill');
+INSERT INTO `sessionsSkills` VALUES (175,4,208,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (176,4,212,'skill');
+INSERT INTO `sessionsSkills` VALUES (177,4,213,'skill');
+INSERT INTO `sessionsSkills` VALUES (178,4,217,'skill');
+INSERT INTO `sessionsSkills` VALUES (179,4,215,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (180,4,220,'ability');
+INSERT INTO `sessionsSkills` VALUES (181,4,221,'skill');
+INSERT INTO `sessionsSkills` VALUES (182,4,223,'skill');
+INSERT INTO `sessionsSkills` VALUES (183,4,224,'skill');
+INSERT INTO `sessionsSkills` VALUES (184,4,227,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (185,4,307,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (186,4,309,'skill');
+INSERT INTO `sessionsSkills` VALUES (187,4,310,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (188,4,312,'skill');
+INSERT INTO `sessionsSkills` VALUES (189,4,313,'skill');
+INSERT INTO `sessionsSkills` VALUES (190,4,314,'ability');
+INSERT INTO `sessionsSkills` VALUES (191,4,317,'ability');
+INSERT INTO `sessionsSkills` VALUES (192,4,319,'skill');
+INSERT INTO `sessionsSkills` VALUES (193,4,321,'skill');
+INSERT INTO `sessionsSkills` VALUES (194,4,326,'skill');
+INSERT INTO `sessionsSkills` VALUES (195,4,327,'skill');
+INSERT INTO `sessionsSkills` VALUES (196,4,331,'skill');
+INSERT INTO `sessionsSkills` VALUES (197,4,335,'ability');
+INSERT INTO `sessionsSkills` VALUES (198,4,336,'skill');
+INSERT INTO `sessionsSkills` VALUES (199,4,338,'skill');
+INSERT INTO `sessionsSkills` VALUES (200,4,339,'skill');
+INSERT INTO `sessionsSkills` VALUES (201,4,341,'skill');
+INSERT INTO `sessionsSkills` VALUES (202,4,343,'skill');
+INSERT INTO `sessionsSkills` VALUES (203,4,344,'knowledge');
+INSERT INTO `sessionsSkills` VALUES (204,4,345,'ability');
+INSERT INTO `sessionsSkills` VALUES (205,4,347,'skill');
+INSERT INTO `sessionsSkills` VALUES (206,4,348,'knowledge');

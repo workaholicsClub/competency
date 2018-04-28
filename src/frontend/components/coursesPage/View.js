@@ -31,7 +31,8 @@ let CoursesView = {
             h('div#head.row',
                 h('div.col-md-12',
                     h('div.page-header',
-                        h('h1.display-4', 'Поиск курсов')
+                        h('h1.display-4', 'Поиск курсов'),
+                        h('a', 'на главную', {href: '/'})
                     )
                 )
             ),

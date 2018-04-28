@@ -21,6 +21,7 @@
     "js-cookie": "^2.2.0",
     "jss": "^9.0.0",
     "jss-preset-default": "^4.0.1",
+    "lodash.debounce": "^4.0.8",
     "page": "^1.8.2",
     "selectivity": "^3.0.6"
   },

@@ -88,7 +88,11 @@ class CompetencyModel
         $groupIndexes = [];
         $professionIndexes = [];
 
+        /**
+         * @var CompetencyMapper $mapper
+         */
         $mapper = $this->getMapper(CompetencyEntity::class);
+        $competencyStats = $mapper->getCompetencyStats();
 
         $professions = [];
 
@@ -144,6 +148,7 @@ class CompetencyModel
 
                 $competencyData = $competencyEntity->toArray();
                 $competencyData['skills'] = $skills;
+                $competencyData['average'] = $competencyStats[ $competencyEntity->get('id') ];
 
                 $professions[$professionIndex]['groups'][$groupIndex]['competencies'][] =
                     $competencyData;

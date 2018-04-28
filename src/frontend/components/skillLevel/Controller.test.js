@@ -43,7 +43,7 @@ test('SkillLevelController.interface', function () {
 });
 
 test('SkillLevelController.getViewModel', function () {
-    let expectedSkillsCount = 22;
+    let expectedSkillsCount = 23;
     let testController = getControllerInstance();
     let viewModel = testController.getViewModel();
 
@@ -75,7 +75,7 @@ test('SkillLevelController skills render and change', function () {
 
     expect(skillSlider).toBeInstanceOf(HTMLInputElement);
     expect(skillLabel).toBeInstanceOf(HTMLElement);
-    expect(skillLabel.textContent).toContain('Работа с ОС на уровне пользователя');
+    expect(skillLabel.textContent).toContain('Работа с Linux на уровне пользователя');
     expect(skillLevel.textContent).toContain(skillLevels[0]);
 
     let expectedSkillValue = 1;
@@ -83,7 +83,7 @@ test('SkillLevelController skills render and change', function () {
     skillSlider.value = expectedSkillValue;
     skillSlider.dispatchEvent(changeEvent);
 
-    let expectedAnswers = [expectedSkillValue, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let expectedAnswers = [expectedSkillValue, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     expect(skillLevel.textContent).toContain(skillLevels[expectedSkillValue]);
     expect(answersModel.get(competencyCode)).toEqual(expectedAnswers);
 });

@@ -1,5 +1,6 @@
 const BaseModel = require('./Base');
 const answersFactory = require('./Answers');
+const userFactory = require('./User');
 const skillCodes = require('./Answers').skillCodes;
 const configMockFactory = require('../mocks/Config');
 const storageMockFactory = require('../mocks/Storage');
@@ -16,8 +17,15 @@ function answersMockFactory(props, config, xhr, storage, autoload) {
     return answersFactory(props, config, xhr, storage, autoload);
 }
 
-function getCompetency(professionCode, competencyCode) {
+function getProfessionsModel(professionCode) {
     let professionsModel = professionsFactory(professionsMockData);
+    professionsModel.setProfessionCode(professionCode);
+
+    return professionsModel;
+}
+
+function getCompetency(professionCode, competencyCode) {
+    let professionsModel = getProfessionsModel(professionCode);
     return professionsModel.getCompetency(professionCode, competencyCode);
 }
 
@@ -37,6 +45,8 @@ test('AnswersModel.interface', function () {
     expect(answersModel.loadAnswers).toBeInstanceOf(Function);
     expect(answersModel.getSkillLevelsText).toBeInstanceOf(Function);
     expect(answersModel.getAnsweredSkills).toBeInstanceOf(Function);
+    expect(answersModel.saveUserResultsWithPause).toBeInstanceOf(Function);
+    expect(answersModel.saveUserResults).toBeInstanceOf(Function);
 });
 
 test('AnswersModel skillCodes', function () {
@@ -133,29 +143,37 @@ test('AnswersModel.getAnsweredSkills', function () {
     let skillAnswers = [1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0];
     let expectedSkills = [
         {
+            id: 207,
             answer: '1',
             answerText: 'Знаю',
+            answerCode: 'knowledge',
             isAnswered: true,
-            text: 'Работа с ОС на уровне пользователя',
+            text: 'Работа с Linux на уровне пользователя',
             additionalDescription: ''
         },
         {
+            id: 208,
             answer: '2',
             answerText: 'Осознанно применяю',
+            answerCode: 'skill',
             isAnswered: true,
             text: 'Установка и удаление программ',
             additionalDescription: ''
         },
         {
+            id: 209,
             answer: '3',
             answerText: 'Применяю автоматически',
+            answerCode: 'ability',
             isAnswered: true,
             text: 'Подключение к сетям',
             additionalDescription: ''
         },
         {
+            id: 210,
             answer: '0',
             answerText: 'Не знаю',
+            answerCode: 'none',
             isAnswered: false,
             text: 'Консоль',
             additionalDescription: ''
@@ -163,8 +181,10 @@ test('AnswersModel.getAnsweredSkills', function () {
     ];
 
     let expectedSkillWithDescription = {
+        id: 221,
         answer: '2',
         answerText: 'Осознанно применяю',
+        answerCode: 'skill',
         isAnswered: true,
         text: 'Сетевые коммуникационные протоколы',
         additionalDescription: 'IPv4, IPv6, TCP, UDP, POP, IMAP, SMTP, HTTP, SMB'
@@ -201,4 +221,88 @@ test('AnswersModel saveAnswers и loadAnswers', function () {
 
     answers.loadAnswers();
     expect(answers.get('test')).toEqual(expectedValue);
+});
+
+test('AnswersModel saveUserResults', function () {
+    let professionCode = 'tester';
+    let competencyCode = 'operatingSystems';
+    let skillAnswers = [1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0];
+
+    let xhrMock = {
+        addEventListener: jest.fn(),
+        open: jest.fn(),
+        send: jest.fn()
+    };
+
+    let storage = storageMockFactory('answers');
+    let professionsModel = getProfessionsModel(professionCode);
+    let user = userFactory({});
+    let answers = answersFactory({}, configMockFactory(), xhrMock, storage, professionsModel, user);
+    answers.set(competencyCode, skillAnswers);
+
+    let userId = user.getId();
+    let sessionId = user.getSessionId();
+
+    answers.saveUserResults(user, professionsModel);
+    let requestType = xhrMock.open.mock.calls[0][0];
+    let formData = xhrMock.send.mock.calls[0][0];
+
+    expect(formData).toBeInstanceOf(FormData);
+    expect(requestType).toEqual('POST');
+    expect(formData.get('userId')).toEqual(userId);
+    expect(formData.get('sessionId')).toEqual(sessionId);
+    expect(formData.get('skills[207]')).toEqual('knowledge');
+    expect(formData.get('skills[208]')).toEqual('skill');
+    expect(formData.get('skills[209]')).toEqual('ability');
+    expect(formData.get('skills[210]')).toBeNull();
+    expect(formData.get('skills[221]')).toEqual('skill');
+});
+
+test('AnswersModel saveUserResultsWithPause', function () {
+    let waitLoadMs = 600;
+    let professionCode = 'tester';
+    let competencyCode = 'operatingSystems';
+    let skillAnswers = [1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0];
+
+    let xhrMock = getXHRMock('{"success": true}', null, 'http://127.0.0.1:8080/api/results/saveSession');
+
+    let storage = storageMockFactory('answers');
+    let professionsModel = getProfessionsModel(professionCode);
+    let user = userFactory({});
+    let answers = answersFactory({}, configMockFactory(), xhrMock, storage, professionsModel, user);
+    let saveHandler = jest.fn();
+    answers.set(competencyCode, skillAnswers);
+    answers.addEventListener('saveSession', saveHandler);
+
+    return new Promise(function (resolve, reject) {
+        answers.saveUserResultsWithPause(user, professionsModel);
+        answers.saveUserResultsWithPause(user, professionsModel);
+        answers.saveUserResultsWithPause(user, professionsModel);
+        answers.saveUserResultsWithPause(user, professionsModel);
+        answers.saveUserResultsWithPause(user, professionsModel);
+
+        setTimeout(function () {
+            try {
+                expect(saveHandler).toHaveBeenCalledTimes(1);
+                resolve();
+            }
+            catch (exception) {
+                reject(exception);
+            }
+        }, waitLoadMs);
+    }).then(function () {
+        return new Promise(function (resolve, reject) {
+            answers.saveUserResultsWithPause(user, professionsModel);
+
+            setTimeout(function () {
+                try {
+                    expect(saveHandler).toHaveBeenCalledTimes(2);
+                    resolve();
+                }
+                catch (exception) {
+                    reject(exception);
+                }
+            }, waitLoadMs);
+        });
+    });
 });

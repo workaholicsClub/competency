@@ -10,6 +10,7 @@ use Spot\MapperInterface;
 class CompetencyEntity extends Entity
 {
     protected static $table = 'competencies';
+    protected static $mapper = CompetencyMapper::class;
 
     public static function fields() {
         return [

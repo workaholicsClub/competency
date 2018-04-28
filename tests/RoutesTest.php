@@ -82,4 +82,24 @@ class RoutesTest extends TestCase
         $this->assertEquals($expectedSubscribe, $afterSaveUser['user']['subscribe']);
         $this->assertEquals($expectedRemindMonths, $afterSaveUser['user']['remindMonths']);
     }
+
+    /**
+     * @see ApiMethodsTest::testResultsSaveSession()
+     */
+    public function testResultsSaveSession() {
+        $container = $this->makeContainer();
+        $saveResponse = $this->callRoute('resultsSaveSession', 'POST', [
+            'userId'    => 'acb8f472-9f77-4bab-a43a-25201978e86b',
+            'sessionId' => '05313d2c-fcfc-4374-966c-59fe59ddbe02',
+            'skills'    => [
+                '207' => 'knowledge',
+                '208' => 'skill',
+                '209' => 'ability',
+                '221' => 'skill',
+            ],
+        ], $container);
+
+        $this->assertEquals(200, $saveResponse['status']);
+        $this->assertEquals(true, $saveResponse['success']);
+    }
 }

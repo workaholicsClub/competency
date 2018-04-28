@@ -47,7 +47,7 @@ test('Course getRequirementsAsCompetencies', function () {
     let professionsModel = professionsFactory(professionsMockData);
     let course = courseFactory(courseData);
     let expectedCompetencies = {
-        "operatingSystems": 0.32,
+        "operatingSystems": 0.3,
         "python": 0.13
     };
 

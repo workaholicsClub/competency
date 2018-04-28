@@ -17,6 +17,16 @@ test('SkillAnswersModel.interface', function () {
     expect(answersModel.dispatchEvent).toBeInstanceOf(Function);
     expect(answersModel.set).toBeInstanceOf(Function);
     expect(answersModel.get).toBeInstanceOf(Function);
+    expect(answersModel.getCompetencyRating).toBeInstanceOf(Function);
+    expect(answersModel.getAllRatings).toBeInstanceOf(Function);
+    expect(answersModel.saveResults).toBeInstanceOf(Function);
+    expect(answersModel.saveAnswers).toBeInstanceOf(Function);
+    expect(answersModel.loadAnswers).toBeInstanceOf(Function);
+    expect(answersModel.getSkillLevelsText).toBeInstanceOf(Function);
+    expect(answersModel.getAnsweredSkills).toBeInstanceOf(Function);
+    expect(answersModel.saveUserResultsWithPause).toBeInstanceOf(Function);
+    expect(answersModel.saveUserResults).toBeInstanceOf(Function);
+
 });
 
 test('SkillAnswersModel.getCompetencyRating', function () {

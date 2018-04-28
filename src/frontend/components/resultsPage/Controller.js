@@ -70,9 +70,10 @@ let ResultsController = {
     },
 
     getRatingAverage: function (competency, rating) {
-        let lowerRating = 1;
-        let upperRating = 2;
-        let averageRating = 1.5;
+        let lowerRating = competency.average.lower;
+        let upperRating = competency.average.upper;
+        let averageRating = competency.average.average;
+        let hasEnoughData = lowerRating < averageRating && averageRating < upperRating;
 
         let diff = false;
 
@@ -89,7 +90,8 @@ let ResultsController = {
             lower: this.answersModel.getRatingPercent(lowerRating),
             upper: this.answersModel.getRatingPercent(upperRating),
             average: this.answersModel.getRatingPercent(averageRating),
-            diff: diff !== false ? this.answersModel.getRatingPercent(diff) : false
+            diff: diff !== false && hasEnoughData ? this.answersModel.getRatingPercent(diff) : false,
+            hasEnoughData: hasEnoughData
         }
     },
 

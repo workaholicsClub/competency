@@ -54,6 +54,7 @@ class ApiMethodsTest extends TestCase
             "email"          => "ap@mailinator.com",
             "remindMonths"   => null,
             "subscribe"      => null,
+            'uuid'           => null
         ];
 
         $response = $this->makeTestRequest('user', [
@@ -65,7 +66,8 @@ class ApiMethodsTest extends TestCase
     }
 
     public function testProfession() {
-        $response = $this->makeTestRequest('profession', []);
+        //Запрос не тестовый, т.к. используются фукнции, специфичные для MySql
+        $response = $this->makeRequest('profession', []);
         $webDeveloperParams = $response['profession'][0];
 
         $this->assertEquals(200, $response['status']);
@@ -116,16 +118,16 @@ class ApiMethodsTest extends TestCase
         ];
 
         $response = $this->makeTestRequest('/courses/search', [
-            "modeOfStudy" => "selfStudy",
-            "courseForm"  => "video",
-            "certificate" => "1",
-            "skills"      => [
+            "modeOfStudy"  => "selfStudy",
+            "courseForm"   => "video",
+            "certificate"  => "1",
+            "skills"       => [
                 "354" => "knowledge",
                 "380" => "skill",
             ],
             "requirements" => [
-                "361" => "knowledge"
-            ]
+                "361" => "knowledge",
+            ],
         ]);
 
         $this->assertEquals(200, $response['status']);
@@ -136,7 +138,7 @@ class ApiMethodsTest extends TestCase
             "modeOfStudy" => "selfStudy",
             "courseForm"  => "video",
             "certificate" => "1",
-            "userSkills"      => [
+            "userSkills"  => [
                 "354" => "knowledge",
                 "380" => "skill",
             ],
@@ -153,16 +155,34 @@ class ApiMethodsTest extends TestCase
      */
     public function testResultsSave() {
         $saveResponse = $this->makeTestRequest('results/save', [
-            'email' => 'ap@mailinator.com',
-            'subscribe' => UserModel::SUBSCRIBE_COURSES,
+            'email'        => 'ap@mailinator.com',
+            'subscribe'    => UserModel::SUBSCRIBE_COURSES,
             'remindMonths' => 6,
-            'competency' => [
-                'probabiltyBasics' => 0.5
-            ]
+            'competency'   => [
+                'probabiltyBasics' => 0.5,
+            ],
         ], 'POST');
 
         $this->assertEquals(200, $saveResponse['status']);
         $this->assertEquals(true, $saveResponse['success']);
     }
 
+    /**
+     * @see RoutesTest::testResultsSaveSession()
+     */
+    public function testResultsSaveSession() {
+        $saveResponse = $this->makeTestRequest('results/saveSession', [
+            'userId'    => 'acb8f472-9f77-4bab-a43a-25201978e86b',
+            'sessionId' => '05313d2c-fcfc-4374-966c-59fe59ddbe02',
+            'skills'    => [
+                '207' => 'knowledge',
+                '208' => 'skill',
+                '209' => 'ability',
+                '221' => 'skill',
+            ],
+        ], 'POST');
+
+        $this->assertEquals(200, $saveResponse['status']);
+        $this->assertEquals(true, $saveResponse['success']);
+    }
 }

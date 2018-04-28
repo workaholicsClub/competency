@@ -10,6 +10,7 @@ use Spot\MapperInterface;
 class SkillEntity extends Entity
 {
     protected static $table = 'atomicSkills';
+    protected static $mapper = SkillMapper::class;
 
     public static function fields() {
         return [

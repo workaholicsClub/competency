@@ -83,7 +83,9 @@ let ResultView = {
             h('tbody',
                 viewModel.professionCompetencies.map(function (competency) {
                     let averageData = competency.average;
-                    let averageText = averageData.average + ' (' + averageData.lower + '-' + averageData.upper + ')';
+                    let averageText = averageData.hasEnoughData
+                        ? averageData.average + '% (' + averageData.lower + '-' + averageData.upper + ')'
+                        : 'недостаточно данных';
 
                     let ratingText = competency.ratingPercent !== false
                         ? competency.ratingPercent+'%'
@@ -193,7 +195,8 @@ let ResultView = {
             h('div#head.row',
                 h('div.col-md-12',
                     h('div.page-header',
-                        h('h1.display-4', pageTitle)
+                        h('h1.display-4', pageTitle),
+                        h('a', 'на главную', {href: '/'})
                     )
                 )
             ),

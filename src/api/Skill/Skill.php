@@ -3,7 +3,7 @@
 namespace Competencies\Skill;
 
 use Competencies\Course\CourseRequirementEntity;
-use Competencies\Course\CourseSkillEntity;
+use Competencies\Course\SessionSkillEntity;
 
 class Skill
 {
@@ -88,7 +88,7 @@ class Skill
     }
 
     /**
-     * @param CourseSkillEntity|CourseRequirementEntity $linkEntity
+     * @param SessionSkillEntity|CourseRequirementEntity $linkEntity
      * @return Skill
      */
     public static function fromLinkEntity($linkEntity): Skill {

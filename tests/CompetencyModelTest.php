@@ -39,7 +39,8 @@ class CompetencyModelTest extends TestCase
     }
 
     public function testLoadProfessions() {
-        $locator = Database::getTest();
+        //База не тестовая, т.к. используются функции, специфичные для MySql
+        $locator = Database::getReal();
 
         $courseMapper = $locator->mapper(CourseEntity::class);
         $model = CompetencyModel::make($locator, $courseMapper);
@@ -63,7 +64,7 @@ class CompetencyModelTest extends TestCase
         $this->assertArrayHasKey('courseCount', $result[1]);
         $this->assertArrayHasKey('competencyCount', $result[1]);
         $this->assertEquals('tester', $result[1]['code']);
-        $this->assertEquals(9, $result[1]['courseCount']);
+        $this->assertEquals(7, $result[1]['courseCount']);
         $this->assertEquals(7, $result[1]['competencyCount']);
         $this->assertArrayHasKey('groups', $result[1]);
         $this->assertArrayHasKey('0', $result[0]['groups']);
@@ -74,6 +75,14 @@ class CompetencyModelTest extends TestCase
         $sampleCompetency = $result[0]['groups'][1]['competencies'][0];
         $this->assertArrayHasKey('skills', $sampleCompetency);
         $this->assertCount(19, $sampleCompetency['skills']);
+        $this->assertArrayHasKey('average', $sampleCompetency);
+
+        $sampleAverage = $sampleCompetency['average'];
+        $this->assertArrayHasKey('lower', $sampleAverage);
+        $this->assertArrayHasKey('upper', $sampleAverage);
+        $this->assertArrayHasKey('average', $sampleAverage);
+        $this->assertGreaterThanOrEqual($sampleAverage['lower'], $sampleAverage['average']);
+        $this->assertGreaterThanOrEqual($sampleAverage['average'], $sampleAverage['upper']);
     }
 
 }

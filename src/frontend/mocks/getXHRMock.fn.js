@@ -1,16 +1,21 @@
-module.exports = function (response, async) {
+module.exports = function (response, async, url) {
+    if (!url) {
+        url = ''
+    }
+
     return {
         callback: {},
         responseType: 'load',
         responseText: response,
+        responseURL: url,
         addEventListener: function (type, callback) {
             this.callback[type] = callback;
         },
         open: function () {},
         send: function () {
-            var event = {};
-            var xhr = this;
-            var loadTimeMs = 50;
+            let event = {};
+            let xhr = this;
+            let loadTimeMs = 50;
 
             if (async) {
                 setTimeout(function () {

@@ -129,7 +129,7 @@ INSERT INTO `atomicSkills` VALUES (108,'Целенаправленная ден�
 INSERT INTO `atomicSkills` VALUES (109,'ACID','',7);
 INSERT INTO `atomicSkills` VALUES (110,'Теорема CAP','',7);
 INSERT INTO `atomicSkills` VALUES (111,'Реализации SQL','MySQL, PostgreSQL, MSSQL, Oracle',7);
-INSERT INTO `atomicSkills` VALUES (112,'Оптимизирование настроект серверов','',7);
+INSERT INTO `atomicSkills` VALUES (112,'Оптимизирование настроек серверов','',7);
 INSERT INTO `atomicSkills` VALUES (113,'Кластеризация и репликация данных','',7);
 INSERT INTO `atomicSkills` VALUES (114,'Колоночные базы данных','Hbase, Cassandra',7);
 INSERT INTO `atomicSkills` VALUES (115,'Документ-ориентированные базы данных','CouchDB, MongoDB',7);

@@ -1,9 +1,9 @@
 const Cookie = require('js-cookie');
 
-var CookieStorage = {
-    init: function (cookieName) {
+let CookieStorage = {
+    init: function (cookieName, expiresDays) {
         this.cookieName = cookieName;
-        this.expiresDays = 10;
+        this.expiresDays = expiresDays;
     },
 
     save: function (data) {
@@ -15,9 +15,13 @@ var CookieStorage = {
     }
 };
 
-module.exports = function (cookieName) {
-    var instance = Object.create(CookieStorage);
-    instance.init(cookieName);
+module.exports = function (cookieName, expiresDays) {
+    let instance = Object.create(CookieStorage);
+    if (!expiresDays) {
+        expiresDays = 10;
+    }
+    
+    instance.init(cookieName, expiresDays);
 
     return instance;
 };

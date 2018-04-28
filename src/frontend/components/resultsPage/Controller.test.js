@@ -79,39 +79,46 @@ test('ResultsController.getViewModel', function () {
     expect(average).toHaveProperty('upper');
     expect(average).toHaveProperty('average');
     expect(average).toHaveProperty('diff');
-    expect(average.lower).toEqual(33);
-    expect(average.upper).toEqual(67);
-    expect(average.average).toEqual(50);
-    expect(average.diff).toEqual(-29);
+    expect(average).toHaveProperty('hasEnoughData');
+    expect(average.lower).toEqual(54);
+    expect(average.upper).toEqual(61);
+    expect(average.average).toEqual(57);
+    expect(average.diff).toEqual(-49);
+    expect(average.hasEnoughData).toEqual(true);
 });
 
 test('ResultsController.getRatingAverage', function () {
     let resultsController = getControllerInstance();
-    let competency = {};
+    let professionsModel = professionsFactory(professionsMockData);
+    let competency = professionsModel.getCompetency('tester', 'operatingSystems');
 
     let average = resultsController.getRatingAverage(competency, 0.25);
-    expect(average.lower).toEqual(33);
-    expect(average.upper).toEqual(67);
-    expect(average.average).toEqual(50);
-    expect(average.diff).toEqual(-25);
+    expect(average.lower).toEqual(54);
+    expect(average.upper).toEqual(61);
+    expect(average.average).toEqual(57);
+    expect(average.diff).toEqual(-46);
+    expect(average.hasEnoughData).toEqual(true);
 
-    average = resultsController.getRatingAverage(competency, 1.5);
-    expect(average.lower).toEqual(33);
-    expect(average.upper).toEqual(67);
-    expect(average.average).toEqual(50);
+    average = resultsController.getRatingAverage(competency, 1.7);
+    expect(average.lower).toEqual(54);
+    expect(average.upper).toEqual(61);
+    expect(average.average).toEqual(57);
     expect(average.diff).toEqual(0);
+    expect(average.hasEnoughData).toEqual(true);
 
     average = resultsController.getRatingAverage(competency, 3.25);
-    expect(average.lower).toEqual(33);
-    expect(average.upper).toEqual(67);
-    expect(average.average).toEqual(50);
-    expect(average.diff).toEqual(42);
+    expect(average.lower).toEqual(54);
+    expect(average.upper).toEqual(61);
+    expect(average.average).toEqual(57);
+    expect(average.diff).toEqual(48);
+    expect(average.hasEnoughData).toEqual(true);
 
     average = resultsController.getRatingAverage(competency, false);
-    expect(average.lower).toEqual(33);
-    expect(average.upper).toEqual(67);
-    expect(average.average).toEqual(50);
+    expect(average.lower).toEqual(54);
+    expect(average.upper).toEqual(61);
+    expect(average.average).toEqual(57);
     expect(average.diff).toEqual(false);
+    expect(average.hasEnoughData).toEqual(true);
 });
 
 test('ResultsController.trackSaveResults', function () {

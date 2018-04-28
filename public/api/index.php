@@ -34,5 +34,6 @@ $app->get('/profession', Routes::class.':profession');
 $app->get('/courses/recommend', Routes::class.':coursesRecommend');
 $app->get('/courses/search', Routes::class.':coursesSearch');
 $app->post('/results/save', Routes::class.':resultsSave');
+$app->post('/results/saveSession', Routes::class.':resultsSaveSession');
 
 $app->run();

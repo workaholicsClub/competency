@@ -207,8 +207,8 @@ ProfessionsModel = Object.assign(ProfessionsModel, XhrModelMixin);
 /**
  * @param {Object} props
  * @param {Config} config
- * @param {XMLHttpRequest} xhr
- * @param {string} professionCode
+ * @param {XMLHttpRequest} [xhr]
+ * @param {string} [professionCode]
  * @returns {ProfessionsModel}
  */
 module.exports = function (props, config, xhr, professionCode) {

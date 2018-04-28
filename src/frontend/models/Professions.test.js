@@ -90,14 +90,14 @@ test('ProfessionsModel.getProfessions', function () {
         code: "tester",
         name: "Тестировщик (Python)",
         competencyCount: 7,
-        courseCount: 9,
+        courseCount: 7,
         timeToFill: 11
     }, {
-        "code": "webProjectManager",
-        "name": "Менеджер web-проектов",
-        "competencyCount": 24,
-        "courseCount": 3,
-        "timeToFill": 36
+        code: "webProjectManager",
+        name: "Менеджер web-проектов",
+        competencyCount: 24,
+        courseCount: 2,
+        timeToFill: 36
     }];
 
     let professionsModel = professionsModelFactory({}, configMockFactory(), xhrMock);
@@ -160,13 +160,21 @@ test('ProfessionsModel.getTimeToFillProfession', function () {
 });
 
 
-function testComptency(competency) {
+function testCompetency(competency) {
     expect(competency).toHaveProperty('code');
     expect(competency).toHaveProperty('name');
     expect(competency).toHaveProperty('level1');
     expect(competency).toHaveProperty('level2');
     expect(competency).toHaveProperty('level3');
     expect(competency).toHaveProperty('level4');
+
+    expect(competency).toHaveProperty('average');
+    expect(competency.average).toHaveProperty('lower');
+    expect(competency.average).toHaveProperty('upper');
+    expect(competency.average).toHaveProperty('average');
+    expect(competency.average.lower).toBeLessThanOrEqual(competency.average.average);
+    expect(competency.average.average).toBeLessThanOrEqual(competency.average.upper);
+
     expect(competency).toHaveProperty('group');
     expect(competency.group).toHaveProperty('code');
     expect(competency.group).toHaveProperty('name');
@@ -186,12 +194,12 @@ test('ProfessionsModel.getCompetencies', function () {
 
             try {
                 expect(competencies).toHaveLength(7);
-                testComptency( competencies[0] );
+                testCompetency( competencies[0] );
 
                 expect(noProfessionCompetencies).toBeFalsy();
 
                 expect(setProfessionCompetencies).toHaveLength(7);
-                testComptency( setProfessionCompetencies[0] );
+                testCompetency( setProfessionCompetencies[0] );
 
                 resolve();
             }

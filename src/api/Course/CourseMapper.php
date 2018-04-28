@@ -183,7 +183,8 @@ class CourseMapper extends Mapper
 
             try {
                 $mapper->update($courseSkillLink);
-            } catch (Exception $e) {
+            }
+            catch (Exception $e) {
                 return false;
             }
         }
@@ -194,9 +195,9 @@ class CourseMapper extends Mapper
     protected function createSkillInDatabase(Skill $skill, string $courseId, MapperInterface $mapper): bool {
         $entityName = $mapper->entity();
         $courseSkillLink = new $entityName([
-            'courseId' => $courseId,
+            'courseId'      => $courseId,
             'atomicSkillId' => $skill->getId(),
-            'level' => $skill->getLevel(),
+            'level'         => $skill->getLevel(),
         ]);
 
         $saveResult = $mapper->save($courseSkillLink);
