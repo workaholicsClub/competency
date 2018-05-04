@@ -40,16 +40,13 @@ let IndexView = {
 
     createProfessionCards: function (viewModel) {
         return viewModel.professions.map(function (profession) {
-            return h('div.col-sm',
-                h('div.card',
-                    h('div.card-header', profession.name),
-                    h('ul.list-group.list-group-flush',
-                        h('li.list-group-item', 'Компетенций: '+profession.competencyCount),
-                    ),
-                    h('div.card-body',
-                        h('a.btn.btn-primary', {href: '/test/'+profession.code}, 'Пройти (~' +
-                            profession.timeToFill + ' мин)')
-                    )
+            return h('div.card.mb-3',
+                h('div.card-header', profession.name),
+                h('ul.list-group.list-group-flush',
+                    h('li.list-group-item', 'Компетенций: '+profession.competencyCount),
+                ),
+                h('div.card-body',
+                    h('a.btn.btn-primary', {href: '/test/'+profession.code}, 'Проверить навыки')
                 )
             )
         });
@@ -57,15 +54,13 @@ let IndexView = {
 
     createCourseSearchCards: function (viewModel) {
         return viewModel.professions.map(function (profession) {
-            return h('div.col-sm',
-                h('div.card',
-                    h('div.card-header', profession.name),
-                    h('ul.list-group.list-group-flush',
-                        h('li.list-group-item', 'Курсов: '+profession.courseCount)
-                    ),
-                    h('div.card-body',
-                        h('a.btn.btn-primary', {href: '/courses/'+profession.code}, 'Подобрать курсы')
-                    )
+            return h('div.card.mb-3',
+                h('div.card-header', profession.name),
+                h('ul.list-group.list-group-flush',
+                    h('li.list-group-item', 'Курсов: '+profession.courseCount)
+                ),
+                h('div.card-body',
+                    h('a.btn.btn-primary', {href: '/courses/'+profession.code}, 'Подобрать курсы')
                 )
             )
         });
@@ -78,23 +73,21 @@ let IndexView = {
         return h('div#page.container-fluid.mt-3',
                     h('div#head.jumbotron.jumbotron-fluid',
                         h('div.container',
-                            h('h1.display-4', 'Убежище N'),
+                            h('h1.display-4', 'Развивака'),
                             h('p.lead', 'Сначала мы поможем понять свой уровень, а потом поможем стать лучше'),
                             h('hr.my-4'),
                             h('p', 'Здесь вы можете следить за развитием собственных компетенций и получать персональные' +
                                 ' рекомендации по подходящим онлайн-курсам.')
                         )
                     ),
-                    h('div#content.container-fluid.mt-3',
-                        h('div.row', h('h2.display-5', 'Поиск курсов')),
-                        h('div.row',
-                            this.createCourseSearchCards(viewModel)
-                        )
-                    ),
-                    h('div#content.container-fluid.mt-3',
-                        h('div.row', h('h2.display-5', 'Проверка навыков')),
-                        h('div.row',
-                            this.createProfessionCards(viewModel)
+                    h('div#content.row.mt-3',
+                        h('div.col',
+                            h('div', h('h2.display-5', 'Поиск курсов')),
+                            h('div', this.createCourseSearchCards(viewModel)),
+                        ),
+                        h('div.col',
+                            h('div', h('h2.display-5', 'Проверка навыков')),
+                            h('div', this.createProfessionCards(viewModel))
                         )
                     ),
                     footer

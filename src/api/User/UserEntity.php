@@ -7,6 +7,7 @@ use Spot\Entity;
 class UserEntity extends Entity
 {
     protected static $table = 'users';
+    protected static $mapper = UserMapper::class;
 
     public static function fields() {
         return [

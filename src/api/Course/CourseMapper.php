@@ -2,7 +2,13 @@
 
 namespace Competencies\Course;
 
+use Competencies\Session\Session;
+use Competencies\Session\SessionEntity;
+use Competencies\Session\SessionMapper;
 use Competencies\Skill\Skill;
+use Competencies\User\UserEntity;
+use Competencies\User\UserMapper;
+use Competencies\User\UserModel;
 use Spot\Entity;
 use Spot\Exception;
 use Spot\Mapper;
@@ -30,10 +36,23 @@ class CourseMapper extends Mapper
 
     /**
      * @param string $code
-     * @return CourseEntity
+     * @return CourseEntity|false
      */
-    public function loadByCode(string $code): CourseEntity {
+    public function loadByCode(string $code) {
         return $this->first(['code' => $code]);
+    }
+
+    /**
+     * @param string $code
+     * @return Course|bool
+     */
+    public function getByCode(string $code) {
+        $entity = $this->loadByCode($code);
+        if (!$entity) {
+            return false;
+        }
+
+        return Course::fromEntity($entity);
     }
 
     /**
@@ -436,5 +455,45 @@ class CourseMapper extends Mapper
         $result = $this->convertEntityCollectionToCourses($entityCollection);
 
         return $result;
+    }
+
+    /**
+     * @param Course $course
+     * @param Session $session
+     * @return bool
+     */
+    public function saveVisit(Course $course, Session $session) {
+        $user = $session->getUser();
+        $visitMapper = $this->getMapper(CourseVisitEntity::class);
+
+        /**
+         * @var UserMapper $userMapper
+         * @var SessionMapper $sessionMapper
+         */
+        $userMapper = $this->getMapper(UserEntity::class);
+        $sessionMapper = $this->getMapper(SessionEntity::class);
+
+        $sessionSaveResult = $sessionMapper->saveSession($session);
+        if (!$sessionSaveResult) {
+            return false;
+        }
+
+        $courseEntity = $this->loadByCode($course->getCode());
+        $userEntity = $userMapper->loadByUuid($user->getUuid());
+        $sessionEntity = $sessionMapper->loadByUuid($session->getUuid());
+
+        if (!$courseEntity) {
+            return false;
+        }
+
+
+        $entity = new CourseVisitEntity([
+            'courseId'  => $courseEntity->get('id'),
+            'userId'    => $userEntity->get('id'),
+            'sessionId' => $sessionEntity->get('id'),
+        ]);
+
+        $saveResult = $visitMapper->save($entity);
+        return (bool) $saveResult;
     }
 }

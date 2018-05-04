@@ -64,6 +64,21 @@ let CourseModel = {
         }, context);
 
         return this.skillsModel.getAllRatings();
+    },
+
+    getFullUrl: function (userId, sessionId) {
+        let url = this.get('url');
+        if (userId) {
+            url += url.indexOf('?') > 0 ? '&' : '?';
+            url += 'userId=' + userId;
+        }
+
+        if (sessionId) {
+            url += url.indexOf('?') > 0 ? '&' : '?';
+            url += 'sessionId=' + sessionId;
+        }
+
+        return url;
     }
 };
 

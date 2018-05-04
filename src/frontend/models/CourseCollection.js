@@ -80,14 +80,17 @@ let CourseCollection = {
                 value.forEach(function (competencyCode) {
                     let skills = this.getCompetencySkills(competencyCode, fieldData.variants);
                     let answers = answersModel.get(competencyCode);
-                    answers.forEach(function (answer, index) {
-                        if (answer > 0) {
-                            let skill = skills[index];
-                            let answerCode = answerCodes[answer];
 
-                            queryParams.push( fieldCode+'['+skill.id+']='+answerCode );
-                        }
-                    }, context);
+                    if (answers) {
+                        answers.forEach(function (answer, index) {
+                            if (answer > 0) {
+                                let skill = skills[index];
+                                let answerCode = answerCodes[answer];
+
+                                queryParams.push( fieldCode+'['+skill.id+']='+answerCode );
+                            }
+                        }, context);
+                    }
                 }, context);
 
                 return false;

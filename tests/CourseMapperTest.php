@@ -4,10 +4,17 @@ use Competencies\Course\Course;
 use Competencies\Course\CourseEntity;
 use Competencies\Course\CourseMapper;
 use Competencies\Course\CourseSkillEntity;
+use Competencies\Course\CourseVisitEntity;
 use Competencies\Mocks\Database;
+use Competencies\Session\Session;
+use Competencies\Session\SessionEntity;
+use Competencies\Session\SessionMapper;
 use Competencies\Skill\Skill;
 use Competencies\Skill\SkillEntity;
+use Competencies\User\UserEntity;
+use Competencies\User\UserMapper;
 use PHPUnit\Framework\TestCase;
+use Spot\Locator;
 use Spot\MapperInterface;
 
 class CourseMapperTest extends TestCase
@@ -58,6 +65,23 @@ class CourseMapperTest extends TestCase
 
         $this->assertInstanceOf(CourseEntity::class, $entity);
         $this->assertEquals($testCode, $entity->get('code'));
+    }
+
+    public function testGetByCode() {
+        $testCode = 'osnovy-statistiki';
+        $nonExistentCode = 'no-such-course';
+        $locator = Database::getTest();
+        /**
+         * @var CourseMapper $instance
+         */
+        $instance = $locator->mapper(CourseEntity::class);
+        $course = $instance->getByCode($testCode);
+
+        $this->assertInstanceOf(Course::class, $course);
+        $this->assertEquals($testCode, $course->getCode());
+
+        $nonExistentCourse = $instance->getByCode($nonExistentCode);
+        $this->assertFalse($nonExistentCourse);
     }
 
     public function testCountCoursesForProfession() {
@@ -206,6 +230,8 @@ class CourseMapperTest extends TestCase
 
         $course->setName($expectedName);
         $course->setLengthDays($expectedLength);
+        $course->updateCodeByName();
+
         $entity = $this->loadCourse($course, $courseMapper);
         $oldId = $entity->get('id');
 
@@ -495,6 +521,57 @@ class CourseMapperTest extends TestCase
         foreach ($courses as $course) {
             $this->assertEquals("stepik", $course->getEduProvider()->getCode());
         }
+    }
 
+    public function saveVisitHelper(Locator $locator, string $courseCode, string $userUuid, string $sessionUuid) {
+        /**
+         * @var CourseMapper $courseMapper
+         * @var UserMapper $userMapper
+         */
+        $courseMapper = $locator->mapper(CourseEntity::class);
+        $userMapper = $locator->mapper(UserEntity::class);
+
+        $course = $courseMapper->getByCode($courseCode);
+        $user = $userMapper->getByUuid($userUuid);
+        $session = Session::fromArray([
+            'uuid' => $sessionUuid,
+            'user' => $user
+        ]);
+
+        return $courseMapper->saveVisit($course, $session);
+    }
+
+    public function testSaveVisitAllExists() {
+        $expectedCourseId = 26; //vvedenie-v-bazy-dannyh
+        $expectedSessionId = 5; //5faac8d1-f3eb-4eeb-bdbb-b5e53f999326
+        $expectedUserId = 2; //da8c4a60-f28d-49fc-a6c2-1a6924bbf0bf
+
+        $locator = Database::getTest();
+        $saveResult = $this->saveVisitHelper($locator, 'vvedenie-v-bazy-dannyh', 'da8c4a60-f28d-49fc-a6c2-1a6924bbf0bf', '5faac8d1-f3eb-4eeb-bdbb-b5e53f999326');
+
+        $visitMapper = $locator->mapper(CourseVisitEntity::class);
+        $visitEntity = $visitMapper->first(['courseId' => $expectedCourseId]);
+
+        $this->assertTrue($saveResult);
+        $this->assertEquals($expectedCourseId, $visitEntity->get('courseId'));
+        $this->assertEquals($expectedUserId, $visitEntity->get('userId'));
+        $this->assertEquals($expectedSessionId, $visitEntity->get('sessionId'));
+    }
+
+    public function testSaveVisitNoneExists() {
+        $expectedCourseId = 26; //vvedenie-v-bazy-dannyh
+        $expectedSessionId = 6; //18dec1a3-d6d2-4a39-a295-1cb96803090e
+        $expectedUserId = 3; //7b5c4dce-bf5d-4145-964b-193d636ff2ce
+
+        $locator = Database::getTest();
+        $saveResult = $this->saveVisitHelper($locator, 'vvedenie-v-bazy-dannyh', '7b5c4dce-bf5d-4145-964b-193d636ff2ce', '18dec1a3-d6d2-4a39-a295-1cb96803090e');
+
+        $visitMapper = $locator->mapper(CourseVisitEntity::class);
+        $visitEntity = $visitMapper->first(['courseId' => $expectedCourseId]);
+
+        $this->assertTrue($saveResult);
+        $this->assertEquals($expectedCourseId, $visitEntity->get('courseId'));
+        $this->assertEquals($expectedUserId, $visitEntity->get('userId'));
+        $this->assertEquals($expectedSessionId, $visitEntity->get('sessionId'));
     }
 }

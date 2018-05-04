@@ -11,6 +11,7 @@ $settings = [
     'mysql_dsn'      => getenv('MYSQL_DSN'),
     'mailgun_key'    => getenv('MAILGUN_KEY'),
     'mailgun_domain' => getenv('MAILGUN_DOMAIN'),
+    'apiBase'        => getenv('API_URL'),
 
     'debug'               => true,
     'displayErrorDetails' => true,
@@ -33,6 +34,7 @@ $app->get('/user', Routes::class.':user');
 $app->get('/profession', Routes::class.':profession');
 $app->get('/courses/recommend', Routes::class.':coursesRecommend');
 $app->get('/courses/search', Routes::class.':coursesSearch');
+$app->get('/courses/go/{code}', Routes::class.':coursesGo');
 $app->post('/results/save', Routes::class.':resultsSave');
 $app->post('/results/saveSession', Routes::class.':resultsSaveSession');
 

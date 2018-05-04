@@ -739,7 +739,7 @@ INSERT INTO `courses` VALUES (12,NULL,3,'head-of-development','Руководи�
 INSERT INTO `courses` VALUES (13,NULL,7,'it-english','Английский для IT-специалистов',NULL,'https://geekbrains.ru/courses/98',1098.00,2,10,'online','video','evening',1,'teacherCheck',14);
 INSERT INTO `courses` VALUES (15,'6375',1,'centre-for-integrable-systems-introduction-to-python','Centre for Integrable Systems - Introduction to Python','Python','https://stepik.org/course/6375',NULL,0,NULL,'selfStudy','video','free',0,'autoCheck',0);
 INSERT INTO `courses` VALUES (16,'6075',1,'it-intensiv-python','IT-интенсив (Python)','Интенсивный вводный курс в программирование на языке Python учащий эффективно решать задачи из реальной жизни. \n\nСтуденты курса получат фундаментальные знания о том, как компьютеры хранят и оперируют данными на примере проектов различной сложности: от простых консольных игр до настоящих автоматизированных решений. ','https://stepik.org/course/6075',NULL,0,NULL,'selfStudy','video','free',0,'autoCheck',0);
-INSERT INTO `courses` VALUES (17,'512',1,'python-osnovy-i-primenenie','Python: основы и применение','Курс посвящен базовым принципам языка Python и программирования в целом. Он хорошо подойдет тем, кто уже может писать простейшие программы на Python или тем, кто до этого программировал на других языках.','https://stepik.org/course/512',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',1);
+INSERT INTO `courses` VALUES (17,'512',1,'python-osnovy-i-primenenie-test','Python: основы и применение','Курс посвящен базовым принципам языка Python и программирования в целом. Он хорошо подойдет тем, кто уже может писать простейшие программы на Python или тем, кто до этого программировал на других языках.','https://stepik.org/course/512',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',1);
 INSERT INTO `courses` VALUES (18,'431',1,'adaptivnyj-trenazher-python','Адаптивный тренажер Python','Курс представляет собой набор задач на языке Python. Сложность задач варьируется от начальной до высокой. Курс проходится в специальном адаптивном режиме!','https://stepik.org/course/431',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',1);
 INSERT INTO `courses` VALUES (19,'154',1,'web-tehnologii','Web-технологии','Курс посвящен разработке серверной части web-приложений, их архитектуре и протоколу HTTP. По итогам курса вы научитесь: разрабатывать приложения на языке python, использовать MVC фреймворки, изучите верстку HTML страниц, погрузитесь в тематику web разработки и сможете выбирать конкретные технологии.','https://stepik.org/course/154',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',2);
 INSERT INTO `courses` VALUES (20,'67',1,'programmirovanie-na-python','Программирование на Python','Курс посвящен базовым понятиям и элементам языка программирования Python (операторы, числовые и строковые переменные, списки, условия и циклы). Курс является вводным и наиболее подойдет слушателям, не имеющим опыта написания программ ни на одном из языков программирования.','https://stepik.org/course/67',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',1);
@@ -927,6 +927,13 @@ INSERT INTO `coursesSkills` VALUES (103,31,499,'knowledge');
 INSERT INTO `coursesSkills` VALUES (104,31,500,'knowledge');
 INSERT INTO `coursesSkills` VALUES (105,31,501,'knowledge');
 
+CREATE TABLE `courseVisits` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  `dateVisited` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `courseId` INT NULL DEFAULT NULL,
+  `userId` INT NULL DEFAULT NULL,
+  `sessionId` INT NULL DEFAULT NULL);
+
 CREATE TABLE `eduProviders` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   `code` varchar(25) DEFAULT NULL,
@@ -987,6 +994,7 @@ CREATE TABLE `users` (
 );
 
 INSERT INTO `users` VALUES (1,NULL,'2017-12-18 11:45:36',NULL,'ap@mailinator.com', NULL, NULL);
+INSERT INTO `users` VALUES (2,'da8c4a60-f28d-49fc-a6c2-1a6924bbf0bf','2018-05-03 13:19:17',NULL,'app@mailinator.com', NULL, NULL);
 
 CREATE TABLE `sessions` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -999,6 +1007,7 @@ INSERT INTO `sessions` VALUES (1,'05313d2c-fcfc-4374-966c-59fe59ddbe02','2018-04
 INSERT INTO `sessions` VALUES (2,'60cbb2b8-4407-42ae-8c7c-d937d49789ee','2018-04-27 13:01:57',1);
 INSERT INTO `sessions` VALUES (3,'1c93a89f-ec47-46e6-87c0-549d21171262','2018-04-27 13:49:34',1);
 INSERT INTO `sessions` VALUES (4,'b4343e7c-aa95-406a-ade5-6a78447c8ecf','2018-04-27 14:14:50',1);
+INSERT INTO `sessions` VALUES (5,'5faac8d1-f3eb-4eeb-bdbb-b5e53f999326','2018-05-03 15:26:45',2);
 
 CREATE TABLE `sessionsSkills` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

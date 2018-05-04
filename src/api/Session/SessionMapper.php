@@ -21,6 +21,19 @@ class SessionMapper extends Mapper
 
     /**
      * @param string $uuid
+     * @return bool|Session
+     */
+    public function getByUuid(string $uuid) {
+        $entity = $this->loadByUuid($uuid);
+        if (!$entity) {
+            return false;
+        }
+
+        return Session::fromEntity($entity);
+    }
+
+    /**
+     * @param string $uuid
      * @return bool
      */
     public function sessionExist(string $uuid): bool {

@@ -19,6 +19,7 @@ services:
     working_dir: "/var/www"
     environment:
       - MYSQL_DSN=mysql://${DATABASE_USER}:${DATABASE_PASSWORD}@database/${DATABASE_SCHEMA}?charset=UTF8
+      - API_URL=${API_URL}
       - MAILGUN_KEY=${MAILGUN_KEY}
       - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
       - XDEBUG_CONFIG=remote_host=${HOST_IP}

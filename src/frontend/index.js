@@ -122,7 +122,7 @@ function initAndGoToRoute() {
         let fieldsData = [];
         let filterController = filterControllerFactory(filterView, coursesFilter, answersModel, fieldsData, skillController);
 
-        let coursesController = coursesControllerFactory(coursesView, listView, filterController, coursesFilter, professionsModel, answersModel, coursesModel, xhr, tracker);
+        let coursesController = coursesControllerFactory(coursesView, listView, filterController, coursesFilter, professionsModel, answersModel, coursesModel, xhr, tracker, userModel);
         coursesController.loadDataAndRenderIndexPage();
     });
 

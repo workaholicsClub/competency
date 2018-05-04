@@ -91,7 +91,7 @@ class UserModel implements UserModelInterface
     }
 
     /**
-     * @return \Spot\Mapper
+     * @return UserMapper
      */
     public function getMapper() {
         return $this->mapper;
@@ -120,7 +120,9 @@ class UserModel implements UserModelInterface
     public function load() {
         $mapper = $this->getMapper();
 
-        return $mapper->first(['email' => $this->getEmail()]);
+        return $this->getEmail()
+            ? $mapper->loadByEmail($this->getEmail())
+            : $mapper->loadByUuid($this->getUuid());
     }
 
     /**

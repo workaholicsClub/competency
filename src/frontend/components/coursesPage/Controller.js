@@ -1,7 +1,7 @@
 const BaseController = require('../base/Controller');
 
 let CoursesController = {
-    init: function (pageView, coursesListView, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker) {
+    init: function (pageView, coursesListView, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker, user) {
         this.pageView = pageView;
         this.coursesListView = coursesListView;
         this.filterController = filterController;
@@ -13,6 +13,7 @@ let CoursesController = {
         this.xhr = xhr;
         this.tracker = tracker;
         this.events = [];
+        this.user = user;
     },
 
     initEvents: function () {
@@ -78,6 +79,8 @@ let CoursesController = {
     getViewModel: function () {
         let competencyRatings = this.answersModel.getAllRatings();
         let competenciesWithRatings = this.getCompetenciesWithRatings(competencyRatings);
+        let userId = this.user ? this.user.getId() : '';
+        let sessionId = this.user ? this.user.getSessionId() : '';
 
         let courses = [];
         this.coursesModel.getLoadedCourses().forEach(function (courseModel) {
@@ -87,6 +90,7 @@ let CoursesController = {
             let skillCompetenciesRatings = courseModel.getSkillsAsCompetencies(competencies);
             let requirementCompetenciesRatings = courseModel.getRequirementsAsCompetencies(competencies);
 
+            courseData.url = courseModel.getFullUrl(userId, sessionId);
             courseData.skillCompetencies = this.getCompetenciesWithRatings(skillCompetenciesRatings);
             courseData.requirementCompetencies = this.getCompetenciesWithRatings(requirementCompetenciesRatings);
 
@@ -225,16 +229,17 @@ CoursesController = Object.assign(Object.create(BaseController), CoursesControll
  * @param {CourseCollection} coursesModel
  * @param {XMLHttpRequest} xhr
  * @param {GTagTracker} tracker
+ * @param {UserModel} user
  * @returns {CoursesController}
  */
-module.exports = function (pageView, coursesListView, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker) {
+module.exports = function (pageView, coursesListView, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker, user) {
     let instance = Object.create(CoursesController);
 
     if (!xhr) {
         xhr = new XMLHttpRequest();
     }
 
-    instance.init(pageView, coursesListView, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker);
+    instance.init(pageView, coursesListView, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker, user);
 
     return instance;
 };

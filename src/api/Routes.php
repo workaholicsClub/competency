@@ -14,6 +14,7 @@ use Competencies\Session\SessionMapper;
 use Competencies\Skill\SkillEntity;
 use Competencies\Skill\SkillMapper;
 use Competencies\User\UserEntity;
+use Competencies\User\UserMapper;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -116,6 +117,8 @@ class Routes
 
     public function coursesSearch(Request $request, Response $response) {
         $filter = $request->getQueryParams();
+        $apiBase = $this->container->get('settings')['apiBase'] ?? '';
+
         /**
          * @var CourseMapper $courseMapper
          */
@@ -123,6 +126,7 @@ class Routes
         $foundCourses = $courseMapper->searchByFilter($filter);
         $coursesJson = [];
         foreach ($foundCourses as $course) {
+            $course->setApiBase($apiBase);
             $coursesJson[] = $course->toArray();
         }
 
@@ -165,15 +169,11 @@ class Routes
         $success = false;
 
         if ($userUuid) {
+            /**
+             * @var UserMapper $userMapper
+             */
             $userMapper = $locator->mapper(UserEntity::class);
-            $userEntity = $userMapper->first(['uuid' => $userUuid]);
-            $user = UserModel::make();
-            if ($userEntity) {
-                $user = UserModel::makeFromEntity($userEntity);
-            }
-            else {
-                $user->setUuid($userUuid);
-            }
+            $user = $userMapper->getByUuid($userUuid);
 
             /**
              * @var SkillMapper $skillMapper
@@ -199,5 +199,31 @@ class Routes
             "status"  => 200,
             "success" => $success
         ]);
+    }
+
+    public function coursesGo(Request $request, Response $response) {
+        $courseCode = $request->getAttribute('code');
+        $userId = $request->getQueryParam('userId');
+        $sessionId = $request->getQueryParam('sessionId');
+
+        $locator = $this->getLocator($request);
+        /**
+         * @var CourseMapper $courseMapper
+         * @var UserMapper $userMapper
+         */
+        $courseMapper = $locator->mapper(CourseEntity::class);
+        $userMapper = $locator->mapper(UserEntity::class);
+
+        $course = $courseMapper->getByCode($courseCode);
+        $user = $userMapper->getByUuid($userId);
+        $session = Session::fromArray([
+            'uuid' => $sessionId,
+            'user' => $user,
+        ]);
+
+        $courseMapper->saveVisit($course, $session);
+        $redirectToUrl = $course->getUrl();
+
+        return $response->withRedirect($redirectToUrl);
     }
 }

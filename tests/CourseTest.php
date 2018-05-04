@@ -102,6 +102,9 @@ class CourseTest extends TestCase
 
     public function testFromEntity() {
         $testCourseId = 17;
+        $generatedCode = 'python-osnovy-i-primenenie';
+        $databaseCode = 'python-osnovy-i-primenenie-test';
+
         $expectedProps = [
             'externalId'           => '512',
             'name'                 => 'Python: основы и применение',
@@ -129,6 +132,8 @@ class CourseTest extends TestCase
         $course = Course::fromEntity($courseEntity);
 
         $this->assertInstanceOf(Course::class, $course);
+        $this->assertEquals($generatedCode, $course->generateCode());
+        $this->assertEquals($databaseCode, $course->getCode());
         $this->assertEquals($expectedProps['externalId'], $course->getExternalId());
         $this->assertEquals($expectedProps['name'], $course->getName());
         $this->assertEquals($expectedProps['description'], $course->getDescription());
@@ -280,8 +285,9 @@ class CourseTest extends TestCase
         $expectedProps = [
             'externalId'           => '35',
             'name'                 => 'Название курса',
+            'code'                 => 'nazvanie-kursa',
             'description'          => 'Course Description',
-            'url'                  => 'https://stepik.org/course/1780/',
+            'url'                  => '/courses/go/nazvanie-kursa',
             'skills'               => [
                 [
                     'id'          => 1,
@@ -319,5 +325,22 @@ class CourseTest extends TestCase
         $course = Course::fromArray($constructProps);
 
         $this->assertEquals($expectedProps, $course->toArray());
+    }
+
+    public function testUrls() {
+        $expectedRawUrl = 'https://stepik.org/course/1780/';
+        $expectedMaskedUrl = 'https://api.test.ru/api/courses/go/course-name';
+
+        $course = Course::fromArray([
+            'name' => 'Course Name',
+            'url'  => $expectedRawUrl,
+        ]);
+        $course->setApiBase('https://api.test.ru/api');
+
+        $courseData = $course->toArray();
+
+        $this->assertEquals( $expectedRawUrl, $course->getUrl() );
+        $this->assertEquals( $expectedMaskedUrl, $course->getMaskedUrl() );
+        $this->assertEquals( $expectedMaskedUrl, $courseData['url'] );
     }
 }

@@ -85,3 +85,18 @@ test('Course getSkillsAsCompetencies, проценты', function () {
     expect(ratingPercent).toBeLessThanOrEqual(100);
     expect(expectedPercent).toEqual(expectedPercent);
 });
+
+test('Course getFullUrl', function () {
+    let courseData = searchMockData.course[0];
+    let course = courseFactory(courseData);
+
+    let userId = 'e658fc48-c1ae-480e-b87e-a391706de722';
+    let sessionId = 'a20bf398-3e88-4084-a4e0-8f2f4631e173';
+    let expectedUrl = 'https://api.test/api/course/go/web-tehnologii?userId=e658fc48-c1ae-480e-b87e-a391706de722&sessionId=a20bf398-3e88-4084-a4e0-8f2f4631e173';
+    let expectedEmptyUrl = 'https://api.test/api/course/go/web-tehnologii';
+    let url = course.getFullUrl(userId, sessionId);
+    let emptyUrl = course.getFullUrl();
+
+    expect(url).toEqual(expectedUrl);
+    expect(emptyUrl).toEqual(expectedEmptyUrl);
+});

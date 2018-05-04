@@ -8,8 +8,10 @@ const answersFactory = require('../../models/Answers');
 const filterFactory = require('../../models/Filter');
 const coursesFactory = require('../../models/CourseCollection');
 const trackerFactory = require('../../classes/GTagTracker');
+const userFactory = require('../../models/User');
 const filterFieldsMockData = require('../../mocks/filterFieldsData')();
 const professionsMockData = require('../../mocks/professions.json');
+const coursesMockData = require('../../mocks/coursesSearch.json');
 const jss = require('jss');
 const jsspreset = require('jss-preset-default').default;
 const configMock = require('../../mocks/Config');
@@ -25,7 +27,7 @@ function getViewInstance() {
     return coursesViewFactory(rootElement, stylesManager);
 }
 
-function getControllerInstance(xhr, gtag, rootElement, professionCode) {
+function getControllerInstance(xhr, gtag, rootElement, professionCode, user) {
     let view = getViewInstance();
     let stylesManager = getStylesManager();
     let coursesList = listViewFactory(stylesManager);
@@ -49,14 +51,19 @@ function getControllerInstance(xhr, gtag, rootElement, professionCode) {
     }
 
     let coursesModel = coursesFactory({}, configMock());
+    coursesModel.loadedCourses = coursesModel.convertToCourseModelArray(coursesMockData.course);
 
     if (!gtag) {
         gtag = jest.fn();
     }
 
+    if (!user) {
+        user = userFactory({});
+    }
+
     let tracker = trackerFactory(gtag, configMock());
 
-    return coursesControllerFactory(view, coursesList, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker);
+    return coursesControllerFactory(view, coursesList, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker, user);
 }
 
 test('CoursesController.interface', function () {
@@ -67,8 +74,13 @@ test('CoursesController.interface', function () {
 });
 
 test('CoursesController.getViewModel', function () {
-    let controller = getControllerInstance();
+    let user = userFactory({
+        'id': 'e658fc48-c1ae-480e-b87e-a391706de722',
+        'sessionId': 'a20bf398-3e88-4084-a4e0-8f2f4631e173'
+    });
+    let controller = getControllerInstance(null, null, null, 'tester', user);
     let viewModel = controller.getViewModel();
+    let expectedCourseUrl = 'https://api.test/api/course/go/web-tehnologii?userId=e658fc48-c1ae-480e-b87e-a391706de722&sessionId=a20bf398-3e88-4084-a4e0-8f2f4631e173';
 
     expect(viewModel).toHaveProperty('allCompetencies');
     expect(viewModel).toHaveProperty('courses');
@@ -80,6 +92,9 @@ test('CoursesController.getViewModel', function () {
     expect(viewModel.allCompetencies[0]).toHaveProperty('rating');
     expect(viewModel.allCompetencies[0].code).toEqual('codeQuality');
     expect(viewModel.allCompetencies[0].rating).toEqual(3);
+
+    let courseData = viewModel.courses[0];
+    expect(courseData.url).toEqual(expectedCourseUrl);
 });
 
 test('CoursesController.renderFilter', function () {

@@ -2,6 +2,7 @@
 
 use Competencies\Mocks\Http;
 use Competencies\User\UserModel;
+use GuzzleHttp\Psr7\Response;
 use Http\Adapter\Guzzle6\Client;
 use PHPUnit\Framework\TestCase;
 
@@ -16,12 +17,18 @@ class ApiMethodsTest extends TestCase
 {
     const TEST_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYXRyaXgiLCJpYXQiOjE1MTM3MDAwMDAsImV4cCI6MTUxMzcxMDgwMCwiZW1haWwiOiJhcEBtYWlsaW5hdG9yLmNvbSJ9.oW5Ym4MT-HmKQlXIPd1u7bJBdJRyWU6B6wzJN7pNh90';
 
-    public function makeRequest(string $uri, array $queryParams, string $type = 'GET'): array {
+    public function makeRequestRaw(string $uri, array $queryParams, string $type = 'GET'): Response {
         $urlBase = 'http://127.0.0.1:8080/api';
 
         $request = Http::makeRequest($urlBase.'/'.$uri, $queryParams, $type);
         $client = new Client();
         $response = $client->sendRequest($request);
+
+        return $response;
+    }
+
+    public function makeRequest(string $uri, array $queryParams, string $type = 'GET'): array {
+        $response = $this->makeRequestRaw($uri, $queryParams, $type);
 
         $decodeAssoc = true;
         $responseBody = (string) $response->getBody();
@@ -83,7 +90,7 @@ class ApiMethodsTest extends TestCase
     }
 
     public function testCoursesRecommend() {
-        $response = $this->makeTestRequest('/courses/recommend', [
+        $response = $this->makeTestRequest('courses/recommend', [
             'competency' => [
                 'probabiltyBasics' => 0.5
             ]
@@ -102,6 +109,7 @@ class ApiMethodsTest extends TestCase
     public function testCoursesSearch() {
         $expectedCourseFields = [
             'externalId',
+            'code',
             'name',
             'description',
             'url',
@@ -117,7 +125,7 @@ class ApiMethodsTest extends TestCase
             'eduProvider'
         ];
 
-        $response = $this->makeTestRequest('/courses/search', [
+        $response = $this->makeTestRequest('courses/search', [
             "modeOfStudy"  => "selfStudy",
             "courseForm"   => "video",
             "certificate"  => "1",
@@ -134,7 +142,7 @@ class ApiMethodsTest extends TestCase
         $this->assertCount(2, $response['course']);
         $this->assertEquals($expectedCourseFields, array_keys($response['course'][0]));
 
-        $response = $this->makeTestRequest('/courses/search', [
+        $response = $this->makeTestRequest('courses/search', [
             "modeOfStudy" => "selfStudy",
             "courseForm"  => "video",
             "certificate" => "1",
@@ -184,5 +192,20 @@ class ApiMethodsTest extends TestCase
 
         $this->assertEquals(200, $saveResponse['status']);
         $this->assertEquals(true, $saveResponse['success']);
+    }
+
+    /**
+     * @see RoutesTest::testCoursesGo()
+     */
+    public function testCoursesGo() {
+        $redirectResponse = $this->makeRequestRaw('courses/go/vvedenie-v-bazy-dannyh', [
+            'userId'    => 'acb8f472-9f77-4bab-a43a-25201978e86b',
+            'sessionId' => '05313d2c-fcfc-4374-966c-59fe59ddbe02',
+            '_test'     => 'true'
+        ], 'GET');
+
+        $redirectUrl = $redirectResponse->getHeader('Location')[0];
+        $this->assertEquals(302, $redirectResponse->getStatusCode());
+        $this->assertEquals($redirectUrl, 'https://stepik.org/course/551');
     }
 }

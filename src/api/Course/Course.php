@@ -41,6 +41,11 @@ class Course
     /**
      * @var string
      */
+    private $code = "";
+
+    /**
+     * @var string
+     */
     private $name = "";
 
     /**
@@ -114,6 +119,11 @@ class Course
     private $eduProvider;
 
     /**
+     * @var string
+     */
+    private $apiBase = "";
+
+    /**
      * @param $courseProps
      * @return Course
      */
@@ -122,6 +132,7 @@ class Course
 
         $fieldSetters = [
             'externalId'           => 'setExternalId',
+            'code'                 => 'setCode',
             'name'                 => 'setName',
             'description'          => 'setDescription',
             'url'                  => 'setUrl',
@@ -197,6 +208,10 @@ class Course
         $this->name = $name;
     }
 
+    public function updateCodeByName() {
+        $this->code = $this->generateCode();
+    }
+
     /**
      * @return string
      */
@@ -255,6 +270,16 @@ class Course
      */
     public function getUrl(): string {
         return $this->url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMaskedUrl(): string {
+        $apiBase = $this->getApiBase();
+        $url = $apiBase.'/courses/go/'.$this->getCode();
+
+        return $url;
     }
 
     /**
@@ -394,13 +419,25 @@ class Course
         $this->lengthDays = $lengthDays;
     }
 
-    public function getCode(): string {
+    public function generateCode(): string {
         $translit = \Transliterator::create('Cyrillic-Latin')->transliterate($this->getName());
         $specialCharsToDash = preg_replace('#[ _:()\.,]+#','-', $translit);
         $noDuplicates = preg_replace('#-+#', '-', $specialCharsToDash);
         $lowerCase = strtolower($noDuplicates);
 
         return $lowerCase;
+    }
+
+    public function getCode(): string {
+        if (!$this->code) {
+            $this->code = $this->generateCode();
+        }
+
+        return $this->code;
+    }
+
+    public function setCode(string $code) {
+        $this->code = $code;
     }
 
     /**
@@ -472,9 +509,10 @@ class Course
     public function toArray(): array {
         $fieldGetters = [
             'externalId'           => 'getExternalId',
+            'code'                 => 'getCode',
             'name'                 => 'getName',
             'description'          => 'getDescription',
-            'url'                  => 'getUrl',
+            'url'                  => 'getMaskedUrl',
             'modeOfStudy'          => 'getModeOfStudy',
             'courseForm'           => 'getCourseForm',
             'schedule'             => 'getSchedule',
@@ -500,7 +538,7 @@ class Course
         }
 
         $eduProvider = $this->getEduProvider();
-        $resultArray['eduProvider'] = $eduProvider->toArray();
+        $resultArray['eduProvider'] = $eduProvider ? $eduProvider->toArray() : null;
 
         return $resultArray;
     }
@@ -531,5 +569,19 @@ class Course
      */
     public function setEduProvider(EduProvider $eduProvider) {
         $this->eduProvider = $eduProvider;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiBase(): string {
+        return $this->apiBase;
+    }
+
+    /**
+     * @param string $apiBase
+     */
+    public function setApiBase(string $apiBase) {
+        $this->apiBase = $apiBase;
     }
 }

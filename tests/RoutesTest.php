@@ -1,5 +1,6 @@
 <?php
 
+use Competencies\Course\CourseVisitEntity;
 use Competencies\MailerInterface;
 use Competencies\Mocks\Database;
 use Competencies\Mocks\Http;
@@ -7,6 +8,8 @@ use Competencies\Routes;
 use Competencies\User\UserModel;
 use PHPUnit\Framework\TestCase;
 use Slim\Container;
+use Slim\Http\Response;
+use Spot\Locator;
 
 /**
  * Class RoutesTest
@@ -31,12 +34,24 @@ class RoutesTest extends TestCase
         return $container;
     }
 
-    public function callRoute(string $routeName, string $requestType, array $requestParams, Container $container): array {
+    public function callRouteRaw(string $routeName, string $requestType, array $requestParams, Container $container, array $requestAttributes = []): Response {
         $request = Http::makeSlimRequest('', $requestParams, $requestType);
+        if ( !empty($requestAttributes) ) {
+            foreach ($requestAttributes as $key => $value) {
+                $request = $request->withAttribute($key, $value);
+            }
+        }
+
         $response = Http::makeSlimResponse();
 
         $routes = new Routes($container);
         $response = $routes->$routeName($request, $response, $requestParams);
+
+        return $response;
+    }
+
+    public function callRoute(string $routeName, string $requestType, array $requestParams, Container $container, array $requestAttributes = []): array {
+        $response = $this->callRouteRaw($routeName, $requestType, $requestParams, $container, $requestAttributes);
         $responseBody = (string) $response->getBody();
 
         $decodeAssoc = true;
@@ -101,5 +116,40 @@ class RoutesTest extends TestCase
 
         $this->assertEquals(200, $saveResponse['status']);
         $this->assertEquals(true, $saveResponse['success']);
+    }
+
+    /**
+     * @see ApiMethodsTest::testCoursesGo()
+     */
+    public function testCoursesGo() {
+        $testCourseId = 26;
+        $testCourseCode = 'vvedenie-v-bazy-dannyh';
+        $expectedSessionId = 6;
+        $expectedUserId = 2;
+
+        $container = $this->makeContainer();
+        /**
+         * @var Locator $locator;
+         */
+        $locator = $container->get('dbLocator');
+        $visitsMapper = $locator->mapper(CourseVisitEntity::class);
+        $visitEntityBeforeVisit = $visitsMapper->first(['courseId' => $testCourseId]);
+        $this->assertFalse($visitEntityBeforeVisit);
+
+        $redirectResponse = $this->callRouteRaw('coursesGo', 'GET', [
+            'userId'    => 'da8c4a60-f28d-49fc-a6c2-1a6924bbf0bf',
+            'sessionId' => '57af3bc1-83ec-4a94-8b55-4a7aaee65891'
+        ], $container, ['code' => $testCourseCode]);
+
+        $redirectUrl = $redirectResponse->getHeader('Location')[0];
+        $this->assertEquals(302, $redirectResponse->getStatusCode());
+        $this->assertEquals($redirectUrl, 'https://stepik.org/course/551');
+
+        /**
+         * @var CourseVisitEntity $visitEntityAfterVisit
+         */
+        $visitEntityAfterVisit = $visitsMapper->first(['courseId' => $testCourseId]);
+        $this->assertEquals($expectedSessionId, $visitEntityAfterVisit->get('sessionId'));
+        $this->assertEquals($expectedUserId, $visitEntityAfterVisit->get('userId'));
     }
 }

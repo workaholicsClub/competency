@@ -26,6 +26,23 @@ class SessionMapperTest extends TestCase
         $this->assertEquals($testUuid, $sessionEntity->get('uuid'));
     }
 
+    public function testGetByUuid() {
+        $testUuid = '05313d2c-fcfc-4374-966c-59fe59ddbe02';
+        $nonExistentUuid = '13e8084b-5ba2-490e-897c-0aa333027c6f';
+        $locator = Database::getTest();
+
+        /**
+         * @var SessionMapper $mapper
+         */
+        $mapper = $locator->mapper(SessionEntity::class);
+        $session = $mapper->getByUuid($testUuid);
+        $this->assertInstanceOf(Session::class, $session);
+        $this->assertEquals($testUuid, $session->getUuid());
+
+        $nonExistentSession = $mapper->getByUuid($nonExistentUuid);
+        $this->assertFalse($nonExistentSession);
+    }
+
     public function testSessionExists() {
         $existentUuid = '05313d2c-fcfc-4374-966c-59fe59ddbe02';
         $nonExistentUuid = '2a05c565-86f9-4825-b86e-4d0439d7390';

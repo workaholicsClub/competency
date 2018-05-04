@@ -5,7 +5,7 @@
       "externalId": "154",
       "name": "Web-технологии",
       "description": "Курс посвящен разработке серверной части web-приложений, их архитектуре и протоколу HTTP. По итогам курса вы научитесь: разрабатывать приложения на языке python, использовать MVC фреймворки, изучите верстку HTML страниц, погрузитесь в тематику web разработки и сможете выбирать конкретные технологии.",
-      "url": "https://stepik.org/course/154",
+      "url": "https://api.test/api/course/go/web-tehnologii",
       "modeOfStudy": "selfStudy",
       "courseForm": "video",
       "schedule": "free",
