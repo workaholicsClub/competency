@@ -1,14 +1,6 @@
-UPDATE `competencies` SET `code`='pmSelfDiscipline', `name`='Личная дисциплина' WHERE `id`='35';
-UPDATE `competencies` SET `name`='Управление рисками' WHERE `id`='46';
-UPDATE `competencies` SET `name`='Ведение встреч' WHERE `id`='39';
-UPDATE `competencies` SET `name`='Планирование и управление' WHERE `id`='43';
-UPDATE `competencies` SET `code`='pmTeamWork', `name`='Работа с командой' WHERE `id`='44';
-UPDATE `competencies` SET `name`='Работа с продуктом' WHERE `id`='45';
-UPDATE `competencies` SET `name`='Итерации и ритуалы гибких методологий' WHERE `id`='51';
-INSERT INTO `competencies` (`id`, `code`, `name`, `competencyGroupId`) VALUES ('53', 'pmQuality', 'Управление качеством', '13');
-INSERT INTO `competencies` (`id`, `code`, `name`, `competencyGroupId`) VALUES ('54', 'pmOrgManagement', 'Управление организацией', '13');
-INSERT INTO `competencies` (`id`, `code`, `name`, `competencyGroupId`) VALUES ('55', 'pmProjectMethods', 'Методологии ведения проектов', '13');
+START TRANSACTION;
 
+DROP TABLE IF EXISTS `atomicSkills`;
 CREATE TABLE `atomicSkills` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `text` text DEFAULT NULL,
@@ -16,7 +8,7 @@ CREATE TABLE `atomicSkills` (
   `competencyId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=512 DEFAULT CHARSET=utf8;
 
 INSERT INTO `atomicSkills` VALUES (1,'Базовые алгоритмы','Линейный поиск, сортировка и бинарный поиск, обход многомерного массива',1);
 INSERT INTO `atomicSkills` VALUES (2,'Векторные и матричные операции','',1);
@@ -129,7 +121,7 @@ INSERT INTO `atomicSkills` VALUES (108,'Целенаправленная ден�
 INSERT INTO `atomicSkills` VALUES (109,'ACID','',7);
 INSERT INTO `atomicSkills` VALUES (110,'Теорема CAP','',7);
 INSERT INTO `atomicSkills` VALUES (111,'Реализации SQL','MySQL, PostgreSQL, MSSQL, Oracle',7);
-INSERT INTO `atomicSkills` VALUES (112,'Оптимизирование настроек серверов','',7);
+INSERT INTO `atomicSkills` VALUES (112,'Оптимизирование настроект серверов','',7);
 INSERT INTO `atomicSkills` VALUES (113,'Кластеризация и репликация данных','',7);
 INSERT INTO `atomicSkills` VALUES (114,'Колоночные базы данных','Hbase, Cassandra',7);
 INSERT INTO `atomicSkills` VALUES (115,'Документ-ориентированные базы данных','CouchDB, MongoDB',7);
@@ -528,3 +520,317 @@ INSERT INTO `atomicSkills` VALUES (508,'Работа с обратной свя�
 INSERT INTO `atomicSkills` VALUES (509,'Бэклог задач','',51);
 INSERT INTO `atomicSkills` VALUES (510,'Диаграмма сгорания','',51);
 INSERT INTO `atomicSkills` VALUES (511,'Работа с Windows на уровне пользователя','',14);
+
+ALTER TABLE `competencies` CHANGE COLUMN `level1` `level1` text DEFAULT NULL;
+ALTER TABLE `competencies` CHANGE COLUMN `level2` `level2` text DEFAULT NULL;
+ALTER TABLE `competencies` CHANGE COLUMN `level3` `level3` text DEFAULT NULL;
+ALTER TABLE `competencies` CHANGE COLUMN `level4` `level4` text DEFAULT NULL;
+
+UPDATE `competencies` SET `code`='pmSelfDiscipline', `name`='Личная дисциплина' WHERE `id`='35';
+UPDATE `competencies` SET `name`='Ведение встреч' WHERE `id`='39';
+UPDATE `competencies` SET `name`='Планирование и управление' WHERE `id`='43';
+UPDATE `competencies` SET `code`='pmTeamWork', `name`='Работа с командой' WHERE `id`='44';
+UPDATE `competencies` SET `name`='Работа с продуктом' WHERE `id`='45';
+UPDATE `competencies` SET `name`='Управление рисками' WHERE `id`='46';
+UPDATE `competencies` SET `name`='Итерации и ритуалы гибких методологий' WHERE `id`='51';
+INSERT INTO `competencies` VALUES (53,'pmQuality','Управление качеством',NULL,NULL,NULL,NULL,13);
+INSERT INTO `competencies` VALUES (54,'pmOrgManagement','Управление организацией',NULL,NULL,NULL,NULL,13);
+INSERT INTO `competencies` VALUES (55,'pmProjectMethods','Методологии ведения проектов',NULL,NULL,NULL,NULL,13);
+
+INSERT INTO `competencyProfession` VALUES (56,26,2);
+
+DROP TABLE IF EXISTS `courseVisits`;
+CREATE TABLE `courseVisits` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dateVisited` datetime NOT NULL DEFAULT current_timestamp(),
+  `courseId` int(11) DEFAULT NULL,
+  `userId` int(11) DEFAULT NULL,
+  `sessionId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `courseId` (`courseId`),
+  KEY `userId` (`userId`),
+  KEY `sessionId` (`sessionId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `courses` MODIFY `code` VARCHAR(60) DEFAULT NULL;
+ALTER TABLE `courses` CHANGE COLUMN `url` `url` text DEFAULT NULL;
+ALTER TABLE `courses` ADD COLUMN `eduProviderId` INT DEFAULT NULL NULL AFTER id;
+ALTER TABLE `courses` ADD COLUMN `externalId` VARCHAR(36) DEFAULT NULL NULL AFTER id;
+ALTER TABLE `courses` ADD COLUMN `description` TEXT NULL DEFAULT NULL AFTER `name`;
+ALTER TABLE `courses` ADD COLUMN `modeOfStudy` VARCHAR(20) DEFAULT NULL NULL;
+ALTER TABLE `courses` ADD COLUMN `courseForm` VARCHAR(20) DEFAULT NULL NULL;
+ALTER TABLE `courses` ADD COLUMN `schedule` VARCHAR(20) DEFAULT NULL NULL;
+ALTER TABLE `courses` ADD COLUMN `certificate` INT(1) DEFAULT 0 NOT NULL;
+ALTER TABLE `courses` ADD COLUMN `tasksType` VARCHAR(20) DEFAULT NULL  NULL;
+ALTER TABLE `courses` ADD COLUMN `lengthDays` INT DEFAULT 0 NULL;
+
+LOCK TABLES `courses` WRITE;
+/*!40000 ALTER TABLE `courses` DISABLE KEYS */;
+TRUNCATE TABLE `courses`;
+INSERT INTO `courses` VALUES (1,NULL,2,'html-verstka','HTML-верстка: с нуля до первого макета',NULL,'https://netology.ru/programs/html-verstka',23900.00,6,16,'online','webinar','evening',1,'teacherCheck',42);
+INSERT INTO `courses` VALUES (2,NULL,2,'html-javascript','JavaScript в браузере: создаем интерактивные веб-страницы',NULL,'https://netology.ru/programs/html-javascript',20900.00,8,18,'online','webinar','evening',1,'teacherCheck',56);
+INSERT INTO `courses` VALUES (3,NULL,2,'adaptive-mobile-layout','Адаптивная и мобильная верстка',NULL,'https://netology.ru/programs/adaptive-mobile-layout',20900.00,4,10,'online','webinar','evening',1,'teacherCheck',28);
+INSERT INTO `courses` VALUES (4,NULL,2,'html-css-base','HTML и CSS с нуля',NULL,'https://netology.ru/programs/html-css-base',0.00,6,7,'online','webinar','evening',1,'teacherCheck',42);
+INSERT INTO `courses` VALUES (5,NULL,2,'javascript','JavaScript: основы и современныe возможности языка',NULL,'https://netology.ru/programs/javascript',20900.00,9,18,'online','webinar','evening',1,'teacherCheck',63);
+INSERT INTO `courses` VALUES (6,NULL,2,'php-sql','PHP/SQL: back-end разработка и базы данных',NULL,'https://netology.ru/programs/php-sql',20900.00,9,19,'online','webinar','evening',1,'teacherCheck',63);
+INSERT INTO `courses` VALUES (7,NULL,2,'python-base','Python: программирование на каждый день и сверхбыстрое прототипирование',NULL,'https://netology.ru/programs/python-base',20900.00,13,26,'online','webinar','evening',1,'teacherCheck',91);
+INSERT INTO `courses` VALUES (8,NULL,2,'react','Библиотека React: построй свою любовь к интерактивным веб-интерфейсам',NULL,'https://netology.ru/programs/react',20900.00,6,13,'online','webinar','evening',1,'teacherCheck',42);
+INSERT INTO `courses` VALUES (9,NULL,2,'node','Node, AngularJS и MongoDB: разработка полноценных веб-приложений',NULL,'https://netology.ru/programs/node',20900.00,10,20,'online','webinar','evening',1,'teacherCheck',70);
+INSERT INTO `courses` VALUES (12,NULL,3,'head-of-development','Руководитель разработки',NULL,'https://otus.ru/lessons/rukovoditel-razrabotki/',26000.00,4,32,'online','webinar','evening',1,'teacherCheck',28);
+INSERT INTO `courses` VALUES (13,NULL,7,'it-english','Английский для IT-специалистов',NULL,'https://geekbrains.ru/courses/98',1098.00,2,10,'online','video','evening',1,'teacherCheck',14);
+INSERT INTO `courses` VALUES (15,'6375',1,'centre-for-integrable-systems-introduction-to-python','Centre for Integrable Systems - Introduction to Python','Python','https://stepik.org/course/6375',NULL,0,NULL,'selfStudy','video','free',0,'autoCheck',0);
+INSERT INTO `courses` VALUES (16,'6075',1,'it-intensiv-python','IT-интенсив (Python)','Интенсивный вводный курс в программирование на языке Python учащий эффективно решать задачи из реальной жизни. \n\nСтуденты курса получат фундаментальные знания о том, как компьютеры хранят и оперируют данными на примере проектов различной сложности: от простых консольных игр до настоящих автоматизированных решений. ','https://stepik.org/course/6075',NULL,0,NULL,'selfStudy','video','free',0,'autoCheck',0);
+INSERT INTO `courses` VALUES (17,'512',1,'python-osnovy-i-primenenie','Python: основы и применение','Курс посвящен базовым принципам языка Python и программирования в целом. Он хорошо подойдет тем, кто уже может писать простейшие программы на Python или тем, кто до этого программировал на других языках.','https://stepik.org/course/512',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',1);
+INSERT INTO `courses` VALUES (18,'431',1,'adaptivnyj-trenazher-python','Адаптивный тренажер Python','Курс представляет собой набор задач на языке Python. Сложность задач варьируется от начальной до высокой. Курс проходится в специальном адаптивном режиме!','https://stepik.org/course/431',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',1);
+INSERT INTO `courses` VALUES (19,'154',1,'web-tehnologii','Web-технологии','Курс посвящен разработке серверной части web-приложений, их архитектуре и протоколу HTTP. По итогам курса вы научитесь: разрабатывать приложения на языке python, использовать MVC фреймворки, изучите верстку HTML страниц, погрузитесь в тематику web разработки и сможете выбирать конкретные технологии.','https://stepik.org/course/154',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',2);
+INSERT INTO `courses` VALUES (20,'67',1,'programmirovanie-na-python','Программирование на Python','Курс посвящен базовым понятиям и элементам языка программирования Python (операторы, числовые и строковые переменные, списки, условия и циклы). Курс является вводным и наиболее подойдет слушателям, не имеющим опыта написания программ ни на одном из языков программирования.','https://stepik.org/course/67',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',1);
+INSERT INTO `courses` VALUES (21,'4138',1,'git','GIT','','https://stepik.org/course/4138',NULL,0,NULL,'selfStudy','video','free',0,'autoCheck',0);
+INSERT INTO `courses` VALUES (22,'3145',1,'osnovy-git','Основы Git','Курс описывает наиболее часто используемые  команды git, взятые из опыта реальных проектов.','https://stepik.org/course/3145',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',0);
+INSERT INTO `courses` VALUES (23,'3203',1,'pogruzhenie-v-subd-sezon-2017','Погружение в СУБД. Сезон 2017.','Курс для тех, кто уже имеет некоторый опыт проектирования баз данных и разработки приложений и хочет расширить свои знания.','https://stepik.org/course/3203',NULL,0,NULL,'online','video','free',1,'autoCheck',2);
+INSERT INTO `courses` VALUES (24,'2614',1,'bazy-dannyh','Базы данных','Курс знакомит слушателей с основными принципами работы со структурированными данными в реляционной модели, учит проектировать данные, описывать объекты базы данных в терминах реальной СУБД, составлять запросы на языке SQL, использовать представления, процедуры, функции и триггеры, создавать индексы, управлять конкурентным доступом к данным и манипулировать механизмом транзакций','https://stepik.org/course/2614',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',0);
+INSERT INTO `courses` VALUES (25,'2586',1,'vvedenie-v-nerelyacionnye-bazy-dannyh','Введение в нереляционные базы данных','Данный курс посвящен практическим вопросам использования нереляционных СУБД. Его основной задачей является освоение  языков запросов наиболее популярных NoSQL решений и формирование представления о том в каких случаях лучше всего использовать тот или иной продукт. ','https://stepik.org/course/2586',NULL,0,NULL,'online','video','free',0,'autoCheck',0);
+INSERT INTO `courses` VALUES (26,'551',1,'vvedenie-v-bazy-dannyh','Введение в базы данных','Знакомство с методами структурированного хранения данных, основами SQL, принципами использования баз данных в приложениях, обзор нереляционных способов хранения данных','https://stepik.org/course/551',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',1);
+INSERT INTO `courses` VALUES (27,'2223',1,'javascript-dlya-nachinayuschih','JavaScript для начинающих','В данном курсе рассмотрены основы программирования на JavaScript а также некоторые инструменты и модели данных, необходимые для практического использования JavaScript.','https://stepik.org/course/2223',NULL,0,NULL,'selfStudy','video','free',0,'autoCheck',0);
+INSERT INTO `courses` VALUES (28,'76',1,'osnovy-statistiki','Основы статистики','Курс знакомит слушателей с основными понятиями и методами математической статистики. В течение трех недель мы рассмотрим наиболее широко используемые статистические методы и принципы, стоящие за ними. Полученных знаний будет достаточно для решения широкого круга задач, возникающих в рамках исследовательской работы.','https://stepik.org/course/76',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',0);
+INSERT INTO `courses` VALUES (29,'2621',1,'html-css-dlya-novichkov','Html, CSS для новичков','Курс направлен на изучение ОСНОВ HTML, CSS для новичков, начинающих и людей не знакомых с этим, но взявших путь освоить. Материал составлен учителем информатики и успешно применяется на уроках в школе.\nДля людей знающих HTML - уроки не расскажут о новом и покажутся поверхностными. ','https://stepik.org/course/2621',NULL,0,NULL,'selfStudy','video','free',0,'autoCheck',0);
+INSERT INTO `courses` VALUES (30,'2376',1,'osnovy-upravleniya-proektami','Основы управления проектами','В настоящем курсе рассматриваются широко используемые методы проектного управления для проектов любых отраслей деятельности. Излагаемые в курсе методы являются базовыми для управления проектами.','https://stepik.org/course/2376',NULL,0,NULL,'selfStudy','video','free',0,'autoCheck',0);
+INSERT INTO `courses` VALUES (31,'1128',1,'postanovka-zadachi-na-razrabotku-po','Постановка задачи на разработку ПО','Курс формирует базовые навыки подготовки и документирования требований к программному обеспечению. По итогам курса вы научитесь: работать с требованиями  и заинтересованными сторонами, анализировать проблему и формулировать требования, проектировать взаимодействие пользователей с системой, обеспечивать необходимые качества системы на этапе постановки задачи.','https://stepik.org/course/1128',NULL,0,NULL,'selfStudy','video','free',1,'autoCheck',1);
+/*!40000 ALTER TABLE `courses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `coursesRequirements`;
+CREATE TABLE `coursesRequirements` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `courseId` int(11) NOT NULL,
+  `atomicSkillId` int(11) NOT NULL,
+  `level` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `courseId` (`courseId`),
+  KEY `atomicSkillId` (`atomicSkillId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `coursesRequirements` VALUES (1,16,71,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (2,16,72,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (3,16,75,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (4,16,79,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (5,16,80,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (6,16,83,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (7,16,90,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (8,16,105,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (9,17,351,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (10,17,354,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (11,17,355,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (12,17,365,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (13,18,351,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (14,18,354,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (15,18,355,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (16,18,365,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (17,18,356,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (18,18,357,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (19,18,358,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (20,18,359,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (21,18,366,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (22,18,364,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (23,18,361,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (24,19,351,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (25,19,354,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (26,19,355,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (27,19,365,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (28,19,356,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (29,19,207,'ability');
+INSERT INTO `coursesRequirements` VALUES (30,19,210,'skill');
+INSERT INTO `coursesRequirements` VALUES (31,19,211,'skill');
+INSERT INTO `coursesRequirements` VALUES (32,19,195,'skill');
+INSERT INTO `coursesRequirements` VALUES (33,19,392,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (34,22,210,'skill');
+INSERT INTO `coursesRequirements` VALUES (35,22,211,'skill');
+INSERT INTO `coursesRequirements` VALUES (36,23,90,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (37,23,91,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (38,23,93,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (39,23,354,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (40,24,1,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (41,24,125,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (42,24,2,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (43,25,210,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (44,25,211,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (45,26,210,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (46,26,211,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (47,26,90,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (48,22,207,'skill');
+INSERT INTO `coursesRequirements` VALUES (49,25,207,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (50,26,207,'knowledge');
+INSERT INTO `coursesRequirements` VALUES (51,31,511,'skill');
+
+DROP TABLE IF EXISTS `coursesSkills`;
+CREATE TABLE `coursesSkills` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `courseId` int(11) NOT NULL,
+  `atomicSkillId` int(11) NOT NULL,
+  `level` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `courseId` (`courseId`),
+  KEY `atomicSkillId` (`atomicSkillId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `coursesSkills` VALUES (1,15,354,'knowledge');
+INSERT INTO `coursesSkills` VALUES (2,15,355,'knowledge');
+INSERT INTO `coursesSkills` VALUES (3,15,361,'knowledge');
+INSERT INTO `coursesSkills` VALUES (4,15,365,'knowledge');
+INSERT INTO `coursesSkills` VALUES (5,16,354,'knowledge');
+INSERT INTO `coursesSkills` VALUES (6,16,355,'knowledge');
+INSERT INTO `coursesSkills` VALUES (7,16,365,'knowledge');
+INSERT INTO `coursesSkills` VALUES (8,16,71,'knowledge');
+INSERT INTO `coursesSkills` VALUES (9,16,72,'knowledge');
+INSERT INTO `coursesSkills` VALUES (10,16,90,'knowledge');
+INSERT INTO `coursesSkills` VALUES (11,16,105,'knowledge');
+INSERT INTO `coursesSkills` VALUES (12,17,365,'knowledge');
+INSERT INTO `coursesSkills` VALUES (13,17,356,'knowledge');
+INSERT INTO `coursesSkills` VALUES (14,17,357,'knowledge');
+INSERT INTO `coursesSkills` VALUES (15,17,358,'knowledge');
+INSERT INTO `coursesSkills` VALUES (16,17,359,'knowledge');
+INSERT INTO `coursesSkills` VALUES (17,17,366,'knowledge');
+INSERT INTO `coursesSkills` VALUES (18,17,364,'knowledge');
+INSERT INTO `coursesSkills` VALUES (19,17,361,'knowledge');
+INSERT INTO `coursesSkills` VALUES (20,17,71,'knowledge');
+INSERT INTO `coursesSkills` VALUES (21,17,80,'knowledge');
+INSERT INTO `coursesSkills` VALUES (22,17,72,'knowledge');
+INSERT INTO `coursesSkills` VALUES (23,17,83,'knowledge');
+INSERT INTO `coursesSkills` VALUES (24,17,84,'knowledge');
+INSERT INTO `coursesSkills` VALUES (25,17,79,'knowledge');
+INSERT INTO `coursesSkills` VALUES (26,17,82,'knowledge');
+INSERT INTO `coursesSkills` VALUES (27,18,351,'skill');
+INSERT INTO `coursesSkills` VALUES (28,18,354,'skill');
+INSERT INTO `coursesSkills` VALUES (29,18,355,'skill');
+INSERT INTO `coursesSkills` VALUES (30,18,365,'skill');
+INSERT INTO `coursesSkills` VALUES (31,18,356,'skill');
+INSERT INTO `coursesSkills` VALUES (32,18,1,'skill');
+INSERT INTO `coursesSkills` VALUES (33,19,71,'knowledge');
+INSERT INTO `coursesSkills` VALUES (34,19,72,'knowledge');
+INSERT INTO `coursesSkills` VALUES (35,19,74,'knowledge');
+INSERT INTO `coursesSkills` VALUES (36,19,75,'knowledge');
+INSERT INTO `coursesSkills` VALUES (37,19,76,'knowledge');
+INSERT INTO `coursesSkills` VALUES (38,19,80,'knowledge');
+INSERT INTO `coursesSkills` VALUES (39,19,381,'knowledge');
+INSERT INTO `coursesSkills` VALUES (40,19,222,'knowledge');
+INSERT INTO `coursesSkills` VALUES (41,19,223,'knowledge');
+INSERT INTO `coursesSkills` VALUES (42,20,354,'knowledge');
+INSERT INTO `coursesSkills` VALUES (43,20,351,'knowledge');
+INSERT INTO `coursesSkills` VALUES (44,20,380,'knowledge');
+INSERT INTO `coursesSkills` VALUES (45,20,388,'knowledge');
+INSERT INTO `coursesSkills` VALUES (46,20,355,'knowledge');
+INSERT INTO `coursesSkills` VALUES (47,20,356,'knowledge');
+INSERT INTO `coursesSkills` VALUES (48,20,364,'knowledge');
+INSERT INTO `coursesSkills` VALUES (49,21,195,'knowledge');
+INSERT INTO `coursesSkills` VALUES (50,21,392,'knowledge');
+INSERT INTO `coursesSkills` VALUES (51,22,195,'knowledge');
+INSERT INTO `coursesSkills` VALUES (52,22,392,'knowledge');
+INSERT INTO `coursesSkills` VALUES (53,23,90,'skill');
+INSERT INTO `coursesSkills` VALUES (54,23,92,'knowledge');
+INSERT INTO `coursesSkills` VALUES (55,23,94,'knowledge');
+INSERT INTO `coursesSkills` VALUES (56,23,95,'knowledge');
+INSERT INTO `coursesSkills` VALUES (57,23,96,'knowledge');
+INSERT INTO `coursesSkills` VALUES (58,23,97,'knowledge');
+INSERT INTO `coursesSkills` VALUES (59,23,98,'knowledge');
+INSERT INTO `coursesSkills` VALUES (60,23,99,'knowledge');
+INSERT INTO `coursesSkills` VALUES (61,23,103,'knowledge');
+INSERT INTO `coursesSkills` VALUES (62,23,106,'knowledge');
+INSERT INTO `coursesSkills` VALUES (63,23,107,'knowledge');
+INSERT INTO `coursesSkills` VALUES (64,23,109,'knowledge');
+INSERT INTO `coursesSkills` VALUES (65,23,105,'knowledge');
+INSERT INTO `coursesSkills` VALUES (66,24,90,'knowledge');
+INSERT INTO `coursesSkills` VALUES (67,24,91,'knowledge');
+INSERT INTO `coursesSkills` VALUES (68,24,92,'knowledge');
+INSERT INTO `coursesSkills` VALUES (69,24,93,'knowledge');
+INSERT INTO `coursesSkills` VALUES (70,24,94,'knowledge');
+INSERT INTO `coursesSkills` VALUES (71,24,96,'knowledge');
+INSERT INTO `coursesSkills` VALUES (72,24,97,'knowledge');
+INSERT INTO `coursesSkills` VALUES (73,24,104,'knowledge');
+INSERT INTO `coursesSkills` VALUES (74,24,101,'knowledge');
+INSERT INTO `coursesSkills` VALUES (75,24,107,'knowledge');
+INSERT INTO `coursesSkills` VALUES (76,25,223,'knowledge');
+INSERT INTO `coursesSkills` VALUES (77,25,105,'knowledge');
+INSERT INTO `coursesSkills` VALUES (78,26,92,'knowledge');
+INSERT INTO `coursesSkills` VALUES (79,26,105,'knowledge');
+INSERT INTO `coursesSkills` VALUES (80,26,106,'knowledge');
+INSERT INTO `coursesSkills` VALUES (81,26,104,'knowledge');
+INSERT INTO `coursesSkills` VALUES (82,26,101,'knowledge');
+INSERT INTO `coursesSkills` VALUES (83,26,93,'knowledge');
+INSERT INTO `coursesSkills` VALUES (84,26,107,'knowledge');
+INSERT INTO `coursesSkills` VALUES (85,26,97,'skill');
+INSERT INTO `coursesSkills` VALUES (86,27,149,'knowledge');
+INSERT INTO `coursesSkills` VALUES (87,27,157,'knowledge');
+INSERT INTO `coursesSkills` VALUES (88,27,153,'knowledge');
+INSERT INTO `coursesSkills` VALUES (89,28,126,'knowledge');
+INSERT INTO `coursesSkills` VALUES (90,28,121,'knowledge');
+INSERT INTO `coursesSkills` VALUES (91,28,119,'knowledge');
+INSERT INTO `coursesSkills` VALUES (92,28,125,'knowledge');
+INSERT INTO `coursesSkills` VALUES (93,29,75,'knowledge');
+INSERT INTO `coursesSkills` VALUES (94,29,76,'knowledge');
+INSERT INTO `coursesSkills` VALUES (95,29,72,'knowledge');
+INSERT INTO `coursesSkills` VALUES (96,29,73,'knowledge');
+INSERT INTO `coursesSkills` VALUES (97,30,461,'knowledge');
+INSERT INTO `coursesSkills` VALUES (98,30,462,'knowledge');
+INSERT INTO `coursesSkills` VALUES (99,30,484,'knowledge');
+INSERT INTO `coursesSkills` VALUES (100,30,459,'knowledge');
+INSERT INTO `coursesSkills` VALUES (101,31,403,'knowledge');
+INSERT INTO `coursesSkills` VALUES (102,31,497,'knowledge');
+INSERT INTO `coursesSkills` VALUES (103,31,499,'knowledge');
+INSERT INTO `coursesSkills` VALUES (104,31,500,'knowledge');
+INSERT INTO `coursesSkills` VALUES (105,31,501,'knowledge');
+
+DROP TABLE IF EXISTS `eduProviders`;
+CREATE TABLE `eduProviders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(25) DEFAULT NULL,
+  `name` varchar(150) DEFAULT NULL,
+  `url` varchar(150) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `eduProviders` VALUES (1,'stepik','Stepik','http://welcome.stepik.org/ru');
+INSERT INTO `eduProviders` VALUES (2,'netology','Нетология','https://netology.ru/');
+INSERT INTO `eduProviders` VALUES (3,'otus','Otus','https://otus.ru/');
+INSERT INTO `eduProviders` VALUES (4,'hexlet','Hexlet','https://ru.hexlet.io/');
+INSERT INTO `eduProviders` VALUES (5,'coursera','Coursera','https://www.coursera.org/');
+INSERT INTO `eduProviders` VALUES (6,'udemy','Udemy','https://www.udemy.com/');
+INSERT INTO `eduProviders` VALUES (7,'geekbrains','GeekBrains','https://geekbrains.ru/');
+INSERT INTO `eduProviders` VALUES (8,'moscoding','Moscow Coding School','https://moscoding.ru/');
+INSERT INTO `eduProviders` VALUES (9,'intuit','Intuit','http://www.intuit.ru/');
+INSERT INTO `eduProviders` VALUES (10,'htmlacademy','HtmlAcademy','https://htmlacademy.ru/');
+INSERT INTO `eduProviders` VALUES (11,'lektorium','Лекториум','https://www.lektorium.tv/');
+INSERT INTO `eduProviders` VALUES (12,'openedu','Открытое образование','https://openedu.ru/');
+INSERT INTO `eduProviders` VALUES (13,'javarush','JavaRush','https://javarush.ru/');
+INSERT INTO `eduProviders` VALUES (14,'newprolab','New Professions Lab','http://newprolab.com/ru/');
+INSERT INTO `eduProviders` VALUES (15,'tceh','#tceh','http://tceh.com/edu/');
+INSERT INTO `eduProviders` VALUES (16,'skillfactory','SkillFactory','http://skillfactory.ru/');
+
+ALTER TABLE `polls` ADD COLUMN `sessionId` VARCHAR(36) DEFAULT NULL AFTER `userId`;
+
+DROP TABLE IF EXISTS `sessions`;
+CREATE TABLE `sessions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(36) DEFAULT NULL,
+  `dateCreated` datetime NOT NULL DEFAULT current_timestamp(),
+  `userId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sessionsSkills`;
+CREATE TABLE `sessionsSkills` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sessionId` int(11) DEFAULT NULL,
+  `atomicSkillId` int(11) DEFAULT NULL,
+  `level` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sessionId` (`sessionId`),
+  KEY `atomicSkillId` (`atomicSkillId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `users`
+  ADD COLUMN `uuid` VARCHAR(36) NULL AFTER `id`,
+  ADD UNIQUE INDEX `uuid` (`uuid` ASC);
+
+COMMIT;
