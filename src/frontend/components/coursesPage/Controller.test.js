@@ -87,11 +87,13 @@ test('CoursesController.getViewModel', function () {
     expect(viewModel).toHaveProperty('professions');
     expect(viewModel).toHaveProperty('fieldNames');
     expect(viewModel).toHaveProperty('fieldVariants');
+    expect(viewModel).toHaveProperty('levelTexts');
     expect(viewModel.allCompetencies).toHaveLength(1);
     expect(viewModel.allCompetencies[0]).toHaveProperty('code');
     expect(viewModel.allCompetencies[0]).toHaveProperty('rating');
     expect(viewModel.allCompetencies[0].code).toEqual('codeQuality');
     expect(viewModel.allCompetencies[0].rating).toEqual(3);
+    expect(viewModel.levelTexts).toHaveProperty('none');
 
     let courseData = viewModel.courses[0];
     expect(courseData.url).toEqual(expectedCourseUrl);

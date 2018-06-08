@@ -58,14 +58,42 @@ let CourseCollection = {
         return competency ? competency.skills : false;
     },
 
+    prepareSkillsField: function (fieldCode, answersModel, fieldsData) {
+        let answerCodes = answersModel.getSkillLevelsCode();
+        let userSkillsFieldData = this.getFieldData(fieldCode, fieldsData);
+        let professionCompetencies = userSkillsFieldData.variants;
+        let context = this;
+        let queryParams = [];
+
+        professionCompetencies.forEach(function (competency) {
+            let competencyCode = competency.code;
+            let skills = this.getCompetencySkills(competencyCode, userSkillsFieldData.variants);
+            let answers = answersModel.get(competencyCode);
+
+            skills.forEach(function (skill, index) {
+                let answer = (answers instanceof Array) ? (answers[index] || 0): 0;
+                let answerCode = answerCodes[answer];
+
+                queryParams.push( fieldCode+'['+skill.id+']='+answerCode );
+            }, context);
+        }, context);
+
+        return queryParams;
+    },
+
     makeFilterUrl: function (filterModel, answersModel, fieldsData) {
         let filterParams = filterModel.getProps();
 
-        let queryParams = [];
+        let queryParams = this.prepareSkillsField('userSkills', answersModel, fieldsData);;
         let context = this;
+
         Object.keys(filterParams).forEach(function (fieldCode) {
             let fieldData = this.getFieldData(fieldCode, fieldsData);
             if (!fieldData) {
+                return false;
+            }
+
+            if (fieldCode === 'userSkills') {
                 return false;
             }
 
@@ -75,23 +103,8 @@ let CourseCollection = {
             }
 
             if (fieldData.type === 'competency') {
-                let answerCodes = answersModel.getSkillLevelsCode();
-
-                value.forEach(function (competencyCode) {
-                    let skills = this.getCompetencySkills(competencyCode, fieldData.variants);
-                    let answers = answersModel.get(competencyCode);
-
-                    if (answers) {
-                        answers.forEach(function (answer, index) {
-                            if (answer > 0) {
-                                let skill = skills[index];
-                                let answerCode = answerCodes[answer];
-
-                                queryParams.push( fieldCode+'['+skill.id+']='+answerCode );
-                            }
-                        }, context);
-                    }
-                }, context);
+                let fieldQueryParams = this.prepareSkillsField(fieldCode, answersModel, fieldsData);
+                queryParams = queryParams.concat(fieldQueryParams);
 
                 return false;
             }

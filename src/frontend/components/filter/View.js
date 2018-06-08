@@ -217,6 +217,23 @@ let FilterView = {
         );
     },
 
+    createCompetencySkillsField: function (fieldData) {
+        let competencies = fieldData.variants;
+
+        let select = h('select#'+fieldData.code+'.form-control', {name: fieldData.code, attrs: {'data-type': 'competencySkill', 'data-code': fieldData.code}},
+            h('option', {'placeholder': 'placeholder'}, 'Не выбрано'),
+            competencies.map(function (competency) {
+                return h('optgroup', {label: competency.name},
+                    competency.skills.map(function (skill) {
+                        return h('option', {value: skill.id}, skill.text);
+                    })
+                )
+            })
+        );
+
+        return select;
+    },
+
     getFieldCodeBySubElement: function (element) {
         let fieldElement = element.closest('[data-type=competency]');
         return fieldElement.getAttribute('data-code');
@@ -355,6 +372,9 @@ let FilterView = {
         switch (fieldData.type.toLowerCase()) {
             case 'competency':
                 input = this.createAltCompetencyField(fieldData);
+            break;
+            case 'competencyskill':
+                input = this.createCompetencySkillsField(fieldData);
             break;
             case 'checkbox':
                 input = this.createCheckboxField(fieldData);

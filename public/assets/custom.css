@@ -1,0 +1,102 @@
+.filterCol {
+    height: 100vh;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+}
+.filterCol::-webkit-scrollbar {
+    display: none;
+}
+
+.tooltipToggle {
+    background: url("/images/question-mark.svg");
+    background-size: cover;
+    width: 0.8rem;
+    height: 0.8rem;
+    display: inline-block;
+    opacity: 0.25;
+}
+
+.noSkillsDefined {
+    display: flex;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    margin-left: 0.75rem !important;
+    margin-right: -0.75rem !important;
+}
+
+.dashedLink {
+    text-decoration: none;
+    border: 0;
+    border-bottom: 1px;
+    border-style: dashed;
+}
+
+.dashedLink:hover, .dashedLink:active {
+    text-decoration: none;
+}
+
+.addSkillButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 6rem;
+    color: #212529;
+    border: 0.1rem dashed rgba(0, 0, 0, 0.125);
+    margin: 0.5rem 0;
+    background: none;
+    cursor: pointer;
+}
+
+.addSkillButton:active, .addSkillButton:focus {
+    outline: none;
+}
+
+.addSkillButton img {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.addSkillButton i {
+    font-size: 2.5rem;
+    color: #0069d9;
+}
+
+.priceBadge {
+    position: absolute;
+    right: 1rem;
+}
+
+.addSkillsContainer span::after {
+    content: ', ';
+}
+
+.addSkillsContainer span:last-child::after {
+    content: '';
+}
+
+.addFormContainer {
+    border: 1px solid rgba(0,0,0,.125);
+    padding: 2rem!important;
+}
+
+.skillBlock {
+    display: flex!important;
+    justify-content: space-between!important;
+    flex-direction: column;
+}
+
+.skillBlock .alert-heading {
+    margin-right: 1rem;
+}
+
+.levelHeaderContainer {
+    display: flex!important;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.skillContainer {
+    justify-content: space-between;
+}

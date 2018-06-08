@@ -306,25 +306,24 @@ class CourseMapper extends Mapper
         return array_unique($courseIds);
     }
 
-    private function makeLevelsCondition(int $skillId, array $skillLevels): string {
+    private function makeLevelsCondition(int $skillId, array $skillLevels, string $fieldName = 'atomicSkillId'): string {
         $skillLevelsSql = "'".implode("','", $skillLevels)."'";
-        return "atomicSkillId = {$skillId} AND level IN ({$skillLevelsSql})";
+        return "{$fieldName} = {$skillId} AND level IN ({$skillLevelsSql})";
     }
 
-    private function makeLessThanOrEqualsLevelCondition(int $skillId, string $skillLevel): string {
+    private function makeLessThanOrEqualsLevelCondition(int $skillId, string $skillLevel, string $fieldName = 'atomicSkillId'): string {
         $skillLevels = Skill::getLevelsEnum(Skill::LEVEL_NONE, $skillLevel);
-        return $this->makeLevelsCondition($skillId, $skillLevels);
+        return $this->makeLevelsCondition($skillId, $skillLevels, $fieldName);
     }
 
-    private function makeLessThanOrEqualsLevelRequirementCondition(int $skillId, string $skillLevel): string {
+    private function makeLessThanOrEqualsLevelRequirementCondition(int $skillId, string $skillLevel, string $fieldName = 'atomicSkillId'): string {
         $skillLevels = Skill::getLevelsEnum(Skill::LEVEL_NONE, $skillLevel);
-        $skillLevelsSql = "'".implode("','", $skillLevels)."'";
-        return "cr{$skillId}.level IN ({$skillLevelsSql}) OR cr{$skillId}.level IS NULL";
+        return $this->makeLevelsCondition($skillId, $skillLevels, $fieldName);
     }
 
-    private function makeGreaterThanOrEqualsLevelCondition(int $skillId, string $skillLevel): string {
+    private function makeGreaterThanOrEqualsLevelCondition(int $skillId, string $skillLevel, string $fieldName = 'atomicSkillId'): string {
         $skillLevels = Skill::getLevelsEnum($skillLevel);
-        return $this->makeLevelsCondition($skillId, $skillLevels);
+        return $this->makeLevelsCondition($skillId, $skillLevels, $fieldName);
     }
 
     private function addSkillFilterToQuery(Query $query, array $skillLevelsHash): Query {
@@ -358,17 +357,32 @@ class CourseMapper extends Mapper
             return $query;
         }
 
-        $querySql = "SELECT DISTINCT c.id AS courseId FROM courses c\n";
         $queryConditions = "";
         foreach ($requirementLevelsHash as $skillId => $level) {
             $hasConditions = $queryConditions !== "";
-            $conjunction = $hasConditions ? "AND" : "";
-            $condition = $this->makeLessThanOrEqualsLevelRequirementCondition($skillId, $level);
+            $conjunction = $hasConditions ? "OR" : "";
+            $condition = $this->makeLessThanOrEqualsLevelRequirementCondition($skillId, $level, 'skillId');
             $queryConditions .= " {$conjunction} ({$condition})";
-
-            $querySql .= "LEFT JOIN coursesRequirements cr{$skillId} ON c.id = cr{$skillId}.courseId AND cr{$skillId}.atomicSkillId = {$skillId}\n";
         }
-        $querySql .= "WHERE {$queryConditions}";
+
+        $skillCount = count($requirementLevelsHash);
+
+        $querySql = "SELECT cs.id AS courseId, COUNT(*) AS `skillCount` FROM (
+            SELECT * FROM (
+                SELECT
+                        c.id,
+                        c.skillId,
+                        IFNULL(cr.level, 'none') AS `level`
+                FROM
+                    (SELECT c.*, a.id AS skillId FROM courses c CROSS JOIN atomicSkills a) c
+                LEFT JOIN
+                    coursesRequirements cr ON c.id = cr.courseId AND c.skillId = cr.atomicSkillId
+            ) ccr
+            WHERE
+                {$queryConditions}
+        ) cs
+        GROUP BY cs.id
+        HAVING skillCount = {$skillCount}";
 
         $courseResults = $this->query($querySql);
         if ($courseResults instanceof Entity\Collection) {

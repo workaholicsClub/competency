@@ -24,7 +24,7 @@ let FooterView = {
         let menuItems = [
             {href: '/', text: 'Главная'},
             {href: 'https://github.com/workaholicsClub/competency/', text: 'GitHub', target: '_blank'},
-            {href: 'https://11713.typeform.com/to/oe9WIB', text: 'Помогите нам пройдя небольшой опрос (~2 мин)'},
+            {href: 'https://www.survio.com/survey/d/A1G9Y0H4O6S8W4X7X', text: 'Помогите нам пройдя опрос'},
         ];
 
         return menuView.createDOM({type: 'horizontal', menuItems: menuItems});

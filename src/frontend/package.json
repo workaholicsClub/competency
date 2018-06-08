@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "bootstrap.native": "^2.0.21",
+    "choices.js": "^3.0.4",
     "dotenv": "^4.0.0",
     "hyperscript": "^2.0.2",
     "js-cookie": "^2.2.0",

@@ -44,6 +44,7 @@ test('AnswersModel.interface', function () {
     expect(answersModel.saveAnswers).toBeInstanceOf(Function);
     expect(answersModel.loadAnswers).toBeInstanceOf(Function);
     expect(answersModel.getSkillLevelsText).toBeInstanceOf(Function);
+    expect(answersModel.getSkillLevelsTextForProps).toBeInstanceOf(Function);
     expect(answersModel.getAnsweredSkills).toBeInstanceOf(Function);
     expect(answersModel.saveUserResultsWithPause).toBeInstanceOf(Function);
     expect(answersModel.saveUserResults).toBeInstanceOf(Function);
@@ -250,6 +251,7 @@ test('AnswersModel saveUserResults', function () {
     expect(formData).toBeInstanceOf(FormData);
     expect(requestType).toEqual('POST');
     expect(formData.get('userId')).toEqual(userId);
+    expect(formData.get('sessionId')).toEqual(sessionId);
     expect(formData.get('sessionId')).toEqual(sessionId);
     expect(formData.get('skills[207]')).toEqual('knowledge');
     expect(formData.get('skills[208]')).toEqual('skill');

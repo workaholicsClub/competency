@@ -1,4 +1,5 @@
 const BaseController = require('../base/Controller');
+const bsn = require('bootstrap.native/dist/bootstrap-native-v4');
 
 let CoursesController = {
     init: function (pageView, coursesListView, filterController, filterModel, professionsModel, answersModel, coursesModel, xhr, tracker, user) {
@@ -113,19 +114,36 @@ let CoursesController = {
             return accumulator;
         }, {});
 
+        let levelTexts = {};
+        let levelCodes = this.answersModel.getSkillLevelsCode();
+        this.answersModel.getSkillLevelsTextForProps().forEach(function (levelText, index) {
+            let levelCode = levelCodes[index];
+            levelTexts[levelCode] = levelText;
+        });
+
         return {
             'allCompetencies': competenciesWithRatings,
             'courses': courses,
             'professions': this.professionsModel.getProfessions(),
             'fieldNames': fieldNames,
-            'fieldVariants': fieldVariants
+            'fieldVariants': fieldVariants,
+            'levelTexts' : levelTexts
         };
+    },
+
+    bindCollapseLinkEvents: function () {
+        let coursesElement = this.pageView.getCoursesContainer();
+        let links = this.coursesListView.getCollapseLinks(coursesElement);
+        links.forEach(function (link) {
+            new bsn.Collapse(link);
+        });
     },
 
     renderCourses: function () {
         let viewModel = this.getViewModel();
         let coursesListDOM = this.coursesListView.createDOM(viewModel);
         this.pageView.getCoursesContainer().innerHTML = coursesListDOM.outerHTML;
+        this.bindCollapseLinkEvents();
     },
 
     getFilterFields: function () {
@@ -141,6 +159,7 @@ let CoursesController = {
         return [
             //{code: 'professionCode', label: 'Профессия', type: 'select', value: this.getFilterValue('professionCode'), variants: professions},
             {code: 'userSkills', label: 'Навыки', type: 'competency', value: this.getFilterValue('userCompetencies'), variants: professionCompetencies},
+            //{code: 'userSkills2', label: 'Развиваемые навыки', type: 'competencySkill', value: this.getFilterValue('userCompetencies'), variants: professionCompetencies},
             {code: 'price', label: 'Стоимость', type: 'multiCheckbox', value: this.getFilterValue('price'), variants: [
                     {name: "Только бесплатные", code: "free"}
                 ]},

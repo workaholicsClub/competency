@@ -18,6 +18,13 @@ let skillTexts = [
     'Применяю автоматически'
 ];
 
+let skillTextsProps = [
+    'Отсутствует',
+    'Информация',
+    'Практическое умение',
+    'Автоматический навык'
+];
+
 let saveUserResultsPauseMs = 500;
 
 function saveUserResults(user, professionsModel) {
@@ -149,6 +156,10 @@ let AnswersModel = {
         //['Ознакомлен', 'Повторяю чьи-то действия', 'Осмысляю, отношусь критически', 'Занимаюсь творчеством'];
 
         return skillTexts;
+    },
+
+    getSkillLevelsTextForProps: function() {
+        return skillTextsProps;
     },
 
     getSkillLevelsCode: function() {

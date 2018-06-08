@@ -29,8 +29,8 @@ FilterModel = Object.assign(FilterModel, StorageMixin);
 
 /**
  * @param props
- * @param {string|boolean} storageName
- * @param storage
+ * @param {string|boolean} [storageName]
+ * @param [storage]
  * @returns {FilterModel}
  */
 module.exports = function (props, storageName, storage) {

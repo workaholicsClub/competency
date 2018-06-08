@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/custom.css" type="text/css">
+</head>
+
+<body>
+<div class="py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md">
+                <h1>Вакансии&nbsp;<small class="text-muted">Фронтенд-разработчик</small> </h1>
+            </div>
+            <div class="col-md-2 justify-content-end align-items-end align-self-end d-flex">
+                <a class="btn btn-primary btn-lg" href="add.html">Добавить вакансию</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 bg-light py-4 filterCol">
+                <form class="">
+                    <div class="form-group">
+                        <label class="h3">Ваши навыки</label>
+                        <div class="alert alert-warning additionalSkills" role="alert" style="display: none">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            <p class="mb-0">Чтобы увидеть дополнительные вакансии добавьте следующие навыки:&nbsp;
+                                <span class="addSkillsContainer">
+                                </span>
+                            </p>
+                        </div>
+                        <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
+                            <i class="fas fa-plus-circle"></i>
+                            Добавить мои навыки
+                        </button>
+                        <small class="form-text text-muted">После выбора навыка укажите текущий уровень владения</small>
+                    </div>
+                    <div class="skillContainer">
+
+                    </div>
+                    <div class="form-group py-3">
+                        <label class="h3">Параметры вакансии</label>
+                        <div class="form-group">
+                            <label class="d-block">Заработная плата</label>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <label for="from">От</label>
+                                    <input type="number" min="10000" max="100000" step="5000" value="30000" id="from" class="form-control">
+                                </div>
+                                <div class="col form-group">
+                                    <label for="to">До</label>
+                                    <input type="number" min="30000" max="500000" step="5000" value="50000" id="to" class="form-control">
+                                </div>
+                            </div>
+                            <!--div class="form-row">
+                                <div class="col justify-content-center d-flex">
+                                    <input type="range" min="10000" max="100000" step="5000" value="30000" id="from" class="form-control"></div>
+                                <div class="col justify-content-center d-flex">
+                                    <input type="range" min="30000" max="500000" step="5000" value="50000" id="to" class="form-control"></div>
+                            </div>
+                            <div-- class="row">
+                                <div class="col justify-content-center d-flex">От: &nbsp;
+                                    <span id="from-text">30000</span>&nbsp;руб
+                                </div>
+                                <div class="col justify-content-center d-flex">До:&nbsp;
+                                    <span id="to-text">50000</span>&nbsp;руб
+                                </div>
+                            </div-->
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" id="c1">
+                            <label class="form-check-label" for="c1">Оформление по ТК</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" id="c2">
+                            <label class="form-check-label" for="c2">Гибкий график</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" id="c3">
+                            <label class="form-check-label" for="c3">Удаленная работа</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" id="c4">
+                            <label class="form-check-label" for="c4">Без тестового задания</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" id="c5">
+                            <label class="form-check-label" for="c5">Обучение за счет работодателя</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" id="c6">
+                            <label class="form-check-label" for="c6">Питание за счет работодателя</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" id="c7">
+                            <label class="form-check-label" for="c7">ДМС</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-8 noSkillsDefined align-items-center">
+                <div class="row justify-content-center align-self-center w-100">
+                    <div class="col-md-8">
+                        <h2>Поиск среди 1054 вакансий</h2>
+                        <p>Чтобы начать поиск укажите ваши навыки или добавьте один из следующих:</p>
+                        <p>
+                            <a href="#" class="dashedLink" data-skill="HTML5">HTML5</a>,
+                            <a href="#" class="dashedLink" data-skill="CSS3">CSS3</a>,
+                            <a href="#" class="dashedLink" data-skill="Верстка">Верстка</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 searchResults" style="display: none;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card m-1">
+                            <div class="card-body">
+                                <span class="badge badge-secondary" style="position: absolute; right: 1rem">От 150 000 до 200 000 руб.</span>
+                                <h4>Frontend-разработчик</h4>
+                                <h6 class="text-muted">Лаборатория Касперского</h6>
+                                <p>Москва • Полный рабочий день</p>
+                                <button class="btn btn-outline-secondary mb-3" data-toggle="collapse" data-target="#description1" aria-expanded="true" aria-controls="description1">
+                                    Описание вакансии
+                                </button>
+                                <p id="description1" class="collapse">
+                                    Условия:
+                                    - Работа удалённо или в офисе (в семи минутах ходьбы от "Василеостровской" и "Спортивной-2");
+                                    - Индивидуальный, определяемый вами график работы;
+                                    - Пересмотр заработной платы раз в полгода по итогам работы;
+                                    - Корпоративные праздники по особым поводам, пицца по пятницам, а также сладости, вкусный кофе и много разного чая каждый день.
+                                    Дополнительные инструкции
+                                    Откликаясь на вакансию, убедитесь, что в вашем резюме есть контактные данные (удобнее всего Skype, Telegram).
+                                </p>
+                                <a href="#" class="btn btn-primary d-flex justify-content-center">Пройти тестирование и
+                                    отправить резюме</a>
+                            </div>
+                        </div>
+                        <div class="card m-1">
+                            <div class="card-body">
+                                <span class="badge badge-secondary" style="position: absolute; right: 1rem">Зарплата не указана</span>
+                                <h4>Технический директор</h4>
+                                <h6 class="text-muted">CSSSR</h6>
+                                <p>Москва • Гибкий график • Без тестового задания</p>
+                                <button class="btn btn-outline-secondary mb-3" data-toggle="collapse" data-target="#description2" aria-expanded="true" aria-controls="description2">
+                                    Описание вакансии
+                                </button>
+                                <p id="description2" class="collapse">
+                                    Креативная команда Компании создаёт мобильные и веб приложения для Холдинга МТС. Наше портфолио насчитывает десятки реализованных проектов на федеральном уровне с применением BigData, Programmatic в области рекламы, огромная платформа по реализации VaS услуг, мобильных сервисов и мобильного контента, собственный видеосервис МТС ТВ и множество социально важных и интересных проектов.
+                                    Среди наших приложений вы найдёте МТС ТВ – собственный видеосервис; МТС Music – более 20 млн. треков с бесплатным трафиком; МТС Реклама – качественный таргетинг с использованием BigData; Медси – онлайн кабинет для записи к врачу, выбор клиник, вызов врача на дом; Мой МТС – основное приложение для абонентов по управлению тарифом; МТС Книги – более 10 000 доступных книг для пользователей; Ring-back Tone – сочетает в себе две услуги: ГудОК и Музыкальная Шкатулка и многое другое!
+                                    На предстоящий год у нас есть большие планы по развитию своего портфолио и разработке принципиально новых приложений, призванных сделать использование смартфона более удобным и эффективным, а также упростить и сделать интереснее жизнь наших клиентов.
+                                </p>
+                                <a href="#" class="btn btn-primary d-flex justify-content-center">Отправить резюме</a>
+                            </div>
+                        </div>
+                        <div class="card m-1">
+                            <div class="card-body">
+                                <span class="badge badge-secondary" style="position: absolute; right: 1rem">От 150 000 руб.</span>
+                                <h4>Менеджер по продажам</h4>
+                                <h6 class="text-muted">ООО "ТехноКад"</h6>
+                                <p>Москва • Полный рабочий день • Обучение • Без тестового задания</p>
+                                <button class="btn btn-outline-secondary mb-3" data-toggle="collapse" data-target="#description3" aria-expanded="true" aria-controls="description3">
+                                    Описание вакансии
+                                </button>
+                                <p id="description3" class="collapse">
+                                    Нам срочно нужны ещё несколько опытных frontend разработчиков для работы над внутренними проектами компании.
+                                    У нас несколько основных проектов (но есть и целый ряд других), люди требуются везде. Не нужно одновременно работать над несколькими, можно выбрать тот, который больше нравится.
+                                    I. CRM (ERP) для ветеринарных клиник и зоомагазинов. Мы строим свою сеть и чем стремительнее мы развиваем наш софт, тем стремительнее растёт наш бизнес. С нашей crm работает и медицинское оборудование через кроссплатформенную программу на Electron, благодаря чему вы сможете получить уникальный опыт по взаимодействию с медицинским оборудованием и его интеграции в единую экосистему.
+                                    II. Averia.Collar – умный ошейник для собак, работающий по принципу Apple Watch через Bluetooth Low Energy. Это интересный и сложный проект, позволяющий покрыть все основные потребности клиентов: "шаринг" питомцев доверенным лицам, история передвижений и активности, множество "ачивок" (например, "покоритель пустоши", для получения требуется уйти вместе с собакой на расстояние более 20км от ближайшей безопасной зоны), совместные прогулки с другими владельцами, внутренний месенджер, глобальная карта, фид представляющий из себя микс instagram/vk.
+                                    III. Аверия.поиск - сервис помощи в поиске потерянных питомцев. Мы автоматически генерируем рекламные объявления (пока только для VK, в будущем fb, insta) на основе создаваемых пользователем анкет своих питомцев. Когда питомец потерян, пользователь нажимает на кнопку SOS в мобильных приложениях или вебе, а сервис же фиксирует место где пользователь это сделал и начинает крутить геотаргетированные рекламные объявления в новостных лентах пользователей, которые рядом с местом пропажи. Фронт написан на React.
+                                    Все наши проекты так или иначе связаны с домашними питомцами и многие наши сотрудники, даже не вовлечённые в эту тему и не разделявшие наши интересы изначально, со временем заводят своих домашних любимцев. Общность наших с вами интересов будет ощутимым плюсом.
+                                    Мы не рассматриваем удалённую работу, поскольку в таком случае невозможно организовать нормальный рабочий процесс из-за специфики проектов. При работе над Averia.Collar приходится работать с hardware в виде ошейников, быть в тесном контакте с разработчиками его firmware и схемотехники. При работе над CRM обязательна гемба. Разработчику придётся выходить в клинику не реже раза в месяц и отрабатывать смену совместно с администратором, чтобы видеть и чувствовать на себе все боли создаваемого продукта, а так же закрывать их улучшениями продукта.
+                                    Со своей стороны мы поможем вам с релокацией, при этом гражданство РФ не обязательно, мы оформим патенты для иностранцев.                                </p>
+                                <a href="#" class="btn btn-primary d-flex justify-content-center">Отправить резюме</a>
+                            </div>
+                        </div>
+                        <div class="card m-1">
+                            <div class="card-body">
+                                <span class="badge badge-secondary" style="position: absolute; right: 1rem">До 100 000 руб.</span>
+                                <h4>Программист-разработчик (C#, WPF)</h4>
+                                <h6 class="text-muted">Usend</h6>
+                                <p>Москва • Гибкий график • Оформление по ТК • Питание</p>
+                                <button class="btn btn-outline-secondary mb-3" data-toggle="collapse" data-target="#description4" aria-expanded="true" aria-controls="description4">
+                                    Описание вакансии
+                                </button>
+                                <p id="description4" class="collapse">
+                                    Digital-агентство полного цикла с 20-летним опытом разработки.
+                                    Что нужно делать:
+                                    Верстать сайты, landing page.
+                                    Писать скрипты.
+                                    Верстать адаптивно и кроссбраузерно.
+                                </p>
+                                <a href="#" class="btn btn-primary d-flex justify-content-center">Пройти тестирование и
+                                    отправить резюме</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addSkillModal" tabindex="-1" role="dialog" aria-labelledby="addSkillModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSkillModalTitle">Добавление навыков</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group skillList">
+                    <a href="#" class="list-group-item list-group-item-action">HTML5</a>
+                    <a href="#" class="list-group-item list-group-item-action">CSS3</a>
+                    <a href="#" class="list-group-item list-group-item-action">Верстка</a>
+                    <a href="#" class="list-group-item list-group-item-action">JavaScript</a>
+                    <a href="#" class="list-group-item list-group-item-action">React</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary confirmSkillsAddButton" data-dismiss="modal">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.2/bootstrap-slider.min.js"></script>
+<script>
+
+    function addSkill(skillName) {
+        let skillHTML = "<div class=\"alert alert-primary d-flex justify-content-between skillBlock\" role=\"alert\">\n" +
+            "    <div class=\"levelHeaderContainer\">\n" +
+            "       <h4 class=\"alert-heading\">"+skillName+"</h4>\n" +
+            "       <button type=\"button\" class=\"close align-self-start\" data-dismiss=\"alert\">×</button>\n" +
+            "    </div>\n" +
+            "    <select class=\"custom-select skillSlider\">\n" +
+            "       <option selected>Не знаю</option>\n" +
+            "       <option value=1>Знаю теорию</option>\n" +
+            "       <option value=2>Применяю на практике</option>\n" +
+            "       <option value=3>Владею в совершенстве</option>\n" +
+            "    </select>\n" +
+            "</div>\n";
+
+        $('.skillContainer').append(skillHTML);
+        toggleAdditionalSkills();
+        search();
+    }
+
+    function search() {
+        if (!hasSkills()) {
+            return;
+        }
+
+        $('.searchResults').css('opacity', '0.3');
+        setTimeout(function () {
+            $('.searchResults').attr('style', '');
+        }, 2000)
+    }
+
+    function toggleNoSkillsResult() {
+        if (hasSkills()) {
+            $('.noSkillsDefined').hide();
+            $('.searchResults').show();
+            toggleAdditionalSkills();
+        }
+        else {
+            $('.noSkillsDefined').show();
+            $('.searchResults').hide();
+            toggleAdditionalSkills();
+        }
+    }
+
+    function hasSkills() {
+        return $('.skillBlock').length > 0;
+    }
+
+    function toggleAdditionalSkills() {
+        let allAdditionalSkills = ['HTML5', 'CSS3', 'Верстка'];
+        let selectedSkills = $('.skillBlock h4').map(function () { return $(this).text(); }).toArray();
+        let shownAdditionalSkills = allAdditionalSkills.filter(function (skillName) {
+            return selectedSkills.indexOf(skillName) === -1;
+        });
+        let hasAdditionalSkills = shownAdditionalSkills.length > 0;
+
+        $('.addSkillsContainer').html('');
+        shownAdditionalSkills.forEach(function (skillName) {
+           $('.addSkillsContainer').append('<a href="#" class="dashedLink" data-skill="'+skillName+'">'+skillName+'</a><span></span>');
+        });
+
+        if (hasSkills() && hasAdditionalSkills) {
+            $('.additionalSkills').show();
+        }
+        else {
+            $('.additionalSkills').hide();
+        }
+    }
+
+    $(function () {
+        $(document).on('click', '[data-skill]', function () {
+            let skillName = $(this).attr('data-skill');
+            addSkill(skillName);
+            toggleNoSkillsResult();
+        });
+
+        $(document).on('change', '.skillSelect', function () {
+            let skillName = $(this).val();
+            if (skillName) {
+                addSkill(skillName);
+                toggleNoSkillsResult();
+            }
+        });
+
+        $(document).on('click', '.alert .close', function () {
+            toggleNoSkillsResult();
+        });
+
+        $(document).on('click', '.skillList a', function () {
+            $(this).toggleClass('active');
+        });
+
+        $(document).on('click', '.confirmSkillsAddButton', function () {
+            $('.skillList a.active').each(function () {
+                let skillName = $(this).text();
+                addSkill(skillName);
+                $(this).removeClass('active');
+            });
+            toggleNoSkillsResult();
+            search();
+        });
+
+        $(document).on('change input', '.skillSlider', function () {
+            /*let skillLevels = ['Не знаю', 'Знаю', 'Умею применять', 'Владею в совершенстве'];
+            let newText = skillLevels[$(this).val()];
+            $(this).closest('.skillBlock').find('.skillText').text(newText);*/
+            search();
+        });
+
+        $(document).on('change input', '#from, #to', function () {
+            let inputId = $(this).attr('id');
+            let textId = inputId+'-text';
+            let value = parseInt($(this).val());
+
+            $('#'+textId).text(value);
+
+            if (inputId === 'from') {
+                $('#to').attr('min', value);
+                if (parseInt($('#to').val()) <= value) {
+                    $('#to').val(value).trigger('input');
+                }
+            }
+        });
+
+        $(document).on('change input click', 'input', function () {
+            search();
+        });
+    });
+
+</script>
+</body>
+
+</html>
+
