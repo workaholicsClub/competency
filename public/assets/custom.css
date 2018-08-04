@@ -16,7 +16,13 @@
     opacity: 0.25;
 }
 
-.noSkillsDefined {
+.priceBadge {
+    font-size: 1.2rem;
+    position: absolute;
+    right: 1rem;
+}
+
+.noSkillsDefined, .noVacanciesFound {
     display: flex;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0.25rem;
@@ -68,11 +74,11 @@
     right: 1rem;
 }
 
-.addSkillsContainer span::after {
+.addSkillsContainer span::after, .updateSkillsContainer span::after {
     content: ', ';
 }
 
-.addSkillsContainer span:last-child::after {
+.addSkillsContainer span:last-child::after, .updateSkillsContainer span:last-child::after {
     content: '';
 }
 
@@ -99,4 +105,9 @@
 
 .skillContainer {
     justify-content: space-between;
+}
+
+.courseLink {
+    width: 80%;
+    display: inline-block;
 }

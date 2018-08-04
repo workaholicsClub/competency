@@ -14,7 +14,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md">
-                <h1>Курсы&nbsp;<small class="text-muted">Фронтенд-разработчик</small> </h1>
+                <h1>Курсы&nbsp;<small class="text-muted">HR менеджер</small> </h1>
             </div>
             <div class="col-md-2 justify-content-end align-items-end align-self-end d-flex">
                 <!--a class="btn btn-primary btn-lg" href="#">Добавить курс</a-->
@@ -33,7 +33,7 @@
                             <i class="fas fa-plus-circle"></i>
                             Добавить развиваемые навыки
                         </button>
-                        <small class="form-text text-muted">После выбора навыка укажите желаемый уровень владения</small>
+                        <small class="form-text text-muted">После выбора навыка укажите текущий уровень владения</small>
                     </div>
                     <div class="skillContainer">
 
@@ -263,13 +263,10 @@
             <div class="col-md-8 noSkillsDefined align-items-center">
                 <div class="row justify-content-center align-self-center w-100">
                     <div class="col-md-8">
-                        <h2>Поиск среди 10 курсов</h2>
-                        <p>Чтобы начать поиск укажите желаемые навыки или добавьте один из следующих:</p>
-                        <p>
-                            <a href="#" class="dashedLink" data-skill="HTML5">HTML5</a>,
-                            <a href="#" class="dashedLink" data-skill="CSS3">CSS3</a>,
-                            <a href="#" class="dashedLink" data-skill="Верстка">Верстка</a>
-                        </p>
+                        <h2>Активных курсов: <span id="coursesCount">10</span></h2>
+                        <p>Чтобы начать поиск укажите желаемые навыки или добавьте один из наиболее популярных у работодателей:</p>
+                        <p id="startSkills"></p>
+                        <button class="btn btn-primary btn-lg mb-3" id="startSearch">Добавить все перечисленные навыки в фильтр</button>
                     </div>
                 </div>
             </div>
@@ -363,13 +360,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="list-group skillList">
-                    <a href="#" class="list-group-item list-group-item-action">HTML5</a>
-                    <a href="#" class="list-group-item list-group-item-action">CSS3</a>
-                    <a href="#" class="list-group-item list-group-item-action">Верстка</a>
-                    <a href="#" class="list-group-item list-group-item-action">JavaScript</a>
-                    <a href="#" class="list-group-item list-group-item-action">React</a>
-                </div>
+                <div class="list-group skillList" id="allSkills"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
@@ -391,137 +382,10 @@
         crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.2/bootstrap-slider.min.js"></script>
-<script>
-
-    function addSkill(skillName) {
-        let skillHTML = "<div class=\"alert alert-primary d-flex justify-content-between skillBlock\" role=\"alert\">\n" +
-            "    <div class=\"levelHeaderContainer\">\n" +
-            "       <h4 class=\"alert-heading\">"+skillName+"</h4>\n" +
-            "       <button type=\"button\" class=\"close align-self-start\" data-dismiss=\"alert\">×</button>\n" +
-            "    </div>\n" +
-            "    <select class=\"custom-select skillSlider\">\n" +
-            "       <option value=1 selected>Теория</option>\n" +
-            "       <option value=2>Практика</option>\n" +
-            "       <option value=3>Повышение квалификации</option>\n" +
-            "    </select>\n" +
-            "</div>\n";
-
-        $('.skillContainer').append(skillHTML);
-        toggleAdditionalSkills();
-        search();
-    }
-
-    function search() {
-        if (!hasSkills()) {
-            return;
-        }
-
-        $('.searchResults').css('opacity', '0.3');
-        setTimeout(function () {
-            $('.searchResults').attr('style', '');
-        }, 2000)
-    }
-
-    function toggleNoSkillsResult() {
-        if (hasSkills()) {
-            $('.noSkillsDefined').hide();
-            $('.searchResults').show();
-            toggleAdditionalSkills();
-        }
-        else {
-            $('.noSkillsDefined').show();
-            $('.searchResults').hide();
-            toggleAdditionalSkills();
-        }
-    }
-
-    function hasSkills() {
-        return $('.skillBlock').length > 0;
-    }
-
-    function toggleAdditionalSkills() {
-        let allAdditionalSkills = ['HTML', 'CSS', 'Верстка'];
-        let selectedSkills = $('.skillBlock h4').map(function () { return $(this).text(); }).toArray();
-        let shownAdditionalSkills = allAdditionalSkills.filter(function (skillName) {
-            return selectedSkills.indexOf(skillName) === -1;
-        });
-        let hasAdditionalSkills = shownAdditionalSkills.length > 0;
-
-        $('.addSkillsContainer').html('');
-        shownAdditionalSkills.forEach(function (skillName) {
-           $('.addSkillsContainer').append('<a href="#" class="dashedLink" data-skill="'+skillName+'">'+skillName+'</a><span></span>');
-        });
-
-        if (hasSkills() && hasAdditionalSkills) {
-            $('.additionalSkills').show();
-        }
-        else {
-            $('.additionalSkills').hide();
-        }
-    }
-
-    $(function () {
-        $(document).on('click', '[data-skill]', function () {
-            let skillName = $(this).attr('data-skill');
-            addSkill(skillName);
-            toggleNoSkillsResult();
-        });
-
-        $(document).on('change', '.skillSelect', function () {
-            let skillName = $(this).val();
-            if (skillName) {
-                addSkill(skillName);
-                toggleNoSkillsResult();
-            }
-        });
-
-        $(document).on('click', '.alert .close', function () {
-            toggleNoSkillsResult();
-        });
-
-        $(document).on('click', '.skillList a', function () {
-            $(this).toggleClass('active');
-        });
-
-        $(document).on('click', '.confirmSkillsAddButton', function () {
-            $('.skillList a.active').each(function () {
-                let skillName = $(this).text();
-                addSkill(skillName);
-                $(this).removeClass('active');
-            });
-            toggleNoSkillsResult();
-            search();
-        });
-
-        $(document).on('change input', '.skillSlider', function () {
-            /*let skillLevels = ['Не знаю', 'Знаю', 'Умею применять', 'Владею в совершенстве'];
-            let newText = skillLevels[$(this).val()];
-            $(this).closest('.skillBlock').find('.skillText').text(newText);*/
-            search();
-        });
-
-        $(document).on('change input', '#from, #to', function () {
-            let inputId = $(this).attr('id');
-            let textId = inputId+'-text';
-            let value = parseInt($(this).val());
-
-            $('#'+textId).text(value);
-
-            if (inputId === 'from') {
-                $('#to').attr('min', value);
-                if (parseInt($('#to').val()) <= value) {
-                    $('#to').val(value).trigger('input');
-                }
-            }
-        });
-
-        $(document).on('change input click', 'input', function () {
-            search();
-        });
-    });
-
-</script>
+<script src="courseList.js"></script>
+<script src="../../vacancy/hr-manager/vacancyList.js"></script>
+<script src="/assets/vacancyFunctions.js"></script>
+<script src="/assets/course.js"></script>
 </body>
 
 </html>
-
