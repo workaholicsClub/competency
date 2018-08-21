@@ -1,10 +1,55 @@
-.filterCol {
+.wrapper {
+    width: 100%;
+}
+
+#courseBar {
+    /*width: 70px;*/
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+    position: fixed;
+    top: 0px;
+    right: 0px;
     height: 100vh;
+    z-index: 999;
+    transition: all 0.3s;
+    padding: 0px!important;
+
     overflow-y: scroll;
     -ms-overflow-style: none;
 }
+
+#courseBar::-webkit-scrollbar {
+    display: none;
+}
+
+#courseBar h2 {
+    text-align: center;
+}
+
+#courseBar.active {
+    margin-left: -100px;
+}
+
+.course-item {
+    padding: .5rem;
+    text-align: center;
+}
+
+.course-item small {
+
+}
+
+.filterCol {
+    /*height: 100vh;*/
+    /*overflow-y: scroll;*/
+    /*-ms-overflow-style: none;*/
+}
 .filterCol::-webkit-scrollbar {
     display: none;
+}
+
+#startSearch {
+    white-space: normal;
 }
 
 .tooltipToggle {
@@ -23,11 +68,12 @@
 }
 
 .noSkillsDefined, .noVacanciesFound {
-    display: flex;
+    display: block;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0.25rem;
     margin-left: 0.75rem !important;
     margin-right: -0.75rem !important;
+    padding-top: 4rem;
 }
 
 .dashedLink {

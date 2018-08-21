@@ -37,7 +37,7 @@ function getSkillsFilter() {
 
     $('.skillBlock').each(function () {
         let skillName = $(this).find('h4').text();
-        let skillLevel = parseInt( $(this).find('select').val() );
+        let skillLevel = parseInt( $(this).find('select').val() ) || 0;
 
         skillsData[skillName] = skillLevel;
     });

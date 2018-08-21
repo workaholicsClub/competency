@@ -22,332 +22,284 @@
         </div>
     </div>
 </div>
-<div class="pb-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 bg-light py-4 filterCol">
-                <form class="">
-                    <div class="form-group">
-                        <label class="h3">Развиваемые навыки</label>
-                        <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
-                            <i class="fas fa-plus-circle"></i>
-                            Добавить развиваемые навыки
-                        </button>
-                        <small class="form-text text-muted">После выбора навыка укажите текущий уровень владения</small>
-                    </div>
-                    <div class="skillContainer">
+<div class="wrapper">
+    <div class="pb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 bg-light py-4 filterCol">
+                    <form class="">
+                        <div class="form-group">
+                            <label class="h3">Развиваемые навыки</label>
+                            <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
+                                <i class="fas fa-plus-circle"></i>
+                                Добавить развиваемые навыки
+                            </button>
+                            <small class="form-text text-muted">После выбора навыка укажите текущий уровень владения</small>
+                        </div>
+                        <div class="skillContainer">
 
-                    </div>
-                    <div class="form-group py-3">
-                        <label class="h3">Параметры курсов</label>
-                        <div class="form-group pt-3">
-                            <label class="d-block h4">Стоимость</label>
-                            <div class="form-check py-1">
-                                <input type="checkbox" class="form-check-input" value="on" id="cf">
-                                <label class="form-check-label" for="cf">Только бесплатные</label>
-                            </div>
-                            <div class="form-row coursePrice">
-                                <div class="col form-group">
-                                    <label for="from">От</label>
-                                    <input type="number" min="10000" max="100000" step="5000" value="30000" id="from" class="form-control">
+                        </div>
+                        <div class="form-group py-3">
+                            <label class="h3">Параметры курсов</label>
+                            <div class="form-group pt-3">
+                                <label class="d-block h4">Стоимость</label>
+                                <div class="form-check py-1">
+                                    <input type="checkbox" class="form-check-input" value="on" id="cf">
+                                    <label class="form-check-label" for="cf">Только бесплатные</label>
                                 </div>
-                                <div class="col form-group">
-                                    <label for="to">До</label>
-                                    <input type="number" min="30000" max="500000" step="5000" value="50000" id="to" class="form-control">
+                                <div class="form-row coursePrice">
+                                    <div class="col form-group">
+                                        <label for="from">От</label>
+                                        <input type="number" min="10000" max="100000" step="5000" value="30000" id="from" class="form-control">
+                                    </div>
+                                    <div class="col form-group">
+                                        <label for="to">До</label>
+                                        <input type="number" min="30000" max="500000" step="5000" value="50000" id="to" class="form-control">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
 
-                        <div class="form-group pt-3">
-                            <label class="h4">Форма обучения</label>
-                            <div class="form-check">
-                                <input id="modeOfStudy_1" class="form-check-input"
-                                                           name="modeOfStudy_1" type="checkbox"
-                                                           data-type="multicheckbox" data-code="modeOfStudy"
-                                                           value="inPerson">
-                                <label class="form-check-label"
-                                                                                   for="modeOfStudy_1">Очная</label>
-                                <span data-toggle="tooltip" title="Аудиторные занятия с преподавателями" class="tooltipToggle"></span>
+                            <div class="form-group pt-3">
+                                <label class="h4">Форма обучения</label>
+                                <div class="form-check">
+                                    <input id="modeOfStudy_1" class="form-check-input"
+                                                               name="modeOfStudy_1" type="checkbox"
+                                                               data-type="multicheckbox" data-code="modeOfStudy"
+                                                               value="inPerson">
+                                    <label class="form-check-label"
+                                                                                       for="modeOfStudy_1">Очная</label>
+                                    <span data-toggle="tooltip" title="Аудиторные занятия с преподавателями" class="tooltipToggle"></span>
+                                </div>
+                                <div class="form-check">
+                                    <input id="modeOfStudy_2" class="form-check-input"
+                                                               name="modeOfStudy_2" type="checkbox"
+                                                               data-type="multicheckbox" data-code="modeOfStudy"
+                                                               value="longDistance">
+                                    <label class="form-check-label"
+                                                                                           for="modeOfStudy_2">Дистанционная</label>
+                                    <span data-toggle="tooltip" title="Периодическое взаимодействие с преподавателями по электропочте, skype для получения образовательных материалов и задач, обсуждения их выполнения" class="tooltipToggle"></span>
+                                </div>
+                                <div class="form-check">
+                                    <input id="modeOfStudy_3" class="form-check-input"
+                                                               name="modeOfStudy_3" type="checkbox"
+                                                               data-type="multicheckbox" data-code="modeOfStudy"
+                                                               value="online">
+                                    <label class="form-check-label"
+                                                                                     for="modeOfStudy_3">Онлайн</label>
+                                    <span data-toggle="tooltip" title="Работа с образовательными материалами и преподавателями в режиме онлайн" class="tooltipToggle"></span>
+                                </div>
+                                <div class="form-check">
+                                    <input id="modeOfStudy_4" class="form-check-input"
+                                                               name="modeOfStudy_4" type="checkbox"
+                                                               data-type="multicheckbox" data-code="modeOfStudy"
+                                                               value="inPersonOnline">
+                                    <label class="form-check-label"
+                                                                                             for="modeOfStudy_4">Очная и
+                                    онлайн</label>
+                                    <span data-toggle="tooltip" title="Совмещение аудиторных и онлайн занятий" class="tooltipToggle"></span>
+                                </div>
+                                <div class="form-check">
+                                    <input id="modeOfStudy_5" class="form-check-input"
+                                                               name="modeOfStudy_5" type="checkbox"
+                                                               data-type="multicheckbox" data-code="modeOfStudy"
+                                                               value="selfStudy">
+                                    <label class="form-check-label"
+                                                                                        for="modeOfStudy_5">Самостоятельное
+                                    обучение</label>
+                                    <span data-toggle="tooltip" title="Самостоятельное изучение материалов без участия преподавателя или куратора" class="tooltipToggle"></span>
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input id="modeOfStudy_2" class="form-check-input"
-                                                           name="modeOfStudy_2" type="checkbox"
-                                                           data-type="multicheckbox" data-code="modeOfStudy"
-                                                           value="longDistance">
-                                <label class="form-check-label"
-                                                                                       for="modeOfStudy_2">Дистанционная</label>
-                                <span data-toggle="tooltip" title="Периодическое взаимодействие с преподавателями по электропочте, skype для получения образовательных материалов и задач, обсуждения их выполнения" class="tooltipToggle"></span>
+                            <div class="form-group pt-3">
+                                <label class="h4">Вид обучения</label>
+                                <div class="form-check">
+                                    <input id="courseForm_1" class="form-check-input"
+                                                               name="courseForm_1" type="checkbox" data-type="multicheckbox"
+                                                               data-code="courseForm" value="video">
+                                    <label
+                                        class="form-check-label" for="courseForm_1">Видеокурс</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
+                                <div class="form-check">
+                                    <input id="courseForm_2" class="form-check-input"
+                                                               name="courseForm_2" type="checkbox" data-type="multicheckbox"
+                                                               data-code="courseForm" value="text">
+                                    <label
+                                        class="form-check-label" for="courseForm_2">Текстовый курс</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
+                                <div class="form-check">
+                                    <input id="courseForm_3" class="form-check-input"
+                                                               name="courseForm_3" type="checkbox" data-type="multicheckbox"
+                                                               data-code="courseForm" value="interactive">
+                                    <label
+                                        class="form-check-label" for="courseForm_3">Интерактивный курс</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
+                                <div class="form-check">
+                                    <input id="courseForm_4" class="form-check-input"
+                                                               name="courseForm_4" type="checkbox" data-type="multicheckbox"
+                                                               data-code="courseForm" value="crashCourse">
+                                    <label
+                                        class="form-check-label" for="courseForm_4">Интенсив</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
+                                <div class="form-check">
+                                    <input id="courseForm_5" class="form-check-input"
+                                                               name="courseForm_5" type="checkbox" data-type="multicheckbox"
+                                                               data-code="courseForm" value="training">
+                                    <label
+                                        class="form-check-label" for="courseForm_5">Тренинг</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input id="modeOfStudy_3" class="form-check-input"
-                                                           name="modeOfStudy_3" type="checkbox"
-                                                           data-type="multicheckbox" data-code="modeOfStudy"
-                                                           value="online">
-                                <label class="form-check-label"
-                                                                                 for="modeOfStudy_3">Онлайн</label>
-                                <span data-toggle="tooltip" title="Работа с образовательными материалами и преподавателями в режиме онлайн" class="tooltipToggle"></span>
+                            <div class="form-group pt-3">
+                                <label class="h4">Время проведения занятий</label>
+                                <div class="form-check">
+                                    <input id="schedule_1" class="form-check-input" name="schedule_1"
+                                                               type="checkbox" data-type="multicheckbox"
+                                                               data-code="schedule" value="free">
+                                    <label
+                                        class="form-check-label" for="schedule_1">Свободный график</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
+                                <div class="form-check">
+                                    <input id="schedule_2" class="form-check-input" name="schedule_2"
+                                                               type="checkbox" data-type="multicheckbox"
+                                                               data-code="schedule" value="day">
+                                    <label
+                                        class="form-check-label" for="schedule_2">Дневные занятия</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
+                                <div class="form-check">
+                                    <input id="schedule_3" class="form-check-input" name="schedule_3"
+                                                               type="checkbox" data-type="multicheckbox"
+                                                               data-code="schedule" value="evening">
+                                    <label
+                                        class="form-check-label" for="schedule_3">Вечерние занятия</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
+                                <div class="form-check">
+                                    <input id="schedule_4" class="form-check-input" name="schedule_4"
+                                                               type="checkbox" data-type="multicheckbox"
+                                                               data-code="schedule" value="weekends">
+                                    <label
+                                        class="form-check-label" for="schedule_4">По выходным</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input id="modeOfStudy_4" class="form-check-input"
-                                                           name="modeOfStudy_4" type="checkbox"
-                                                           data-type="multicheckbox" data-code="modeOfStudy"
-                                                           value="inPersonOnline">
-                                <label class="form-check-label"
-                                                                                         for="modeOfStudy_4">Очная и
-                                онлайн</label>
-                                <span data-toggle="tooltip" title="Совмещение аудиторных и онлайн занятий" class="tooltipToggle"></span>
+                            <div class="form-group pt-3">
+                                <div class="form-check">
+                                    <input id="certificate" class="form-check-input" name="certificate"
+                                                               type="checkbox" data-type="checkbox" data-code="certificate">
+                                    <label
+                                        class="form-check-label" for="certificate">Выдается сертификат</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input id="modeOfStudy_5" class="form-check-input"
-                                                           name="modeOfStudy_5" type="checkbox"
-                                                           data-type="multicheckbox" data-code="modeOfStudy"
-                                                           value="selfStudy">
-                                <label class="form-check-label"
-                                                                                    for="modeOfStudy_5">Самостоятельное
-                                обучение</label>
-                                <span data-toggle="tooltip" title="Самостоятельное изучение материалов без участия преподавателя или куратора" class="tooltipToggle"></span>
+                            <div class="form-group pt-3"><label class="h4">Задания</label>
+                                <div class="form-check">
+                                    <input id="tasksType_1" class="form-check-input" name="tasksType_1"
+                                                               type="checkbox" data-type="multicheckbox"
+                                                               data-code="tasksType" value="noTasks">
+                                    <label
+                                        class="form-check-label" for="tasksType_1">Без заданий</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
+                                <div class="form-check">
+                                    <input id="tasksType_2" class="form-check-input" name="tasksType_2"
+                                                               type="checkbox" data-type="multicheckbox"
+                                                               data-code="tasksType" value="teacherCheck">
+                                    <label
+                                        class="form-check-label" for="tasksType_2">Проверка преподавателем</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
+                                <div class="form-check">
+                                    <input id="tasksType_3" class="form-check-input" name="tasksType_3"
+                                                               type="checkbox" data-type="multicheckbox"
+                                                               data-code="tasksType" value="autoCheck">
+                                    <label
+                                        class="form-check-label" for="tasksType_3">Автоматизированная проверка</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
+                                <div class="form-check">
+                                    <input id="tasksType_4" class="form-check-input" name="tasksType_4"
+                                                               type="checkbox" data-type="multicheckbox"
+                                                               data-code="tasksType" value="selfCheck">
+                                    <label
+                                        class="form-check-label" for="tasksType_4">Самостоятельная проверка</label>
+                                    <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group pt-3">
-                            <label class="h4">Вид обучения</label>
-                            <div class="form-check">
-                                <input id="courseForm_1" class="form-check-input"
-                                                           name="courseForm_1" type="checkbox" data-type="multicheckbox"
-                                                           data-code="courseForm" value="video">
-                                <label
-                                    class="form-check-label" for="courseForm_1">Видеокурс</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
+                            <div class="form-group pt-3">
+                                <label class="h4">Длительность</label>
+                                <div class="form-check">
+                                    <input id="length_1" class="form-check-input" name="length_1"
+                                                               type="checkbox" data-type="multicheckbox" data-code="length"
+                                                               value="short">
+                                    <label class="form-check-label" for="length_1">Краткосрочные</label>
+                                    <span data-toggle="tooltip" title="Не больше одного-двух дней" class="tooltipToggle"></span>
+                                </div>
+                                <div class="form-check">
+                                    <input id="length_2" class="form-check-input" name="length_2"
+                                                               type="checkbox" data-type="multicheckbox" data-code="length"
+                                                               value="medium">
+                                    <label class="form-check-label"
+                                                                                     for="length_2">Средней
+                                    длительности</label>
+                                    <span data-toggle="tooltip" title="Несколько месяцев" class="tooltipToggle"></span>
+                                </div>
+                                <div class="form-check">
+                                    <input id="length_3" class="form-check-input" name="length_3"
+                                                               type="checkbox" data-type="multicheckbox" data-code="length"
+                                                               value="long">
+                                    <label class="form-check-label" for="length_3">Долгосрочные</label>
+                                    <span data-toggle="tooltip" title="Год и больше" class="tooltipToggle"></span>
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input id="courseForm_2" class="form-check-input"
-                                                           name="courseForm_2" type="checkbox" data-type="multicheckbox"
-                                                           data-code="courseForm" value="text">
-                                <label
-                                    class="form-check-label" for="courseForm_2">Текстовый курс</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                            <div class="form-check">
-                                <input id="courseForm_3" class="form-check-input"
-                                                           name="courseForm_3" type="checkbox" data-type="multicheckbox"
-                                                           data-code="courseForm" value="interactive">
-                                <label
-                                    class="form-check-label" for="courseForm_3">Интерактивный курс</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                            <div class="form-check">
-                                <input id="courseForm_4" class="form-check-input"
-                                                           name="courseForm_4" type="checkbox" data-type="multicheckbox"
-                                                           data-code="courseForm" value="crashCourse">
-                                <label
-                                    class="form-check-label" for="courseForm_4">Интенсив</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                            <div class="form-check">
-                                <input id="courseForm_5" class="form-check-input"
-                                                           name="courseForm_5" type="checkbox" data-type="multicheckbox"
-                                                           data-code="courseForm" value="training">
-                                <label
-                                    class="form-check-label" for="courseForm_5">Тренинг</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                        </div>
-                        <div class="form-group pt-3">
-                            <label class="h4">Время проведения занятий</label>
-                            <div class="form-check">
-                                <input id="schedule_1" class="form-check-input" name="schedule_1"
-                                                           type="checkbox" data-type="multicheckbox"
-                                                           data-code="schedule" value="free">
-                                <label
-                                    class="form-check-label" for="schedule_1">Свободный график</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                            <div class="form-check">
-                                <input id="schedule_2" class="form-check-input" name="schedule_2"
-                                                           type="checkbox" data-type="multicheckbox"
-                                                           data-code="schedule" value="day">
-                                <label
-                                    class="form-check-label" for="schedule_2">Дневные занятия</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                            <div class="form-check">
-                                <input id="schedule_3" class="form-check-input" name="schedule_3"
-                                                           type="checkbox" data-type="multicheckbox"
-                                                           data-code="schedule" value="evening">
-                                <label
-                                    class="form-check-label" for="schedule_3">Вечерние занятия</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                            <div class="form-check">
-                                <input id="schedule_4" class="form-check-input" name="schedule_4"
-                                                           type="checkbox" data-type="multicheckbox"
-                                                           data-code="schedule" value="weekends">
-                                <label
-                                    class="form-check-label" for="schedule_4">По выходным</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                        </div>
-                        <div class="form-group pt-3">
-                            <div class="form-check">
-                                <input id="certificate" class="form-check-input" name="certificate"
-                                                           type="checkbox" data-type="checkbox" data-code="certificate">
-                                <label
-                                    class="form-check-label" for="certificate">Выдается сертификат</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                        </div>
-                        <div class="form-group pt-3"><label class="h4">Задания</label>
-                            <div class="form-check">
-                                <input id="tasksType_1" class="form-check-input" name="tasksType_1"
-                                                           type="checkbox" data-type="multicheckbox"
-                                                           data-code="tasksType" value="noTasks">
-                                <label
-                                    class="form-check-label" for="tasksType_1">Без заданий</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                            <div class="form-check">
-                                <input id="tasksType_2" class="form-check-input" name="tasksType_2"
-                                                           type="checkbox" data-type="multicheckbox"
-                                                           data-code="tasksType" value="teacherCheck">
-                                <label
-                                    class="form-check-label" for="tasksType_2">Проверка преподавателем</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                            <div class="form-check">
-                                <input id="tasksType_3" class="form-check-input" name="tasksType_3"
-                                                           type="checkbox" data-type="multicheckbox"
-                                                           data-code="tasksType" value="autoCheck">
-                                <label
-                                    class="form-check-label" for="tasksType_3">Автоматизированная проверка</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                            <div class="form-check">
-                                <input id="tasksType_4" class="form-check-input" name="tasksType_4"
-                                                           type="checkbox" data-type="multicheckbox"
-                                                           data-code="tasksType" value="selfCheck">
-                                <label
-                                    class="form-check-label" for="tasksType_4">Самостоятельная проверка</label>
-                                <!--span data-toggle="tooltip" title="" class="tooltipToggle"></span-->
-                            </div>
-                        </div>
-                        <div class="form-group pt-3">
-                            <label class="h4">Длительность</label>
-                            <div class="form-check">
-                                <input id="length_1" class="form-check-input" name="length_1"
-                                                           type="checkbox" data-type="multicheckbox" data-code="length"
-                                                           value="short">
-                                <label class="form-check-label" for="length_1">Краткосрочные</label>
-                                <span data-toggle="tooltip" title="Не больше одного-двух дней" class="tooltipToggle"></span>
-                            </div>
-                            <div class="form-check">
-                                <input id="length_2" class="form-check-input" name="length_2"
-                                                           type="checkbox" data-type="multicheckbox" data-code="length"
-                                                           value="medium">
-                                <label class="form-check-label"
-                                                                                 for="length_2">Средней
-                                длительности</label>
-                                <span data-toggle="tooltip" title="Несколько месяцев" class="tooltipToggle"></span>
-                            </div>
-                            <div class="form-check">
-                                <input id="length_3" class="form-check-input" name="length_3"
-                                                           type="checkbox" data-type="multicheckbox" data-code="length"
-                                                           value="long">
-                                <label class="form-check-label" for="length_3">Долгосрочные</label>
-                                <span data-toggle="tooltip" title="Год и больше" class="tooltipToggle"></span>
-                            </div>
-                        </div>
 
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-8 noSkillsDefined align-items-center">
-                <div class="row justify-content-center align-self-center w-100">
-                    <div class="col-md-8">
-                        <h2>Активных курсов: <span id="coursesCount">10</span></h2>
-                        <p>Чтобы начать поиск укажите желаемые навыки или добавьте один из наиболее популярных у работодателей:</p>
-                        <p id="startSkills"></p>
-                        <button class="btn btn-primary btn-lg mb-3" id="startSearch">Добавить все перечисленные навыки в фильтр</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6 noSkillsDefined align-items-center">
+                    <div class="row justify-content-center align-self-center w-100">
+                        <div class="col-md-8">
+                            <h2>Активных курсов: <span id="coursesCount">10</span></h2>
+                            <p>Чтобы начать поиск укажите желаемые навыки или добавьте один из наиболее популярных у работодателей:</p>
+                            <p id="startSkills"></p>
+                            <button class="btn btn-primary btn-lg mb-3" id="startSearch">Добавить все перечисленные навыки в фильтр</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-8 searchResults" style="display: none;">
-                <div class="row">
-                    <div class="col-md-12">
+                <div class="col-md-6 searchResults" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-12">
 
-                        <div class="card m-1">
-                            <div class="card-body">
-                                <span class="badge badge-secondary priceBadge">Бесплатно</span>
-                                <h4><a href="https://stepik.org/course/2223/" target="_blank"> JavaScript для начинающих <i class="fas fa-external-link-square-alt"></i></a></h4>
-                                <h6 class="text-muted">Stepik</h6>
-                                <p class="mt-1 mb-0">Теория: JavaScript</p>
-                                <p>Требования: Нет</p>
-                                <p>Самостоятельное обучение&nbsp;&bull;&nbsp;
-                                    Видеокурс&nbsp;&bull;&nbsp;
-                                    Свободный&nbsp;график&nbsp;&bull;&nbsp;
-                                    Без&nbsp;сертификата&nbsp;&bull;&nbsp;
-                                    Автоматизированная&nbsp;проверка&nbsp;заданий&nbsp;&bull;&nbsp;
-                                    Краткосрочный
-                                </p>
-                                <button class="btn btn-outline-secondary" data-toggle="collapse" data-target="#description1" aria-expanded="true" aria-controls="description1">
-                                    Описание курса
-                                </button>
-                                <p id="description1" class="collapse mt-3">
-                                    В данном курсе рассмотрены основы программирования на JavaScript а также некоторые инструменты и модели данных, необходимые для практического использования JavaScript.
-                                </p>
-                            </div>
                         </div>
-
-                        <div class="card m-1">
-                            <div class="card-body">
-                                <span class="badge badge-secondary priceBadge">Бесплатно</span>
-                                <h4><a href="https://stepik.org/course/2621/" target="_blank"> Html, CSS для новичков <i class="fas fa-external-link-square-alt"></i></a></h4>
-                                <h6 class="text-muted">Stepik</h6>
-                                <p class="mt-1 mb-0">Теория: HTML5&nbsp;&bull;&nbsp;CSS3&nbsp;&bull;&nbsp;JavaScript</p>
-                                <p>Требования: Нет</p>
-                                <p>Самостоятельное обучение&nbsp;&bull;&nbsp;
-                                    Видеокурс&nbsp;&bull;&nbsp;
-                                    Свободный&nbsp;график&nbsp;&bull;&nbsp;
-                                    Без&nbsp;сертификата&nbsp;&bull;&nbsp;
-                                    Автоматизированная&nbsp;проверка&nbsp;заданий&nbsp;&bull;&nbsp;
-                                    Краткосрочный
-                                </p>
-                                <button class="btn btn-outline-secondary" data-toggle="collapse" data-target="#description2" aria-expanded="true" aria-controls="description1">
-                                    Описание курса
-                                </button>
-                                <p id="description2" class="collapse mt-3">
-                                    Курс направлен на изучение ОСНОВ HTML, CSS для новичков, начинающих и людей не знакомых с этим, но взявших путь освоить. Материал составлен учителем информатики и успешно применяется на уроках в школе. Для людей знающих HTML - уроки не расскажут о новом и покажутся поверхностными.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="card m-1">
-                            <div class="card-body">
-                                <span class="badge badge-secondary priceBadge">54 900 руб</span>
-                                <h4><a href="https://netology.ru/programs/front-end" target="_blank">Профессия frontend-разработчик <i class="fas fa-external-link-square-alt"></i></a></h4>
-                                <h6 class="text-muted">Нетология</h6>
-                                <p class="mt-1 mb-0">Практика: HTML5&nbsp;&bull;&nbsp;CSS3&nbsp;&bull;&nbsp;JavaScript&nbsp;&bull;&nbsp;Верстка&nbsp;&bull;&nbsp;React&nbsp;&bull;&nbsp;Git</p>
-                                <p>Требования: Нет</p>
-                                <p>Онлайн&nbsp;&bull;&nbsp;
-                                    Видеокурс&nbsp;&bull;&nbsp;
-                                    Вечерние&nbsp;занятия&nbsp;&bull;&nbsp;
-                                    Выдается сертификат&nbsp;&bull;&nbsp;
-                                    Проверка преподавателем&nbsp;&bull;&nbsp;
-                                    Долгосрочный (49 недель)
-                                </p>
-                                <button class="btn btn-outline-secondary" data-toggle="collapse" data-target="#description3" aria-expanded="true" aria-controls="description1">
-                                    Описание курса
-                                </button>
-                                <p id="description3" class="collapse mt-3">
-                                    Освойте одну из самых востребованных профессий на сегодняшний день. Добавьте в свой арсенал три самые популярные технологии: HTML, CSS и JavaScript и создавайте сайты и интерактивные веб-приложения, доступные на большинстве платформ.
-                                </p>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <nav id="courseBar" class="col">
+        <h2>План</h2>
+        <div class="progress-bar-circular">
+            <svg id="animated" viewbox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#6c757d"/>
+                <path id="progress" stroke-linecap="round" stroke-width="5" stroke="#fff" fill="none"
+                      stroke-dasharray="0,251.2"
+                      d="M50 10
+           a 40 40 0 0 1 0 80
+           a 40 40 0 0 1 0 -80">
+                </path>
+                <text id="count" x="50" y="45" text-anchor="middle" dy="7" font-size="20" fill="#fff">0%</text>
+                <text x="30" y="65" font-size="10" fill="#fff" text-ancor="middle">навыков</text>
+            </svg>
+        </div>
+        <ul class="course-items list-group">
+            <li class="list-group-item">Добавьте курсы из списка в план</li>
+        </ul>
+    </nav>
 </div>
 
 <div class="modal fade" id="addSkillModal" tabindex="-1" role="dialog" aria-labelledby="addSkillModalTitle" aria-hidden="true">
@@ -371,8 +323,7 @@
 </div>
 
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
@@ -382,6 +333,8 @@
         crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.2/bootstrap-slider.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.3.0/snap.svg-min.js"></script>
+
 <script src="courseList.js"></script>
 <script src="../../vacancy/hr-manager/vacancyList.js"></script>
 <script src="/assets/vacancyFunctions.js"></script>
