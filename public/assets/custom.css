@@ -157,3 +157,19 @@
     width: 80%;
     display: inline-block;
 }
+
+.skillContainer .afterLearnContainer {
+    display: none;
+}
+
+.skillContainer.pathEnabled .afterLearnContainer {
+    display: block;
+}
+
+#courseBar .totals, #courseBar .pathDetails {
+    display: none;
+}
+
+#courseBar.pathEnabled .totals, #courseBar.pathEnabled .pathDetails {
+    display: block;
+}

@@ -13,7 +13,7 @@ function addCourseSkill(skillName) {
         "       <option value=2>Уверенный</option>\n" +
         "       <option value=3>Глубокий</option>\n" +
         "    </select>\n" +
-        "    <small>После обучения:<br><span class='afterLearn'>основы</span> (max. <span class='maxLearn'>глубокий</span>)</small>\n" +
+        "    <small class=\"afterLearnContainer\">После обучения:<br><span class='afterLearn'>основы</span> (max. <span class='maxLearn'>глубокий</span>)</small>\n" +
         "</div>\n";
 
     $('.skillContainer').append(skillHTML);
@@ -128,10 +128,21 @@ function getSkillsPropHTML(skills, filter, isRequirements) {
         return '<a href="#" class="badge badge-secondary" data-skill="'+skillName+'" data-toggle="tooltip" title="Навык не указан в списке развиваемых">'+badgeText+'</a>';
     });
 
+    let hasUndefinedSkills = undefinedSkills.length > 0;
+    let truncateUndefined = !isRequirements;
+    let undefinedSkillsTruncatedHTML = '<a href=\"#\" class=\"badge badge-secondary undefinedSkillsTrigger\" data-toggle=\"tooltip\" title=\"+'+undefinedSkills.length+' навыков, не указанных в фильтре\">...</a>\n' +
+        "<span class=\"hiddenSkills\" style=\"display: none;\">" +
+        undefinedSkillsHtml.join("\n") +
+        "</span>";
+    let undefinedSkillsPlainHTML = undefinedSkillsHtml.join("\n");
+
+
     return matchingSkillsHtml.join("\n") + "\n" +
         (isRequirements ? "" : equalSkillsHtml.join("\n") + "\n") +
         unmatchingSkillsHtml.join("\n") + "\n" +
-        undefinedSkillsHtml.join("\n");
+        (hasUndefinedSkills
+            ? (truncateUndefined ? undefinedSkillsTruncatedHTML : undefinedSkillsPlainHTML)
+            : "");
 }
 
 function getSkillsHTML(course, filter) {
@@ -267,7 +278,9 @@ function search() {
             addCourse(course);
         });
 
-        $('.searchResults').attr('style', '');
+        if (courses.length > 0) {
+            $('.searchResults').attr('style', '');
+        }
     }, 2000)
 }
 
@@ -323,12 +336,11 @@ function setProgress(percent) {
         easing: 'linear',
         step: function () {
             $count.text(Math.floor(this.currentText)+ "%");
+        },
+        complete: function () {
+            $count.text(numberTo+ "%");
         }
     });
-
-    setTimeout(function () {
-        $count.text(numberTo+ "%");
-    }, animateMs + 10);
 
     let s = Snap('#animated');
     let progress = s.select('#progress');
@@ -431,7 +443,7 @@ function getFilterLevelsCount() {
     return summSkills(skillsFilter);
 }
 
-function getMaxLevelsCount() {
+function getMaxLevels() {
     let filter = getCoursesFilter();
     let skillsFilter = filter.skills;
 
@@ -451,9 +463,11 @@ function getMaxLevelsCount() {
         return maxLevelsAcc;
     }, {});
 
-    let skillLevelsSumm = summSkills(maxLevels);
+    return maxLevels;
+}
 
-    return skillLevelsSumm;
+function getMaxLevelsCount() {
+    return summSkills(getMaxLevels());
 }
 
 function addCourseToPath(course) {
@@ -462,6 +476,17 @@ function addCourseToPath(course) {
 
     let newPrecentage = Math.round(getFilterLevelsCount()/getMaxLevelsCount() * 100);
     setProgress(newPrecentage);
+    updateSkillCards();
+    updateTotals();
+
+    if (newPrecentage === 100) {
+        showSuccess();
+    }
+}
+
+function showSuccess() {
+    $('.noSkillsDefined, .searchResults').hide();
+    $('.searchSuccess').show();
 }
 
 function getCourseById(courseId) {
@@ -477,6 +502,89 @@ function getCourseById(courseId) {
 
 function enableTooltips() {
     $('[data-toggle="tooltip"]').tooltip();
+}
+
+function isPathNotEmpty() {
+    return eduPath.length > 0;
+}
+
+function updateSkillCards() {
+    if (isPathNotEmpty()) {
+        $('.skillContainer').addClass('pathEnabled');
+    }
+    else {
+        $('.skillContainer').removeClass('pathEnabled');
+    }
+
+    let maxSkills = getMaxLevels();
+    let baseSkills = getCoursesFilter().skills;
+    let currentSkills = applyEduPathSkills( baseSkills );
+
+    $('.skillBlock').each(function (index, card) {
+        let skillName = $(card).find('h4').text();
+        let baseLevel = baseSkills[skillName];
+        let currentLevel = currentSkills[skillName];
+        let maxLevel = maxSkills[skillName];
+
+        let currentLevelText = getLevelText(currentLevel);
+        let maxLevelText = getLevelText(maxLevel);
+
+        let colorClass = 'alert-primary';
+        if (currentLevel > baseLevel) {
+            colorClass = 'alert-warning';
+        }
+
+        if (currentLevel === maxLevel) {
+            colorClass = 'alert-success';
+        }
+
+        $(card).find('.afterLearn').text(currentLevelText);
+        $(card).find('.maxLearn').text(maxLevelText);
+
+        $(card).removeClass('alert-primary alert-warning alert-success');
+        $(card).addClass(colorClass);
+    });
+}
+
+function getTimeInDays(course) {
+    let time = course.duration;
+    let units = course.durationUnits;
+    let daysCoefficient = {
+        'ак. час': 45/1440,
+        'день': 1,
+        'час': 1/24,
+        'урок': 1/24,
+        'минута': 1/1440,
+        'месяц': 30,
+        'неделя': 7
+    };
+
+    let timeInDays = time * daysCoefficient[units];
+
+    return timeInDays;
+}
+
+function updateTotals() {
+    if (isPathNotEmpty()) {
+        $('#courseBar').addClass('pathEnabled');
+    }
+    else {
+        $('#courseBar').removeClass('pathEnabled');
+    }
+
+    let totalCourses = 0;
+    let totalPrice = 0;
+    let totalDays = 0;
+
+    eduPath.forEach(function (course) {
+        totalCourses++;
+        totalPrice += course.price;
+        totalDays += getTimeInDays(course);
+    });
+
+    $('.totalCourses').text(totalCourses + ' курсов');
+    $('.totalTime').text(Math.round(totalDays) + ' дней');
+    $('.totalPrice').text(totalPrice + ' руб');
 }
 
 $(function () {
@@ -531,6 +639,12 @@ $(function () {
         });
         toggleNoSkillsResult();
         search();
+    });
+
+    $(document).on('click', '.undefinedSkillsTrigger', function () {
+        event.preventDefault();
+        $(this).hide();
+        $(this).closest('.card-body').find('.hiddenSkills').show();
     });
 
     $(document).on('change input', '.skillSlider', function () {
