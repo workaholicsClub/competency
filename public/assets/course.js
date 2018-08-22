@@ -1,19 +1,39 @@
 let eduPath = [];
 
 function addCourseSkill(skillName) {
+    let skillsFilter = {};
+    skillsFilter[skillName] = 0;
+
+    let maxLevels = getMaxCourseLevels(skillsFilter);
+    let maxLevel = getLevelText(maxLevels[skillName]);
+
     let skillHTML = "<div class=\"alert alert-primary d-flex justify-content-between skillBlock\" role=\"alert\">\n" +
         "    <div class=\"levelHeaderContainer\">\n" +
         "       <h4 class=\"alert-heading\">"+skillName+"</h4>\n" +
         "       <button type=\"button\" class=\"close align-self-start\" data-dismiss=\"alert\">×</button>\n" +
         "    </div>\n" +
-        "    <select class=\"custom-select skillSlider\">\n" +
-        "       <option selected>Текущий уровень</option>\n" +
-        "       <option value=0>Не владею</option>\n" +
-        "       <option value=1>Основы</option>\n" +
-        "       <option value=2>Уверенный</option>\n" +
-        "       <option value=3>Глубокий</option>\n" +
-        "    </select>\n" +
-        "    <small class=\"afterLearnContainer\">После обучения:<br><span class='afterLearn'>основы</span> (max. <span class='maxLearn'>глубокий</span>)</small>\n" +
+        "    <div class='row'>\n" +
+        "        <div class='col-6'>\n" +
+        "            <h6>До обучения</h6>\n" +
+        "            <select class=\"custom-select skillSlider\">\n" +
+        "               <option value=0 selected>Не владею</option>\n" +
+        "               <option value=1>Основы</option>\n" +
+        "               <option value=2>Уверенный</option>\n" +
+        "               <option value=3>Глубокий</option>\n" +
+        "            </select>\n" +
+        "        </div>\n" +
+        "        <div class='col-6 afterLearnContainer'>\n" +
+        "            <h6>Максимальный уровень курсов</h6>" +
+        "            <span class='maxLearn'>" + maxLevel + "</span>\n" +
+        "        </div>\n" +
+        "    </div>\n" +
+        "    <div class='row'>\n" +
+        "        <div class='col-12'>\n" +
+        "            <div class=\"progress mt-3\">\n" +
+        "                <div class=\"progress-bar\" role=\"progressbar\" style=\"width: 0%\" aria-valuenow=\"0\" aria-valuemin=\"0\" aria-valuemax=\"100\">" +
+        "            </div>\n" +
+        "        </div>\n" +
+        "    </div>\n" +
         "</div>\n";
 
     $('.skillContainer').append(skillHTML);
@@ -106,19 +126,25 @@ function getSkillsPropHTML(skills, filter, isRequirements) {
 
     let matchingSkillsHtml = matchingSkills.map(function (skillName) {
         let levelText = getLevelText(skills[skillName]);
-        let badgeText = skillName + ':&nbsp;' + levelText;
+        let badgeText = isRequirements
+            ? skillName + ':&nbsp; ' + levelText
+            : skillName + ':&nbsp; улучшение до ' + levelText;
         return '<span class="badge badge-success" data-toggle="tooltip" title="' + matchLabel + '">'+badgeText+'</span>';
     });
 
     let equalSkillsHtml = unchangedSkills.map(function (skillName) {
         let levelText = getLevelText(skills[skillName]);
-        let badgeText = skillName + ':&nbsp;' + levelText;
+        let badgeText = isRequirements
+            ? skillName + ':&nbsp;' + levelText
+            : skillName + ':&nbsp;без&nbsp;изменений';
         return '<span class="badge badge-warning" data-toggle="tooltip" title="' + equalLabel + '">'+badgeText+'</span>';
     });
 
     let unmatchingSkillsHtml = unmatchingSkills.map(function (skillName) {
         let levelText = getLevelText(skills[skillName]);
-        let badgeText = skillName + ':&nbsp;' + levelText;
+        let badgeText = isRequirements
+            ? skillName + ':&nbsp;' + levelText
+            : skillName + ':&nbsp;ваш&nbsp;уровень&nbps;выше';
         return '<span class="badge badge-danger" data-toggle="tooltip" title="' + unmatchLabel + '">'+badgeText+'</span>';
     });
 
@@ -130,7 +156,8 @@ function getSkillsPropHTML(skills, filter, isRequirements) {
 
     let hasUndefinedSkills = undefinedSkills.length > 0;
     let truncateUndefined = !isRequirements;
-    let undefinedSkillsTruncatedHTML = '<a href=\"#\" class=\"badge badge-secondary undefinedSkillsTrigger\" data-toggle=\"tooltip\" title=\"+'+undefinedSkills.length+' навыков, не указанных в фильтре\">...</a>\n' +
+    let undefinedSkillsTruncatedHTML = '<a href=\"#\" class=\"badge badge-secondary undefinedSkillsTrigger\" data-toggle=\"tooltip\" title=\"+'+undefinedSkills.length+
+        ' навыков, не указанных в фильтре\">+'+undefinedSkills.length+' навыков...</a>\n' +
         "<span class=\"hiddenSkills\" style=\"display: none;\">" +
         undefinedSkillsHtml.join("\n") +
         "</span>";
@@ -157,7 +184,7 @@ function getCourseSkillPercent(course) {
     return Math.round(getSkillLevelUps(course)/getMaxLevelsCount() * 100);
 }
 
-function addCourse(course) {
+function getCourseDataHTML(course, skipButton) {
     let descriptionHTML = course.description || "";
     let price = course.price == 0 ? 'Бесплатно' : course.price + ' руб';
     let percentText = '+' + getCourseSkillPercent(course) + '% навыков';
@@ -178,28 +205,40 @@ function addCourse(course) {
     ];
 
     let attributesHTML = attributes.join('&nbsp;&bull;&nbsp;\n');
+    let buttonHTML = skipButton
+        ? ""
+        : "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center add-to-plan mt-1\" data-course-id=\""+course.id+"\">Добавить в план</a>";
 
+    return "<span class=\"badge badge-secondary priceBadge\">" + price + "<br>" + percentText + "</span>\n" +
+        "<h4><a class=\"courseLink\" href=\"" + course.url + "\" target=\"_blank\">" + course.title + "&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a></h4>\n" +
+        "<h6 class=\"text-muted\">" +course.platform+ "</h6>\n" +
+        "<p class=\"mt-1 mb-0\">Навыки, которые вы приобретёте:</p>\n" +
+        "<p>" + skillsHTML + "</p>\n" +
+        "<p class=\"mt-1\">Требования: " + requirementsHTML + "</p>\n" +
+        "<p>" + attributesHTML + "</p>\n" +
+        "<button class=\"btn btn-outline-secondary\" data-toggle=\"collapse\" data-target=\"#description"+course.id+"\" aria-expanded=\"true\" aria-controls=\"description"+course.id+"\">\n" +
+        "    Описание курса\n" +
+        "</button>\n" +
+        "<p id=\"description"+course.id+"\" class=\"collapse mt-3\">\n" +
+            descriptionHTML +
+        "</p>\n" +
+        buttonHTML;
+}
+
+function getCourseCardHTML(course) {
     let courseHTML = "<div class=\"card m-1\">\n" +
         "    <div class=\"card-body\">\n" +
-        "        <span class=\"badge badge-secondary priceBadge\">" + price + "<br>" + percentText + "</span>\n" +
-        "        <h4><a class=\"courseLink\" href=\"" + course.url + "\" target=\"_blank\">" + course.title + "&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a></h4>\n" +
-        "        <h6 class=\"text-muted\">" +course.platform+ "</h6>\n" +
-        "        <p class=\"mt-1 mb-0\">Навыки, которые вы приобретёте:</p>\n" +
-        "        <p>" + skillsHTML + "</p>\n" +
-        "        <p class=\"mt-1\">Требования: " + requirementsHTML + "</p>\n" +
-        "        <p>" + attributesHTML + "</p>\n" +
-        "        <button class=\"btn btn-outline-secondary\" data-toggle=\"collapse\" data-target=\"#description"+course.id+"\" aria-expanded=\"true\" aria-controls=\"description"+course.id+"\">\n" +
-        "            Описание курса\n" +
-        "        </button>\n" +
-        "        <p id=\"description"+course.id+"\" class=\"collapse mt-3\">\n" +
-        descriptionHTML +
-        "        </p>\n" +
-        "        <a href=\"#\" class=\"btn btn-primar" +
-        "y d-flex justify-content-center add-to-plan mt-1\" data-course-id=\""+course.id+"\">Добавить в план</a>\n" +
+            getCourseDataHTML(course) +
         "    </div>\n" +
         "</div>";
 
-    $('.searchResults').append(courseHTML);
+    return courseHTML;
+}
+
+function addCourse(course) {
+    let courseHTML = getCourseCardHTML(course);
+
+    $('#coursesList').append(courseHTML);
 }
 
 function getCourseMatchRating(course, filter) {
@@ -269,9 +308,9 @@ function search() {
         return;
     }
 
-    $('.searchResults').css('opacity', '0.3');
+    $('#coursesList').css('opacity', '0.3');
     setTimeout(function () {
-        $('.searchResults').html('');
+        $('#coursesList').html('');
 
         let courses = findCourses( getCoursesFilter() );
         courses.forEach(function (course) {
@@ -279,7 +318,7 @@ function search() {
         });
 
         if (courses.length > 0) {
-            $('.searchResults').attr('style', '');
+            $('#coursesList').attr('style', '');
         }
     }, 2000)
 }
@@ -287,12 +326,12 @@ function search() {
 function toggleNoSkillsResult() {
     if (hasSkills()) {
         $('.noSkillsDefined').hide();
-        $('.searchResults').show();
+        $('.searchResultsContainer').show();
         toggleAdditionalSkills();
     }
     else {
         $('.noSkillsDefined').show();
-        $('.searchResults').hide();
+        $('.searchResultsContainer').hide();
         toggleAdditionalSkills();
     }
 }
@@ -322,50 +361,32 @@ function toggleAdditionalSkills() {
     }
 }
 
-function setProgress(percent) {
-    let $count = $(('#count'));
-    let numberFrom = parseInt($count.text().replace('%', ''));
+function setProgress(percent, $progressbar, progressColor) {
     let numberTo = percent;
-    let animateMs = 1000*Math.abs(numberTo-numberFrom)/100;
-    let emptyColor = "#6c757d";
-    let notEnoughColor = "#ffc107";
-    let almostThereColor = "#28a745";
+    let emptyColor = "";
+    let notEnoughColor = "bg-warning";
+    let almostThereColor = "bg-success";
 
-    $({ currentText: numberFrom }).animate({ currentText: numberTo }, {
-        duration: animateMs,
-        easing: 'linear',
-        step: function () {
-            $count.text(Math.floor(this.currentText)+ "%");
-        },
-        complete: function () {
-            $count.text(numberTo+ "%");
+    if (!$progressbar) {
+        $progressbar = $('#coursesPlanContainer .progress-bar')
+    }
+
+    if (!progressColor) {
+        progressColor = emptyColor;
+
+        if (percent > 0) {
+            progressColor = notEnoughColor;
         }
-    });
 
-    let s = Snap('#animated');
-    let progress = s.select('#progress');
-    let background = $('circle');
-
-    if (percent === 0) {
-        background.attr({'fill': emptyColor});
+        if (percent >= 90) {
+            progressColor = almostThereColor;
+        }
     }
 
-    if (percent > 0) {
-        background.attr({'fill': notEnoughColor});
-    }
-
-    if (percent >= 90) {
-        background.attr({'fill': almostThereColor});
-    }
-
-    let progressLength = 251.2;
-    let startPoint = progressLength * numberFrom/100;
-    let endPoint = progressLength * numberTo/100;
-
-    progress.attr({strokeDasharray: '0, 251.2'});
-    Snap.animate(startPoint, endPoint, function( value ) {
-        progress.attr({ 'stroke-dasharray': value+',251.2'});
-    }, animateMs);
+    $progressbar
+        .css({width: numberTo+'%'})
+        .removeClass('bg-warning bg-success')
+        .addClass(progressColor);
 }
 
 function updateStartCourseSkills() {
@@ -383,6 +404,10 @@ function getSkillLevelUps(course, skipFilter) {
     let matchedSkillNames = getMatchingCourseSkills(course.skills, skillsFilter, false);
     let levelUps = matchedSkillNames.reduce(function (accumulator, skillName) {
         let skillLevelsIncrease = course.skills[skillName] - skillsFilter[skillName];
+        let userKnowsMore = skillLevelsIncrease < 0;
+        if (userKnowsMore) {
+            skillLevelsIncrease = 0;
+        }
         return accumulator + skillLevelsIncrease;
     }, 0);
 
@@ -406,25 +431,26 @@ function getMatchingListHTML(course) {
 }
 
 function getCoursePathHTML(course, index) {
-    let title = "Курс №"+index;
-    let skillsCount = '+' + getSkillLevelUps(course, true);
-    let percentText = '+' + getCourseSkillPercent(course) + '%';
-    let tooltipHTML = "<b>"+course.title+"</b><br><br>" + getMatchingListHTML(course);
+    let courseHTML = getCourseDataHTML(course, true);
 
-    let tooltipAttrs = "data-toggle=\"tooltip\" data-html=\"true\" data-placement=\"left\" title=\"" + tooltipHTML + "\"";
-    return "<li class=\"course-item list-group-item\""+tooltipAttrs+">" +
-        "<h4>"+title+"</h4>" +
-        skillsCount+"<br><small>навыков</small>"+
-        "</li>";
+    return "<div class=\"input-group\">\n" +
+        "    <div class=\"input-group-prepend\">\n" +
+        "        <span class=\"input-group-text\">" + index + "</span>\n" +
+        "    </div>\n" +
+        "    <li class=\"list-group-item\" id=\"heading" + index + "\">\n" +
+        "        <button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse" + index + "\" aria-expanded=\"true\" aria-controls=\"collapse" + index + "\">\n" +
+        "            " + course.title + "\n" +
+        "        </button>\n" +
+        "    </li>\n" +
+        "</div>\n" +
+        "<li class=\"list-group-item collapse\" id=\"collapse" + index + "\" aria-labelledby=\"heading" + index + "\" data-parent=\"#coursesPlan\">" + courseHTML + "</li>\n";
 }
 
 function redrawPath() {
-    $('.course-items').html('');
+    $('#coursesPlan').html('');
     eduPath.forEach(function (course, index) {
-        $('.course-items').append(getCoursePathHTML(course, index+1));
+        $('#coursesPlan').append(getCoursePathHTML(course, index+1));
     });
-
-    enableTooltips();
 }
 
 function summSkills(skills) {
@@ -443,9 +469,11 @@ function getFilterLevelsCount() {
     return summSkills(skillsFilter);
 }
 
-function getMaxLevels() {
-    let filter = getCoursesFilter();
-    let skillsFilter = filter.skills;
+function getMaxCourseLevels(skillsFilter) {
+    if (!skillsFilter) {
+        let filter = getCoursesFilter();
+        skillsFilter = filter.skills;
+    }
 
     let maxLevels = Object.keys(skillsFilter).reduce(function (maxLevelsAcc, skillName) {
         if (typeof maxLevelsAcc[skillName] === 'undefined') {
@@ -467,7 +495,18 @@ function getMaxLevels() {
 }
 
 function getMaxLevelsCount() {
-    return summSkills(getMaxLevels());
+    let maxCourseLevels = getMaxCourseLevels();
+    let filterLevels = applyEduPathSkills(getCoursesFilter().skills);
+    let skillNames = Object.keys(filterLevels);
+    let maxCourseAndFilterLevels = skillNames.reduce(function (accumulator, skillName) {
+        accumulator[skillName] = filterLevels[skillName] > maxCourseLevels[skillName]
+            ? filterLevels[skillName]
+            : maxCourseLevels[skillName];
+
+        return accumulator;
+    }, {});
+
+    return summSkills(maxCourseAndFilterLevels);
 }
 
 function addCourseToPath(course) {
@@ -516,7 +555,7 @@ function updateSkillCards() {
         $('.skillContainer').removeClass('pathEnabled');
     }
 
-    let maxSkills = getMaxLevels();
+    let maxSkills = getMaxCourseLevels();
     let baseSkills = getCoursesFilter().skills;
     let currentSkills = applyEduPathSkills( baseSkills );
 
@@ -530,19 +569,33 @@ function updateSkillCards() {
         let maxLevelText = getLevelText(maxLevel);
 
         let colorClass = 'alert-primary';
-        if (currentLevel > baseLevel) {
-            colorClass = 'alert-warning';
-        }
+        let progressColor = ' ';
 
-        if (currentLevel === maxLevel) {
-            colorClass = 'alert-success';
+        if (baseLevel < maxLevel) {
+            if (currentLevel > baseLevel) {
+                colorClass = 'alert-warning';
+                progressColor = 'bg-warning';
+            }
+
+            if (currentLevel >= maxLevel) {
+                colorClass = 'alert-success';
+                progressColor = 'bg-success';
+            }
         }
 
         $(card).find('.afterLearn').text(currentLevelText);
         $(card).find('.maxLearn').text(maxLevelText);
+        let $progress = $(card).find('.progress-bar');
 
         $(card).removeClass('alert-primary alert-warning alert-success');
         $(card).addClass(colorClass);
+
+        let percent = Math.round(currentLevel/maxLevel * 100);
+        if (currentLevel > maxLevel) {
+            percent = 100;
+        }
+
+        setProgress(percent, $progress, progressColor);
     });
 }
 
@@ -652,6 +705,7 @@ $(function () {
         let newText = skillLevels[$(this).val()];
         $(this).closest('.skillBlock').find('.skillText').text(newText);*/
         search();
+        updateSkillCards();
     });
 
     $(document).on('change input', '#from, #to', function () {

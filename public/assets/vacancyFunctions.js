@@ -482,7 +482,8 @@ function addSkillToPopup(allSkills, selector) {
 
     sortSkillsByCount(allSkills).forEach(function (skill, index) {
         let skillCount = skillsCount[skill] || 0;
-        let countText = index === 0 ? skillCount + ' вакансий' : skillCount;
+        let vacanciesPercent = Math.round(skillCount/getVacanciesList().length * 100);
+        let countText = index === 0 ? vacanciesPercent + '% вакансий' : vacanciesPercent + '%';
 
         skillsHtml.push('<a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-name="'+skill+'">'+skill+' <span class="badge badge-primary">'+countText+'</span></a>');
     });
