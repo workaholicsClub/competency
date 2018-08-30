@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/custom.css" type="text/css">
+</head>
+
+<body class="addVacancy">
+<div class="py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Новая вакансия&nbsp;<small class="text-muted">Фронтенд-разработчик</small></h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="py-5">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-md-8 addFormContainer">
+                <form class="mainForm">
+                    <div class="form-group">
+                        <label class="h3">Название вакансии</label>
+                        <input type="" class="form-control" placeholder="">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <label>Название организации</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col form-group">
+                                <label>Сайт организации</label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row pt-3">
+                        <label class="h3">Требуемые навыки</label>
+                        <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
+                            <img src="/images/plus.svg">
+                            Добавить требуемые навыки
+                        </button>
+                    </div>
+
+                    <div class="form-row skillContainer">
+
+
+                        <!--div class="alert alert-primary d-flex justify-content-between skillBlock" role="alert">
+                            <div class="levelHeaderContainer">
+                                <h4 class="alert-heading">CRM-системы</h4>
+                                <button type="button" class="close align-self-start" data-dismiss="alert">×</button>
+                            </div>
+                            <select class="custom-select skillSlider">
+                                <option value=1>Знание и выше</option>
+                                <option value=2>Умение применять и выше</option>
+                                <option value=3>Владение в совершенстве</option>
+                            </select>
+                        </div-->
+                    </div>
+                    
+                    <div class="form-group py-3">
+                        <label class="h3">Параметры вакансии</label>
+                        <div class="form-group">
+                            <label class="d-block">Заработная плата</label>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <label for="from">От</label>
+                                    <input type="number" min="10000" max="200000" step="5000" value="100000" id="from" class="form-control">
+                                </div>
+                                <div class="col form-group">
+                                    <label for="to">До</label>
+                                    <input type="number" min="100000" max="500000" step="5000" value="150000" id="to" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" data-prob-on="1" data-prob-off="0.3">
+                            <label class="form-check-label">Оформление по ТК</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" data-prob-on="1" data-prob-off="0.6">
+                            <label class="form-check-label">Гибкий график</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" data-prob-on="1" data-prob-off="0.7">
+                            <label class="form-check-label">Удаленная работа</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" data-prob-on="1" data-prob-off="0.9">
+                            <label class="form-check-label">Предоставляется обучение</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" data-prob-on="1" data-prob-off="0.9">
+                            <label class="form-check-label">Предоставляется питание</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="on" data-prob-on="1" data-prob-off="0.9">
+                            <label class="form-check-label" contenteditable="true">ДМС</label>
+                        </div>
+                    </div>
+                    <div class="form-group py-3">
+                        <div class="form-group">
+                            <label class="h3">Описание вакансии</label>
+                            <textarea
+                                    placeholder="Постарайтесь максимально подробно описать вакансию. Чем больше информации, тем проще соискателю составить первое впечатление о работодателе и принять решение об отклике."
+                                    class="form-control"
+                                    rows="4"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="h3">Публиковать вакансию до</label>
+                        <input type="date" class="form-control" placeholder="">
+                    </div>
+
+                </form>
+            </div>
+            <div class="col-md-4 px-4">
+                <p class="flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h2>Увидят вакансию</h2>
+                    </div>
+                    <h3 class="display-3 probValue"></h3>
+                    <small>Приблизительное количество пользователей, соответствующих указанным навыкам</small>
+                </p>
+                <p class=" flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h2>Отправят резюме</h2>
+                    </div>
+                    <h3 class="display-3 resumeValue"></h3>
+                    <small>Ожидаемое количество откликов подходящих кандидатов за месяц</small>
+                </p>
+                <h4 class="mt-5 mb-1">Вместе с резюме соискателей, я также хочу получить</h4>
+                <form>
+                    <div class="form-check py-1">
+                        <input type="checkbox" class="form-check-input" value="on">
+                        <label class="form-check-label" contenteditable="true">Оценку навыков соискателя</label>
+                    </div>
+                    <div class="form-check py-1">
+                        <input type="checkbox" class="form-check-input" value="on">
+                        <label class="form-check-label" contenteditable="true">Тестовые вопросы для собеседования</label>
+                    </div>
+                </form>
+                <a class="btn btn-primary btn-block btn-lg mt-5" href="#">Опубликовать вакансию</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addSkillModal" tabindex="-1" role="dialog" aria-labelledby="addSkillModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSkillModalTitle">Добавление навыков</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group skillList">
+                        <a href="#" class="list-group-item list-group-item-action">Excel</a>
+                        <a href="#" class="list-group-item list-group-item-action">CRM-системы</a>
+                        <a href="#" class="list-group-item list-group-item-action">HTML</a>
+                        <a href="#" class="list-group-item list-group-item-action">CSS</a>
+                        <a href="#" class="list-group-item list-group-item-action">Верстка</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary confirmSkillsAddButton" data-dismiss="modal">Добавить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <script>
+
+
+        function addSkill(skillName) {
+            let skillHTML = "<div class=\"alert alert-primary d-flex justify-content-between skillBlock\" role=\"alert\">\n" +
+                "    <div class=\"levelHeaderContainer\">\n" +
+                "        <h4 class=\"alert-heading\">"+skillName+"</h4>\n" +
+                "        <button type=\"button\" class=\"close align-self-start\" data-dismiss=\"alert\">×</button>\n" +
+                "    </div>\n" +
+                "    <select class=\"custom-select skillSlider\">\n" +
+                "        <option value=1>Знание и выше</option>\n" +
+                "        <option value=2>Умение применять и выше</option>\n" +
+                "        <option value=3>Владение в совершенстве</option>\n" +
+                "    </select>\n" +
+                "</div>";
+
+            $('.skillContainer').append(skillHTML);
+            updateConversion();
+        }
+
+        function salaryProb(salary) {
+            return 1.054924 + (-0.003264661 - 1.054924)/(1 + Math.pow(salary/75466.43,6.263553)); //Сигмоида
+        }
+
+        function skillsProb() {
+            let levelProbs = [1, 0.7, 0.5, 0.05];
+
+            let totalProb = 1;
+            $('.skillSlider').each(function () {
+                let currentProb = levelProbs[ parseInt($(this).val()) ];
+                totalProb *= currentProb;
+            });
+
+            return totalProb;
+        }
+
+        function checkboxProb() {
+            let totalProb = 1;
+            $('.mainForm input[type=checkbox]').each(function () {
+                let probAttrName = this.checked ? 'data-prob-on' : 'data-prob-off';
+                let currentProb = parseFloat( $(this).attr(probAttrName) );
+
+                totalProb *= currentProb;
+            });
+
+            return totalProb;
+        }
+
+        function updateConversion() {
+            let salaryAvg = (parseInt($('#from').val()) + parseInt($('#to').val()))/2;
+            let resumesAverage = 20;
+
+            let prob = Math.round( salaryProb(salaryAvg) * skillsProb() * checkboxProb() * 100);
+            if (prob > 100) {
+                prob = 100;
+            }
+            let resumesCount = Math.round(resumesAverage * prob / 100);
+
+            $('.probValue').text( prob + '%' );
+            $('.resumeValue').text(resumesCount);
+        }
+
+        $(function () {
+            updateConversion();
+
+            $(document).on('change', '.skillSelect', function () {
+                let skillName = $(this).val();
+                if (skillName) {
+                    addSkill(skillName);
+                    updateConversion();
+                }
+            });
+
+            $(document).on('click', '.alert .close', function () {
+                updateConversion();
+            });
+
+            $(document).on('click', '.skillList a', function () {
+                $(this).toggleClass('active');
+            });
+
+            $(document).on('click', '.confirmSkillsAddButton', function () {
+                $('.skillList a.active').each(function () {
+                    let skillName = $(this).text();
+                    addSkill(skillName);
+                    $(this).removeClass('active');
+                });
+                updateConversion();
+            });
+
+            $(document).on('change input', '.skillSlider', function () {
+                updateConversion();
+            });
+
+            $(document).on('change input', '#from, #to', function () {
+                let inputId = $(this).attr('id');
+                let textId = inputId+'-text';
+                let value = parseInt($(this).val());
+
+                $('#'+textId).text(value);
+
+                if (inputId === 'from') {
+                    $('#to').attr('min', value);
+                    if (parseInt($('#to').val()) <= value) {
+                        $('#to').val(value).trigger('input');
+                    }
+                }
+            });
+
+            $(document).on('change input click', 'input', function () {
+                updateConversion();
+            });
+        });
+
+    </script>
+</div>
+</body>
+
+</html>

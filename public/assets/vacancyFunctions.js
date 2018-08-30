@@ -49,13 +49,23 @@ function getSelectedSkillNames() {
     return Object.keys(getSkillsFilter());
 }
 
+function getVacancySkillLevel(vacancy, skillName) {
+    return vacancy.skills.reduce(function (level, skillData) {
+        if (skillData.title === skillName) {
+            level = skillData.level;
+        }
+
+        return level;
+    }, false);
+}
+
 function matchVacancy(vacancy, filter) {
     let isMatching = true;
-    let vacancySkillNames = Object.keys(vacancy.skills);
+    let vacancySkillNames = getVacancySkillNames(vacancy);
 
     vacancySkillNames.forEach(function (skillName) {
         let isInFilter = typeof filter[skillName] !== 'undefined';
-        let levelMatches = isInFilter && vacancy.skills[skillName] <= filter[skillName];
+        let levelMatches = isInFilter && getVacancySkillLevel(vacancy, skillName) <= filter[skillName];
         isMatching = isMatching && levelMatches;
     });
 
@@ -63,12 +73,12 @@ function matchVacancy(vacancy, filter) {
 }
 
 function getMatchingSkills(vacancy, filter) {
-    let vacancySkillNames = Object.keys(vacancy.skills);
+    let vacancySkillNames = getVacancySkillNames(vacancy);
     let matchingSkills = [];
 
     vacancySkillNames.forEach(function (skillName) {
         let isInFilter = typeof filter[skillName] !== 'undefined';
-        let levelMatches = isInFilter && vacancy.skills[skillName] <= filter[skillName];
+        let levelMatches = isInFilter && getVacancySkillLevel(vacancy, skillName) <= filter[skillName];
 
         if (levelMatches) {
             matchingSkills.push(skillName);
@@ -79,12 +89,12 @@ function getMatchingSkills(vacancy, filter) {
 }
 
 function getUnmatchingSkills(vacancy, filter) {
-    let vacancySkillNames = Object.keys(vacancy.skills);
+    let vacancySkillNames = getVacancySkillNames(vacancy);
     let unmatchingSkills = [];
 
     vacancySkillNames.forEach(function (skillName) {
         let isInFilter = typeof filter[skillName] !== 'undefined';
-        let levelNotMatches = isInFilter && vacancy.skills[skillName] > filter[skillName];
+        let levelNotMatches = isInFilter && getVacancySkillLevel(vacancy, skillName) > filter[skillName];
 
         if (levelNotMatches) {
             unmatchingSkills.push(skillName);
@@ -95,7 +105,7 @@ function getUnmatchingSkills(vacancy, filter) {
 }
 
 function getUndefinedSkills(vacancy, filter) {
-    let vacancySkillNames = Object.keys(vacancy.skills);
+    let vacancySkillNames = getVacancySkillNames(vacancy);
     let undefinedSkills = [];
 
     vacancySkillNames.forEach(function (skillName) {
@@ -110,7 +120,7 @@ function getUndefinedSkills(vacancy, filter) {
 }
 
 function getMatchRating(vacancy, filter) {
-    let vacancySkillNames = Object.keys(vacancy.skills);
+    let vacancySkillNames = getVacancySkillNames(vacancy);
     let matchingSkillsCount = getMatchingSkills(vacancy, filter).length;
     let unmatchingSkillsCount = getUnmatchingSkills(vacancy, filter).length;
     let skillsCount = vacancySkillNames.length;
@@ -372,17 +382,24 @@ function toggleAdditionalSkills() {
     }
 }
 
+function getVacancySkillNames(vacancy) {
+    return vacancy.skills.reduce(function (skillNames, skillData) {
+        skillNames.push(skillData.title);
+        return skillNames;
+    }, []);
+}
+
 function getMinimalSkills(vacancies) {
     let skillMinLevelData = {};
 
     vacancies.forEach(function (vacancy) {
-        let skillNames = Object.keys(vacancy.skills);
+        let skillNames = getVacancySkillNames(vacancy);
         skillNames.forEach(function (skillName) {
             let isNotSet = typeof skillMinLevelData[skillName] === 'undefined';
-            let isLevelHigher = skillMinLevelData[skillName] > vacancy.skills[skillName];
+            let isLevelHigher = skillMinLevelData[skillName] > getVacancySkillLevel(vacancy, skillName);
 
             if (isNotSet || isLevelHigher) {
-                skillMinLevelData[skillName] = vacancy.skills[skillName];
+                skillMinLevelData[skillName] = getVacancySkillLevel(vacancy, skillName);
             }
         });
     });
@@ -578,7 +595,7 @@ function addVacancy(vacancy, index, selector) {
 
 function findVacanciesBySkillNames(vacancies, skillNames) {
     let foundVacancies = vacancies.filter(function (vacancy) {
-        let vacancySkills = Object.keys(vacancy.skills);
+        let vacancySkills = getVacancySkillNames(vacancy);
 
         let missingSkills = vacancySkills.filter(function (skillName) {
             return skillNames.indexOf(skillName) === -1;
@@ -592,7 +609,7 @@ function findVacanciesBySkillNames(vacancies, skillNames) {
 
 function getSkills(vacancies) {
     return vacancies.reduce(function (allSkills, vacancy) {
-        let skillNames = Object.keys(vacancy.skills);
+        let skillNames = getVacancySkillNames(vacancy);
 
         skillNames.forEach(function (skillName) {
             if (allSkills.indexOf(skillName) === -1) {
@@ -608,7 +625,7 @@ function getSkillCount(vacancies) {
     let skillCountData = {};
 
     vacancies.forEach(function (vacancy) {
-        let skillNames = Object.keys(vacancy.skills);
+        let skillNames = getVacancySkillNames(vacancy);
         skillNames.forEach(function (skillName) {
             if (typeof skillCountData[skillName] === 'undefined') {
                 skillCountData[skillName] = 0;
@@ -623,7 +640,7 @@ function getSkillCount(vacancies) {
 
 function getAverageSkillWeight(vacancies, vacancy) {
     let totalWeight = 0;
-    let skillNames = Object.keys(vacancy.skills);
+    let skillNames = getVacancySkillNames(vacancy);
     let skillCount = getSkillCount(vacancies);
 
     skillNames.forEach(function (skillName) {
@@ -657,7 +674,7 @@ function getNeededSkills(vacancies, minimumVacancies) {
             return;
         }
 
-        let vacancySkillNames = Object.keys(vacancy.skills);
+        let vacancySkillNames = getVacancySkillNames(vacancy);
         vacancySkillNames.forEach(function (vacancySkillName) {
             if (neededSkills.indexOf(vacancySkillName) === -1) {
                 neededSkills.push(vacancySkillName);

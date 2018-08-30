@@ -144,7 +144,7 @@ function getSkillsPropHTML(skills, filter, isRequirements) {
         let levelText = getLevelText(skills[skillName]);
         let badgeText = isRequirements
             ? skillName + ':&nbsp;' + levelText
-            : skillName + ':&nbsp;ваш&nbsp;уровень&nbps;выше';
+            : skillName + ':&nbsp;ваш&nbsp;уровень&nbsp;выше';
         return '<span class="badge badge-danger" data-toggle="tooltip" title="' + unmatchLabel + '">'+badgeText+'</span>';
     });
 
@@ -184,12 +184,12 @@ function getCourseSkillPercent(course) {
     return Math.round(getSkillLevelUps(course)/getMaxLevelsCount() * 100);
 }
 
-function getCourseDataHTML(course, skipButton) {
+function getCourseDataHTML(course, skipButton, index) {
     let descriptionHTML = course.description || "";
     let price = course.price == 0 ? 'Бесплатно' : course.price + ' руб';
     let percentText = '+' + getCourseSkillPercent(course) + '% навыков';
     let filter = getCoursesFilter();
-    let skillsFilter = applyEduPathSkills(filter.skills);
+    let skillsFilter = applyEduPathSkills(filter.skills, index);
     let skillsHTML = getSkillsHTML(course, skillsFilter);
     let hasRequirements = Object.keys(course.requirements).length > 0;
     let requirementsHTML = hasRequirements
@@ -250,13 +250,16 @@ function getCourseMatchRating(course, filter) {
     let totalSkillsAndRequirements = Object.keys(course.skills).length + Object.keys(course.requirements).length;
 
     return (matchedSkillsCount - 0.5 * unmatchedSkillsCount)/totalSkillsAndRequirements +
-        (matchingRequirementsCount - 0.5 * unmatchingRequirementsCount)/totalSkillsAndRequirements;
+        (matchingRequirementsCount - 2 * unmatchingRequirementsCount)/totalSkillsAndRequirements;
 }
 
-function applyEduPathSkills(currentSkills) {
+function applyEduPathSkills(currentSkills, level) {
     let skillsAfterLearn = JSON.parse(JSON.stringify(currentSkills));
+    let coursesToApply = typeof (level) === 'number'
+        ? eduPath.slice(0, level)
+        : eduPath;
 
-    eduPath.forEach(function (course) {
+    coursesToApply.forEach(function (course) {
         Object.keys(course.skills).forEach(function (skillName) {
             if (typeof skillsAfterLearn[skillName] !== 'undefined' && skillsAfterLearn[skillName] < course.skills[skillName]) {
                 skillsAfterLearn[skillName] = course.skills[skillName];
@@ -267,9 +270,45 @@ function applyEduPathSkills(currentSkills) {
     return skillsAfterLearn;
 }
 
-
 function findCourses(filter) {
     let skillsFilter = applyEduPathSkills(filter.skills);
+
+    let compareRating = function (ratingA, ratingB) {
+        if (ratingA > ratingB) {
+            return -1;
+        }
+
+        if (ratingA < ratingB) {
+            return 1;
+        }
+
+        return 0;
+    };
+
+    let compareSkillsAndRating = function (skillsA, skillsB, ratingA, ratingB) {
+        if (skillsA > skillsB) {
+            return -1;
+        }
+
+        if (skillsA < skillsB) {
+            return 1;
+        }
+
+        return compareRating(ratingA, ratingB);
+    };
+
+    let comparePriceSkillsAndRating = function (priceA, priceB, skillsA, skillsB, ratingA, ratingB) {
+        if (priceA > priceB) {
+            return 1;
+        }
+
+        if (priceA < priceB) {
+            return -1;
+        }
+
+        return compareSkillsAndRating(skillsA, skillsB, ratingA, ratingB);
+    };
+
 
     return getCoursesList()
         .filter(function (course) {
@@ -280,16 +319,24 @@ function findCourses(filter) {
         .sort(function (courseA, courseB) {
             let ratingA = getCourseMatchRating(courseA, filter);
             let ratingB = getCourseMatchRating(courseB, filter);
+            let priceA = courseA.price;
+            let priceB = courseB.price;
+            let skillsA = getCourseSkillPercent(courseA);
+            let skillsB = getCourseSkillPercent(courseB);
+            let priceForSkillA = priceA/skillsA;
+            let priceForSkillB = priceB/skillsB;
+            let unmatchingA = getUnmatchingCourseSkills(courseA.requirements, skillsFilter, true).length;
+            let unmatchingB = getUnmatchingCourseSkills(courseB.requirements, skillsFilter, true).length;
 
-            if (ratingA > ratingB) {
-                return -1;
-            }
-
-            if (ratingA < ratingB) {
+            if (unmatchingA > unmatchingB) {
                 return 1;
             }
 
-            return 0;
+            if (unmatchingA < unmatchingB) {
+                return -1;
+            }
+
+            return comparePriceSkillsAndRating(priceForSkillA, priceForSkillB, skillsA, skillsB, ratingA, ratingB);
         });
 }
 
@@ -431,7 +478,8 @@ function getMatchingListHTML(course) {
 }
 
 function getCoursePathHTML(course, index) {
-    let courseHTML = getCourseDataHTML(course, true);
+    let pathLevel = index-1;
+    let courseHTML = getCourseDataHTML(course, true, pathLevel);
 
     return "<div class=\"input-group\">\n" +
         "    <div class=\"input-group-prepend\">\n" +
@@ -628,6 +676,9 @@ function updateTotals() {
     let totalCourses = 0;
     let totalPrice = 0;
     let totalDays = 0;
+    let skillsAfterLearn = applyEduPathSkills(getCoursesFilter().skills);
+    let vacanciesCount = findParticialMacth(skillsAfterLearn).length;
+    let vacanciesPercent = Math.round( vacanciesCount / getVacanciesList().length * 100 );
 
     eduPath.forEach(function (course) {
         totalCourses++;
@@ -638,6 +689,7 @@ function updateTotals() {
     $('.totalCourses').text(totalCourses + ' курсов');
     $('.totalTime').text(Math.round(totalDays) + ' дней');
     $('.totalPrice').text(totalPrice + ' руб');
+    $('.percentVacancies').text(vacanciesPercent + '% вакансий');
 }
 
 $(function () {
