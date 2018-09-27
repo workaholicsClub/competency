@@ -189,3 +189,34 @@
     padding: 0px;
     overflow: hidden;
 }
+
+.modal-scrollable .modal-body {
+    position: relative;
+    padding: 15px;
+    max-height: 600px !important;
+    overflow-y: scroll;
+}
+
+.modal .container {
+    padding: 0px;
+}
+
+.modal-scrollable .modal-header .container .close {
+    margin: -3rem -1rem -1rem auto;
+}
+
+.modal-scrollable .modal-dialog {
+    max-width: 600px;
+}
+
+.skillList .list-group-item .custom-select {
+    display: none;
+}
+
+.skillList .list-group-item.active .custom-select {
+    display: block;
+}
+
+.card h4 {
+    max-width: 75%;
+}

@@ -1,22 +1,28 @@
-function addSkill(skillName) {
+function getSkillLevels() {
+    return ['Не владею', 'Основы', 'Уверенный', 'Глубокий'];
+}
+
+function addSkill(skillName, skillLevel) {
     let selectedSkills = getSelectedSkillNames();
     let isSelected = selectedSkills.indexOf(skillName) !== -1;
+    let skillLevelDefined = (typeof (skillLevel) === "string" || typeof (skillLevel) === "number") && skillLevel !== "Определите уровень";
+    let colorClass = skillLevelDefined ? "alert-primary" : "alert-danger";
 
     if (isSelected) {
         return;
     }
 
-    let skillHTML = "<div class=\"alert alert-danger d-flex justify-content-between skillBlock\" role=\"alert\" data-name=\""+skillName+"\">\n" +
+    let skillHTML = "<div class=\"alert " + colorClass + " d-flex justify-content-between skillBlock\" role=\"alert\" data-name=\""+skillName+"\">\n" +
         "    <div class=\"levelHeaderContainer\">\n" +
         "       <h4 class=\"alert-heading\">"+skillName+"</h4>\n" +
         "       <button type=\"button\" class=\"close align-self-start\" data-dismiss=\"alert\">×</button>\n" +
         "    </div>\n" +
         "    <select class=\"custom-select skillSlider\">\n" +
-        "       <option selected>Определите уровень</option>\n" +
-        "       <option value=0>Не владею</option>\n" +
-        "       <option value=1>Основы</option>\n" +
-        "       <option value=2>Уверенный</option>\n" +
-        "       <option value=3>Глубокий</option>\n" +
+        "       <option "+(skillLevelDefined?"":"selected")+">Определите уровень</option>\n" +
+                getSkillLevels().map(function (skillText, index) {
+                    let isSelected = skillLevel === index.toString();
+                    return "       <option value="+index+" "+(isSelected?"selected":"")+">"+skillText+"</option>\n";
+                }).join("\n") +
         "    </select>\n" +
         "</div>\n";
 
@@ -125,7 +131,8 @@ function getMatchRating(vacancy, filter) {
     let unmatchingSkillsCount = getUnmatchingSkills(vacancy, filter).length;
     let skillsCount = vacancySkillNames.length;
 
-    return (matchingSkillsCount - unmatchingSkillsCount * 0.5) / skillsCount;
+    //return (matchingSkillsCount - unmatchingSkillsCount * 0.5) / skillsCount;
+    return matchingSkillsCount * 100000 - unmatchingSkillsCount * 10000 + 100/skillsCount;
 }
 
 function findVacancies(filter) {
@@ -136,16 +143,10 @@ function findVacancies(filter) {
 }
 
 function findParticialMacth(filter) {
-    let minimumRating = 0.3;
-
     return getVacanciesList()
         .filter(function (vacancy) {
             let isNotInRecommendedList = !matchVacancy(vacancy, filter);
             return isNotInRecommendedList;
-        })
-        .filter(function (vacancy) {
-            let rating = getMatchRating(vacancy, filter);
-            return rating >= minimumRating;
         })
         .sort(function (vacancyA, vacancyB) {
             let ratingA = getMatchRating(vacancyA, filter);
@@ -164,10 +165,6 @@ function findParticialMacth(filter) {
 }
 
 function search() {
-    if (!hasEnoughSkills()) {
-        return;
-    }
-
     toggleSkillsResult();
     clearVacanciesList();
 
@@ -198,21 +195,13 @@ function search() {
 
 function toggleSkillsResult() {
     let areVacanciesFound = findParticialMacth(getSkillsFilter()).length > 0;
-    let allSkillsDefined = hasSkillsWithoutLevels() === false;
 
-    if (hasEnoughSkills() && areVacanciesFound) {
-        $('.noSkillsDefined').hide();
+    if (areVacanciesFound) {
         $('.noVacanciesFound').hide();
         $('.searchResults').show();
     }
-    else if (!areVacanciesFound && allSkillsDefined) {
-        $('.noSkillsDefined').hide();
-        $('.noVacanciesFound').show();
-        $('.searchResults').hide();
-    }
     else {
-        $('.noSkillsDefined').show();
-        $('.noVacanciesFound').hide();
+        $('.noVacanciesFound').show();
         $('.searchResults').hide();
     }
     toggleAdditionalSkills();
@@ -261,7 +250,7 @@ function updateUpdatableSkills() {
     }
 
     updatableSkills.forEach(function (skillName) {
-        $('.updateSkillsContainer').append('<a href="#" class="dashedLink">'+skillName+'</a><span></span>');
+        $('.updateSkillsContainer').append('<span data-skill="'+skillName+'">'+skillName+'</span>');
     });
 }
 
@@ -279,14 +268,12 @@ function updateAdditionalSkills(additionalSkills) {
     }
 
     shownAdditionalSkills.forEach(function (skillName) {
-        $('.addSkillsContainer').append('<a href="#" class="dashedLink" data-skill="'+skillName+'">'+skillName+'</a><span></span>');
+        $('.addSkillsContainer').append('<span data-skill="'+skillName+'">'+skillName+'</span>');
     });
 }
 
 function updateAllSkills() {
-    let minSkills = getMinNeededSkills();
     let filteredSkills = removeSelectedSkills( getSkills(getVacanciesList()) );
-    filteredSkills = removeSkills(filteredSkills, minSkills);
 
     $('#allSkills').html('');
     if (filteredSkills && filteredSkills.length === 0) {
@@ -374,7 +361,7 @@ function toggleAdditionalSkills() {
 
     updateAdditionalSkills(allAdditionalSkills);
 
-    if (hasEnoughSkills() && hasAdditionalSkills) {
+    if (hasAdditionalSkills) {
         $('.additionalSkills').show();
     }
     else {
@@ -474,6 +461,12 @@ function addSkillsToList(skillNames, selector) {
     $(selector).html( skillsHtml.join(', ') );
 }
 
+function sortSkillsByAlphabet(allSkills) {
+    return allSkills.sort(function (first, second) {
+        return first.localeCompare(second);
+    })
+}
+
 function sortSkillsByCount(allSkills) {
     let skillsCount = getSkillCount(getVacanciesList());
 
@@ -490,22 +483,96 @@ function sortSkillsByCount(allSkills) {
         }
 
         return 0;
-    })
+    });
 }
 
 function addSkillToPopup(allSkills, selector) {
     let skillsHtml = [];
+    let sortType = $('#sortSelect').val();
+    let sortByCount = sortType === 'jobCount';
     let skillsCount = getSkillCount(getVacanciesList());
+    let sortedSkills = sortByCount
+        ? sortSkillsByCount(allSkills)
+        : sortSkillsByAlphabet(allSkills);
 
-    sortSkillsByCount(allSkills).forEach(function (skill, index) {
+    sortedSkills.forEach(function (skill, index) {
         let skillCount = skillsCount[skill] || 0;
         let vacanciesPercent = Math.round(skillCount/getVacanciesList().length * 100);
-        let countText = index === 0 ? vacanciesPercent + '% вакансий' : vacanciesPercent + '%';
+        let firstLetter = skill.slice(0,1).toLocaleUpperCase();
+        let countText = sortByCount
+            ? vacanciesPercent + '%'
+            : firstLetter;
 
-        skillsHtml.push('<a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-name="'+skill+'">'+skill+' <span class="badge badge-primary">'+countText+'</span></a>');
+        let itemHTML =
+            "<div class=\"list-group-item list-group-item-action\" data-name=\""+skill+"\">\n" +
+            "    <form class=\"form-inline skill-form\">\n" +
+            "        <div class=\"form-group col-1\">\n" +
+            "            <div class=\"form-check\">\n" +
+            "                <input class=\"form-check-input\" type=\"checkbox\" value=\"\" id=\"check"+index+"\">\n" +
+            "            </div>\n" +
+            "        </div>\n" +
+            "        <div class=\"form-group col-5\">\n" +
+            "            <label class=\"form-check-label\" for=\"check"+index+"\">\n" +
+            "                "+skill+"\n" +
+            "            </label>\n" +
+            "        </div>\n" +
+            "        <div class=\"form-group col-5\">\n" +
+            "        <select class=\"custom-select\">\n" +
+            "           <option selected>Определите уровень</option>\n" +
+            "           <option value=0>Не владею</option>\n" +
+            "           <option value=1>Основы</option>\n" +
+            "           <option value=2>Уверенный</option>\n" +
+            "           <option value=3>Глубокий</option>\n" +
+            "        </select>\n" +
+            "        </div>\n" +
+            "        <div class=\"form-group col-1\">\n" +
+            "            <span class=\"badge badge-primary\">"+countText+"</span>\n" +
+            "        </div>\n" +
+            "    </form>\n" +
+            "</div>";
+
+        skillsHtml.push(itemHTML);
     });
 
     $(selector).html( skillsHtml.join('') );
+}
+
+function getVacancyById(vacancyId) {
+    return getVacanciesList().reduce(function (result, currentVacancy) {
+        return vacancyId === currentVacancy.id
+            ? currentVacancy
+            : result;
+    }, false);
+}
+
+function addSkillsToVacancyPopup(customSkills) {
+    let skillsHtml = [];
+
+    customSkills.forEach(function (skill, index) {
+        let itemHTML =
+            "<div class=\"list-group-item list-group-item-action\" data-name=\""+skill+"\">\n" +
+            "    <form class=\"form-inline skill-form\">\n" +
+            "        <div class=\"form-group col-7\">\n" +
+            "            <label class=\"form-check-label\" for=\"check"+index+"\">\n" +
+            "                "+skill+"\n" +
+            "            </label>\n" +
+            "        </div>\n" +
+            "        <div class=\"form-group col-5\">\n" +
+            "        <select class=\"custom-select\">\n" +
+            "           <option selected>Определите уровень</option>\n" +
+            "           <option value=0>Не владею</option>\n" +
+            "           <option value=1>Основы</option>\n" +
+            "           <option value=2>Уверенный</option>\n" +
+            "           <option value=3>Глубокий</option>\n" +
+            "        </select>\n" +
+            "        </div>\n" +
+            "    </form>\n" +
+            "</div>";
+
+        skillsHtml.push(itemHTML);
+    });
+
+    $("#selectedSkills").html( skillsHtml.join('') );
 }
 
 function addAllSkills(allSkills) {
@@ -519,18 +586,18 @@ function addMinSkills(allSkills) {
 function getSalaryHtml(vacancy) {
     if (vacancy.salary) {
         if (vacancy.salary.from && vacancy.salary.to) {
-            return "От " + vacancy.salary.from + " до " + vacancy.salary.to + "руб";
+            return "От " + vacancy.salary.from + "<br>до " + vacancy.salary.to + " руб";
         }
 
         if (!vacancy.salary.from) {
-            return "До " + vacancy.salary.to + "руб";
+            return "До " + vacancy.salary.to + " руб";
         }
         else {
-            return "От " + vacancy.salary.from + "руб";
+            return "От " + vacancy.salary.from + " руб";
         }
     }
 
-    return 'Заработная плата не указана';
+    return 'Заработная плата<br>не указана';
 }
 
 function getAttributesHtml(vacancy) {
@@ -570,11 +637,13 @@ function addVacancy(vacancy, index, selector) {
     let hasNoUndefinedSkills = getUndefinedSkills(vacancy, getSkillsFilter()).length === 0;
     let canSendResume = isRecommended || hasNoUndefinedSkills;
 
+
     let buttonHtml = canSendResume
         ? "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center\">Отправить резюме</a>\n"
-        : "<span tabindex=\"0\" data-toggle=\"tooltip\" title=\"Отправка резюме невозможна, пока не определен уровень всех требуемых навыков\"><a href=\"#\" class=\"btn btn-secondary disabled d-flex justify-content-center\" disabled=\"disabled\">Отправить резюме</a></span>\n";
+        : "<a href=\"#\" class=\"btn btn-secondary disabled d-flex justify-content-center mb-2\" disabled=\"disabled\">Отправить резюме</a>\n" +
+          "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center addVacancySkillsButton\" data-toggle=\"modal\" data-target=\"#addVacancySkillsModal\">Оценить требования, чтобы отправить резюме</a>\n";
 
-    let vacancyHtml = "<div class=\"card m-1\">"+
+    let vacancyHtml = "<div class=\"card m-1\" data-vacancy-id='"+vacancy.id+"'>"+
         "   <div class=\"card-body "+additionalClass+"\">\n" +
         "       <span class=\"badge badge-secondary priceBadge\">" +getSalaryHtml(vacancy)+ "</span>\n" +
         "       <h4>"+vacancy.title+"</h4>\n" +
@@ -683,4 +752,51 @@ function getNeededSkills(vacancies, minimumVacancies) {
     });
 
     return neededSkills;
+}
+
+function getVacanciesSalaryRange(vacancies) {
+    return vacancies.reduce(function (range, vacancy) {
+        if (vacancy.salary) {
+            let newMin = false;
+            let newMax = false;
+
+            if (vacancy.salary.from && vacancy.salary.to) {
+                newMin = vacancy.salary.from;
+                newMax = vacancy.salary.to;
+            }
+            else if (vacancy.salary.from) {
+                newMin = vacancy.salary.from;
+            }
+            else {
+                newMax = vacancy.salary.to;
+            }
+
+            if ( (newMin && newMin < range.min) || range.min === false ) {
+                range.min = newMin;
+            }
+
+            if ( (newMax && newMax > range.max) || range.max === false ) {
+                range.max = newMax;
+            }
+        }
+
+        return range;
+    }, {min: false, max: false});
+}
+
+function updateVacancyFromTo() {
+    let salaryRange = getVacanciesSalaryRange(getVacanciesList());
+    $('#from')
+        .attr('min', salaryRange.min)
+        .attr('max', salaryRange.max)
+        .attr('value', salaryRange.min);
+
+    $('#to')
+        .attr('min', salaryRange.min)
+        .attr('max', salaryRange.max)
+        .attr('value', salaryRange.max);
+}
+
+function scrollToTop() {
+    window.scroll({top: 0});
 }

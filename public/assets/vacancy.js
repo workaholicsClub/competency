@@ -4,8 +4,10 @@ $(function () {
     updateStartSkills();
     updateMinSkills();
     updateAllSkills();
-
-    $('#vacanciesCount').text( getVacanciesList().length );
+    toggleAdditionalSkills();
+    toggleUpdatableSkills();
+    updateVacancyFromTo();
+    search();
 
     $(document).on('click', '[data-skill]:not(#startSkills [data-skill], #updatedSkills [data-skill])', function () {
         let skillName = $(this).attr('data-skill');
@@ -26,8 +28,30 @@ $(function () {
         toggleSkillsResult();
     });
 
-    $(document).on('click', '#allSkills a', function () {
-        $(this).toggleClass('active');
+    $(document).on('click', '.skillList .list-group-item', function (event) {
+        let isCheckboxClicked = event.target.nodeName == 'INPUT';
+        let isLevelSelectClicked = event.target.nodeName == 'SELECT' || event.target.nodeName == 'OPTION';
+        let isItemActive = $(this).hasClass('active');
+
+        if (isLevelSelectClicked) {
+            return;
+        }
+
+        let newActiveState = isCheckboxClicked
+            ? $(event.target).prop('checked')
+            : !isItemActive;
+
+        if (newActiveState) {
+            $(this).addClass('active');
+        }
+        else {
+            $(this).removeClass('active');
+        }
+
+        if (!isCheckboxClicked) {
+            let $input = $(this).find('input');
+            $input.prop('checked', newActiveState);
+        }
     });
 
     $(document).on('click', '#minSkills a', function () {
@@ -35,12 +59,14 @@ $(function () {
     });
 
     $(document).on('click', '.confirmSkillsAddButton', function () {
-        $('.skillList a.active').each(function () {
+        $('.skillList .active').each(function () {
             let skillName = $(this).data('name');
-            addSkill(skillName);
+            let skillLevel = $(this).find('select').val();
+            addSkill(skillName, skillLevel);
             $(this).removeClass('active');
         });
         toggleSkillsResult();
+        scrollToTop();
         search();
     });
 
@@ -98,4 +124,41 @@ $(function () {
     $(document).on('change input click', 'input', function () {
         search();
     });
+
+    $(document).on('change', '#sortSelect', function () {
+        updateAllSkills();
+    });
+
+    $(document).on('click', '.addSKillButton', function () {
+        updateAllSkills();
+    });
+
+    $(document).on('click', '.addVacancySkillsButton', function () {
+        let vacancyId = parseInt( $(this).closest('.card').data('vacancy-id') );
+        let vacancy = getVacancyById(vacancyId);
+        let skillsToAdd = removeSkills(getVacancySkillNames(vacancy), getSelectedSkillNames())
+        addSkillsToVacancyPopup(skillsToAdd);
+    });
+
+    $(document).on('click', '.confirmSkillsAddButton', function () {
+        $('#selectedSkills .list-group-item').each(function () {
+            let $skillElement = $(this);
+            let skillName = $skillElement.data('name');
+            let skillLevel = $skillElement.find('select').val();
+            addSkill(skillName, skillLevel);
+        });
+
+        scrollToTop();
+        search();
+    });
+    
+    $(document).on('click', '#addRecommendedSkills', function () {
+        $('.addSkillsContainer [data-skill]').each(function () {
+            let skillName = $(this).data('skill');
+            addSkill(skillName);
+        });
+
+        scrollToTop();
+        search();
+    })
 });
