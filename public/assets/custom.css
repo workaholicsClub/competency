@@ -220,3 +220,33 @@
 .card h4 {
     max-width: 75%;
 }
+
+.accordion .card h4 {
+    max-width: 100%;
+}
+
+.inner-card {
+    border-top: 1px solid rgba(0,0,0,.125);
+}
+
+.inner-card:first-child {
+    border-top: 0px!important;
+}
+
+.finish-button {
+    display: none;
+}
+
+.card.current .finish-button {
+    display: inline-block;
+}
+
+.card.inactive {
+    border: 3px dashed rgba(0,0,0,.125);
+    opacity: 0.5;
+}
+.card.inactive .card-header {
+    color: #6c757d!important;
+    border-bottom: 0px;
+}
+

@@ -296,6 +296,7 @@ function updateStartSkills() {
     $('#startSkills').html('');
 
     if (filteredSkills.length === 0) {
+        let neededVacancies = 2;
         let neededSkills = removeSelectedSkills( getNeededSkills(getVacanciesList(), neededVacancies) );
         let hasNoNeededSkills = neededSkills.length === 0;
         if (hasNoNeededSkills) {
@@ -512,7 +513,7 @@ function addSkillToPopup(allSkills, selector) {
             "            </div>\n" +
             "        </div>\n" +
             "        <div class=\"form-group col-5\">\n" +
-            "            <label class=\"form-check-label\" for=\"check"+index+"\">\n" +
+            "            <label class=\"form-check-label\">\n" +
             "                "+skill+"\n" +
             "            </label>\n" +
             "        </div>\n" +

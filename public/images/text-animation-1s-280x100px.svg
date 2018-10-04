@@ -1,0 +1,67 @@
+<svg class="ldt-blank" width="280px"  height="100px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" style="background: none;"><style type="text/css">path,ellipse,circle,rect,polygon,polyline,line { stroke-width: 0; }
+@keyframes ld-breath {
+  0% {
+    -webkit-transform: scale(0.86);
+    transform: scale(0.86);
+  }
+  50% {
+    -webkit-transform: scale(1.06);
+    transform: scale(1.06);
+  }
+  100% {
+    -webkit-transform: scale(0.86);
+    transform: scale(0.86);
+  }
+}
+@-webkit-keyframes ld-breath {
+  0% {
+    -webkit-transform: scale(0.86);
+    transform: scale(0.86);
+  }
+  50% {
+    -webkit-transform: scale(1.06);
+    transform: scale(1.06);
+  }
+  100% {
+    -webkit-transform: scale(0.86);
+    transform: scale(0.86);
+  }
+}
+.ld.ld-breath {
+  -webkit-animation: ld-breath 1s infinite;
+  animation: ld-breath 1s infinite;
+}
+
+text { font-family: Arial }</style><g transform="translate(49.35973072052002 67.0988784790039)" style="opacity: 1;">
+  <g style="animation-delay: 0s; animation-duration: 1s; font-size: 48px; animation-direction: normal; transform-origin: 9.49359px 0px 0px;" class="ld ld-breath">
+    <text fill="#93dbe9" style="font-family:Arial">з</text>
+  </g>
+</g><g transform="translate(68.34691715240479 67.0988784790039)" style="opacity: 1;">
+  <g style="animation-delay: -0.125s; animation-duration: 1s; font-size: 48px; animation-direction: normal; transform-origin: 12.5856px 0px 0px;" class="ld ld-breath">
+    <text fill="#689cc5" style="font-family:Arial">а</text>
+  </g>
+</g><g transform="translate(93.51818943023682 67.0988784790039)" style="opacity: 1;">
+  <g style="animation-delay: -0.25s; animation-duration: 1s; font-size: 48px; animation-direction: normal; transform-origin: 8.99872px 0px 0px;" class="ld ld-breath">
+    <text fill="#5e6fa3" style="font-family:Arial">г</text>
+  </g>
+</g><g transform="translate(111.51563358306885 67.0988784790039)" style="opacity: 1;">
+  <g style="animation-delay: -0.375s; animation-duration: 1s; font-size: 48px; animation-direction: normal; transform-origin: 14.0395px 0px 0px;" class="ld ld-breath">
+    <text fill="#3b4368" style="font-family:Arial">р</text>
+  </g>
+</g><g transform="translate(139.59455394744873 67.0988784790039)" style="opacity: 1;">
+  <g style="animation-delay: -0.5s; animation-duration: 1s; font-size: 48px; animation-direction: normal; transform-origin: 12.7117px 0px 0px;" class="ld ld-breath">
+    <text fill="#191d3a" style="font-family:Arial">у</text>
+  </g>
+</g><g transform="translate(165.017991065979 67.0988784790039)" style="opacity: 1;">
+  <g style="animation-delay: -0.625s; animation-duration: 1s; font-size: 48px; animation-direction: normal; transform-origin: 10.7389px 0px 0px;" class="ld ld-breath">
+    <text fill="#d9dbee" style="font-family:Arial">з</text>
+  </g>
+</g><g transform="translate(186.4957456588745 67.0988784790039)" style="opacity: 1;">
+  <g style="animation-delay: -0.75s; animation-duration: 1s; font-size: 48px; animation-direction: normal; transform-origin: 10.4985px 0px 0px;" class="ld ld-breath">
+    <text fill="#b3b7e2" style="font-family:Arial">к</text>
+  </g>
+</g><g transform="translate(207.492751121521 67.0988784790039)" style="opacity: 1;">
+  <g style="animation-delay: -0.875s; animation-duration: 1s; font-size: 48px; animation-direction: normal; transform-origin: 11.5738px 0px 0px;" class="ld ld-breath">
+    <text fill="#93dbe9" style="font-family:Arial">а</text>
+  </g>
+</g></svg>
