@@ -5,7 +5,7 @@ function getSkillLevels() {
 function addSkill(skillName, skillLevel) {
     let selectedSkills = getSelectedSkillNames();
     let isSelected = selectedSkills.indexOf(skillName) !== -1;
-    let skillLevelDefined = (typeof (skillLevel) === "string" || typeof (skillLevel) === "number") && skillLevel !== "Определите уровень";
+    let skillLevelDefined = (typeof (skillLevel) === "string" || typeof (skillLevel) === "number") && skillLevel !== "Текущий уровень";
     let colorClass = skillLevelDefined ? "alert-primary" : "alert-danger";
 
     if (isSelected) {
@@ -18,7 +18,7 @@ function addSkill(skillName, skillLevel) {
         "       <button type=\"button\" class=\"close align-self-start\" data-dismiss=\"alert\">×</button>\n" +
         "    </div>\n" +
         "    <select class=\"custom-select skillSlider\">\n" +
-        "       <option "+(skillLevelDefined?"":"selected")+">Определите уровень</option>\n" +
+        "       <option "+(skillLevelDefined?"":"selected")+">Текущий уровень</option>\n" +
                 getSkillLevels().map(function (skillText, index) {
                     let isSelected = skillLevel === index.toString();
                     return "       <option value="+index+" "+(isSelected?"selected":"")+">"+skillText+"</option>\n";
@@ -74,6 +74,13 @@ function matchVacancy(vacancy, filter) {
         let levelMatches = isInFilter && getVacancySkillLevel(vacancy, skillName) <= filter[skillName];
         isMatching = isMatching && levelMatches;
     });
+
+    return isMatching;
+}
+
+function softMatchVacancy(vacancy, filter) {
+    let matchingSkills = getMatchingSkills(vacancy, filter);
+    let isMatching = matchingSkills.length > 0;
 
     return isMatching;
 }
@@ -142,15 +149,27 @@ function findVacancies(filter) {
         });
 }
 
-function findParticialMacth(filter) {
+function findSoftVacancies(filter) {
     return getVacanciesList()
+        .filter(function (vacancy) {
+            return softMatchVacancy(vacancy, filter);
+        });
+}
+
+function findParticialMacth(filter) {
+    let vacanices = JSON.parse( JSON.stringify(getVacanciesList()) ).map(function (vacancy) {
+        vacancy.rating = getMatchRating(vacancy, filter);
+        return vacancy;
+    });
+
+    return vacanices
         .filter(function (vacancy) {
             let isNotInRecommendedList = !matchVacancy(vacancy, filter);
             return isNotInRecommendedList;
         })
         .sort(function (vacancyA, vacancyB) {
-            let ratingA = getMatchRating(vacancyA, filter);
-            let ratingB = getMatchRating(vacancyB, filter);
+            let ratingA = vacancyA.rating;
+            let ratingB = vacancyB.rating;
 
             if (ratingA > ratingB) {
                 return -1;
@@ -519,7 +538,7 @@ function addSkillToPopup(allSkills, selector) {
             "        </div>\n" +
             "        <div class=\"form-group col-5\">\n" +
             "        <select class=\"custom-select\">\n" +
-            "           <option selected>Определите уровень</option>\n" +
+            "           <option selected>Текущий уровень</option>\n" +
             "           <option value=0>Не владею</option>\n" +
             "           <option value=1>Основы</option>\n" +
             "           <option value=2>Уверенный</option>\n" +
@@ -560,7 +579,7 @@ function addSkillsToVacancyPopup(customSkills) {
             "        </div>\n" +
             "        <div class=\"form-group col-5\">\n" +
             "        <select class=\"custom-select\">\n" +
-            "           <option selected>Определите уровень</option>\n" +
+            "           <option selected>Текущий уровень</option>\n" +
             "           <option value=0>Не владею</option>\n" +
             "           <option value=1>Основы</option>\n" +
             "           <option value=2>Уверенный</option>\n" +

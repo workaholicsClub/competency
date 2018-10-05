@@ -250,3 +250,36 @@
     border-bottom: 0px;
 }
 
+.visible-sm {
+    display: block;
+}
+
+.invisible-sm {
+    display: none;
+}
+
+.invisible-sm.show {
+    display: block;
+}
+
+.selected-title {
+    white-space: pre-wrap;
+    text-align: left;
+    min-width: 70%;
+    display: inline-block;
+    padding: 0px;
+}
+
+@media (min-width: 768px) {
+    .visible-sm {
+        display: none;
+    }
+
+    .invisible-sm {
+        display: block;
+    }
+
+    .selected-title {
+        max-width: 90%;
+    }
+}

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/custom.css" type="text/css">
+</head>
+
+<body>
+<div class="py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md">
+                <h1>Курсы&nbsp;<small class="text-muted"></small> </h1>
+            </div>
+            <div class="col-md-2 justify-content-end align-items-end align-self-end d-flex">
+                <!--a class="btn btn-primary btn-lg" href="#">Добавить курс</a-->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="pb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 bg-light py-4 filterCol">
+                    <form class="">
+                        <div class="form-group">
+                            <label class="h3">Развиваемые навыки</label>
+                            <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
+                                <i class="fas fa-plus-circle"></i>
+                                Добавить развиваемые навыки
+                            </button>
+                            <small class="form-text text-muted">После выбора навыка укажите текущий уровень владения</small>
+                        </div>
+                        <div class="skillContainer">
+
+                        </div>
+                        <div class="form-group py-3">
+                            <label class="h3">Фильтр курсов</label>
+                            <button class="btn btn-secondary hidden visible-sm" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">Развернуть</button>
+                            <div id="filterCollapse" class="invisible-sm">
+                                <div class="form-group pt-3">
+                                    <label class="d-block h4">Стоимость</label>
+                                    <div class="form-check py-1">
+                                        <input type="checkbox" class="form-check-input" value="on" id="cf">
+                                        <label class="form-check-label" for="cf">Только бесплатные</label>
+                                    </div>
+                                    <div class="form-row coursePrice">
+                                        <div class="col form-group">
+
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">От</div>
+                                                </div>
+                                                <input type="number" min="10000" max="100000" step="5000" value="30000" id="from" class="form-control">
+                                            </div>
+
+                                        </div>
+                                        <div class="col form-group">
+
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">До</div>
+                                                </div>
+                                                <input type="number" min="30000" max="500000" step="5000" value="50000" id="to" class="form-control">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group pt-3">
+                                    <label class="h4">Формат курса</label>
+                                    <div class="form-check">
+                                        <input id="format_1" class="form-check-input"
+                                               name="format_1" type="checkbox"
+                                               data-type="multicheckbox" data-code="format"
+                                               value="Интерактивный">
+                                        <label class="form-check-label" for="format_1">Интерактивный</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="format_2" class="form-check-input"
+                                               name="format_2" type="checkbox"
+                                               data-type="multicheckbox" data-code="format"
+                                               value="Вебинар">
+                                        <label class="form-check-label" for="format_2">Вебинар</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="format_3" class="form-check-input"
+                                               name="format_3" type="checkbox"
+                                               data-type="multicheckbox" data-code="format"
+                                               value="Видео">
+                                        <label class="form-check-label" for="format_3">Видео</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="format_4" class="form-check-input"
+                                               name="format_4" type="checkbox"
+                                               data-type="multicheckbox" data-code="format"
+                                               value="Онлайн">
+                                        <label class="form-check-label" for="format_4">Онлайн</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="format_5" class="form-check-input"
+                                               name="format_5" type="checkbox"
+                                               data-type="multicheckbox" data-code="format"
+                                               value="Текстовый">
+                                        <label class="form-check-label" for="format_5">Текстовый</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="format_6" class="form-check-input"
+                                               name="format_6" type="checkbox"
+                                               data-type="multicheckbox" data-code="format"
+                                               value="Интенсив">
+                                        <label class="form-check-label" for="format_6">Интенсив</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="format_7" class="form-check-input"
+                                               name="format_7" type="checkbox"
+                                               data-type="multicheckbox" data-code="format"
+                                               value="Вечерняя">
+                                        <label class="form-check-label" for="format_7">Вечерняя</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group pt-3">
+                                    <label class="h4">Сертификат</label>
+                                    <div class="form-check">
+                                        <input id="certificate_1" class="form-check-input"
+                                               name="certificate_1" type="checkbox"
+                                               data-type="multicheckbox" data-code="certificate"
+                                               value="Нет">
+                                        <label class="form-check-label" for="certificate_1">Нет</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="certificate_2" class="form-check-input"
+                                               name="certificate_2" type="checkbox"
+                                               data-type="multicheckbox" data-code="certificate"
+                                               value="Собственный">
+                                        <label class="form-check-label" for="certificate_2">Собственный</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="certificate_3" class="form-check-input"
+                                               name="certificate_3" type="checkbox"
+                                               data-type="multicheckbox" data-code="certificate"
+                                               value="Государственного образца">
+                                        <label class="form-check-label" for="certificate_3">Государственного образца</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group pt-3">
+                                    <label class="h4">Практика</label>
+                                    <div class="form-check">
+                                        <input id="hasPractice_1" class="form-check-input"
+                                               name="hasPractice_1" type="checkbox"
+                                               data-type="multicheckbox" data-code="hasPractice"
+                                               value="true">
+                                        <label class="form-check-label" for="hasPractice_1">Есть</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="hasPractice_2" class="form-check-input"
+                                               name="hasPractice_2" type="checkbox"
+                                               data-type="multicheckbox" data-code="hasPractice"
+                                               value="false">
+                                        <label class="form-check-label" for="hasPractice_2">Нет</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group pt-3">
+                                    <label class="h4">Преподаватель</label>
+                                    <div class="form-check">
+                                        <input id="hasTeacher_1" class="form-check-input"
+                                               name="hasTeacher_1" type="checkbox"
+                                               data-type="multicheckbox" data-code="hasTeacher"
+                                               value="true">
+                                        <label class="form-check-label" for="hasTeacher_1">Есть</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="hasTeacher_2" class="form-check-input"
+                                               name="hasTeacher_2" type="checkbox"
+                                               data-type="multicheckbox" data-code="hasTeacher"
+                                               value="false">
+                                        <label class="form-check-label" for="hasTeacher_2">Нет</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-8 searchResultsContainer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="accordion" id="levelsAccordion">
+                                <div class="card current">
+                                    <div class="card-header" id="headingOne">
+                                        <h4 class="mb-0">
+                                            <i class="fas fa-chess-pawn"></i> <span>Уровень 1&nbsp;</span><small>&laquo;Школьник&raquo;</small>
+                                            <button class="btn btn-link collapsed collapse-button" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                Выбрать курс...
+                                            </button>
+                                            <button class="btn btn-danger btn-sm float-right finish-button" type="button">Завершить подбор</button>
+                                        </h4>
+                                    </div>
+
+                                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#levelsAccordion">
+                                        <div class="searchResults">
+                                            <div id="coursesList">
+                                                <img src="/images/Rolling-1s-200px.svg">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card inactive">
+                                    <div class="card-header" id="headingTwo">
+                                        <h4 class="mb-0">
+                                            <i class="fas fa-chess-knight"></i> <span>Уровень 2&nbsp;</span><small>&laquo;Студент&raquo;</small>
+                                            <button class="btn btn-link collapsed collapse-button" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="display: none">
+                                                Выбрать курс...
+                                            </button>
+                                            <button class="btn btn-danger btn-sm float-right finish-button" type="button">Завершить подбор</button>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#levelsAccordion">
+                                    </div>
+                                </div>
+                                <div class="card inactive">
+                                    <div class="card-header" id="headingThree">
+                                        <h4 class="mb-0">
+                                            <i class="fas fa-chess-bishop"></i> <span>Уровень 3&nbsp;</span><small>&laquo;Аспирант&raquo;</small>
+                                            <button class="btn btn-link collapsed collapse-button" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="display: none">
+                                                Выбрать курс...
+                                            </button>
+                                            <button class="btn btn-danger btn-sm float-right finish-button" type="button">Завершить подбор</button>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#levelsAccordion">
+                                    </div>
+                                </div>
+                                <div class="card inactive">
+                                    <div class="card-header" id="headingFour">
+                                        <h4 class="mb-0">
+                                            <i class="fas fa-chess-rook"></i> <span>Уровень 4&nbsp;</span><small>&laquo;Кандидат&raquo;</small>
+                                            <button class="btn btn-link collapsed collapse-button" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree" style="display: none">
+                                                Выбрать курс...
+                                            </button>
+                                            <button class="btn btn-danger btn-sm float-right finish-button" type="button">Завершить подбор</button>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#levelsAccordion">
+                                    </div>
+                                </div>
+                                <div class="card inactive">
+                                    <div class="card-header" id="headingFive">
+                                        <h4 class="mb-0">
+                                            <i class="fas fa-chess-queen"></i> <span>Уровень 5&nbsp;</span><small>&laquo;Профессор&raquo;</small>
+                                            <button class="btn btn-link collapsed collapse-button" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseThree" style="display: none">
+                                                Выбрать курс...
+                                            </button>
+                                            <button class="btn btn-danger btn-sm float-right finish-button" type="button">Завершить подбор</button>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#levelsAccordion">
+                                    </div>
+                                </div>
+                                <div class="card inactive">
+                                    <div class="card-header" id="headingSix">
+                                        <h4 class="mb-0">
+                                            <i class="fas fa-chess-king"></i> <span>Уровень 6&nbsp;</span><small>&laquo;Академик&raquo;</small>
+                                            <button class="btn btn-link collapsed collapse-button" type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseThree" style="display: none">
+                                                Выбрать курс...
+                                            </button>
+                                            <button class="btn btn-danger btn-sm float-right finish-button" type="button">Завершить подбор</button>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#levelsAccordion">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-5 searchSuccess" style="display: none;">
+                        <div class="col-md-12">
+                            <h2>Поздравляем!</h2>
+                            <p>Вы успешно составили план обучения и можете приступать к улучшению собственных навыков!</p>
+                            <ul>
+                                <li>Общая длительность обучения: <span class="totalDuration"></span> дней</li>
+                                <li>Общая стоимость обучения: <span class="totalCost"></span> руб</li>
+                                <li>Полученные навыки подходят для <span class="vacanciesPercent"></span>% вакансий</li>
+                            </ul>
+
+                            <form class="form-inline" id="emailPlanForm">
+                                <label class="sr-only form-control-lg" for="emailField">Электропочта</label>
+                                <div class="input-group mb-2 mr-sm-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">@</div>
+                                    </div>
+                                    <input type="text" class="form-control form-control-lg" id="emailField" placeholder="Электропочта">
+                                </div>
+
+                                <button class="btn btn-primary btn-lg mb-2 pathDetails">Отправить план</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-scrollable" id="addSkillModal" tabindex="-1" role="dialog" aria-labelledby="addSkillModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="container">
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <h5 class="modal-title" id="addSkillModalTitle">Добавление навыков</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="sortSelect">Сортировать по:</label>
+                                </div>
+                                <select class="custom-select" id="sortSelect">
+                                    <option value="jobCount">Популярности у работодателей</option>
+                                    <option value="alphabet">Алфавиту</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="list-group skillList" id="allSkills"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary confirmSkillsAddButton" data-dismiss="modal">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-sm" id="alertModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="alert alert-success mb-0" role="alert" id="alertText">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.2/bootstrap-slider.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.3.0/snap.svg-min.js"></script>
+
+<script type="text/javascript" src="https://smtpjs.com/v2/smtp.js"></script>
+
+<script src="../courseList.js"></script>
+<script src="../vacancyList.js"></script>
+<script src="/assets/vacancyFunctions.js"></script>
+<script src="/assets/course.js"></script>
+</body>
+
+</html>
