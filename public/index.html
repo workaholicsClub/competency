@@ -6,13 +6,13 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/selectivity.css">
+    <link rel="stylesheet" href="/assets/custom.css">
 
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
 
-    <title>Развивака</title>
+    <title>Путь развития</title>
     <style>
         html {
             position: relative;
@@ -24,20 +24,83 @@
         }
     </style>
 
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WG2XFBS');</script>
+    <!-- End Google Tag Manager -->
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113216929-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
+
+        gtag('config', 'UA-113216929-1');
     </script>
+
 </head>
 <body>
-    <div class="container">
-        <div class="row justify-content-md-center">
-            <div class="col-lg-2 pt-3"><p class="text-muted">Подождите...</p></div>
+<main role="main">
+
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h1 class="jumbotron-heading">Путь развития</h1>
+            <p class="lead text-muted">
+                &laquo;Путь развития&raquo; поможем вам подобрать подходящие курсы для того чтобы освоить новую профессию или
+                улучшить навыки, а затем найти подходящую к вашим навыкам работу
+            </p>
+            <p>
+                <a href="#courses" class="btn btn-primary my-2">Посмотреть специальности</a>
+            </p>
+        </div>
+    </section>
+
+    <div class="album py-5" id="courses">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-body">
+                            <img class="" src="/images/PHP-logo.svg" alt="PHP-разработчик" height="100px">
+                            <p class="card-text">
+                                PHP-разработчик
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a href="/php-developer/courses/" class="btn btn-outline-secondary">Подобрать курсы</a>
+                                    <a href="/php-developer/vacancies/" class="btn btn-outline-secondary">Посмотреть вакансии</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-body">
+                            <img class="" src="/images/executive-534413_640.jpg" alt="HR-менеджер" height="100px">
+                            <p class="card-text">
+                                HR-менеджер
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a href="/hr-manager/courses/" class="btn btn-outline-secondary">Подобрать курсы</a>
+                                    <a href="/hr-manager/vacancies/" class="btn btn-outline-secondary">Посмотреть вакансии</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-    <script src="/assets/index.build.js" crossorigin="anonymous"></script>
+
+</main>
 </body>
 </html>

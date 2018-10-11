@@ -270,6 +270,12 @@
     padding: 0px;
 }
 
+.album .card .card-body {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
 @media (min-width: 768px) {
     .visible-sm {
         display: none;
