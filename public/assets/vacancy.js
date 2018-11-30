@@ -7,6 +7,7 @@ $(function () {
     toggleAdditionalSkills();
     toggleUpdatableSkills();
     updateVacancyFromTo();
+    updatePageTitle();
     search();
 
     $(document).on('click', '[data-skill]:not(#startSkills [data-skill], #updatedSkills [data-skill])', function () {

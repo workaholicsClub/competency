@@ -661,7 +661,7 @@ function addVacancy(vacancy, index, selector) {
     let buttonHtml = canSendResume
         ? "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center\">Отправить резюме</a>\n"
         : "<a href=\"#\" class=\"btn btn-secondary disabled d-flex justify-content-center mb-2\" disabled=\"disabled\">Отправить резюме</a>\n" +
-          "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center addVacancySkillsButton\" data-toggle=\"modal\" data-target=\"#addVacancySkillsModal\">Оценить требования, чтобы отправить резюме</a>\n";
+          "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center addVacancySkillsButton\" data-toggle=\"modal\" data-target=\"#addVacancySkillsModal\">Указать навыки, чтобы отправить резюме</a>\n";
 
     let vacancyHtml = "<div class=\"card m-1\" data-vacancy-id='"+vacancy.id+"'>"+
         "   <div class=\"card-body "+additionalClass+"\">\n" +
@@ -820,3 +820,15 @@ function updateVacancyFromTo() {
 function scrollToTop() {
     window.scroll({top: 0});
 }
+
+function updatePageTitle() {
+    let pageCode = location.pathname.split('/')[1];
+    let titles = {
+        'php-developer': 'Разработчик PHP',
+        'hr-manager': 'HR менеджер'
+    };
+
+    let pageTitle = titles[pageCode] || '';
+    $('h1 small').html(pageTitle);
+}
+

@@ -868,17 +868,6 @@ function getTimeInDays(course) {
     return timeInDays;
 }
 
-function updatePageTitle() {
-    let pageCode = location.pathname.split('/')[1];
-    let titles = {
-        'php-developer': 'Разработчик PHP',
-        'hr-manager': 'HR менеджер'
-    };
-
-    let pageTitle = titles[pageCode] || '';
-    $('h1 small').html(pageTitle);
-}
-
 $(function () {
     enableTooltips();
 
