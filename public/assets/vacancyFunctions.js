@@ -825,7 +825,22 @@ function updatePageTitle() {
     let pageCode = location.pathname.split('/')[1];
     let titles = {
         'php-developer': 'Разработчик PHP',
-        'hr-manager': 'HR менеджер'
+        'hr-manager': 'HR менеджер',
+        'pr-specialist': 'PR специалист',
+        'python-developer': 'Разработчик Python',
+        'golang-developer': 'Разработчик Golang',
+        'javascript-developer': 'Разработчик JavaScript',
+        'ui-ux-designer': 'UI/UX дизайнер',
+        'ios-developer': 'Разработчик iOS',
+        'android-developer': 'Разработчик Android',
+        'internet-marketologist': 'Интернет-маркетолог',
+        'qa-tester': 'Тестировщик',
+        'devops': 'DevOps специалист',
+        'data-scientist': 'Data Scientist',
+        'game-designer': 'Гейм-дизайнер',
+        'project-manager': 'Менеджер интернет-проектов',
+        'game-artist-2d': 'Игровой художник 2D',
+        'game-artist-3d': 'Игровой художник 3D'
     };
 
     let pageTitle = titles[pageCode] || '';

@@ -21,11 +21,21 @@ try {
 }
 
 $professionCode = $_REQUEST['professionCode'];
-$coursesQuery = $pdo->prepare('SELECT DISTINCT c.* FROM courses c
-        LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
-        LEFT JOIN links_skills_professions lsp ON lsc.skillId = lsp.skillId
-        LEFT JOIN professions p ON lsp.professionId = p.id
-    WHERE p.code = ?');
+$coursesQuery = $pdo->prepare('SELECT * FROM courses WHERE id IN (
+	SELECT id FROM (
+		SELECT c.id, c.name, COUNT(*) AS countProfSkills, countTotalSkills FROM `self.academy`.courses c
+			LEFT JOIN links_skills_courses lsc ON c.id=lsc.courseId
+			LEFT JOIN links_skills_professions lsp ON lsc.skillId = lsp.skillId
+            LEFT JOIN professions p ON lsp.professionId = p.id
+			LEFT JOIN (
+				SELECT courseId, COUNT(*) AS countTotalSkills FROM links_skills_courses lsc
+				GROUP BY lsc.courseId
+			) sc ON c.id = sc.courseId
+		WHERE p.code = ?
+		GROUP BY c.id
+		HAVING countProfSkills = countTotalSKills
+	) idt
+)');
 
 $skillsQuery = $pdo->prepare('SELECT s.name, lsc.skillLevel FROM links_skills_courses lsc
 	LEFT JOIN skills s ON lsc.skillId = s.id

@@ -180,7 +180,7 @@ CREATE TABLE `professions` (
 
 LOCK TABLES `professions` WRITE;
 /*!40000 ALTER TABLE `professions` DISABLE KEYS */;
-INSERT INTO `professions` VALUES (1,'php-developer','Разработчик PHP'),(2,'hr-manager','HR менеджер'),(3,'pr-specialist','PR специалицт'),(4,'python-developer','Разработчик Python'),(5,'golang-developer','Разработчик Golang'),(6,'javascript-developer','Разработчик JavaScript'),(7,'ui-ux-designer','UI/UX дизайнер'),(8,'ios-developer','Разработчик iOS'),(9,'android-developer','Разработчик Android'),(10,'internet-marketologist','Интернет-маркетолог'),(11,'qa-tester','Тестировщик'),(12,'devops','DevOps специалист'),(13,'data-scientist','Data Scientist'),(14,'game-designer','Гейм-дизайнер'),(15,'project-manager','Менеджер интернет-проектов'),(16,'game-artist-2d','Игровой художник 2D'),(17,'game-artist-3d','Игровой художник 3D');
+INSERT INTO `professions` VALUES (1,'php-developer','Разработчик PHP'),(2,'hr-manager','HR менеджер'),(3,'pr-specialist','PR специалист'),(4,'python-developer','Разработчик Python'),(5,'golang-developer','Разработчик Golang'),(6,'javascript-developer','Разработчик JavaScript'),(7,'ui-ux-designer','UI/UX дизайнер'),(8,'ios-developer','Разработчик iOS'),(9,'android-developer','Разработчик Android'),(10,'internet-marketologist','Интернет-маркетолог'),(11,'qa-tester','Тестировщик'),(12,'devops','DevOps специалист'),(13,'data-scientist','Data Scientist'),(14,'game-designer','Гейм-дизайнер'),(15,'project-manager','Менеджер интернет-проектов'),(16,'game-artist-2d','Игровой художник 2D'),(17,'game-artist-3d','Игровой художник 3D');
 /*!40000 ALTER TABLE `professions` ENABLE KEYS */;
 UNLOCK TABLES;
 
