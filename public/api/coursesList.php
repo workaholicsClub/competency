@@ -2,11 +2,9 @@
 
 $jsonOutput = false;
 
-$user = 'root';
-$password = 'Vai0chi2';
-
+$user = getenv('MYSQL_USER');
+$password = getenv('MYSQL_PASSWORD');
 $dsn = getenv('MYSQL_DSN');
-$dsn = "mysql:host=database;dbname=self.academy;charset=utf8";
 
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -16,7 +14,8 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $user, $password, $options);
-} catch (\PDOException $exception) {
+}
+catch (\PDOException $exception) {
     $jsonOutput = false;
 }
 
@@ -33,7 +32,7 @@ $coursesQuery = $pdo->prepare('SELECT * FROM courses WHERE id IN (
 			) sc ON c.id = sc.courseId
 		WHERE p.code = ?
 		GROUP BY c.id
-		HAVING countProfSkills = countTotalSKills
+		HAVING countProfSkills >= countTotalSKills - 2
 	) idt
 )');
 
@@ -67,7 +66,7 @@ if ($professionCode) {
             "id"            => intval($course['id']),
             "platform"      => $course['platform'],
             "title"         => $course['name'],
-            "url"           => $course['url'],
+            "url"           => '/api/go.php?courseId='.$course['id'],
             "format"        => $course['format'],
             "hasTeacher"    => boolval($course['hasTeacher']),
             "hasPractice"   => boolval($course['hasPractice']),

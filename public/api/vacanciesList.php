@@ -2,11 +2,9 @@
 
 $jsonOutput = false;
 
-$user = 'root';
-$password = 'Vai0chi2';
-
+$user = getenv('MYSQL_USER');
+$password = getenv('MYSQL_PASSWORD');
 $dsn = getenv('MYSQL_DSN');
-$dsn = "mysql:host=database;dbname=self.academy;charset=utf8";
 
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -16,7 +14,8 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $user, $password, $options);
-} catch (\PDOException $exception) {
+}
+catch (\PDOException $exception) {
     $jsonOutput = false;
 }
 

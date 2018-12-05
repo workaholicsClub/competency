@@ -87,7 +87,7 @@
     text-decoration: none;
 }
 
-.addSkillButton {
+.addSkillButton, .addRequirementButton {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -101,16 +101,16 @@
     cursor: pointer;
 }
 
-.addSkillButton:active, .addSkillButton:focus {
+.addSkillButton:active, .addSkillButton:focus, .addRequirementButton:active, .addRequirementButton:focus {
     outline: none;
 }
 
-.addSkillButton img {
+.addSkillButton img, .addRequirementButton img {
     width: 2.5rem;
     height: 2.5rem;
 }
 
-.addSkillButton i {
+.addSkillButton i, .addRequirementButton i {
     font-size: 2.5rem;
     color: #0069d9;
 }
@@ -150,7 +150,7 @@
 }
 
 .skillContainer {
-    justify-content: space-between;
+    /*justify-content: space-between;*/
 }
 
 .courseLink {
@@ -209,11 +209,11 @@
     max-width: 600px;
 }
 
-.skillList .list-group-item .custom-select {
+.skillList .list-group-item .custom-select, .requirementList .list-group-item .custom-select {
     display: none;
 }
 
-.skillList .list-group-item.active .custom-select {
+.skillList .list-group-item.active .custom-select, .requirementList .list-group-item.active .custom-select {
     display: block;
 }
 
