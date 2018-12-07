@@ -213,10 +213,11 @@
             return ['Не владею', 'Основы', 'Уверенный', 'Глубокий'];
         }
 
-        function getSkillsFilter() {
+        function getSkillsFilter(isRequirement) {
             let skillsData = {};
+            let blockSelector = isRequirement ? '.requirementsContainer .skillBlock' : '.skillContainer .skillBlock';
 
-            $('.skillBlock').each(function () {
+            $(blockSelector).each(function () {
                 let skillName = $(this).find('h4').text();
                 let skillLevel = parseInt( $(this).find('select').val() ) || 0;
 
@@ -226,14 +227,14 @@
             return skillsData;
         }
 
-        function getSelectedSkillNames() {
-            return Object.keys(getSkillsFilter());
+        function getSelectedSkillNames(isRequirement) {
+            return Object.keys(getSkillsFilter(isRequirement));
         }
 
         function addSkill(skillId, skillName, skillLevel, isRequirement) {
             let container = isRequirement ? '.requirementsContainer' :'.skillContainer';
 
-            let selectedSkills = getSelectedSkillNames();
+            let selectedSkills = getSelectedSkillNames(isRequirement);
             let isSelected = selectedSkills.indexOf(skillName) !== -1;
             let colorClass = "alert-primary";
 
