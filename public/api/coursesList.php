@@ -46,7 +46,6 @@ WHERE lrc.courseId = ?');
 
 
 if ($professionCode) {
-
     $coursesQuery->execute([$professionCode]);
     $jsonOutput = [];
     while ($course = $coursesQuery->fetch()) {

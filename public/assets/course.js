@@ -283,7 +283,9 @@ function getCourseDataHTML(course, skipButton, index) {
     let attributesHTML = attributes.join('&nbsp;&bull;&nbsp;\n');
     let buttonHTML = skipButton
         ? ""
-        : "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center add-to-plan mt-1\" data-course-id=\""+course.id+"\">Выбрать курс</a>";
+        : "<a href=\"#\" class=\"btn btn-primary btn-block d-flex justify-content-center add-to-plan mt-1\" data-course-id=\""+course.id+"\"><img src=\"/assets/images/backpack-white.svg\"></img>&nbsp;Добавить в портфель</a>";
+
+    let visitButtonHTML = "<a href=\"" + course.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-course mt-1\" data-course-id=\""+course.id+"\"><i class=\"fas fa-external-link-square-alt\"></i>&nbsp;Перейти к курсу</a>";
 
     let eduPathIndex = eduPath.length;
     let difficultyText = eduPathIndex === 0
@@ -316,6 +318,7 @@ function getCourseDataHTML(course, skipButton, index) {
         "<p id=\"description"+course.id+"\" class=\"collapse\">\n" +
             descriptionHTML +
         "</p>\n" +
+        visitButtonHTML +
         buttonHTML;
 }
 
