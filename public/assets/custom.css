@@ -12,6 +12,11 @@ body {
     width: 3rem;
 }
 
+.navbar-alert button {
+    display: block;
+    margin-top: 1rem;
+}
+
 .navbar-toggler .backpackCount {
     display: block;
     width: 1rem;
@@ -32,6 +37,12 @@ body {
 }
 
 .alert .btn-turnoff {
+}
+
+.backpack-dropdown {
+    height: auto;
+    max-height: 90vh;
+    overflow-x: hidden;
 }
 
 .wrapper {
@@ -337,11 +348,5 @@ body {
 
     .selected-title {
         max-width: 90%;
-    }
-
-    .alert .btn-turnoff {
-        float: right;
-        margin-top: -7px;
-        margin-right: 7px;
     }
 }
