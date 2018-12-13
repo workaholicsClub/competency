@@ -39,7 +39,7 @@ $linkQuery = $pdo->prepare('INSERT INTO links_users_courses (userId, courseId) V
 $coursesQuery = $pdo->prepare('SELECT * FROM courses WHERE id IN ('.$placeHolders.')');
 $coursesQuery->execute($courseIds);
 
-$messageText = "Здравствуйте!<br><br>С помощью сервиса <a href='https://self.academy/'>Сам себе академик</a> вы составили план обучения и выбрали следующие курсы:<br>";
+$messageText = "Здравствуйте!<br><br>С помощью сервиса <a href='https://self.academy/'>Сам себе академик</a> вы составили план обучения и выбрали следующие курсы:<br><br>";
 
 while ($course = $coursesQuery->fetch()) {
     $messageText .= "<a href='https://self.academy/api/go.php?courseId=".$course['id']."&from=".$emailTo."'>".$course['name']."</a><br>";

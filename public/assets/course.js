@@ -885,6 +885,7 @@ function updateBackpackData() {
     }, 0);
     totalDuration = Math.ceil(totalDuration);
 
+    $('.totalCount').text(backpack.length);
     $('.totalDuration').text(totalDuration);
     $('.totalCost').text(totalPrice);
     $('.vacanciesPercent').text(vacanciesPercent);
@@ -1231,15 +1232,14 @@ $(function () {
     $('#emailPlanForm').on('submit', function (event) {
         event.preventDefault();
 
-        let defaultText = 'Отправить план';
         $('.sendPlan').text('...Идет отправка...').attr('disabled', true);
 
         sendBackpackToEmail()
             .then(function () {
-                $('.sendPlan').text(defaultText).attr('disabled', false);
+                $('.sendPlan').text('Успешно! Отправить еще раз').attr('disabled', false);
             })
             .catch(function () {
-                $('.sendPlan').text('Ошибка: отправить еще раз').attr('disabled', false);
+                $('.sendPlan').text('Ошибка! Отправить еще раз').attr('disabled', false);
             });
 
     });
