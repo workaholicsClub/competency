@@ -12,6 +12,13 @@ body {
     width: 3rem;
 }
 
+.navbar-buttons button.btn-recommend {
+    width: 7rem;
+    white-space: normal;
+    font-size: 0.9rem;
+    line-height: 0.9rem;
+}
+
 .navbar-alert button {
     display: block;
     margin-top: 1rem;
@@ -264,10 +271,6 @@ body {
     display: block;
 }
 
-.card h4 {
-    max-width: 75%;
-}
-
 .accordion .card h4 {
     max-width: 100%;
 }
@@ -336,6 +339,16 @@ a.header, a.header:visited, a.header:hover, a.header:active {
     width: 100%;
     height: 90.5vh;
     overflow-y: scroll;
+}
+
+#filterCollapse.vacancyFilter {
+    height: 92vh;
+}
+
+@media (max-width: 768px) {
+    .addVacancySkillsButton {
+        font-size: .8rem;
+    }
 }
 
 @media (min-width: 768px) {

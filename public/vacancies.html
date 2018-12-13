@@ -10,80 +10,39 @@
 </head>
 
 <body>
-<div class="py-4">
-    <div class="container">
-        <div class="row">
-            <div class="col-md">
-                <h1>Вакансии&nbsp;<small class="text-muted"></small> </h1>
-            </div>
-            <div class="col-md-2 justify-content-end align-items-end align-self-end d-flex">
-                <a class="btn btn-outline-primary btn-lg" href="add.html">Добавить вакансию</a>
-            </div>
-        </div>
+
+<nav class="navbar navbar-expand-md fixed-top navbar-light bg-light visible-sm-flex">
+    <a href="?" class="header"><h1 class="h5">Вакансии<br><small class="text-muted">Разработчик PHP</small> </h1></a>
+
+    <div class="navbar-buttons">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
+            <span class="fas fa-filter"></span>
+            <span class="filterCount" style="display: none;">0</span>
+        </button>
+
+        <button class="btn btn-primary btn-lg btn-recommend ml-1" type="button" data-toggle="modal"  data-target="#recommendModal">
+            Автоподбор вакансии
+        </button>
     </div>
-</div>
+
+    <div class="collapse navbar-collapse place-filter-here vacancyFilter" id="filterCollapse">
+    </div>
+</nav>
+
+<nav class="navbar navbar-expand-md fixed-top navbar-light bg-light invisible-sm">
+    <div class="container">
+        <a href="?" class="header"><h1>Вакансии&nbsp;<small class="text-muted"></small> </h1></a>
+
+        <button class="btn btn-primary btn-lg btn-recommend" type="button" data-toggle="modal"  data-target="#recommendModal">
+            Автоподбор вакансии
+        </button>
+    </div>
+</nav>
+
 <div class="pb-5">
     <div class="container">
         <div class="row equal">
-            <div class="col-md-4 bg-light py-4 filterCol">
-                <form class="">
-                    <div class="form-group">
-                        <label class="h3">Ваши навыки</label>
-                        <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
-                            <i class="fas fa-plus-circle"></i>
-                            Добавить мои навыки
-                        </button>
-                        <small class="form-text text-muted">После выбора навыка укажите текущий уровень владения</small>
-                    </div>
-                    <div class="skillContainer">
-
-                    </div>
-                    <label class="h3">Фильтр вакансий</label>
-                    <button class="btn btn-secondary hidden visible-sm" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">Развернуть</button>
-                    <div id="filterCollapse" class="invisible-sm">
-                        <div class="form-group">
-                            <label class="d-block">Заработная плата</label>
-                            <div class="form-row">
-                                <div class="col form-group">
-                                    <label for="from">От</label>
-                                    <input type="number" min="10000" max="100000" step="5000" value="30000" id="from" class="form-control">
-                                </div>
-                                <div class="col form-group">
-                                    <label for="to">До</label>
-                                    <input type="number" min="30000" max="500000" step="5000" value="50000" id="to" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" id="c1">
-                            <label class="form-check-label" for="c1">Оформление по ТК</label>
-                        </div>
-                        <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" id="c2">
-                            <label class="form-check-label" for="c2">Гибкий график</label>
-                        </div>
-                        <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" id="c3">
-                            <label class="form-check-label" for="c3">Возможность удаленной работы</label>
-                        </div>
-                        <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" id="c4">
-                            <label class="form-check-label" for="c4">Без тестового задания</label>
-                        </div>
-                        <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" id="c5">
-                            <label class="form-check-label" for="c5">Обучение за счет работодателя</label>
-                        </div>
-                        <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" id="c6">
-                            <label class="form-check-label" for="c6">Питание за счет работодателя</label>
-                        </div>
-                        <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" id="c7">
-                            <label class="form-check-label" for="c7">ДМС</label>
-                        </div>
-                    </div>
-                </form>
+            <div class="col-md-4 bg-light py-4 filterCol invisible-sm place-filter-here">
             </div>
             <div class="col-md-8 noVacanciesFound align-items-center" style="display: none;">
                 <div class="row justify-content-center align-self-center w-100">
@@ -99,40 +58,134 @@
             <div class="col-md-8 searchResults">
                 <div class="row">
                     <div class="col-md-12">
-                        <h5>Вакансии, рекомендуемые для ваших навыков</h5>
-                        <div class="alert alert-warning additionalSkills" role="alert" style="display: none">
-                            <button type="button" class="close" data-dismiss="alert">×</button>
-                            <p class="mb-0">Чтобы увидеть рекомендуемые вакансии добавьте в фильтр следующие навыки:&nbsp;
-                                <span class="addSkillsContainer">
-                                </span>
-                            </p>
-                            <button class="btn btn-warning mt-3" id="addRecommendedSkills">Добавить все перечисленные навыки в фильтр</button>
-                        </div>
-                        <div class="alert alert-warning updateSkills" role="alert" style="display: none">
-                            <button type="button" class="close" data-dismiss="alert">×</button>
-                            <p class="mb-0">Пройдите обучение, повысьте уровень владения следующими навыками и сможете расчитывать на новые рекомендации:&nbsp;
-                                <span class="updateSkillsContainer">
-                                </span>
-                            </p>
-                            <a href="../courses/" class="btn btn-warning mt-3" id="searchCourses" target="_blank">Подобрать подходящие курсы</a>
-                        </div>
-                        <div class="card m-1 noRecommendedVacancies">
-                            <div class="card-body">
-                                <h4>Рекомендованых вакансий не найдено</h4>
-                            </div>
-                        </div>
                         <div id="vacancyList"></div>
-                    </div>
-                </div>
-                <div class="row mt-5">
-                    <div class="col-md-12">
-                        <h5>Не полностью соответствуют указанным навыкам</h5>
-                        <div id="notMatchedVacancyList"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<div class="take-filter-from-here" style="display: none">
+    <form class="">
+        <div class="form-group">
+            <label class="h3">Ваши навыки</label>
+            <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
+                <i class="fas fa-plus-circle"></i>
+                Добавить мои навыки
+            </button>
+            <small class="form-text text-muted">После выбора навыка укажите текущий уровень владения</small>
+        </div>
+        <div class="skillContainer">
+
+        </div>
+        <div class="form-group">
+            <div class="form-group pt-3">
+                <label class="d-block h4">Заработная плата</label>
+                <div class="form-row vacancySalary">
+                    <div class="col form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">От</div>
+                            </div>
+                            <input type="number" min="10000" max="100000" step="5000" value="" id="from" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">До</div>
+                            </div>
+                            <input type="number" min="30000" max="500000" step="5000" value="" id="to" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="h4">Город</label>
+            <div class="form-check">
+                <input id="city_1" class="form-check-input"
+                        name="city_1" type="checkbox"
+                        data-type="multicheckbox" data-code="city"
+                        value="Москва">
+                <label class="form-check-label" for="city_1">Москва</label>
+            </div>
+            <div class="form-check">
+                <input id="city_2" class="form-check-input"
+                        name="city_2" type="checkbox"
+                        data-type="multicheckbox" data-code="city"
+                        value="Санкт-Петербург">
+                <label class="form-check-label" for="city_2">Санкт-Петербург</label>
+            </div>
+            <div class="form-check">
+                <input id="city_3" class="form-check-input"
+                        name="city_3" type="checkbox"
+                        data-type="multicheckbox" data-code="city"
+                        value="Томск">
+                <label class="form-check-label" for="city_3">Томск</label>
+            </div>
+        </div>
+
+        <label class="d-block h4">Параметры вакансий</label>
+        <div class="form-check pt-1">
+            <input type="checkbox" class="form-check-input" name="fullTime" value="1" id="c1">
+            <label class="form-check-label" for="c1">Полный рабочий день</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="flexibleSchedule" value="1" id="c2">
+            <label class="form-check-label" for="c2">Гибкий график</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="probation" value="1" id="c3">
+            <label class="form-check-label" for="c3">Испытательный срок</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="officialEmployment" value="1" id="c4">
+            <label class="form-check-label" for="c4">Соблюдение ТК</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="canBeRemote" value="1" id="c5">
+            <label class="form-check-label" for="c5">Возможность удаленной работы</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="training" value="1" id="c6">
+            <label class="form-check-label" for="c6">Обучение за счет работодателя</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="food" value="1" id="c7">
+            <label class="form-check-label" for="c7">Питание за счет работодателя</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="insurance" value="1" id="c8">
+            <label class="form-check-label" for="c8">Страхование (ДМС, туристическое)</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="sportAndFitness" value="1" id="c9">
+            <label class="form-check-label" for="c9">Спорт и фитнес за счет работодателя</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="communicationsCompensation" value="1" id="c10">
+            <label class="form-check-label" for="c10">Компенсация затрат на связь</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="sickLeaveCompensation" value="1" id="c11">
+            <label class="form-check-label" for="c11">Оплата больничного</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="vacationCompensation" value="1" id="c12">
+            <label class="form-check-label" for="c12">Оплата отпуска</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="dressCode" value="1" id="c13">
+            <label class="form-check-label" for="c13">Наличие дресс-кода</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="relocationHelp" value="1" id="c14">
+            <label class="form-check-label" for="c14">Помощь с релокацией</label>
+        </div>
+    </form>
 </div>
 
 <div class="modal fade modal-scrollable" id="addSkillModal" tabindex="-1" role="dialog" aria-labelledby="addSkillModalTitle" aria-hidden="true">

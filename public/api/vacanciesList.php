@@ -48,7 +48,7 @@ if ($professionCode) {
             "title"                      => $vacancy['title'],
             "company"                    => $vacancy['companyName'],
             "description"                => $vacancy['text'],
-            "location"                   => $vacancy['city'],
+            "city"                       => $vacancy['city'],
             "url"                        => $vacancy['url'],
             "salary"                     => [
                 "from" => floatval($vacancy['salaryFrom']),

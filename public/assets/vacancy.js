@@ -10,6 +10,8 @@ $(function () {
     updatePageTitle();
     search();
 
+    drawFilter();
+
     $(document).on('click', '[data-skill]:not(#startSkills [data-skill], #updatedSkills [data-skill])', function () {
         let skillName = $(this).attr('data-skill');
         addSkill(skillName);

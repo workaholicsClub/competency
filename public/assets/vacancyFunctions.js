@@ -35,7 +35,6 @@ function addSkill(skillName, skillLevel) {
 
 function clearVacanciesList() {
     $('#vacancyList').html('');
-    $('#notMatchedVacancyList').html('');
 }
 
 function getSkillsFilter() {
@@ -193,7 +192,7 @@ function search() {
         $('.noRecommendedVacancies').hide();
         recommendedVacancies
             .forEach(function (vacancy, index) {
-                addVacancy(vacancy, index, '#vacancyList');
+                addVacancy(vacancy, index, '#vacancyList', true);
             });
     }
     else {
@@ -203,7 +202,7 @@ function search() {
 
     findParticialMacth(getSkillsFilter())
         .forEach(function (vacancy, index) {
-            addVacancy(vacancy, index, '#notMatchedVacancyList');
+            addVacancy(vacancy, index, '#vacancyList', false);
         });
 
     $('.searchResults').css('opacity', '0.3');
@@ -238,10 +237,6 @@ function toggleUpdatableSkills() {
 
 function hasUpdatableSkills() {
     return getUpdatableSkillList().length > 0;
-}
-
-function hasEnoughSkills() {
-    return $('.skillBlock').length > 0 && findParticialMacth(getSkillsFilter()).length > 0;
 }
 
 function removeSkills(allSkills, removedSkills) {
@@ -380,13 +375,6 @@ function toggleAdditionalSkills() {
     let hasAdditionalSkills = shownAdditionalSkills.length > 0;
 
     updateAdditionalSkills(allAdditionalSkills);
-
-    if (hasAdditionalSkills) {
-        $('.additionalSkills').show();
-    }
-    else {
-        $('.additionalSkills').hide();
-    }
 }
 
 function getVacancySkillNames(vacancy) {
@@ -606,14 +594,19 @@ function addMinSkills(allSkills) {
 function getSalaryHtml(vacancy) {
     if (vacancy.salary) {
         if (vacancy.salary.from && vacancy.salary.to) {
-            return "От " + vacancy.salary.from + "<br>до " + vacancy.salary.to + " руб";
+            return "от " + vacancy.salary.from + " до " + vacancy.salary.to + " руб";
         }
 
         if (!vacancy.salary.from) {
-            return "До " + vacancy.salary.to + " руб";
+            if (vacancy.salary.to) {
+                return "до " + vacancy.salary.to + " руб";
+            }
+            else {
+                return 'заработная плата не указана';
+            }
         }
         else {
-            return "От " + vacancy.salary.from + " руб";
+            return "от " + vacancy.salary.from + " руб";
         }
     }
 
@@ -622,9 +615,31 @@ function getSalaryHtml(vacancy) {
 
 function getAttributesHtml(vacancy) {
     let attributes = [
-        vacancy.location,
-        vacancy.schedule
+        vacancy.city,
     ];
+
+    let attrData = {
+        fullTime: 'Полный день',
+        flexibleSchedule: 'Гибкий график',
+        probation: 'Испытательный срок',
+        officialEmployment: 'Соблюдение ТК',
+        canBeRemote: 'Возможна удаленка',
+        training: 'Обучение',
+        food: 'Питание',
+        insurance: 'ДМС',
+        sportAndFitness: 'Спорт',
+        communicationsCompensation: 'Оплата связи',
+        sickLeaveCompensation: 'Оплата больничных',
+        vacationCompensation: 'Оплата отпуска',
+        dressCode: 'Дресс-код',
+        relocationHelp: 'Помощь с релокацией'
+    };
+
+    Object.keys(attrData).forEach(function (attrName) {
+        if (vacancy[attrName] === true) {
+            attributes.push(attrData[attrName]);
+        }
+    });
 
     return attributes.join(" • ");
 }
@@ -650,32 +665,33 @@ function getSkillsHtml(vacancy) {
     return matchingSkillsHtml.join("\n") + "\n" + unmatchingSkillsHtml.join("\n") + "\n" + undefinedSkillsHtml.join("\n");
 }
 
-function addVacancy(vacancy, index, selector) {
+function addVacancy(vacancy, index, selector, isRecommended) {
     let desciptionHtml = vacancy.description.replace(/\n/g, '<br>');
-    let isRecommended = selector === '#vacancyList';
-    let additionalClass = isRecommended ? 'bg-warning' : '';
+    let additionalClass = isRecommended ? 'alert-warning' : '';
     let hasNoUndefinedSkills = getUndefinedSkills(vacancy, getSkillsFilter()).length === 0;
     let canSendResume = isRecommended || hasNoUndefinedSkills;
-
+    let company = vacancy.company && vacancy.company !== '-' ? vacancy.company : 'Работодатель не указан';
 
     let buttonHtml = canSendResume
         ? "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center\">Отправить резюме</a>\n"
-        : "<a href=\"#\" class=\"btn btn-secondary disabled d-flex justify-content-center mb-2\" disabled=\"disabled\">Отправить резюме</a>\n" +
-          "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center addVacancySkillsButton\" data-toggle=\"modal\" data-target=\"#addVacancySkillsModal\">Указать навыки, чтобы отправить резюме</a>\n";
+        : "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center addVacancySkillsButton\" data-toggle=\"modal\" data-target=\"#addVacancySkillsModal\">Указать навыки, чтобы отправить резюме</a>\n";
+
+    let visitButtonHTML = "<a href=\"" + vacancy.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-vacancy mt-1\" data-vacancy-id=\""+vacancy.id+"\"><i class=\"fas fa-external-link-square-alt\"></i>&nbsp;Перейти на страницу вакансии</a>";
 
     let vacancyHtml = "<div class=\"card m-1\" data-vacancy-id='"+vacancy.id+"'>"+
         "   <div class=\"card-body "+additionalClass+"\">\n" +
-        "       <span class=\"badge badge-secondary priceBadge\">" +getSalaryHtml(vacancy)+ "</span>\n" +
         "       <h4>"+vacancy.title+"</h4>\n" +
-        "       <h6 class=\"text-muted\">"+vacancy.company+"</h6>\n" +
+        "       <h6 class=\"text-muted\">" +getSalaryHtml(vacancy)+ "</h6>\n" +
+        "       <h6 class=\"text-muted\">"+company+"</h6>\n" +
         "       <p>"+getAttributesHtml(vacancy)+"</p>\n" +
-        "       <p>Требования:</p>\n" +
+        "       <p class=\"mb-0\">Требования:</p>\n" +
         "       <p>"+getSkillsHtml(vacancy)+"</p>\n" +
-        "       <button class=\"btn btn-outline-secondary mb-3\" data-toggle=\"collapse\" data-target=\"#description" + index + "\" aria-expanded=\"true\" aria-controls=\"description1\">\n" +
+        "       <button class=\"btn btn-outline-secondary btn-block mb-3\" data-toggle=\"collapse\" data-target=\"#description" + index + "\" aria-expanded=\"true\" aria-controls=\"description1\">\n" +
         "           Описание вакансии\n" +
         "       </button>\n" +
         "       <p id=\"description" + index + "\" class=\"collapse\">\n" + desciptionHtml + "</p>\n" +
         buttonHtml +
+        visitButtonHTML +
         "   </div>"+
         "</div>";
 
@@ -847,3 +863,15 @@ function updatePageTitle() {
     $('h1 small').html(pageTitle);
 }
 
+function updateFieldsAndLabelIds(html, index) {
+    return html
+        .replace(/id=["'](.*?)["']/g, 'id="$1_'+index+'"')
+        .replace(/for=["'](.*?)["']/g, 'for="$1_'+index+'"');
+}
+
+function drawFilter() {
+    let filterHTML = $('.take-filter-from-here').html();
+    $('.place-filter-here').each(function (index) {
+        $(this).html(updateFieldsAndLabelIds(filterHTML, index));
+    });
+}

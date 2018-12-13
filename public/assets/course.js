@@ -1030,19 +1030,6 @@ function getTimeInDays(course) {
     return timeInDays;
 }
 
-function updateFieldsAndLabelIds(html, index) {
-    return html
-            .replace(/id=["'](.*?)["']/g, 'id="$1_'+index+'"')
-            .replace(/for=["'](.*?)["']/g, 'for="$1_'+index+'"');
-}
-
-function drawFilter() {
-    let filterHTML = $('.take-filter-from-here').html();
-    $('.place-filter-here').each(function (index) {
-        $(this).html(updateFieldsAndLabelIds(filterHTML, index));
-    });
-}
-
 function isMobile() {
     return $('.navbar-toggler').is(':visible');
 }
