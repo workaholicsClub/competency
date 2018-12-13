@@ -1,4 +1,4 @@
-let eduPath = [];
+let backpack = [];
 
 function addCourseSkill(skillName, skillLevel) {
     let skillsFilter = {};
@@ -237,7 +237,7 @@ function getCourseMaxLevels() {
 }
 
 function getCourseHardness(course, level) {
-    let skillsFilter = applyEduPathSkills(getCoursesFilter().skills, level);
+    let skillsFilter = applyBackpackSkills(getCoursesFilter().skills, level);
     let userLevels = summSkills(skillsFilter);
     let userUpgradeLevels = getCourseTotalLevels(course)-userLevels;
     let maxLevels = getCourseMaxLevels();
@@ -245,26 +245,68 @@ function getCourseHardness(course, level) {
     return Math.round(userUpgradeLevels/maxLevels * 100);
 }
 
-function getCourseHardnessHTML(course, level) {
+function getHardnessIndex(course, level) {
     let hardnessPercent = getCourseHardness(course, level);
 
-    if (hardnessPercent <= 10) {
-        return "<span class='badge badge-success'>легкий</span>";
+    let hardnessIndex = 1;
+
+    if (hardnessPercent >= 10) {
+        hardnessIndex = 2;
     }
 
     if (hardnessPercent > 50) {
+        hardnessIndex = 3;
+    }
+
+    return hardnessIndex;
+}
+
+function getCourseHardnessHTML(course, level) {
+    let hardnessIndex = getHardnessIndex(course, level);
+
+    if (hardnessIndex === 2) {
+        return "<span class='badge badge-warning'>средний</span>";
+    }
+
+    if (hardnessIndex === 3) {
         return "<span class='badge badge-danger'>трудный</span>";
     }
 
-    return "<span class='badge badge-warning'>средний</span>";
+    return "<span class='badge badge-success'>легкий</span>";
+}
+
+function useBackpackSkills() {
+    return $('#useBackpackSkills').is(':checked');
+}
+
+function getCourseAttributesHTML(course) {
+    let certificateShortNames = {
+        'Нет': 'Без сертификата',
+        'Собственный': 'Собственый сертификат',
+        'Государственного образца': 'Государственный сертификат'
+    };
+
+    let attributes = [
+        course.format,
+        course.hasTeacher ? 'С преподавателем' : 'Без преподавателя',
+        course.hasPractice ? 'С практикой' : 'Без практики',
+        certificateShortNames[course.certificate],
+        course.duration + ' ' + course.durationUnits
+    ];
+
+    return attributes.join('&nbsp;&bull;&nbsp;\n');
+}
+
+function getCoursePriceText(course) {
+    return course.price === 0 ? 'Бесплатно' : course.price + ' руб';
 }
 
 function getCourseDataHTML(course, skipButton, index) {
     let descriptionHTML = course.description || "";
-    let price = course.price === 0 ? 'Бесплатно' : course.price + ' руб';
+    let price = getCoursePriceText(course);
     let filter = getCoursesFilter();
-    let skillsFilter = applyEduPathSkills(filter.skills, index);
-    let showMatchingSkills = hasMatchingSkills(course.skills, skillsFilter, false);
+    let skillsFilter = applyBackpackSkills(filter.skills, index);
+    let showMatchingSkills = useBackpackSkills() && hasMatchingSkills(course.skills, skillsFilter, false);
     let matchingSkillsHTML = getMatchingSkillsHTML(course.skills, skillsFilter, false);
     let skillsHTML = getSkillsHTML(course, skillsFilter);
     let hasRequirements = Object.keys(course.requirements).length > 0;
@@ -272,25 +314,16 @@ function getCourseDataHTML(course, skipButton, index) {
         ? getRequirementsHTML(course, skillsFilter)
         : "нет";
 
-    let attributes = [
-        course.format,
-        course.hasTeacher ? 'С преподавателем' : 'Без преподавателя',
-        course.hasPractice ? 'С практикой' : 'Без практики',
-        'Сертификат: ' + course.certificate,
-        'Длительность: ' + course.duration + ' ' + course.durationUnits
-    ];
-
-    let attributesHTML = attributes.join('&nbsp;&bull;&nbsp;\n');
+    let attributesHTML = getCourseAttributesHTML(course);
     let buttonHTML = skipButton
         ? ""
-        : "<a href=\"#\" class=\"btn btn-primary btn-block d-flex justify-content-center add-to-plan mt-1\" data-course-id=\""+course.id+"\"><img src=\"/assets/images/backpack-white.svg\"></img>&nbsp;Добавить в портфель</a>";
+        : "<a href=\"#\" class=\"btn btn-primary btn-block d-flex justify-content-center add-to-backpack mt-1\" data-course-id=\""+course.id+"\"><img src=\"/assets/images/backpack-white.svg\"></img>&nbsp;Добавить в портфель</a>";
 
     let visitButtonHTML = "<a href=\"" + course.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-course mt-1\" data-course-id=\""+course.id+"\"><i class=\"fas fa-external-link-square-alt\"></i>&nbsp;Перейти к курсу</a>";
 
-    let eduPathIndex = eduPath.length;
-    let difficultyText = eduPathIndex === 0
-        ? 'Сложность курса для вас'
-        : 'Сложность курса с учетом предыдуших шагов';
+    let difficultyText = useBackpackSkills()
+        ? 'Сложность курса с учетом портфеля'
+        : 'Сложность курса для вас';
 
     return "<span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
         "<h4><a class=\"courseLink\" href=\"" + course.url + "\" target=\"_blank\">" + course.title + "&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a></h4>\n" +
@@ -312,14 +345,17 @@ function getCourseDataHTML(course, skipButton, index) {
         "<p class=\"mb-0\">Требования:</p>\n" +
         "<p>" + requirementsHTML + "</p>\n" +
         "<p class=\"mt-1\">" + attributesHTML + "</p>\n" +
-        "<button class=\"btn btn-outline-secondary mb-3\" data-toggle=\"collapse\" data-target=\"#description"+course.id+"\" aria-expanded=\"true\" aria-controls=\"description"+course.id+"\">\n" +
+        "<button class=\"btn btn-outline-secondary btn-block mb-3\" data-toggle=\"collapse\" data-target=\"#description"+course.id+"\" aria-expanded=\"true\" aria-controls=\"description"+course.id+"\">\n" +
         "    Посмотреть описание курса\n" +
         "</button>\n" +
         "<p id=\"description"+course.id+"\" class=\"collapse\">\n" +
             descriptionHTML +
         "</p>\n" +
+        buttonHTML +
         visitButtonHTML +
-        buttonHTML;
+        "<button class=\"btn btn-outline-primary btn-block btn-similar\" data-course=\""+course.id+"\">\n" +
+        "    Подобрать похожие курсы\n" +
+        "</button>\n";
 }
 
 function getCourseCardHTML(course, skipButton, index) {
@@ -332,17 +368,39 @@ function getCourseCardHTML(course, skipButton, index) {
     return courseHTML;
 }
 
+function getBackpackCourseDataHTML(course) {
+    let price = getCoursePriceText(course);
+    let attributesHTML = getCourseAttributesHTML(course);
+
+    return "<span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
+        "<h4><a class=\"courseLink\" href=\"" + course.url + "\" target=\"_blank\">" + course.title + "&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a></h4>\n" +
+        "<h6 class=\"text-muted\">" +course.platform+ "</h6>\n" +
+        "<p class=\"mt-1\">" + attributesHTML + "</p>\n";
+}
+
+function getCourseBackpackCardHTML(course) {
+    let courseHTML = "<div class=\"list-group-item list-group-item-action flex-column align-items-start\">\n" +
+            getBackpackCourseDataHTML(course) +
+        "</div>";
+    
+    return courseHTML;
+}
+
 function addCourse(course) {
     let courseHTML = getCourseCardHTML(course);
 
     $('#coursesList').append(courseHTML);
 }
 
-function applyEduPathSkills(currentSkills, level) {
+function applyBackpackSkills(currentSkills, level) {
+    if (!useBackpackSkills()) {
+        return currentSkills;
+    }
+
     let skillsAfterLearn = JSON.parse(JSON.stringify(currentSkills));
     let coursesToApply = typeof (level) === 'number'
-        ? eduPath.slice(0, level)
-        : eduPath;
+        ? backpack.slice(0, level)
+        : backpack;
 
     coursesToApply.forEach(function (course) {
         Object.keys(course.skills).forEach(function (skillName) {
@@ -358,7 +416,7 @@ function applyEduPathSkills(currentSkills, level) {
     return skillsAfterLearn;
 }
 
-function getNormalizedValue(item, items, callback) {
+function getMaximumValue(items, callback) {
     let maximum = items.reduce(function (prevMax, currentItem) {
         let currentValue = callback(currentItem);
         if (currentValue > prevMax || currentValue === false) {
@@ -366,6 +424,14 @@ function getNormalizedValue(item, items, callback) {
         }
         return prevMax;
     }, false);
+
+    return maximum
+}
+
+function getNormalizedValue(item, items, callback, maximum) {
+    if (!maximum) {
+        maximum = getMaximumValue(items, callback);
+    }
 
     let itemValue = callback(item);
 
@@ -396,13 +462,19 @@ function getWeightenedSkillsCount(course) {
     return weightenedCount;
 }
 
+function getWeightenedSkillsCountStep(course) {
+    let step = 5;
+    let skillsCount = getWeightenedSkillsCount(course);
+    return Math.round(skillsCount / 5) * 5;
+}
+
 function intersectArrays(array1, array2) {
     return array1.filter(value => -1 !== array2.indexOf(value));
 }
 
 function courseMatchesFilterParameters(course) {
     let filter = getCoursesFilter();
-    let filteredEnumProps = ['format', 'certificate', 'hasTeacher', 'hasPractice'];
+    let filteredEnumProps = ['format', 'hardness', 'certificate', 'hasTeacher', 'hasPractice'];
 
     let propsMatch = filteredEnumProps.reduce(function (prevPropsMatch, propName) {
         let filterValues = filter[propName];
@@ -425,30 +497,63 @@ function courseMatchesFilterParameters(course) {
     return courseMatches;
 }
 
-function getCoursesListWithSortIndex() {
+function getCoursesListWithHardnessAndSortIndex() {
+    let clonedList = JSON.parse( JSON.stringify( getCoursesList() ) );
+
+    let skillsFilter = applyBackpackSkills(getCoursesFilter().skills);
+    let isFilterEmpty = Object.keys(skillsFilter).length === 0;
     let getCoursePrice = function (course) { return course.price };
     let getCourseRequirementsCount = function (course) { return Object.keys(course.requirements).length };
-    let getCourseSortIndex = function (course, courses) {
-        let price = getNormalizedValue(course, courses, getCoursePrice);
-        let weightenedSkills = 1-getNormalizedValue(course, courses, getWeightenedSkillsCount);
-        let requirements = getNormalizedValue(course, courses, getCourseRequirementsCount);
-        let hardness = getNormalizedValue(course, courses, getCourseHardness);
+    let getMatchedSkillsCount = function (course) { return isFilterEmpty ? 0 : getMatchingCourseSkills(course.skills, skillsFilter, false).length; }
 
-        return Math.round(price * 10000000) + Math.round(weightenedSkills * 100000) + Math.round(hardness * 1000) + Math.round(requirements * 10);
+    let priceMaximum = getMaximumValue(clonedList, getCoursePrice);
+    let weightenedSkillsMaximum = getMaximumValue(clonedList, getWeightenedSkillsCountStep);
+    let requirementsMaximum = getMaximumValue(clonedList, getCourseRequirementsCount);
+    let hardnessMaximum = getMaximumValue(clonedList, getCourseHardness);
+    let matchedSkillsMaximum = getMaximumValue(clonedList, getMatchedSkillsCount);
+
+    let getCourseSortIndex = function (course, courses) {
+        let price = getNormalizedValue(course, courses, getCoursePrice, priceMaximum);
+        let weightenedSkills = 1-getNormalizedValue(course, courses, getWeightenedSkillsCountStep, weightenedSkillsMaximum);
+        let requirements = getNormalizedValue(course, courses, getCourseRequirementsCount, requirementsMaximum);
+        let hardness = getNormalizedValue(course, courses, getCourseHardness, hardnessMaximum);
+        let matchedSkillsCount = 1-getNormalizedValue(course, courses, getMatchedSkillsCount, matchedSkillsMaximum);
+
+        return Math.round(matchedSkillsCount * 1000000000) +
+            Math.round(price * 10000000) +
+            Math.round(weightenedSkills * 100000) +
+            Math.round(hardness * 1000) +
+            Math.round(requirements * 10);
     };
 
-    let clonedList = JSON.parse( JSON.stringify( getCoursesList() ) );
     let listWithSortIndex = clonedList.map(function (course) {
         course.sortIndex = getCourseSortIndex(course, clonedList);
+        course.hardness = getHardnessIndex(course);
         return course;
     });
 
     return listWithSortIndex;
 }
 
+function skipBackpackCourses(course) {
+    if (!backpack) {
+        return true;
+    }
+
+    let backpackCourseIds = backpack.reduce(function (result, course) {
+        result.push(course.id);
+        return result;
+    }, []);
+
+    let courseIsNotInBackpack = backpackCourseIds.indexOf(course.id) === -1;
+    let showCourse = courseIsNotInBackpack;
+
+    return showCourse;
+}
+
 function findCourses(filter) {
-    let skillsFilter = applyEduPathSkills(filter.skills);
-    let courses = getCoursesListWithSortIndex();
+    let skillsFilter = applyBackpackSkills(filter.skills);
+    let courses = getCoursesListWithHardnessAndSortIndex();
 
     return courses
         .filter(function (course) {
@@ -458,9 +563,30 @@ function findCourses(filter) {
             return hasMatchedSkills || isFilterEmpty;
         })
         .filter(courseMatchesFilterParameters)
+        .filter(skipBackpackCourses)
         .sort(function (courseA, courseB) {
             let ratingA = courseA.sortIndex;
             let ratingB = courseB.sortIndex;
+            let aSkills = Object.keys(courseA.skills);
+            let bSkills = Object.keys(courseB.skills);
+            let aRequirements = Object.keys(courseA.requirements) || [];
+            let bRequirements = Object.keys(courseB.requirements) || [];
+
+            let aHasBrequirements = aSkills.reduce(function (result, aSkillName) {
+                return result || bRequirements.indexOf(aSkillName) !== -1;
+            }, false);
+
+            let bHasArequirements = bSkills.reduce(function (result, bSkillName) {
+                return result || aRequirements.indexOf(bSkillName) !== -1;
+            }, false);
+
+            if (aHasBrequirements) {
+                return -1;
+            }
+
+            if (bHasArequirements) {
+                return 1;
+            }
 
             if (ratingA > ratingB) {
                 return 1;
@@ -492,12 +618,12 @@ function getCoursePriceRange(courses) {
 
 function updateCourseFromTo() {
     let priceRange = getCoursePriceRange(getCoursesList());
-    $('#from')
+    $('[id^=from]')
         .attr('min', priceRange.min)
         .attr('max', priceRange.max)
         .attr('value', priceRange.min);
 
-    $('#to')
+    $('[id^=to]')
         .attr('min', priceRange.min)
         .attr('max', priceRange.max)
         .attr('value', priceRange.max);
@@ -519,14 +645,18 @@ function getBooleanCheckedValues(code) {
         .get();
 }
 
-
 function getCoursesFilter() {
-    let onlyFree = $('#cf').is(':checked');
+    let fieldIndex = isMobile() ? "0" : "1";
+
+    let onlyFree = $('#cf_'+fieldIndex).is(':checked');
 
     return {
         skills: getSkillsFilter(),
-        priceFrom: onlyFree ? 0 : parseInt( $('#from').val() ),
-        priceTo: onlyFree ? 0 : parseInt( $('#to').val() ),
+        priceFrom: onlyFree ? 0 : parseInt( $('#from_'+fieldIndex).val() ),
+        priceTo: onlyFree ? 0 : parseInt( $('#to_'+fieldIndex).val() ),
+        hardness: getCheckedValues('hardness').map(function (strValue) {
+            return parseInt(strValue);
+        }),
         format: getCheckedValues('format'),
         certificate: getCheckedValues('certificate'),
         hasTeacher: getBooleanCheckedValues('hasTeacher'),
@@ -534,7 +664,15 @@ function getCoursesFilter() {
     }
 }
 
+function isSuccessShown() {
+    return $('.searchSuccess').is(':visible');
+}
+
 function search() {
+    if (isSuccessShown()) {
+        return;
+    }
+
     $('#coursesList').css('opacity', '0.3');
     setTimeout(function () {
         $('#coursesList').html('');
@@ -652,45 +790,9 @@ function getMaxCourseLevels(skillsFilter) {
     return maxLevels;
 }
 
-function addCourseDataToLevel(course, levelIndex) {
-    let $levelContainer = $('#levelsAccordion>.card:eq('+levelIndex+')');
-    $levelContainer
-        .find('.card-header .collapse-button')
-        .addClass('selected-title')
-        .text(course.title);
-
-    $levelContainer
-        .find('.collapse')
-        .append(getCourseCardHTML(course, true, levelIndex));
-
-    let successBadgeHTML = "<span class='badge badge-success float-right'><i class=\"fas fa-check\"></i></span>";
-    $levelContainer
-        .find('.card-header h4')
-        .append(successBadgeHTML);
-}
-
-function moveSearchResultsToLevel(newLevelIndex) {
-    let $card = $('#levelsAccordion>.card:eq('+newLevelIndex+')');
-    let $nextLevelContainer = $card.find('.collapse');
-    let $searchResults = $('.searchResults');
-    $searchResults.appendTo($nextLevelContainer);
-
-    let $levelContainer = $('#levelsAccordion>.card:eq('+newLevelIndex+')');
-    $card.removeClass('inactive');
-
-    $levelContainer
-        .find('.card-header .collapse-button')
-        .show();
-}
-
 function collapseAllLevels() {
     $('#levelsAccordion>.card').removeClass('current');
     $('#levelsAccordion>.card>.collapse.show').removeClass('show');
-}
-
-function showLevel(levelIndex) {
-    $('#levelsAccordion>.card:eq('+levelIndex+')').addClass('current');
-    $('#levelsAccordion>.card>.collapse:eq('+levelIndex+')').addClass('show');
 }
 
 function hasNoCoursesForNextStep() {
@@ -698,34 +800,87 @@ function hasNoCoursesForNextStep() {
     return nextStepCourses.length === 0;
 }
 
-function addCourseToPath(course) {
-    eduPath.push(course);
-    let newLevelIndex = eduPath.length;
-    let oldLevelIndex = newLevelIndex-1;
+function updateBackpackCounters() {
+    let courseCount = backpack.length;
+    $('.backpackCount').html(courseCount);
 
-    collapseAllLevels();
-    addCourseDataToLevel(course, oldLevelIndex);
+    if (courseCount === 0) {
+        $('.hidableCount').hide();
+    }
+    else {
+        $('.hidableCount').show();
+    }
+}
+
+function updateFilterCounter() {
+    let filter = getCoursesFilter();
+    let priceRange = getCoursePriceRange(getCoursesList());
+    let filterPriceRange = {
+        priceFrom: priceRange.min,
+        priceTo: priceRange.max
+    };
+
+    let countFilterAttrs = Object.keys(filter).reduce(function (result, filterAttr) {
+        let filterValue = filter[filterAttr];
+        let attrHasValue = false;
+
+        if (filterValue instanceof Array) {
+            attrHasValue = filterValue.length > 0;
+        }
+
+        if (typeof filterValue === "number") {
+            attrHasValue = filterPriceRange[filterAttr] !== parseInt(filterValue);
+        }
+
+        if (filterValue instanceof Object && !(filterValue instanceof Array)) {
+            attrHasValue = Object.keys(filterValue).length > 0;
+        }
+
+        return result + (attrHasValue ? 1 : 0)
+    }, 0);
+
+    $('.filterCount').html(countFilterAttrs);
+    if (countFilterAttrs === 0) {
+        $('.filterCount').hide();
+    }
+    else {
+        $('.filterCount').show();
+    }
+}
+
+function redrawBackpack() {
+    $('#backpackPopupList, #backpackCollapseList').html('');
+
+    backpack.forEach(function (course) {
+        let courseHTML = getCourseBackpackCardHTML(course);
+        $('#backpackPopupList, #backpackCollapseList').append(courseHTML);
+    });
+
+    updateBackpackCounters();
+}
+
+function addCourseToBackpack(course) {
+    backpack.push(course);
+
+    redrawBackpack();
     updateSkillCards();
+    showBackpackSkillsAlert();
 
     if (hasNoCoursesForNextStep()) {
         showSuccess();
     }
-    else {
-        moveSearchResultsToLevel(newLevelIndex);
-        showLevel(newLevelIndex);
-    }
 }
 
-function updatePathData() {
-    let vacancies = findSoftVacancies(applyEduPathSkills(getSkillsFilter()));
+function updateBackpackData() {
+    let vacancies = findSoftVacancies(applyBackpackSkills(getSkillsFilter()));
     let allVacancies = getVacanciesList();
     let vacanciesPercent = Math.round(vacancies.length / allVacancies.length * 100);
 
-    let totalPrice = eduPath.reduce(function (prevPrice, course) {
+    let totalPrice = backpack.reduce(function (prevPrice, course) {
         return prevPrice + course.price;
     }, 0);
 
-    let totalDuration = eduPath.reduce(function (prevDuration, course) {
+    let totalDuration = backpack.reduce(function (prevDuration, course) {
         return prevDuration + getTimeInDays(course);
     }, 0);
     totalDuration = Math.ceil(totalDuration);
@@ -735,51 +890,54 @@ function updatePathData() {
     $('.vacanciesPercent').text(vacanciesPercent);
 }
 
+function hideBackpackSkillsAlert() {
+    $('.navbar-alert').hide();
+}
+
+function showBackpackSkillsAlert() {
+    if ( useBackpackSkills() ) {
+        $('.navbar-alert').show();
+    }
+}
+
 function showSuccess() {
-    updatePathData();
+    updateBackpackData();
+    hideBackpackSkillsAlert();
+    $('#coursesList').hide();
+
+    let searchSuccessText = hasNoCoursesForNextStep()
+        ? "Выбранные курсы позволят вам получить максимальное доступное количество навыков!"
+        : "Вы успешно составили план обучения и можете приступать к улучшению собственных навыков!";
+
+    $('.searhSuccessText').html(searchSuccessText);
     $('.searchSuccess').show();
 }
 
-function showAlert(message, isError) {
-    $('#alertText').html(message);
-    $('#alertModal .alert').removeClass('alert-success alert-danger').addClass(isError ? 'alert-danger' : 'alert-success');
-    $('#alertModal').modal();
-}
+function sendBackpackToEmail() {
+    let promise = $.Deferred();
+    let formData = $('#emailPlanForm').serializeArray();
 
-function sendEduPathToEmail(emailTo) {
-    let emailFrom = 'postmaster@sandboxd099e16c93b540909776a541aacdc1c2.mailgun.org';
-    let securityToken = '1d98293d-f035-4ce5-84b8-c1593ed49044';
-
-    let courses = findCourses( getCoursesFilter() );
-    let courseCardsHTML = courses.map(function (course, index) {
-        return getCourseCardHTML(course, true, index);
+    backpack.map(function (course) {
+        formData.push({name: 'courseId[]', value: course.id});
     });
 
-    let messageHTML = courseCardsHTML.join("\n");
-
-    let oldText = $('.pathDetails').text();
-    $('.pathDetails').text('...Идет отправка...').attr('disabled', true);
-
-    Email.send(emailFrom,
-        emailTo,
-        "Ваши курсы. Приятного обучения!",
-        messageHTML,
-        {
-            token: securityToken,
-            callback: function (message) {
-                let isSuccess = message === 'OK';
-
-                $('.pathDetails').text(oldText).attr('disabled', false);
-
-                if (isSuccess) {
-                    showAlert('Сообщение успешно отправлено!');
-                    $('#emailField').val('');
-                }
-                else {
-                    showAlert('Ошибка отправки сообщения!');
-                }
+    $.ajax({
+        url: "/api/sendEmail.php",
+        data: $.param(formData),
+        success: function (result) {
+            promise.resolve(result);
+        },
+        error: function (result) {
+            if (result && result.status === 200) {
+                promise.resolve(result.responseText);
             }
-        });
+            else {
+                promise.reject(result);
+            }
+        }
+    });
+
+    return promise;
 }
 
 function getCourseById(courseId) {
@@ -797,12 +955,12 @@ function enableTooltips() {
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-function isPathNotEmpty() {
-    return eduPath.length > 0;
+function isBackpackNotEmpty() {
+    return backpack.length > 0;
 }
 
 function updateSkillCards() {
-    if (isPathNotEmpty()) {
+    if (isBackpackNotEmpty()) {
         $('.skillContainer').addClass('pathEnabled');
     }
     else {
@@ -811,7 +969,7 @@ function updateSkillCards() {
 
     let maxSkills = getMaxCourseLevels();
     let baseSkills = getCoursesFilter().skills;
-    let currentSkills = applyEduPathSkills( baseSkills );
+    let currentSkills = applyBackpackSkills( baseSkills );
 
     $('.skillBlock').each(function (index, card) {
         let skillName = $(card).find('h4').text();
@@ -871,22 +1029,82 @@ function getTimeInDays(course) {
     return timeInDays;
 }
 
+function updateFieldsAndLabelIds(html, index) {
+    return html
+            .replace(/id=["'](.*?)["']/g, 'id="$1_'+index+'"')
+            .replace(/for=["'](.*?)["']/g, 'for="$1_'+index+'"');
+}
+
+function drawFilter() {
+    let filterHTML = $('.take-filter-from-here').html();
+    $('.place-filter-here').each(function (index) {
+        $(this).html(updateFieldsAndLabelIds(filterHTML, index));
+    });
+}
+
+function isMobile() {
+    return $('.navbar-toggler').is(':visible');
+}
+
+function addCourseSkillsToFilter(courseId) {
+    let course = getCourseById(courseId);
+    if (!course) {
+        return;
+    }
+
+    Object.keys(course.skills).forEach(function (skillName) {
+        addCourseSkill(skillName);
+    });
+}
+
 $(function () {
     enableTooltips();
+
+    drawFilter();
 
     updateStartCourseSkills();
     updateMinSkills();
     updateAllSkills();
     updateCourseFromTo();
     updatePageTitle();
+    updateFilterCounter();
 
     search();
 
     $('#coursesCount').text( getCoursesList().length );
 
+    $(document).on('click', '.btn-turnoff', function () {
+        $('[name=useBackpackSkills]').attr('checked', false);
+        updateFilterCounter();
+        search();
+    });
+
+    $(document).on('input change click', '#useBackpackSkills', function () {
+        let isChecked = useBackpackSkills();
+        if (isChecked) {
+            if (backpack.length > 0) {
+                showBackpackSkillsAlert();
+            }
+        }
+        else {
+            hideBackpackSkillsAlert();
+        }
+    });
+
+    $(document).on('click', '.search-finish', function () {
+        showSuccess();
+    });
+
+    $(document).on('click', '.btn-similar', function () {
+        let courseId = parseInt( $(this).data('course') );
+        addCourseSkillsToFilter(courseId);
+        updateFilterCounter();
+    });
+
     $(document).on('click', '[data-skill]', function () {
         let skillName = $(this).attr('data-skill');
         addCourseSkill(skillName);
+        updateFilterCounter();
     });
 
     $(document).on('change', '.skillSelect', function () {
@@ -950,6 +1168,7 @@ $(function () {
             $(this).removeClass('active');
         });
         toggleSkillsResult();
+        updateFilterCounter();
         scrollToTop();
         search();
     });
@@ -961,9 +1180,6 @@ $(function () {
     });
 
     $(document).on('change input', '.skillSlider', function () {
-        /*let skillLevels = ['Не знаю', 'Знаю', 'Умею применять', 'Владею в совершенстве'];
-        let newText = skillLevels[$(this).val()];
-        $(this).closest('.skillBlock').find('.skillText').text(newText);*/
         search();
         updateSkillCards();
     });
@@ -981,9 +1197,12 @@ $(function () {
                 $('#to').val(value).trigger('input');
             }
         }
+
+        updateFilterCounter();
     });
 
     $(document).on('change input click', 'input:not(#allSkills input, #emailField)', function () {
+        updateFilterCounter();
         search();
     });
 
@@ -991,10 +1210,10 @@ $(function () {
         search();
     });
 
-    $(document).on('click', '.add-to-plan', function () {
+    $(document).on('click', '.add-to-backpack', function () {
         let courseId = parseInt( $(this).data('course-id') );
         let course = getCourseById(courseId);
-        addCourseToPath(course);
+        addCourseToBackpack(course);
         search();
     });
 
@@ -1009,10 +1228,19 @@ $(function () {
         $('.searchSuccess').hide();
     });
 
-    $('#emailPlanForm').on('submit', function () {
-        let email = $('#emailField').val();
-        sendEduPathToEmail(email);
+    $('#emailPlanForm').on('submit', function (event) {
+        event.preventDefault();
 
-        return false;
-    })
+        let defaultText = 'Отправить план';
+        $('.sendPlan').text('...Идет отправка...').attr('disabled', true);
+
+        sendBackpackToEmail()
+            .then(function () {
+                $('.sendPlan').text(defaultText).attr('disabled', false);
+            })
+            .catch(function () {
+                $('.sendPlan').text('Ошибка: отправить еще раз').attr('disabled', false);
+            });
+
+    });
 });

@@ -17,7 +17,7 @@ body {
     margin-top: 1rem;
 }
 
-.navbar-toggler .backpackCount {
+.navbar-toggler .backpackCount, .navbar-toggler .filterCount {
     display: block;
     width: 1rem;
     height: 1rem;
@@ -201,7 +201,7 @@ body {
 }
 
 .courseLink {
-    width: 80%;
+    width: 76%;
     display: inline-block;
 }
 
@@ -240,7 +240,7 @@ body {
 .modal-scrollable .modal-body {
     position: relative;
     padding: 15px;
-    max-height: 600px !important;
+    max-height: calc(100vh - 15rem) !important;
     overflow-y: scroll;
 }
 
@@ -327,9 +327,14 @@ body {
     flex-direction: column;
 }
 
+a.header, a.header:visited, a.header:hover, a.header:active {
+    color: rgb(33, 37, 41);
+    text-decoration: none;
+}
+
 #filterCollapse, #backpackCollapse {
     width: 100%;
-    height: 95vh;
+    height: 90.5vh;
     overflow-y: scroll;
 }
 

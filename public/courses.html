@@ -38,300 +38,43 @@
 <!-- End Google Tag Manager (noscript) -->
 
 <nav class="navbar navbar-expand-md fixed-top navbar-light bg-light visible-sm-flex">
-    <h1 class="h4">Курсы<br><small class="text-muted">Разработчик PHP</small> </h1>
+    <a href="?" class="header"><h1 class="h4">Курсы<br><small class="text-muted">Разработчик PHP</small> </h1></a>
 
     <div class="navbar-buttons">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
             <span class="fas fa-filter"></span>
+            <span class="filterCount" style="display: none;">0</span>
         </button>
 
         <button class="navbar-toggler ml-1" type="button" data-toggle="collapse" data-target="#backpackCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать портфель">
-            <img src="/assets/images/backpack.svg"></img>
-            <span class="backpackCount">3</span>
+            <img src="/assets/images/backpack.svg">
+            <span class="backpackCount hidableCount" style="display: none;">0</span>
         </button>
     </div>
 
-    <div class="collapse navbar-collapse" id="filterCollapse">
-        <form class="">
-            <div class="form-group">
-                <label class="h3">Развиваемые навыки</label>
-                <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
-                    <i class="fas fa-plus-circle"></i>
-                    Добавить развиваемые навыки
-                </button>
-                <small class="form-text text-muted">После выбора навыка укажите текущий уровень владения</small>
-            </div>
-            <div class="skillContainer">
-
-            </div>
-            <div class="form-group py-3">
-                <div class="form-group pt-3">
-                    <label class="d-block h4">Стоимость</label>
-                    <div class="form-check py-1">
-                        <input type="checkbox" class="form-check-input" value="on" id="cf">
-                        <label class="form-check-label" for="cf">Только бесплатные</label>
-                    </div>
-                    <div class="form-row coursePrice">
-                        <div class="col form-group">
-
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">От</div>
-                                </div>
-                                <input type="number" min="10000" max="100000" step="5000" value="30000" id="from" class="form-control">
-                            </div>
-
-                        </div>
-                        <div class="col form-group">
-
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">До</div>
-                                </div>
-                                <input type="number" min="30000" max="500000" step="5000" value="50000" id="to" class="form-control">
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group pt-3">
-                    <label class="h4">Формат курса</label>
-                    <div class="form-check">
-                        <input id="format_1" class="form-check-input"
-                                name="format_1" type="checkbox"
-                                data-type="multicheckbox" data-code="format"
-                                value="Интерактивный">
-                        <label class="form-check-label" for="format_1">Интерактивный</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="format_2" class="form-check-input"
-                                name="format_2" type="checkbox"
-                                data-type="multicheckbox" data-code="format"
-                                value="Вебинар">
-                        <label class="form-check-label" for="format_2">Вебинар</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="format_3" class="form-check-input"
-                                name="format_3" type="checkbox"
-                                data-type="multicheckbox" data-code="format"
-                                value="Видео">
-                        <label class="form-check-label" for="format_3">Видео</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="format_4" class="form-check-input"
-                                name="format_4" type="checkbox"
-                                data-type="multicheckbox" data-code="format"
-                                value="Онлайн">
-                        <label class="form-check-label" for="format_4">Онлайн</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="format_5" class="form-check-input"
-                                name="format_5" type="checkbox"
-                                data-type="multicheckbox" data-code="format"
-                                value="Текстовый">
-                        <label class="form-check-label" for="format_5">Текстовый</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="format_6" class="form-check-input"
-                                name="format_6" type="checkbox"
-                                data-type="multicheckbox" data-code="format"
-                                value="Интенсив">
-                        <label class="form-check-label" for="format_6">Интенсив</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="format_7" class="form-check-input"
-                                name="format_7" type="checkbox"
-                                data-type="multicheckbox" data-code="format"
-                                value="Вечерняя">
-                        <label class="form-check-label" for="format_7">Вечерняя</label>
-                    </div>
-                </div>
-
-                <div class="form-group pt-3">
-                    <label class="h4">Сертификат</label>
-                    <div class="form-check">
-                        <input id="certificate_1" class="form-check-input"
-                                name="certificate_1" type="checkbox"
-                                data-type="multicheckbox" data-code="certificate"
-                                value="Нет">
-                        <label class="form-check-label" for="certificate_1">Нет</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="certificate_2" class="form-check-input"
-                                name="certificate_2" type="checkbox"
-                                data-type="multicheckbox" data-code="certificate"
-                                value="Собственный">
-                        <label class="form-check-label" for="certificate_2">Собственный</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="certificate_3" class="form-check-input"
-                                name="certificate_3" type="checkbox"
-                                data-type="multicheckbox" data-code="certificate"
-                                value="Государственного образца">
-                        <label class="form-check-label" for="certificate_3">Государственного образца</label>
-                    </div>
-                </div>
-
-                <div class="form-group pt-3">
-                    <label class="h4">Практика</label>
-                    <div class="form-check">
-                        <input id="hasPractice_1" class="form-check-input"
-                                name="hasPractice_1" type="checkbox"
-                                data-type="multicheckbox" data-code="hasPractice"
-                                value="true">
-                        <label class="form-check-label" for="hasPractice_1">Есть</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="hasPractice_2" class="form-check-input"
-                                name="hasPractice_2" type="checkbox"
-                                data-type="multicheckbox" data-code="hasPractice"
-                                value="false">
-                        <label class="form-check-label" for="hasPractice_2">Нет</label>
-                    </div>
-                </div>
-
-                <div class="form-group pt-3">
-                    <label class="h4">Преподаватель</label>
-                    <div class="form-check">
-                        <input id="hasTeacher_1" class="form-check-input"
-                                name="hasTeacher_1" type="checkbox"
-                                data-type="multicheckbox" data-code="hasTeacher"
-                                value="true">
-                        <label class="form-check-label" for="hasTeacher_1">Есть</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="hasTeacher_2" class="form-check-input"
-                                name="hasTeacher_2" type="checkbox"
-                                data-type="multicheckbox" data-code="hasTeacher"
-                                value="false">
-                        <label class="form-check-label" for="hasTeacher_2">Нет</label>
-                    </div>
-
-                </div>
-            </div>
-        </form>
+    <div class="collapse navbar-collapse place-filter-here" id="filterCollapse">
     </div>
 
     <div class="collapse navbar-collapse" id="backpackCollapse">
-        <button class="btn btn-lg btn-block btn-primary mb-2">Продолжить</button>
+        <button class="btn btn-lg btn-block btn-primary mb-2 search-finish" data-toggle="collapse" data-target="#backpackCollapse">Завершить подбор</button>
         <h3>Выбранные курсы</h3>
-        <div class="list-group">
-            <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">List group item heading</h5>
-                    <small>3 days ago</small>
-                </div>
-                <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                <small>Donec id elit non mi porta.</small>
-            </div>
-            <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">List group item heading</h5>
-                    <small class="text-muted">3 days ago</small>
-                </div>
-                <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                <small class="text-muted">Donec id elit non mi porta.</small>
-            </div>
-            <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">List group item heading</h5>
-                    <small class="text-muted">3 days ago</small>
-                </div>
-                <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                <small class="text-muted">Donec id elit non mi porta.</small>
-            </div>
-            <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">List group item heading</h5>
-                    <small class="text-muted">3 days ago</small>
-                </div>
-                <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                <small class="text-muted">Donec id elit non mi porta.</small>
-            </div>
-            <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">List group item heading</h5>
-                    <small class="text-muted">3 days ago</small>
-                </div>
-                <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                <small class="text-muted">Donec id elit non mi porta.</small>
-            </div>
-            <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">List group item heading</h5>
-                    <small class="text-muted">3 days ago</small>
-                </div>
-                <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                <small class="text-muted">Donec id elit non mi porta.</small>
-            </div>
+        <div class="list-group" id="backpackCollapseList">
+            Выбранных курсов нет
         </div>
     </div>
 </nav>
 
 <nav class="navbar navbar-expand-md fixed-top navbar-light bg-light invisible-sm">
     <div class="container">
-        <h1>Курсы&nbsp;<small class="text-muted"></small> </h1>
+        <a href="?" class="header"><h1>Курсы&nbsp;<small class="text-muted"></small> </h1></a>
 
         <div class="dropdown">
-            <button class="btn btn-primary btn-lg btn-backpack dropdown-toggle" type="button" data-toggle="dropdown"  data-boundary="viewport" aria-haspopup="true" aria-expanded="false" aria-label="Показать портфель">
+            <button class="btn btn-primary btn-lg btn-backpack" type="button" data-toggle="modal"  data-target="#backpackModal">
                 <img src="/assets/images/backpack-white.svg">
-                Курсов в портфеле: <span class="backpackCount">3</span>
+                Курсов в портфеле: <span class="backpackCount">0</span>
             </button>
 
-            <div class="dropdown-menu bp-4" >
-                <button class="btn btn-lg btn-block btn-primary mb-2">Завершить подбор</button>
-                <h3>Выбранные курсы</h3>
-                <div class="list-group">
-                    <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">List group item heading</h5>
-                            <small>3 days ago</small>
-                        </div>
-                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                        <small>Donec id elit non mi porta.</small>
-                    </div>
-                    <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">List group item heading</h5>
-                            <small class="text-muted">3 days ago</small>
-                        </div>
-                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                        <small class="text-muted">Donec id elit non mi porta.</small>
-                    </div>
-                    <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">List group item heading</h5>
-                            <small class="text-muted">3 days ago</small>
-                        </div>
-                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                        <small class="text-muted">Donec id elit non mi porta.</small>
-                    </div>
-                    <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">List group item heading</h5>
-                            <small class="text-muted">3 days ago</small>
-                        </div>
-                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                        <small class="text-muted">Donec id elit non mi porta.</small>
-                    </div>
-                    <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">List group item heading</h5>
-                            <small class="text-muted">3 days ago</small>
-                        </div>
-                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                        <small class="text-muted">Donec id elit non mi porta.</small>
-                    </div>
-                    <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">List group item heading</h5>
-                            <small class="text-muted">3 days ago</small>
-                        </div>
-                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                        <small class="text-muted">Donec id elit non mi porta.</small>
-                    </div>
-                </div>
+            <div class="dropdown-menu bp-4 backpack-dropdown-full" >
             </div>
         </div>
     </div>
@@ -341,174 +84,15 @@
     <div class="pb-5">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 bg-light py-4 filterCol invisible-sm">
-                    <form class="">
-                        <div class="form-group">
-                            <label class="h3">Развиваемые навыки</label>
-                            <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
-                                <i class="fas fa-plus-circle"></i>
-                                Добавить развиваемые навыки
-                            </button>
-                            <small class="form-text text-muted">После выбора навыка укажите текущий уровень владения</small>
-                        </div>
-                        <div class="skillContainer">
-
-                        </div>
-                        <div class="form-group py-3">
-                            <label class="h3">Фильтр курсов</label>
-                            <div class="form-group pt-3">
-                                <label class="d-block h4">Стоимость</label>
-                                <div class="form-check py-1">
-                                    <input type="checkbox" class="form-check-input" value="on" id="cf">
-                                    <label class="form-check-label" for="cf">Только бесплатные</label>
-                                </div>
-                                <div class="form-row coursePrice">
-                                    <div class="col form-group">
-
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">От</div>
-                                            </div>
-                                            <input type="number" min="10000" max="100000" step="5000" value="30000" id="from" class="form-control">
-                                        </div>
-
-                                    </div>
-                                    <div class="col form-group">
-
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">До</div>
-                                            </div>
-                                            <input type="number" min="30000" max="500000" step="5000" value="50000" id="to" class="form-control">
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group pt-3">
-                                <label class="h4">Формат курса</label>
-                                <div class="form-check">
-                                    <input id="format_1" class="form-check-input"
-                                           name="format_1" type="checkbox"
-                                           data-type="multicheckbox" data-code="format"
-                                           value="Интерактивный">
-                                    <label class="form-check-label" for="format_1">Интерактивный</label>
-                                </div>
-                                <div class="form-check">
-                                    <input id="format_2" class="form-check-input"
-                                           name="format_2" type="checkbox"
-                                           data-type="multicheckbox" data-code="format"
-                                           value="Вебинар">
-                                    <label class="form-check-label" for="format_2">Вебинар</label>
-                                </div>
-                                <div class="form-check">
-                                    <input id="format_3" class="form-check-input"
-                                           name="format_3" type="checkbox"
-                                           data-type="multicheckbox" data-code="format"
-                                           value="Видео">
-                                    <label class="form-check-label" for="format_3">Видео</label>
-                                </div>
-                                <div class="form-check">
-                                    <input id="format_4" class="form-check-input"
-                                           name="format_4" type="checkbox"
-                                           data-type="multicheckbox" data-code="format"
-                                           value="Онлайн">
-                                    <label class="form-check-label" for="format_4">Онлайн</label>
-                                </div>
-                                <div class="form-check">
-                                    <input id="format_5" class="form-check-input"
-                                           name="format_5" type="checkbox"
-                                           data-type="multicheckbox" data-code="format"
-                                           value="Текстовый">
-                                    <label class="form-check-label" for="format_5">Текстовый</label>
-                                </div>
-                                <div class="form-check">
-                                    <input id="format_6" class="form-check-input"
-                                           name="format_6" type="checkbox"
-                                           data-type="multicheckbox" data-code="format"
-                                           value="Интенсив">
-                                    <label class="form-check-label" for="format_6">Интенсив</label>
-                                </div>
-                                <div class="form-check">
-                                    <input id="format_7" class="form-check-input"
-                                           name="format_7" type="checkbox"
-                                           data-type="multicheckbox" data-code="format"
-                                           value="Вечерняя">
-                                    <label class="form-check-label" for="format_7">Вечерняя</label>
-                                </div>
-                            </div>
-
-                            <div class="form-group pt-3">
-                                <label class="h4">Сертификат</label>
-                                <div class="form-check">
-                                    <input id="certificate_1" class="form-check-input"
-                                           name="certificate_1" type="checkbox"
-                                           data-type="multicheckbox" data-code="certificate"
-                                           value="Нет">
-                                    <label class="form-check-label" for="certificate_1">Нет</label>
-                                </div>
-                                <div class="form-check">
-                                    <input id="certificate_2" class="form-check-input"
-                                           name="certificate_2" type="checkbox"
-                                           data-type="multicheckbox" data-code="certificate"
-                                           value="Собственный">
-                                    <label class="form-check-label" for="certificate_2">Собственный</label>
-                                </div>
-                                <div class="form-check">
-                                    <input id="certificate_3" class="form-check-input"
-                                           name="certificate_3" type="checkbox"
-                                           data-type="multicheckbox" data-code="certificate"
-                                           value="Государственного образца">
-                                    <label class="form-check-label" for="certificate_3">Государственного образца</label>
-                                </div>
-                            </div>
-
-                            <div class="form-group pt-3">
-                                <label class="h4">Практика</label>
-                                <div class="form-check">
-                                    <input id="hasPractice_1" class="form-check-input"
-                                           name="hasPractice_1" type="checkbox"
-                                           data-type="multicheckbox" data-code="hasPractice"
-                                           value="true">
-                                    <label class="form-check-label" for="hasPractice_1">Есть</label>
-                                </div>
-                                <div class="form-check">
-                                    <input id="hasPractice_2" class="form-check-input"
-                                           name="hasPractice_2" type="checkbox"
-                                           data-type="multicheckbox" data-code="hasPractice"
-                                           value="false">
-                                    <label class="form-check-label" for="hasPractice_2">Нет</label>
-                                </div>
-                            </div>
-
-                            <div class="form-group pt-3">
-                                <label class="h4">Преподаватель</label>
-                                <div class="form-check">
-                                    <input id="hasTeacher_1" class="form-check-input"
-                                           name="hasTeacher_1" type="checkbox"
-                                           data-type="multicheckbox" data-code="hasTeacher"
-                                           value="true">
-                                    <label class="form-check-label" for="hasTeacher_1">Есть</label>
-                                </div>
-                                <div class="form-check">
-                                    <input id="hasTeacher_2" class="form-check-input"
-                                           name="hasTeacher_2" type="checkbox"
-                                           data-type="multicheckbox" data-code="hasTeacher"
-                                           value="false">
-                                    <label class="form-check-label" for="hasTeacher_2">Нет</label>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                <div class="col-md-4 bg-light py-4 filterCol invisible-sm place-filter-here">
                 </div>
 
                 <div class="col-md-8 searchResultsContainer">
                     <div class="row">
                         <div class="col-md-12">
 
-                            <div class="navbar-alert alert alert-success mb-0" role="alert">
-                                В поиске учитываются навыки курсов из портфеля
+                            <div class="navbar-alert alert alert-success mb-0" role="alert" style="display: none">
+                                В поиске учитываются навыки курсов из портфеля (можно включить обратно в фильтре)
 
                                 <button class="btn btn-success btn-turnoff" data-dismiss="alert">
                                     Отключить
@@ -524,32 +108,295 @@
                         </div>
                     </div>
 
-                    <div class="row mt-5 searchSuccess" style="display: none;">
+                    <div class="row searchSuccess" style="display: none;">
                         <div class="col-md-12">
                             <h2>Поздравляем!</h2>
-                            <p>Вы успешно составили план обучения и можете приступать к улучшению собственных навыков!</p>
+                            <p class="searhSuccessText">Вы успешно составили план обучения и можете приступать к улучшению собственных навыков!</p>
                             <ul>
+                                <li>Всего курсов: <span class="totalCount">0</span></li>
                                 <li>Общая длительность обучения: <span class="totalDuration"></span> дней</li>
                                 <li>Общая стоимость обучения: <span class="totalCost"></span> руб</li>
                                 <li>Полученные навыки подходят для <span class="vacanciesPercent"></span>% вакансий</li>
                             </ul>
 
-                            <form class="form-inline" id="emailPlanForm">
+                            <form class="mt-4" id="emailPlanForm">
                                 <label class="sr-only form-control-lg" for="emailField">Электропочта</label>
                                 <div class="input-group mb-2 mr-sm-2">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">@</div>
                                     </div>
-                                    <input type="text" class="form-control form-control-lg" id="emailField" placeholder="Электропочта">
+                                    <input type="text" class="form-control form-control-lg " name="email" id="emailField" placeholder="Электропочта">
                                 </div>
 
-                                <button class="btn btn-primary btn-lg mb-2 pathDetails">Отправить план</button>
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" name="remind" value="1" id="sendCheck1">
+                                    <label class="form-check-label" for="sendCheck1">
+                                        Периодически напоминать мне о курсах
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="sendSimilar" value="1" id="sendCheck2">
+                                    <label class="form-check-label" for="sendCheck2">
+                                        Присылать мне похожие курсы по почте
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="courseFeedback" value="1" id="sendCheck3">
+                                    <label class="form-check-label" for="sendCheck3">
+                                        Я не против дать обратную связь по законченным курсам
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="serviceFeedback" value="1" id="sendCheck4">
+                                    <label class="form-check-label" for="sendCheck4">
+                                        Я не против дать обратную связь по использованию этого сервиса
+                                    </label>
+                                </div>
+
+                                <button class="btn btn-primary btn-lg btn-block mt-4 sendPlan">Отправить план</button>
                             </form>
 
                         </div>
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="take-filter-from-here" style="display: none">
+    <form class="">
+        <div class="form-group">
+            <label class="h3">Развиваемые навыки</label>
+            <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
+                <i class="fas fa-plus-circle"></i>
+                Добавить развиваемые навыки
+            </button>
+            <small class="form-text text-muted">После выбора навыка укажите текущий уровень владения</small>
+        </div>
+
+        <div class="form-check pb-3">
+            <input id="useBackpackSkills" class="form-check-input"
+                    name="useBackpackSkills" type="checkbox"
+                    value="1" checked="checked">
+            <label class="form-check-label" for="useBackpackSkills">Учитывать навыки курсов в портфеле</label>
+        </div>
+
+        <div class="skillContainer">
+
+        </div>
+        <div class="form-group">
+            <div class="form-group pt-3">
+                <label class="d-block h4">Стоимость</label>
+                <div class="form-check py-1">
+                    <input type="checkbox" class="form-check-input" value="on" id="cf">
+                    <label class="form-check-label" for="cf">Только бесплатные</label>
+                </div>
+                <div class="form-row coursePrice">
+                    <div class="col form-group">
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">От</div>
+                            </div>
+                            <input type="number" min="10000" max="100000" step="5000" value="30000" id="from" class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="col form-group">
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">До</div>
+                            </div>
+                            <input type="number" min="30000" max="500000" step="5000" value="50000" id="to" class="form-control">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group pt-3">
+                <label class="h4">Сложность курса</label>
+                <div class="form-check">
+                    <input id="hardness_1" class="form-check-input"
+                            name="hardness_1" type="checkbox"
+                            data-type="multicheckbox" data-code="hardness"
+                            value="1">
+                    <label class="form-check-label" for="hardness_1">Легкий</label>
+                </div>
+                <div class="form-check">
+                    <input id="hardness_2" class="form-check-input"
+                            name="hardness_2" type="checkbox"
+                            data-type="multicheckbox" data-code="hardness"
+                            value="2">
+                    <label class="form-check-label" for="hardness_2">Средний</label>
+                </div>
+                <div class="form-check">
+                    <input id="hardness_3" class="form-check-input"
+                            name="hardness_3" type="checkbox"
+                            data-type="multicheckbox" data-code="hardness"
+                            value="3">
+                    <label class="form-check-label" for="hardness_3">Трудный</label>
+                </div>
+            </div>
+
+
+            <div class="form-group pt-3">
+                <label class="h4">Формат курса</label>
+                <div class="form-check">
+                    <input id="format_1" class="form-check-input"
+                            name="format_1" type="checkbox"
+                            data-type="multicheckbox" data-code="format"
+                            value="Интерактивный">
+                    <label class="form-check-label" for="format_1">Интерактивный</label>
+                </div>
+                <div class="form-check">
+                    <input id="format_2" class="form-check-input"
+                            name="format_2" type="checkbox"
+                            data-type="multicheckbox" data-code="format"
+                            value="Вебинар">
+                    <label class="form-check-label" for="format_2">Вебинар</label>
+                </div>
+                <div class="form-check">
+                    <input id="format_3" class="form-check-input"
+                            name="format_3" type="checkbox"
+                            data-type="multicheckbox" data-code="format"
+                            value="Видео">
+                    <label class="form-check-label" for="format_3">Видео</label>
+                </div>
+                <div class="form-check">
+                    <input id="format_4" class="form-check-input"
+                            name="format_4" type="checkbox"
+                            data-type="multicheckbox" data-code="format"
+                            value="Онлайн">
+                    <label class="form-check-label" for="format_4">Онлайн</label>
+                </div>
+                <div class="form-check">
+                    <input id="format_5" class="form-check-input"
+                            name="format_5" type="checkbox"
+                            data-type="multicheckbox" data-code="format"
+                            value="Текстовый">
+                    <label class="form-check-label" for="format_5">Текстовый</label>
+                </div>
+                <div class="form-check">
+                    <input id="format_6" class="form-check-input"
+                            name="format_6" type="checkbox"
+                            data-type="multicheckbox" data-code="format"
+                            value="Интенсив">
+                    <label class="form-check-label" for="format_6">Интенсив</label>
+                </div>
+                <div class="form-check">
+                    <input id="format_7" class="form-check-input"
+                            name="format_7" type="checkbox"
+                            data-type="multicheckbox" data-code="format"
+                            value="Вечерняя">
+                    <label class="form-check-label" for="format_7">Вечерняя</label>
+                </div>
+            </div>
+
+            <div class="form-group pt-3">
+                <label class="h4">Сертификат</label>
+                <div class="form-check">
+                    <input id="certificate_1" class="form-check-input"
+                            name="certificate_1" type="checkbox"
+                            data-type="multicheckbox" data-code="certificate"
+                            value="Нет">
+                    <label class="form-check-label" for="certificate_1">Нет</label>
+                </div>
+                <div class="form-check">
+                    <input id="certificate_2" class="form-check-input"
+                            name="certificate_2" type="checkbox"
+                            data-type="multicheckbox" data-code="certificate"
+                            value="Собственный">
+                    <label class="form-check-label" for="certificate_2">Собственный</label>
+                </div>
+                <div class="form-check">
+                    <input id="certificate_3" class="form-check-input"
+                            name="certificate_3" type="checkbox"
+                            data-type="multicheckbox" data-code="certificate"
+                            value="Государственного образца">
+                    <label class="form-check-label" for="certificate_3">Государственного образца</label>
+                </div>
+            </div>
+
+            <div class="form-group pt-3">
+                <label class="h4">Практика</label>
+                <div class="form-check">
+                    <input id="hasPractice_1" class="form-check-input"
+                            name="hasPractice_1" type="checkbox"
+                            data-type="multicheckbox" data-code="hasPractice"
+                            value="true">
+                    <label class="form-check-label" for="hasPractice_1">Есть</label>
+                </div>
+                <div class="form-check">
+                    <input id="hasPractice_2" class="form-check-input"
+                            name="hasPractice_2" type="checkbox"
+                            data-type="multicheckbox" data-code="hasPractice"
+                            value="false">
+                    <label class="form-check-label" for="hasPractice_2">Нет</label>
+                </div>
+            </div>
+
+            <div class="form-group pt-3">
+                <label class="h4">Преподаватель</label>
+                <div class="form-check">
+                    <input id="hasTeacher_1" class="form-check-input"
+                            name="hasTeacher_1" type="checkbox"
+                            data-type="multicheckbox" data-code="hasTeacher"
+                            value="true">
+                    <label class="form-check-label" for="hasTeacher_1">Есть</label>
+                </div>
+                <div class="form-check">
+                    <input id="hasTeacher_2" class="form-check-input"
+                            name="hasTeacher_2" type="checkbox"
+                            data-type="multicheckbox" data-code="hasTeacher"
+                            value="false">
+                    <label class="form-check-label" for="hasTeacher_2">Нет</label>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade modal-scrollable" id="backpackModal" tabindex="-1" role="dialog" aria-labelledby="backpackModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="container">
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <h5 class="modal-title" id="backpackModalTitle">Выбранные курсы</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-lg btn-block btn-primary search-finish" data-dismiss="modal">Завершить подбор</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="list-group" id="backpackPopupList">
+                                Выбранных курсов нет
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
             </div>
         </div>
     </div>

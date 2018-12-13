@@ -37,7 +37,7 @@ CREATE TABLE `courses` (
   `description` text DEFAULT NULL,
   `price` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,9 +120,29 @@ INSERT INTO `courses` VALUES (71,'YouTube','Курс для HR. \"Проекти
 INSERT INTO `courses` VALUES (72,'YouTube','Подбор персонала: современные приемы проведения собеседования','https://www.youtube.com/watch?v=88dvOWrwEec','Видео',0,0,'Нет','',100,'минута','Собеседование - один из важнейших этапов подбора персонала (см. http://www.specialist.ru/course/kadr-... ), а владение современными приемами проведения собеседования позволяет специалисту по кадрам успешно достигать поставленных задач! На вебинаре будут освещены следующие проблемы проведения собеседования и подбора персонала: 1. Выбор оптимальной технологии подбора (рекрутинг, эксклюзивный поиск, хэдхантинг, прелиминаринг). 2. Деловая беседа. Телефонное интервью, методики, применяемые в ходе интервью. 3. Стили, виды и типы интервью с соискателем. 4. Выбор и использование оптимальных методов первичной оценки кандидата: различные виды тестирования, учет параметров метапрограмм и др. 5. Оценка эффективности подбора персонала. Вебинар проводит один из лучших преподавателей Центра компьютерного обучения «Специалист» при МГТУ им. Н.Э. Баумана Иванова Татьяна Борисовна.',0);
 INSERT INTO `courses` VALUES (73,'YouTube','Трудовые книжки: особенности ведения','https://www.youtube.com/watch?v=G1uc3dX0ChE','Видео',0,0,'Нет','',115,'минута','Трудовая книжка является основным документом, подтверждающим трудовую деятельность и стаж работника. На основе записей в трудовой книжке происходит назначение государственных пенсий, пособий по социальному страхованию, вознаграждений за выслугу лет и т.д. На бесплатном семинаре учебного центра \"Специалист\" вы познакомитесь с особенностями учета, ведения и хранения трудовых книжек. На мастер-классе будут рассмотрены следующие темы: - Как правильно заполнять и вносить изменения в трудовую книжку? - Как происходит учет трудовых книжек и вкладышей в них? - Какие сведения обязательно должны присутствовать в трудовой книжке работника? Ведет бесплатный урок сертифицированный специалист в области кадрового менеджмента, член национального Союза кадровиков Алексей Станиславович Конашевич',0);
 INSERT INTO `courses` VALUES (74,'YouTube','Подбор персонала организации','https://www.youtube.com/watch?v=oLfCPaOiqAA','Видео',0,0,'Нет','',88,'минута','Вы познакомитесь с организацией работы по подбору персонала в компании. Узнате об особенностях подбора эффективных кадров в условиях современного рынка труда и обсудите самые актуальные способы и технологии привлечения кандидатов. Рассмотрите современные методики и алгоритмы подбора персонала.\n\nТемы, рассматриваемые на мастер-классе :\n\n- Каковы особенности современного рынка труда?\n- Как использовать внутренние и внешние источники привлечения кандидатов?\n- Как выбрать наиболее эффективную технологию привлечения работников?\n- Как составить хорошее рекламное объявление о вакансии?\n- Какие существуют современные технологии подбора?\n- Как правильно провести собеседование?\n- Как дать правильную оценку кандидату?\n\nВедет бесплатный урок талантливый практикующий преподаватель, член Национального союза кадровиков России, великолепный специалист в области HR, умеющий «с нуля» подбирать и организовывать эффективную команду сотрудников любого уровня Алексей Станиславович Конашевич.\n',0);
-INSERT INTO `courses` VALUES (75,'Skillbox','UX‑дизайн 2.0 от AIC','https://skillbox.ru/aic/','Онлайн',1,1,'Собственный','Москва',4,'месяц','Погрузитесь в самую популярную профессию за 4 месяца. Получите опыт дизайн-студии №1 в России.\r\nСделайте дипломный проект для крупного клиента.\r\n\r\nПолностью в онлайне\r\nДипломная работа с реальными клиентами\r\nПоддержка наставников\r\nПроверка домашних заданий\r\n',70000);
+INSERT INTO `courses` VALUES (82,'Skillbox','UX‑дизайн 2.0 от AIC','https://skillbox.ru/aic/','Онлайн',1,1,'Собственный','Москва',4,'месяц','Погрузитесь в самую популярную профессию за 4 месяца. Получите опыт дизайн-студии №1 в России.\r\nСделайте дипломный проект для крупного клиента.\r\n\r\nПолностью в онлайне\r\nДипломная работа с реальными клиентами\r\nПоддержка наставников\r\nПроверка домашних заданий\r\n',70000);
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `courses_visits`
+--
+
+DROP TABLE IF EXISTS `courses_visits`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `courses_visits` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dateVisit` datetime DEFAULT current_timestamp(),
+  `userId` int(11) DEFAULT NULL,
+  `courseId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `courses_visits`
+--
 
 --
 -- Table structure for table `links_requirements_courses`
@@ -137,7 +157,7 @@ CREATE TABLE `links_requirements_courses` (
   `skillId` int(1) DEFAULT NULL,
   `skillLevel` int(1) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -231,6 +251,18 @@ INSERT INTO `links_requirements_courses` VALUES (82,46,96,1);
 INSERT INTO `links_requirements_courses` VALUES (83,46,313,1);
 INSERT INTO `links_requirements_courses` VALUES (84,56,96,2);
 INSERT INTO `links_requirements_courses` VALUES (85,71,171,2);
+INSERT INTO `links_requirements_courses` VALUES (86,81,40,1);
+INSERT INTO `links_requirements_courses` VALUES (87,81,350,1);
+INSERT INTO `links_requirements_courses` VALUES (88,81,242,1);
+INSERT INTO `links_requirements_courses` VALUES (89,81,218,1);
+INSERT INTO `links_requirements_courses` VALUES (90,81,195,1);
+INSERT INTO `links_requirements_courses` VALUES (91,81,192,1);
+INSERT INTO `links_requirements_courses` VALUES (92,81,189,1);
+INSERT INTO `links_requirements_courses` VALUES (93,81,136,1);
+INSERT INTO `links_requirements_courses` VALUES (94,81,114,1);
+INSERT INTO `links_requirements_courses` VALUES (95,81,24,1);
+INSERT INTO `links_requirements_courses` VALUES (96,81,20,1);
+INSERT INTO `links_requirements_courses` VALUES (97,83,38,1);
 /*!40000 ALTER TABLE `links_requirements_courses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -247,7 +279,7 @@ CREATE TABLE `links_skills_courses` (
   `skillId` int(1) DEFAULT NULL,
   `skillLevel` int(1) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=461 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=472 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -705,17 +737,28 @@ INSERT INTO `links_skills_courses` VALUES (446,74,10,1);
 INSERT INTO `links_skills_courses` VALUES (447,74,338,1);
 INSERT INTO `links_skills_courses` VALUES (448,74,171,1);
 INSERT INTO `links_skills_courses` VALUES (449,74,201,1);
-INSERT INTO `links_skills_courses` VALUES (450,75,40,1);
-INSERT INTO `links_skills_courses` VALUES (451,75,350,1);
-INSERT INTO `links_skills_courses` VALUES (452,75,242,1);
-INSERT INTO `links_skills_courses` VALUES (453,75,218,1);
-INSERT INTO `links_skills_courses` VALUES (454,75,195,1);
-INSERT INTO `links_skills_courses` VALUES (455,75,192,1);
-INSERT INTO `links_skills_courses` VALUES (456,75,189,1);
-INSERT INTO `links_skills_courses` VALUES (457,75,136,1);
-INSERT INTO `links_skills_courses` VALUES (458,75,114,1);
-INSERT INTO `links_skills_courses` VALUES (459,75,24,1);
-INSERT INTO `links_skills_courses` VALUES (460,75,20,1);
+INSERT INTO `links_skills_courses` VALUES (450,82,40,1);
+INSERT INTO `links_skills_courses` VALUES (451,82,350,1);
+INSERT INTO `links_skills_courses` VALUES (452,82,242,1);
+INSERT INTO `links_skills_courses` VALUES (453,82,218,1);
+INSERT INTO `links_skills_courses` VALUES (454,82,195,1);
+INSERT INTO `links_skills_courses` VALUES (455,82,192,1);
+INSERT INTO `links_skills_courses` VALUES (456,82,189,1);
+INSERT INTO `links_skills_courses` VALUES (457,82,136,1);
+INSERT INTO `links_skills_courses` VALUES (458,82,114,1);
+INSERT INTO `links_skills_courses` VALUES (459,82,24,1);
+INSERT INTO `links_skills_courses` VALUES (460,82,20,1);
+INSERT INTO `links_skills_courses` VALUES (461,83,40,1);
+INSERT INTO `links_skills_courses` VALUES (462,83,350,1);
+INSERT INTO `links_skills_courses` VALUES (463,83,242,1);
+INSERT INTO `links_skills_courses` VALUES (464,83,218,1);
+INSERT INTO `links_skills_courses` VALUES (465,83,195,1);
+INSERT INTO `links_skills_courses` VALUES (466,83,192,1);
+INSERT INTO `links_skills_courses` VALUES (467,83,189,1);
+INSERT INTO `links_skills_courses` VALUES (468,83,136,1);
+INSERT INTO `links_skills_courses` VALUES (469,83,114,1);
+INSERT INTO `links_skills_courses` VALUES (470,83,24,1);
+INSERT INTO `links_skills_courses` VALUES (471,83,20,1);
 /*!40000 ALTER TABLE `links_skills_courses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4612,6 +4655,28 @@ INSERT INTO `links_skills_vacancies` VALUES (2713,259,383,1,1);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `links_users_courses`
+--
+
+DROP TABLE IF EXISTS `links_users_courses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `links_users_courses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` varchar(45) NOT NULL,
+  `courseId` varchar(45) NOT NULL,
+  `dateApplied` datetime NOT NULL DEFAULT current_timestamp(),
+  `dateCompleted` datetime DEFAULT NULL,
+  `dateRefused` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `links_users_courses`
+--
+
+--
 -- Table structure for table `professions`
 --
 
@@ -5457,6 +5522,28 @@ INSERT INTO `skills` VALUES (779,'Zeplin');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dateRegistered` datetime NOT NULL DEFAULT current_timestamp(),
+  `email` varchar(255) DEFAULT NULL,
+  `remind` int(1) NOT NULL DEFAULT 0,
+  `sendSimilar` int(1) NOT NULL DEFAULT 0,
+  `courseFeedback` int(1) NOT NULL DEFAULT 0,
+  `serviceFeedback` int(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+--
 -- Table structure for table `vacancies`
 --
 
@@ -5775,4 +5862,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-05 16:57:42
+-- Dump completed on 2018-12-13 12:24:59

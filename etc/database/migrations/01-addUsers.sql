@@ -1,0 +1,25 @@
+CREATE TABLE `self.academy`.`users` (
+`id` INT NOT NULL AUTO_INCREMENT,
+`dateRegistered` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+`email` VARCHAR(255) NULL,
+`remind` INT(1) NOT NULL DEFAULT 0,
+`sendSimilar` INT(1) NOT NULL DEFAULT 0,
+`courseFeedback` INT(1) NOT NULL DEFAULT 0,
+`serviceFeedback` INT(1) NOT NULL DEFAULT 0,
+PRIMARY KEY (`id`));
+
+CREATE TABLE `self.academy`.`links_users_courses` (
+`id` INT NOT NULL AUTO_INCREMENT,
+`userId` INT NOT NULL,
+`courseId` INT NOT NULL,
+`dateApplied` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+`dateCompleted` DATETIME NULL DEFAULT NULL,
+`dateRefused` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`));
+
+CREATE TABLE `self.academy`.`courses_visits` (
+`id` INT NOT NULL AUTO_INCREMENT,
+`dateVisit` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+`userId` INT NULL,
+`courseId` INT NULL,
+PRIMARY KEY (`id`));
