@@ -501,10 +501,10 @@ function getCoursesListWithHardnessAndSortIndex() {
     let clonedList = JSON.parse( JSON.stringify( getCoursesList() ) );
 
     let skillsFilter = applyBackpackSkills(getCoursesFilter().skills);
-    let isFilterEmpty = Object.keys(skillsFilter).length === 0;
+    let isLocalFilterEmpty = Object.keys(skillsFilter).length === 0;
     let getCoursePrice = function (course) { return course.price };
     let getCourseRequirementsCount = function (course) { return Object.keys(course.requirements).length };
-    let getMatchedSkillsCount = function (course) { return isFilterEmpty ? 0 : getMatchingCourseSkills(course.skills, skillsFilter, false).length; }
+    let getMatchedSkillsCount = function (course) { return isLocalFilterEmpty ? 0 : getMatchingCourseSkills(course.skills, skillsFilter, false).length; }
 
     let priceMaximum = getMaximumValue(clonedList, getCoursePrice);
     let weightenedSkillsMaximum = getMaximumValue(clonedList, getWeightenedSkillsCountStep);
@@ -517,7 +517,7 @@ function getCoursesListWithHardnessAndSortIndex() {
         let weightenedSkills = 1-getNormalizedValue(course, courses, getWeightenedSkillsCountStep, weightenedSkillsMaximum);
         let requirements = getNormalizedValue(course, courses, getCourseRequirementsCount, requirementsMaximum);
         let hardness = getNormalizedValue(course, courses, getCourseHardness, hardnessMaximum);
-        let matchedSkillsCount = 1-getNormalizedValue(course, courses, getMatchedSkillsCount, matchedSkillsMaximum);
+        let matchedSkillsCount = matchedSkillsMaximum ? 1-getNormalizedValue(course, courses, getMatchedSkillsCount, matchedSkillsMaximum) : 0;
 
         return Math.round(matchedSkillsCount * 1000000000) +
             Math.round(price * 10000000) +
