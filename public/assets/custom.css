@@ -121,12 +121,7 @@ body {
 }
 
 .noSkillsDefined, .noVacanciesFound {
-    display: block;
-    border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: 0.25rem;
-    margin-left: 0.75rem !important;
-    margin-right: -0.75rem !important;
-    padding-top: 4rem;
+
 }
 
 .dashedLink {
