@@ -20,7 +20,6 @@ body {
 }
 
 .navbar-alert button {
-    display: block;
     margin-top: 1rem;
 }
 
@@ -316,6 +315,12 @@ body {
     display: block;
 }
 
+.searchResults.invisible-sm .swiper-slide {
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    margin-bottom: .25rem!important;
+}
+
 .selected-title {
     white-space: pre-wrap;
     text-align: left;
@@ -345,9 +350,37 @@ a.header, a.header:visited, a.header:hover, a.header:active {
     height: 92vh;
 }
 
+.swiper-button-next, .swiper-button-prev {
+    top: 50vh;
+    position: fixed;
+}
+
+.swiper-button-next {
+    right: 5px;
+}
+
+.swiper-button-prev {
+    left: 5px;
+}
+
+.swiper-pagination-progressbar {
+    top: 0px;
+    z-index: 1999;
+    height: 5px;
+    width: 100%;
+    position: fixed;
+    left: 0;
+}
+
 @media (max-width: 768px) {
     .addVacancySkillsButton {
         font-size: .8rem;
+    }
+
+    .backpack-filter-alert {
+        position: fixed;
+        z-index: 100;
+        margin-right: 15px;
     }
 }
 

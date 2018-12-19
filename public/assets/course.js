@@ -359,7 +359,7 @@ function getCourseDataHTML(course, skipButton, index) {
 }
 
 function getCourseCardHTML(course, skipButton, index) {
-    let courseHTML = "<div class=\"inner-card m-1\">\n" +
+    let courseHTML = "<div class=\"swiper-slide\">\n" +
         "    <div class=\"card-body\">\n" +
             getCourseDataHTML(course, skipButton, index) +
         "    </div>\n" +
@@ -389,7 +389,7 @@ function getCourseBackpackCardHTML(course) {
 function addCourse(course) {
     let courseHTML = getCourseCardHTML(course);
 
-    $('#coursesList').append(courseHTML);
+    $('.coursesList').append(courseHTML);
 }
 
 function applyBackpackSkills(currentSkills, level) {
@@ -669,23 +669,26 @@ function isSuccessShown() {
 }
 
 function search() {
+    updateSlider();
     if (isSuccessShown()) {
         return;
     }
 
-    $('#coursesList').css('opacity', '0.3');
+    $('.coursesList').css('opacity', '0.3');
     setTimeout(function () {
-        $('#coursesList').html('');
+        $('.coursesList').html('');
 
         let courses = findCourses( getCoursesFilter() );
         courses.forEach(function (course) {
             addCourse(course);
         });
 
-        $('#coursesList').attr('style', '');
+        $('.coursesList').attr('style', '');
         if (courses.length === 0) {
-            $('#coursesList').append("<p class=\"h4 px-3 py-2\">Подходящие курсы не найдены</p>");
+            $('.coursesList').append("<p class=\"h4 px-3 py-2\">Подходящие курсы не найдены</p>");
         }
+
+        updateSlider();
     }, 200)
 }
 
@@ -904,7 +907,7 @@ function showBackpackSkillsAlert() {
 function showSuccess() {
     updateBackpackData();
     hideBackpackSkillsAlert();
-    $('#coursesList').hide();
+    $('.coursesList').hide();
 
     let searchSuccessText = hasNoCoursesForNextStep()
         ? "Выбранные курсы позволят вам получить максимальное доступное количество навыков!"
@@ -1045,6 +1048,32 @@ function addCourseSkillsToFilter(courseId) {
     });
 }
 
+function setupSlider() {
+    let slider = new Swiper ('.swiper-container', {
+        direction: 'horizontal',
+        loop: true,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            type: 'progressbar'
+        },
+    });
+
+    return slider;
+}
+
+function updateSlider() {
+    if (!window.slider) {
+        return;
+    }
+
+    window.slider.update();
+    window.slider.slideTo(0);
+}
+
 $(function () {
     enableTooltips();
 
@@ -1058,6 +1087,8 @@ $(function () {
     updateFilterCounter();
 
     search();
+
+    window.slider = setupSlider();
 
     $('#coursesCount').text( getCoursesList().length );
 
