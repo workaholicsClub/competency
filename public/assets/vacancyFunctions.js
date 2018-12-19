@@ -2,7 +2,7 @@ function getSkillLevels() {
     return ['Не владею', 'Основы', 'Уверенный', 'Глубокий'];
 }
 
-function addSkill(skillName, skillLevel) {
+function addSkill(skillName, skillLevel, autoSearch) {
     let selectedSkills = getSelectedSkillNames();
     let isSelected = selectedSkills.indexOf(skillName) !== -1;
     let skillLevelDefined = (typeof (skillLevel) === "string" || typeof (skillLevel) === "number") && skillLevel !== "Текущий уровень";
@@ -27,20 +27,24 @@ function addSkill(skillName, skillLevel) {
         "</div>\n";
 
     $('.skillContainer').prepend(skillHTML);
-    toggleAdditionalSkills();
-    toggleUpdatableSkills();
-    updateSkillLists();
-    search();
+
+    if (autoSearch !== false) {
+        toggleAdditionalSkills();
+        toggleUpdatableSkills();
+        updateSkillLists();
+        search();
+    }
 }
 
 function clearVacanciesList() {
-    $('#vacancyList').html('');
+    $('.vacancyList').html('');
 }
 
 function getSkillsFilter() {
+    let filterContainer = isMobile() ? "#filterCollapse" : "#filterDesktop";
     let skillsData = {};
 
-    $('.skillBlock').each(function () {
+    $(filterContainer + ' .skillBlock').each(function () {
         let skillName = $(this).find('h4').text();
         let skillLevel = parseInt( $(this).find('select').val() ) || 0;
 
@@ -48,6 +52,51 @@ function getSkillsFilter() {
     });
 
     return skillsData;
+}
+
+function getCheckedValues(code) {
+    return $("[data-code='"+code+"']:checked")
+        .map(function () {
+            return $(this).val();
+        })
+        .get();
+}
+
+function getBooleanCheckedValues(code) {
+    return $("[data-code='"+code+"']:checked")
+        .map(function () {
+            return $(this).val() === 'true';
+        })
+        .get();
+}
+
+function getBooleanValue(code) {
+    return getBooleanCheckedValues(code)[0] || false;
+}
+
+function getVacanciesFilter() {
+    let fieldIndex = isMobile() ? "0" : "1";
+
+    return {
+        skills: getSkillsFilter(),
+        salaryFrom: parseInt($('#from_' + fieldIndex).val()) || 0,
+        salaryTo: parseInt($('#to_' + fieldIndex).val()) || 0,
+        city: getCheckedValues('city'),
+        fullTime: getBooleanValue('fullTime'),
+        flexibleSchedule: getBooleanValue('flexibleSchedule'),
+        probation: getBooleanValue('probation'),
+        officialEmployment: getBooleanValue('officialEmployment'),
+        canBeRemote: getBooleanValue('canBeRemote'),
+        training: getBooleanValue('training'),
+        food: getBooleanValue('food'),
+        insurance: getBooleanValue('insurance'),
+        sportAndFitness: getBooleanValue('sportAndFitness'),
+        communicationsCompensation: getBooleanValue('communicationsCompensation'),
+        sickLeaveCompensation: getBooleanValue('sickLeaveCompensation'),
+        vacationCompensation: getBooleanValue('vacationCompensation'),
+        dressCode: getBooleanValue('dressCode'),
+        relocationHelp: getBooleanValue('relocationHelp')
+    };
 }
 
 function getSelectedSkillNames() {
@@ -64,17 +113,57 @@ function getVacancySkillLevel(vacancy, skillName) {
     }, false);
 }
 
-function matchVacancy(vacancy, filter) {
-    let isMatching = true;
+function intersectArrays(array1, array2) {
+    return array1.filter(value => -1 !== array2.indexOf(value));
+}
+
+function matchVacancySkills(vacancy, filter) {
+    let isSkillMatching = true;
     let vacancySkillNames = getVacancySkillNames(vacancy);
+    let skillsFilterEmpty = Object.keys(filter.skills).length === 0;
+
+    if (skillsFilterEmpty) {
+        return false;
+    }
 
     vacancySkillNames.forEach(function (skillName) {
-        let isInFilter = typeof filter[skillName] !== 'undefined';
-        let levelMatches = isInFilter && getVacancySkillLevel(vacancy, skillName) <= filter[skillName];
-        isMatching = isMatching && levelMatches;
+        let isInFilter = typeof filter.skills[skillName] !== 'undefined';
+        let levelMatches = isInFilter && getVacancySkillLevel(vacancy, skillName) <= filter.skills[skillName];
+        isSkillMatching = isSkillMatching && levelMatches;
     });
 
-    return isMatching;
+    return isSkillMatching;
+}
+
+function matchVacancy(vacancy, filter) {
+    let filteredEnumProps = ['fullTime', 'flexibleSchedule', 'probation', 'officialEmployment', 'canBeRemote', 'training', 'food', 'insurance', 'sportAndFitness', 'communicationsCompensation', 'sickLeaveCompensation', 'vacationCompensation', 'dressCode', 'relocationHelp'];
+
+    let propsMatch = filteredEnumProps.reduce(function (prevPropsMatch, propName) {
+        let filterValues = filter[propName];
+        let vacancyValue = vacancy[propName];
+        let propMatches;
+
+        if (vacancyValue instanceof Array) {
+            propMatches = intersectArrays(filterValues, vacancyValue).length > 0;
+        }
+        else {
+            propMatches = (filterValues === true && vacancyValue === true) || filterValues === false;
+        }
+
+        return prevPropsMatch && propMatches;
+    }, true);
+
+    let salaryFromMatches = (vacancy.salary.from > 0 && filter.salaryFrom <= vacancy.salary.from) || vacancy.salary.from == 0;
+    let salaryToMatches = (vacancy.salary.to > 0 && filter.salaryTo >= vacancy.salary.to) || vacancy.salary.to == 0;
+    let salaryMatches = salaryFromMatches && salaryToMatches;
+
+    let cityMatches = filter.city.length === 0 || filter.city.reduce(function (matches, city) {
+        return matches || vacancy.city.indexOf(city) !== -1;
+    }, false);
+
+    let vacancyMatches = propsMatch && salaryMatches && cityMatches;
+
+    return vacancyMatches;
 }
 
 function softMatchVacancy(vacancy, filter) {
@@ -144,7 +233,7 @@ function getMatchRating(vacancy, filter) {
 function findVacancies(filter) {
     return getVacanciesList()
         .filter(function (vacancy) {
-            return matchVacancy(vacancy, filter);
+            return matchVacancy(vacancy, filter) && matchVacancySkills(vacancy, filter);
         });
 }
 
@@ -163,7 +252,10 @@ function findParticialMacth(filter) {
 
     return vacanices
         .filter(function (vacancy) {
-            let isNotInRecommendedList = !matchVacancy(vacancy, filter);
+            return matchVacancy(vacancy, filter);
+        })
+        .filter(function (vacancy) {
+            let isNotInRecommendedList = !matchVacancySkills(vacancy, filter);
             return isNotInRecommendedList;
         })
         .sort(function (vacancyA, vacancyB) {
@@ -183,16 +275,17 @@ function findParticialMacth(filter) {
 }
 
 function search() {
+    updateSlider();
     toggleSkillsResult();
     clearVacanciesList();
 
-    let recommendedVacancies = findVacancies(getSkillsFilter());
+    let recommendedVacancies = findVacancies(getVacanciesFilter());
 
     if (recommendedVacancies.length > 0) {
         $('.noRecommendedVacancies').hide();
         recommendedVacancies
             .forEach(function (vacancy, index) {
-                addVacancy(vacancy, index, '#vacancyList', true);
+                addVacancy(vacancy, index, '.vacancyList', true);
             });
     }
     else {
@@ -200,19 +293,20 @@ function search() {
     }
 
 
-    findParticialMacth(getSkillsFilter())
+    findParticialMacth(getVacanciesFilter())
         .forEach(function (vacancy, index) {
-            addVacancy(vacancy, index, '#vacancyList', false);
+            addVacancy(vacancy, index, '.vacancyList', false);
         });
 
     $('.searchResults').css('opacity', '0.3');
     setTimeout(function () {
         $('.searchResults').attr('style', '');
+        updateSlider();
     }, 2000);
 }
 
 function toggleSkillsResult() {
-    let areVacanciesFound = findParticialMacth(getSkillsFilter()).length > 0;
+    let areVacanciesFound = findParticialMacth(getVacanciesFilter()).length > 0;
 
     if (areVacanciesFound) {
         $('.noVacanciesFound').hide();
@@ -358,10 +452,10 @@ function updateSkillLists() {
     updateUpdatableSkills();
 }
 
-function toggleAdditionalSkills() {
-    let foundVacanciesCount = findVacancies(getSkillsFilter()).length;
+function getAdditionalSkills() {
+    let foundVacanciesCount = findVacancies(getVacanciesFilter()).length;
     let selectedSkills = getSelectedSkillNames();
-    let neededSkills = getNeededSkills(getVacanciesList(), foundVacanciesCount+1);
+    let neededSkills = getNeededSkills(getVacanciesList(), foundVacanciesCount + 1);
 
     let allAdditionalSkills = [];
     neededSkills.forEach(function (skillName) {
@@ -371,10 +465,14 @@ function toggleAdditionalSkills() {
         }
     });
 
-    let shownAdditionalSkills = removeSelectedSkills(allAdditionalSkills);
-    let hasAdditionalSkills = shownAdditionalSkills.length > 0;
+    return allAdditionalSkills;
+}
 
-    updateAdditionalSkills(allAdditionalSkills);
+function toggleAdditionalSkills(allAdditionalSkills) {
+    if (!allAdditionalSkills) {
+        allAdditionalSkills = getAdditionalSkills();
+    }
+    addSkillsToVacancyPopup(allAdditionalSkills);
 }
 
 function getVacancySkillNames(vacancy) {
@@ -406,8 +504,8 @@ function countAdditionalVacanciesOnSkillUpdate(vacancies, filter, testSkillName)
     let maximumLevel = 3;
     let currentLevel = filter[testSkillName];
     let maxFilter = $.extend({}, filter);
-    Object.keys(maxFilter).forEach(function (skillName) {
-        maxFilter[skillName] = maximumLevel;
+    Object.keys(maxFilter.skills).forEach(function (skillName) {
+        maxFilter.skills[skillName] = maximumLevel;
     });
 
     let currentVacancies = findVacancies(filter);
@@ -435,7 +533,7 @@ function countAdditionalVacanciesOnSkillUpdate(vacancies, filter, testSkillName)
 }
 
 function getUpdatableSkillList() {
-    let filter = getSkillsFilter();
+    let filter = getVacanciesFilter();
     let vacancies = getVacanciesList();
     let updatableSkills = [];
 
@@ -467,6 +565,35 @@ function addSkillsToList(skillNames, selector) {
     });
 
     $(selector).html( skillsHtml.join(', ') );
+}
+
+function setupSlider() {
+    let slider = new Swiper ('.swiper-container', {
+        direction: 'horizontal',
+        loop: false,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            type: 'progressbar'
+        },
+        on: {
+            update: function () {
+            }
+        }
+    });
+
+    return slider;
+}
+
+function updateSlider() {
+    if (!window.slider) {
+        return;
+    }
+
+    window.slider.update();
 }
 
 function sortSkillsByAlphabet(allSkills) {
@@ -514,26 +641,25 @@ function addSkillToPopup(allSkills, selector) {
         let itemHTML =
             "<div class=\"list-group-item list-group-item-action\" data-name=\""+skill+"\">\n" +
             "    <form class=\"form-inline skill-form\">\n" +
-            "        <div class=\"form-group col-1\">\n" +
+            "        <div class=\"form-group col-1 mb-0\">\n" +
             "            <div class=\"form-check\">\n" +
             "                <input class=\"form-check-input\" type=\"checkbox\" value=\"\" id=\"check"+index+"\">\n" +
             "            </div>\n" +
             "        </div>\n" +
-            "        <div class=\"form-group col-5\">\n" +
+            "        <div class=\"form-group col-5 mb-0\">\n" +
             "            <label class=\"form-check-label\">\n" +
             "                "+skill+"\n" +
             "            </label>\n" +
             "        </div>\n" +
-            "        <div class=\"form-group col-5\">\n" +
+            "        <div class=\"form-group col-5 mb-0 px-0\">\n" +
             "        <select class=\"custom-select\">\n" +
-            "           <option selected>Текущий уровень</option>\n" +
-            "           <option value=0>Не владею</option>\n" +
+            "           <option selected value=0>Не владею</option>\n" +
             "           <option value=1>Основы</option>\n" +
             "           <option value=2>Уверенный</option>\n" +
             "           <option value=3>Глубокий</option>\n" +
             "        </select>\n" +
             "        </div>\n" +
-            "        <div class=\"form-group col-1\">\n" +
+            "        <div class=\"form-group col-1 mb-0\">\n" +
             "            <span class=\"badge badge-primary\">"+countText+"</span>\n" +
             "        </div>\n" +
             "    </form>\n" +
@@ -560,15 +686,14 @@ function addSkillsToVacancyPopup(customSkills) {
         let itemHTML =
             "<div class=\"list-group-item list-group-item-action\" data-name=\""+skill+"\">\n" +
             "    <form class=\"form-inline skill-form\">\n" +
-            "        <div class=\"form-group col-7\">\n" +
+            "        <div class=\"form-group col-7 mb-0\">\n" +
             "            <label class=\"form-check-label\" for=\"check"+index+"\">\n" +
             "                "+skill+"\n" +
             "            </label>\n" +
             "        </div>\n" +
-            "        <div class=\"form-group col-5\">\n" +
+            "        <div class=\"form-group col-5 mb-0 px-0\">\n" +
             "        <select class=\"custom-select\">\n" +
-            "           <option selected>Текущий уровень</option>\n" +
-            "           <option value=0>Не владею</option>\n" +
+            "           <option selected value=0>Не владею</option>\n" +
             "           <option value=1>Основы</option>\n" +
             "           <option value=2>Уверенный</option>\n" +
             "           <option value=3>Глубокий</option>\n" +
@@ -580,7 +705,7 @@ function addSkillsToVacancyPopup(customSkills) {
         skillsHtml.push(itemHTML);
     });
 
-    $("#selectedSkills").html( skillsHtml.join('') );
+    $("#selectedVacancySkills").html( skillsHtml.join('') );
 }
 
 function addAllSkills(allSkills) {
@@ -613,10 +738,37 @@ function getSalaryHtml(vacancy) {
     return 'Заработная плата<br>не указана';
 }
 
+function isForNewbies(vacancy) {
+    let vacancies = getVacanciesList();
+    let skillsCount = vacancy.skills.length;
+
+    let minSkillsCount = vacancies.reduce(function (count, enumVacancy) {
+        if (enumVacancy.skills.length < count) {
+            return enumVacancy.skills.length;
+        }
+
+        return count;
+    }, skillsCount);
+
+    let maxLevel = vacancy.skills.reduce(function (maxLevel, skillData) {
+        if (skillData.level > maxLevel) {
+            return skillData.level;
+        }
+
+        return maxLevel;
+    }, 0);
+
+    return (skillsCount - minSkillsCount <= 2) && (maxLevel <= 1);
+}
+
 function getAttributesHtml(vacancy) {
     let attributes = [
         vacancy.city,
     ];
+    
+    if (isForNewbies(vacancy)) {
+        attributes.push('Для новичков');
+    }
 
     let attrData = {
         fullTime: 'Полный день',
@@ -673,25 +825,36 @@ function addVacancy(vacancy, index, selector, isRecommended) {
     let company = vacancy.company && vacancy.company !== '-' ? vacancy.company : 'Работодатель не указан';
 
     let buttonHtml = canSendResume
-        ? "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center\">Отправить резюме</a>\n"
-        : "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center addVacancySkillsButton\" data-toggle=\"modal\" data-target=\"#addVacancySkillsModal\">Указать навыки, чтобы отправить резюме</a>\n";
+        ? "<a href=\"" + vacancy.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-vacancy\" data-vacancy-id=\""+vacancy.id+"\"><i class=\"fas fa-external-link-square-alt\"></i>&nbsp;Отправить резюме</a>"
+        : "<a href=\"#\" class=\"btn btn-primary d-flex justify-content-center addVacancySkillsButton\" data-toggle=\"modal\" data-target=\"#addVacancySkillsModal\">Указать навыки, чтобы откликнуться</a>\n";
+
+    let outdateWarning = "<div class=\"alert alert-danger\">Вакансия устарела</div>";
+    let recommendMessage = "<div class=\"alert bg-warning\">Подходит для вас</div>";
+
+    let outdateDate = new Date(vacancy.dateCreate);
+    outdateDate.setMonth( outdateDate.getMonth() + 1 );
+    let now = new Date;
+
+    let isOutdated = now > outdateDate;
 
     let visitButtonHTML = "<a href=\"" + vacancy.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-vacancy mt-1\" data-vacancy-id=\""+vacancy.id+"\"><i class=\"fas fa-external-link-square-alt\"></i>&nbsp;Перейти на страницу вакансии</a>";
 
-    let vacancyHtml = "<div class=\"card m-1\" data-vacancy-id='"+vacancy.id+"'>"+
+    let vacancyHtml = "<div class=\"swiper-slide vacancy-card\" data-vacancy-id='"+vacancy.id+"'>"+
         "   <div class=\"card-body "+additionalClass+"\">\n" +
+                (isOutdated ? outdateWarning : "") +
+                (isRecommended ? recommendMessage : "") +
         "       <h4>"+vacancy.title+"</h4>\n" +
         "       <h6 class=\"text-muted\">" +getSalaryHtml(vacancy)+ "</h6>\n" +
         "       <h6 class=\"text-muted\">"+company+"</h6>\n" +
         "       <p>"+getAttributesHtml(vacancy)+"</p>\n" +
+                (vacancy.candidatesPerPlace ? "<p>Конкурс: ~"+vacancy.candidatesPerPlace+" чел/место</p>\n" : "") +
         "       <p class=\"mb-0\">Требования:</p>\n" +
         "       <p>"+getSkillsHtml(vacancy)+"</p>\n" +
-        "       <button class=\"btn btn-outline-secondary btn-block mb-3\" data-toggle=\"collapse\" data-target=\"#description" + index + "\" aria-expanded=\"true\" aria-controls=\"description1\">\n" +
+        "       <button class=\"btn btn-outline-secondary btn-block mb-3\" data-toggle=\"collapse\" data-target=\"#description" + index + "\" aria-expanded=\"true\" aria-controls=\"description" + index + "\">\n" +
         "           Описание вакансии\n" +
         "       </button>\n" +
         "       <p id=\"description" + index + "\" class=\"collapse\">\n" + desciptionHtml + "</p>\n" +
         buttonHtml +
-        visitButtonHTML +
         "   </div>"+
         "</div>";
 
@@ -874,4 +1037,48 @@ function drawFilter() {
     $('.place-filter-here').each(function (index) {
         $(this).html(updateFieldsAndLabelIds(filterHTML, index));
     });
+}
+
+function isMobile() {
+    return $('.navbar-toggler').is(':visible');
+}
+
+function updateFilterCounter() {
+    let filter = getVacanciesFilter();
+    let salaryRange = getVacanciesSalaryRange(getVacanciesList());
+    let filterPriceRange = {
+        salaryFrom: salaryRange.min,
+        salaryTo: salaryRange.max
+    };
+
+    let countFilterAttrs = Object.keys(filter).reduce(function (result, filterAttr) {
+        let filterValue = filter[filterAttr];
+        let attrHasValue = false;
+
+        if (filterValue instanceof Array) {
+            attrHasValue = filterValue.length > 0;
+        }
+
+        if (typeof filterValue === "number") {
+            attrHasValue = filterPriceRange[filterAttr] !== parseInt(filterValue);
+        }
+
+        if (typeof filterValue === "boolean") {
+            attrHasValue = filterValue === true;
+        }
+
+        if (filterValue instanceof Object && !(filterValue instanceof Array)) {
+            attrHasValue = Object.keys(filterValue).length > 0;
+        }
+
+        return result + (attrHasValue ? 1 : 0)
+    }, 0);
+
+    $('.filterCount').html(countFilterAttrs);
+    if (countFilterAttrs === 0) {
+        $('.filterCount').hide();
+    }
+    else {
+        $('.filterCount').show();
+    }
 }

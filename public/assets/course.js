@@ -468,10 +468,6 @@ function getWeightenedSkillsCountStep(course) {
     return Math.round(skillsCount / 5) * 5;
 }
 
-function intersectArrays(array1, array2) {
-    return array1.filter(value => -1 !== array2.indexOf(value));
-}
-
 function courseMatchesFilterParameters(course) {
     let filter = getCoursesFilter();
     let filteredEnumProps = ['format', 'hardness', 'certificate', 'hasTeacher', 'hasPractice'];
@@ -627,22 +623,6 @@ function updateCourseFromTo() {
         .attr('min', priceRange.min)
         .attr('max', priceRange.max)
         .attr('value', priceRange.max);
-}
-
-function getCheckedValues(code) {
-    return $("[data-code='"+code+"']:checked")
-                .map(function () {
-                    return $(this).val();
-                })
-                .get();
-}
-
-function getBooleanCheckedValues(code) {
-    return $("[data-code='"+code+"']:checked")
-        .map(function () {
-            return $(this).val() === 'true';
-        })
-        .get();
 }
 
 function getCoursesFilter() {
@@ -908,6 +888,7 @@ function showSuccess() {
     updateBackpackData();
     hideBackpackSkillsAlert();
     $('.coursesList').hide();
+    $('.swiper-button-prev, .swiper-button-next').hide();
 
     let searchSuccessText = hasNoCoursesForNextStep()
         ? "Выбранные курсы позволят вам получить максимальное доступное количество навыков!"
@@ -1033,10 +1014,6 @@ function getTimeInDays(course) {
     return timeInDays;
 }
 
-function isMobile() {
-    return $('.navbar-toggler').is(':visible');
-}
-
 function addCourseSkillsToFilter(courseId) {
     let course = getCourseById(courseId);
     if (!course) {
@@ -1046,32 +1023,6 @@ function addCourseSkillsToFilter(courseId) {
     Object.keys(course.skills).forEach(function (skillName) {
         addCourseSkill(skillName);
     });
-}
-
-function setupSlider() {
-    let slider = new Swiper ('.swiper-container', {
-        direction: 'horizontal',
-        loop: true,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            type: 'progressbar'
-        },
-    });
-
-    return slider;
-}
-
-function updateSlider() {
-    if (!window.slider) {
-        return;
-    }
-
-    window.slider.update();
-    window.slider.slideTo(0);
 }
 
 $(function () {
@@ -1091,6 +1042,13 @@ $(function () {
     window.slider = setupSlider();
 
     $('#coursesCount').text( getCoursesList().length );
+
+    $(document).on('click', '.skillContainer .close', function () {
+        updateFilterCounter();
+        updateAllSkills();
+        search();
+    });
+
 
     $(document).on('click', '.btn-turnoff', function () {
         $('[name=useBackpackSkills]').attr('checked', false);

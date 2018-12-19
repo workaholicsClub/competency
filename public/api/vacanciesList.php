@@ -28,6 +28,26 @@ $skillsQuery = $pdo->prepare('SELECT s.name, lsv.skillLevel, lsv.isPreferred FRO
 	LEFT JOIN skills s ON lsv.skillId = s.id
 WHERE lsv.vacancyId = ?');
 
+$candidatesPerPlace = [
+    'php-developer'          => 2.8,
+    'hr-manager'             => 5.7,
+    'pr-specialist'          => 3.5,
+    'python-developer'       => 2.8,
+    'golang-developer'       => 2.8,
+    'javascript-developer'   => 2.8,
+    'ui-ux-designer'         => 9.2,
+    'ios-developer'          => 2.8,
+    'android-developer'      => 2.8,
+    'internet-marketologist' => 3.5,
+    'qa-tester'              => 2.8,
+    'devops'                 => 2.8,
+    'data-scientist'         => 2.8,
+    'game-designer'          => 9.2,
+    'project-manager'        => 5.7,
+    'game-artist-2d'         => 9.2,
+    'game-artist-3d'         => 9.2,
+];
+
 if ($professionCode) {
 
     $vacanciesQuery->execute([$professionCode]);
@@ -56,6 +76,7 @@ if ($professionCode) {
             ],
             "dateCreate"                 => $vacancy['dateCreate'],
             "dateLastCheck"              => $vacancy['dateLastCheck'],
+            "candidatesPerPlace"         => isset($candidatesPerPlace[$professionCode]) ? $candidatesPerPlace[$professionCode] : false,
             "inArchive"                  => boolval($vacancy['inArchive']),
             "fullTime"                   => boolval($vacancy['fullTime']),
             "flexibleSchedule"           => boolval($vacancy['flexibleSchedule']),

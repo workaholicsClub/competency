@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/css/swiper.min.css">
     <link rel="stylesheet" href="/assets/custom.css" type="text/css">
 </head>
 
@@ -20,7 +21,7 @@
             <span class="filterCount" style="display: none;">0</span>
         </button>
 
-        <button class="btn btn-primary btn-lg btn-recommend ml-1" type="button" data-toggle="modal"  data-target="#recommendModal">
+        <button class="btn btn-primary btn-lg btn-recommend ml-1" type="button" data-toggle="modal"  data-target="#addVacancySkillsModal">
             Автоподбор вакансии
         </button>
     </div>
@@ -33,7 +34,7 @@
     <div class="container">
         <a href="?" class="header"><h1>Вакансии&nbsp;<small class="text-muted"></small> </h1></a>
 
-        <button class="btn btn-primary btn-lg btn-recommend" type="button" data-toggle="modal"  data-target="#recommendModal">
+        <button class="btn btn-primary btn-lg btn-recommend" type="button" data-toggle="modal" data-target="#addVacancySkillsModal">
             Автоподбор вакансии
         </button>
     </div>
@@ -42,7 +43,7 @@
 <div class="pb-5">
     <div class="container">
         <div class="row equal">
-            <div class="col-md-4 bg-light py-4 filterCol invisible-sm place-filter-here">
+            <div id="filterDesktop" class="col-md-4 bg-light py-4 filterCol invisible-sm place-filter-here">
             </div>
             <div class="col-md-8 noVacanciesFound align-items-center" style="display: none;">
                 <div class="row justify-content-center align-self-center w-100">
@@ -55,10 +56,25 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8 searchResults">
+            <div class="col-md-8 searchResultsContainer">
                 <div class="row">
                     <div class="col-md-12">
-                        <div id="vacancyList"></div>
+
+                        <div class="searchResults swiper-container visible-sm">
+                            <div class="vacancyList swiper-wrapper">
+                                <img src="/assets/images/Rolling-1s-200px.svg">
+                            </div>
+                        </div>
+
+                        <div class="searchResults invisible-sm">
+                            <div class="vacancyList">
+                                <img src="/assets/images/Rolling-1s-200px.svg">
+                            </div>
+                        </div>
+
+                        <div class="swiper-pagination visible-sm"></div>
+                        <div class="swiper-button-prev visible-sm"></div>
+                        <div class="swiper-button-next visible-sm"></div>
                     </div>
                 </div>
             </div>
@@ -103,7 +119,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group city-group">
             <label class="h4">Город</label>
             <div class="form-check">
                 <input id="city_1" class="form-check-input"
@@ -130,62 +146,63 @@
 
         <label class="d-block h4">Параметры вакансий</label>
         <div class="form-check pt-1">
-            <input type="checkbox" class="form-check-input" name="fullTime" value="1" id="c1">
+            <input type="checkbox" class="form-check-input" name="fullTime" data-code="fullTime" value="true" id="c1">
             <label class="form-check-label" for="c1">Полный рабочий день</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="flexibleSchedule" value="1" id="c2">
+            <input type="checkbox" class="form-check-input" name="flexibleSchedule" data-code="flexibleSchedule" value="true" id="c2">
             <label class="form-check-label" for="c2">Гибкий график</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="probation" value="1" id="c3">
+            <input type="checkbox" class="form-check-input" name="probation" data-code="probation" value="true" id="c3">
             <label class="form-check-label" for="c3">Испытательный срок</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="officialEmployment" value="1" id="c4">
+            <input type="checkbox" class="form-check-input" name="officialEmployment" data-code="officialEmployment" value="true" id="c4">
             <label class="form-check-label" for="c4">Соблюдение ТК</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="canBeRemote" value="1" id="c5">
+            <input type="checkbox" class="form-check-input" name="canBeRemote" data-code="canBeRemote" value="true" id="c5">
             <label class="form-check-label" for="c5">Возможность удаленной работы</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="training" value="1" id="c6">
+            <input type="checkbox" class="form-check-input" name="training" data-code="training" value="true" id="c6">
             <label class="form-check-label" for="c6">Обучение за счет работодателя</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="food" value="1" id="c7">
+            <input type="checkbox" class="form-check-input" name="food" data-code="food" value="true" id="c7">
             <label class="form-check-label" for="c7">Питание за счет работодателя</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="insurance" value="1" id="c8">
+            <input type="checkbox" class="form-check-input" name="insurance" data-code="insurance" value="true" id="c8">
             <label class="form-check-label" for="c8">Страхование (ДМС, туристическое)</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="sportAndFitness" value="1" id="c9">
+            <input type="checkbox" class="form-check-input" name="sportAndFitness" data-code="sportAndFitness" value="true" id="c9">
             <label class="form-check-label" for="c9">Спорт и фитнес за счет работодателя</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="communicationsCompensation" value="1" id="c10">
+            <input type="checkbox" class="form-check-input" name="communicationsCompensation" data-code="communicationsCompensation" value="true" id="c10">
             <label class="form-check-label" for="c10">Компенсация затрат на связь</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="sickLeaveCompensation" value="1" id="c11">
+            <input type="checkbox" class="form-check-input" name="sickLeaveCompensation" data-code="sickLeaveCompensation" value="true" id="c11">
             <label class="form-check-label" for="c11">Оплата больничного</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="vacationCompensation" value="1" id="c12">
+            <input type="checkbox" class="form-check-input" name="vacationCompensation" data-code="vacationCompensation" value="true" id="c12">
             <label class="form-check-label" for="c12">Оплата отпуска</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="dressCode" value="1" id="c13">
+            <input type="checkbox" class="form-check-input" name="dressCode" data-code="dressCode" value="true" id="c13">
             <label class="form-check-label" for="c13">Наличие дресс-кода</label>
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="relocationHelp" value="1" id="c14">
+            <input type="checkbox" class="form-check-input" name="relocationHelp" data-code="relocationHelp" value="true" id="c14">
             <label class="form-check-label" for="c14">Помощь с релокацией</label>
         </div>
     </form>
+    <button class="btn btn-primary btn-block mt-3 visible-sm" data-toggle="collapse" data-target="#filterCollapse">Показать</button>
 </div>
 
 <div class="modal fade modal-scrollable" id="addSkillModal" tabindex="-1" role="dialog" aria-labelledby="addSkillModalTitle" aria-hidden="true">
@@ -249,14 +266,14 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="list-group" id="selectedSkills"></div>
+                            <div class="list-group" id="selectedVacancySkills"></div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary confirmSkillsAddButton" data-dismiss="modal">Сохранить</button>
+                <button type="button" class="btn btn-primary confirmVacancySkillsAddButton" data-dismiss="modal">Сохранить</button>
             </div>
         </div>
     </div>
@@ -273,6 +290,7 @@
         crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.2/bootstrap-slider.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/js/swiper.min.js"></script>
 <script src="./vacanciesList.js"></script>
 <script src="/assets/vacancyFunctions.js"></script>
 <script src="/assets/vacancy.js"></script>

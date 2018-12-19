@@ -353,14 +353,18 @@ a.header, a.header:visited, a.header:hover, a.header:active {
 .swiper-button-next, .swiper-button-prev {
     top: 50vh;
     position: fixed;
+    width: 15px;
+    height: 31px;
 }
 
 .swiper-button-next {
     right: 5px;
+    background: url('/assets/images/chevron-right-small.png');
 }
 
 .swiper-button-prev {
     left: 5px;
+    background: url('/assets/images/chevron-left-small.png');
 }
 
 .swiper-pagination-progressbar {
@@ -374,7 +378,6 @@ a.header, a.header:visited, a.header:hover, a.header:active {
 
 @media (max-width: 768px) {
     .addVacancySkillsButton {
-        font-size: .8rem;
     }
 
     .backpack-filter-alert {

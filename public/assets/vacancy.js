@@ -1,5 +1,33 @@
 let neededVacancies = 1;
 
+function updateCitiesInFilter() {
+    let citiesList = getVacanciesList().reduce(function (list, vacancy) {
+        let vacanciesCities = vacancy.city.split(", ");
+        vacanciesCities.forEach(function (city) {
+            if (list.indexOf(vacancy.city) === -1) {
+                list.push(vacancy.city);
+            }
+        });
+
+        return list;
+    }, []);
+
+    let citiesHTML = citiesList.reduce(function (html, city, index) {
+        let cityHTML = "<div class=\"form-check\">\n" +
+            "    <input id=\"city_"+index+"\" class=\"form-check-input\"\n" +
+            "            name=\"city_"+index+"\" type=\"checkbox\"\n" +
+            "            data-type=\"multicheckbox\" data-code=\"city\"\n" +
+            "            value=\""+city+"\">\n" +
+            "    <label class=\"form-check-label\" for=\"city_"+index+"\">"+city+"</label>\n" +
+            "</div>";
+
+        return html + cityHTML;
+    }, '');
+
+    $('.city-group .form-check').remove();
+    $('.city-group').append(citiesHTML);
+}
+
 $(function () {
     updateStartSkills();
     updateMinSkills();
@@ -8,14 +36,25 @@ $(function () {
     toggleUpdatableSkills();
     updateVacancyFromTo();
     updatePageTitle();
+    updateCitiesInFilter();
+    drawFilter();
+
     search();
 
-    drawFilter();
+    window.slider = setupSlider();
 
     $(document).on('click', '[data-skill]:not(#startSkills [data-skill], #updatedSkills [data-skill])', function () {
         let skillName = $(this).attr('data-skill');
         addSkill(skillName);
         toggleSkillsResult();
+        updateFilterCounter();
+    });
+
+    $(document).on('click', '.skillContainer .close', function () {
+        updateFilterCounter();
+        updateSkillLists();
+        scrollToTop();
+        search();
     });
 
     $(document).on('change', '.skillSelect', function () {
@@ -25,6 +64,8 @@ $(function () {
             addSkill(skillName);
             toggleSkillsResult();
         }
+
+        updateFilterCounter();
     });
 
     $(document).on('click', '.alert .close', function () {
@@ -71,6 +112,7 @@ $(function () {
         toggleSkillsResult();
         scrollToTop();
         search();
+        updateFilterCounter();
     });
 
     $(document).on('click', '#startSearch, #startSkills a', function (event) {
@@ -107,6 +149,7 @@ $(function () {
         toggleSkillsResult();
         updateStartSkills();
         updateUpdatableSkills();
+        updateFilterCounter();
     });
 
     $(document).on('change input', '#from, #to', function () {
@@ -122,10 +165,13 @@ $(function () {
                 $('#to').val(value).trigger('input');
             }
         }
+
+        updateFilterCounter();
     });
 
     $(document).on('change input click', 'input', function () {
         search();
+        updateFilterCounter();
     });
 
     $(document).on('change', '#sortSelect', function () {
@@ -134,23 +180,49 @@ $(function () {
 
     $(document).on('click', '.addSKillButton', function () {
         updateAllSkills();
+        updateFilterCounter();
     });
 
     $(document).on('click', '.addVacancySkillsButton', function () {
-        let vacancyId = parseInt( $(this).closest('.card').data('vacancy-id') );
+        let vacancyId = parseInt( $(this).closest('.vacancy-card').data('vacancy-id') );
         let vacancy = getVacancyById(vacancyId);
         let skillsToAdd = removeSkills(getVacancySkillNames(vacancy), getSelectedSkillNames())
         addSkillsToVacancyPopup(skillsToAdd);
     });
 
+    $(document).on('click', '.btn-recommend', function () {
+        let neededVacancies = $(this).data('needed') || 1;
+        let skillsNeededToRecommend = removeSelectedSkills( getNeededSkills(getVacanciesList(), neededVacancies) );
+
+        addSkillsToVacancyPopup(skillsNeededToRecommend);
+        updateFilterCounter();
+
+        $(this).data('needed', neededVacancies+1);
+        $('.btn-recommend').text('Подобрать еще');
+    });
+
     $(document).on('click', '.confirmSkillsAddButton', function () {
-        $('#selectedSkills .list-group-item').each(function () {
+        $('#allSkills .active').each(function () {
+            let skillName = $(this).data('name');
+            let skillLevel = $(this).find('select').val();
+            addSkill(skillName, skillLevel, false);
+            $(this).removeClass('active');
+        });
+
+        scrollToTop();
+        updateFilterCounter();
+        search();
+    });
+
+    $(document).on('click', '.confirmVacancySkillsAddButton', function () {
+        $('#selectedVacancySkills .list-group-item').each(function () {
             let $skillElement = $(this);
             let skillName = $skillElement.data('name');
             let skillLevel = $skillElement.find('select').val();
-            addSkill(skillName, skillLevel);
+            addSkill(skillName, skillLevel, false);
         });
 
+        updateFilterCounter();
         scrollToTop();
         search();
     });
@@ -161,6 +233,7 @@ $(function () {
             addSkill(skillName);
         });
 
+        updateFilterCounter();
         scrollToTop();
         search();
     })
