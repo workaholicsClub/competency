@@ -19,7 +19,7 @@ catch (\PDOException $exception) {
 }
 
 $courseData = [];
-$courseFields = ['platform', 'name', 'url', 'format', 'hasTeacher', 'hasPractice', 'certificate', 'city', 'duration', 'durationUnits', 'description', 'price'];
+$courseFields = ['platform', 'name', 'url', 'format', 'hasTeacher', 'hasPractice', 'jobPlacement', 'forKids', 'certificate', 'city', 'duration', 'durationUnits', 'description', 'price'];
 foreach ($_POST as $key => $value) {
     if (in_array($key, $courseFields)) {
         $courseData[":" . $key] = $value;
@@ -37,10 +37,19 @@ if (!isset($courseData[':hasPractice'])) {
     $courseData[':hasPractice'] = 0;
 }
 
+if (!isset($courseData[':jobPlacement'])) {
+    $courseData[':jobPlacement'] = 0;
+}
+
+if (!isset($courseData[':forKids'])) {
+    $courseData[':forKids'] = 0;
+}
+
+
 $insertSQL = "INSERT INTO courses
-  (platform, name, url, format, hasTeacher, hasPractice, certificate, city, duration, durationUnits, description, price)
+  (platform, name, url, format, hasTeacher, hasPractice, jobPlacement, forKids, certificate, city, duration, durationUnits, description, price)
   VALUES
-  (:platform, :name, :url, :format, :hasTeacher, :hasPractice, :certificate, :city, :duration, :durationUnits, :description, :price)";
+  (:platform, :name, :url, :format, :hasTeacher, :hasPractice, :jobPlacement, :forKids, :certificate, :city, :duration, :durationUnits, :description, :price)";
 $insertQuery = $pdo->prepare($insertSQL);
 
 $skillsQuery = $pdo->prepare("INSERT INTO links_skills_courses (courseId, skillId, skillLevel) VALUES (:courseId, :skillId, :skillLevel)");

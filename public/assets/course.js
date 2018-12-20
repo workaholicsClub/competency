@@ -289,10 +289,19 @@ function getCourseAttributesHTML(course) {
     let attributes = [
         course.format,
         course.hasTeacher ? 'С преподавателем' : 'Без преподавателя',
-        course.hasPractice ? 'С практикой' : 'Без практики',
-        certificateShortNames[course.certificate],
-        course.duration + ' ' + course.durationUnits
+        course.hasPractice ? 'С практикой' : 'Без практики'
     ];
+
+    if (course.jobPlacement) {
+        attributes.push('Помощь в трудоустройстве');
+    }
+
+    if (course.forKids) {
+        attributes.push('Подходит детям и школьникам');
+    }
+
+    attributes.push(certificateShortNames[course.certificate]);
+    attributes.push(course.duration + ' ' + course.durationUnits);
 
     return attributes.join('&nbsp;&bull;&nbsp;\n');
 }
@@ -470,7 +479,7 @@ function getWeightenedSkillsCountStep(course) {
 
 function courseMatchesFilterParameters(course) {
     let filter = getCoursesFilter();
-    let filteredEnumProps = ['format', 'hardness', 'certificate', 'hasTeacher', 'hasPractice'];
+    let filteredEnumProps = ['format', 'hardness', 'certificate', 'hasTeacher', 'hasPractice', 'jobPlacement', 'forKids'];
 
     let propsMatch = filteredEnumProps.reduce(function (prevPropsMatch, propName) {
         let filterValues = filter[propName];
@@ -640,7 +649,9 @@ function getCoursesFilter() {
         format: getCheckedValues('format'),
         certificate: getCheckedValues('certificate'),
         hasTeacher: getBooleanCheckedValues('hasTeacher'),
-        hasPractice: getBooleanCheckedValues('hasPractice')
+        hasPractice: getBooleanCheckedValues('hasPractice'),
+        jobPlacement: getBooleanCheckedValues('jobPlacement'),
+        forKids: getBooleanCheckedValues('forKids')
     }
 }
 
@@ -735,7 +746,7 @@ function updateStartCourseSkills() {
 }
 
 function getLevelText(levelNumber) {
-    let levelNames = ["не владею", "основы", "уверенный", "глубокий"];
+    let levelNames = ["сведения", "основы", "уверенный", "глубокий"];
     return levelNames[levelNumber];
 }
 
@@ -1004,6 +1015,7 @@ function getTimeInDays(course) {
         'день': 1,
         'час': 1/24,
         'урок': 1/24,
+        'модуль': 4/24,
         'минута': 1/1440,
         'месяц': 30,
         'неделя': 7

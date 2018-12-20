@@ -90,6 +90,7 @@
                                             <option>минута</option>
                                             <option>ак. час</option>
                                             <option>урок</option>
+                                            <option>модуль</option>
                                             <option>час</option>
                                             <option>день</option>
                                             <option>неделя</option>
@@ -108,6 +109,14 @@
                     <div class="form-check py-1">
                         <input type="checkbox" class="form-check-input" value="1" name="hasPractice">
                         <label class="form-check-label">Есть практика</label>
+                    </div>
+                    <div class="form-check py-1">
+                        <input type="checkbox" class="form-check-input" value="1" name="jobPlacement">
+                        <label class="form-check-label">Помощь в трудоустройстве</label>
+                    </div>
+                    <div class="form-check py-1">
+                        <input type="checkbox" class="form-check-input" value="1" name="forKids">
+                        <label class="form-check-label">Подходит для детей и школьников</label>
                     </div>
 
                     <div class="form-group py-3">
@@ -289,6 +298,7 @@
                         "        </div>\n" +
                         "        <div class=\"form-group col-5\">\n" +
                         "        <select class=\"custom-select\">\n" +
+                        "           <option selected value=\"0\">Сведения</option>\n" +
                         "           <option selected value=\"1\">Основы</option>\n" +
                         "           <option value=\"2\">Уверенный</option>\n" +
                         "           <option value=\"3\">Глубокий</option>\n" +

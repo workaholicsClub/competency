@@ -1,5 +1,5 @@
 function getSkillLevels() {
-    return ['Не владею', 'Основы', 'Уверенный', 'Глубокий'];
+    return ['Сведения', 'Основы', 'Уверенный', 'Глубокий'];
 }
 
 function addSkill(skillName, skillLevel, autoSearch) {
@@ -653,7 +653,7 @@ function addSkillToPopup(allSkills, selector) {
             "        </div>\n" +
             "        <div class=\"form-group col-5 mb-0 px-0\">\n" +
             "        <select class=\"custom-select\">\n" +
-            "           <option selected value=0>Не владею</option>\n" +
+            "           <option selected value=0>Сведения</option>\n" +
             "           <option value=1>Основы</option>\n" +
             "           <option value=2>Уверенный</option>\n" +
             "           <option value=3>Глубокий</option>\n" +
@@ -693,7 +693,7 @@ function addSkillsToVacancyPopup(customSkills) {
             "        </div>\n" +
             "        <div class=\"form-group col-5 mb-0 px-0\">\n" +
             "        <select class=\"custom-select\">\n" +
-            "           <option selected value=0>Не владею</option>\n" +
+            "           <option selected value=0>Сведения</option>\n" +
             "           <option value=1>Основы</option>\n" +
             "           <option value=2>Уверенный</option>\n" +
             "           <option value=3>Глубокий</option>\n" +
