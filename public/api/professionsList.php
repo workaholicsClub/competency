@@ -14,8 +14,7 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $user, $password, $options);
-}
-catch (\PDOException $exception) {
+} catch (\PDOException $exception) {
     $jsonOutput = false;
 }
 
@@ -40,19 +39,19 @@ while ($professionSkill = $professionsAndSkillsQuery->fetch()) {
 
     if (!$currentProfession) {
         $currentProfession = [
-            'id' => $professionSkill['professionId'],
-            'code' => $professionSkill['professionCode'],
-            'name' => $professionSkill['professionName'],
+            'id'         => $professionSkill['professionId'],
+            'code'       => $professionSkill['professionCode'],
+            'name'       => $professionSkill['professionName'],
             'top5Skills' => [],
         ];
     }
 
     if (count($currentProfession['top5Skills']) < 5) {
         $currentProfession['top5Skills'][] = [
-           'id' => $professionSkill['id'],
-           'name' => $professionSkill['name'],
-           'count' => $professionSkill['vacancyCount'],
-           'percent' => round($professionSkill['vacancyCount'] / $totalVacanciesCount * 100, 2)
+            'id'      => $professionSkill['id'],
+            'name'    => $professionSkill['name'],
+            'count'   => $professionSkill['vacancyCount'],
+            'percent' => round($professionSkill['vacancyCount'] / $totalVacanciesCount * 100, 2),
         ];
     }
 };

@@ -420,6 +420,8 @@
 
             $(document).on('click', '.saveCourse', function (event) {
                 event.preventDefault();
+                $('.saveResult').text('Сохраняю...');
+
                 saveCourse()
                     .then(function (result) {
                         if (result.id) {

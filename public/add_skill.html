@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление навыка</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/custom.css" type="text/css">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Добавление навыка</h1>
+            <form>
+                <div class="form-group">
+                    <label for="skillName">Название навыка</label>
+                    <input type="text" class="form-control" id="skillName" name="skillName">
+                </div>
+                <div class="form-group">
+                    <label for="profession">Профессия</label>
+                    <select class="form-control" id="profession" name="professionId">
+                    </select>
+                </div>
+
+                <div class="form-row mt-3">
+                    <div class="col">
+                        <a class="btn btn-primary btn-block btn-lg saveSkill" href="#">Добавить навык</a>
+                    </div>
+                </div>
+                <div class="form-row mt-1">
+                    <div class="col">
+                        <div class="alert alert-success saveResult"></div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script>
+    function loadProfessions() {
+        let promise = $.Deferred();
+
+        $.ajax({
+            url: "/api/professionsList.php",
+            dataType: 'json',
+            success: function (result) {
+                promise.resolve(result);
+            },
+            error: function (result) {
+                if (result && result.status === 200) {
+                    promise.resolve(result.responseText);
+                }
+                else {
+                    promise.reject(result);
+                }
+            }
+        });
+
+        return promise;
+    }
+
+    function saveSkill() {
+        let promise = $.Deferred();
+        let skillData = $('form').serialize();
+
+        $.ajax({
+            url: "/api/saveSkill.php",
+            data: skillData,
+            type: "POST",
+            dataType: 'json',
+            success: function (result) {
+                promise.resolve(result);
+            },
+            error: function (result) {
+                if (result && result.status === 200) {
+                    promise.resolve(result.responseText);
+                }
+                else {
+                    promise.reject(result);
+                }
+            }
+        });
+
+        return promise;
+    }
+
+    function populateProfessions() {
+        loadProfessions()
+            .then(function (professionsList) {
+                $('#profession option').remove();
+                professionsList.forEach(function (professionData) {
+                    $('#profession').append('<option value="'+professionData.id+'">'+professionData.name+'</option>');
+                });
+            });
+    }
+
+    $(function () {
+        populateProfessions();
+
+        $(document).on('click', '.saveSkill', function (event) {
+            event.preventDefault();
+            $('.saveResult').text('Сохраняю...');
+
+            saveSkill()
+                .then(function (result) {
+                    if (result.id) {
+                        $('.saveResult')
+                            .removeClass('alert-success alert-danger')
+                            .addClass('alert-success')
+                            .text('ID: '+result.id);
+                    }
+                    else {
+                        $('.saveResult')
+                            .removeClass('alert-success alert-danger')
+                            .addClass('alert-danger')
+                            .text('Ошибка!');
+                    }
+                })
+                .catch(function () {
+                    $('.saveResult')
+                        .removeClass('alert-success alert-danger')
+                        .addClass('alert-danger')
+                        .text('Ошибка!');
+                });
+        });
+
+    })
+</script>
+</body>
+</html>
