@@ -474,7 +474,7 @@ function applyBackpackSkills(currentSkills, level) {
 function getMaximumValue(items, callback) {
     let maximum = items.reduce(function (prevMax, currentItem) {
         let currentValue = callback(currentItem);
-        if (currentValue > prevMax || currentValue === false) {
+        if (currentValue > prevMax || prevMax === false) {
             return currentValue;
         }
         return prevMax;
@@ -496,7 +496,7 @@ function getNormalizedValue(item, items, callback, maximum) {
 function getWeightenedSkillsCount(course) {
     let skillsCount = getSkillCount(getVacanciesList());
     let maxCount = Object.keys(skillsCount).reduce(function (prevMaxCount, skillName) {
-        let skillCount = skillsCount[skillName];
+        let skillCount = skillsCount[skillName] || 0;
         if (skillCount > prevMaxCount) {
             return skillCount;
         }
@@ -510,7 +510,7 @@ function getWeightenedSkillsCount(course) {
     }, {});
 
     let weightenedCount = Object.keys(course.skills).reduce(function (countAggregator, skillName) {
-        let skillWeight = skillWeights[skillName];
+        let skillWeight = skillWeights[skillName] || 0;
         return countAggregator + skillWeight;
     }, 0);
 
