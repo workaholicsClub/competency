@@ -441,10 +441,16 @@ function getCourseBackpackCardHTML(course) {
     return courseHTML;
 }
 
+function updateCollapseFieldIds(HTML, suffix) {
+    return HTML.replace(/description(\d+)/g, 'description$1_'+suffix);
+}
+
 function addCourse(course) {
     let courseHTML = getCourseCardHTML(course);
+    let mobileCourseHTML = updateCollapseFieldIds(courseHTML, 'm');
 
-    $('.coursesList').append(courseHTML);
+    $('#mobileList').append(mobileCourseHTML);
+    $('#desktopList').append(courseHTML);
 }
 
 function applyBackpackSkills(currentSkills, level) {

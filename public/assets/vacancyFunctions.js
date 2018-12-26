@@ -295,7 +295,8 @@ function search() {
 
     findParticialMacth(getVacanciesFilter())
         .forEach(function (vacancy, index) {
-            addVacancy(vacancy, index, '.vacancyList', false);
+            addVacancy(vacancy, index, '#desktopList', false);
+            addVacancy(vacancy, index, '#mobileList', false, 'm');
         });
 
     $('.searchResults').css('opacity', '0.3');
@@ -833,7 +834,7 @@ function getSkillsHtml(vacancy) {
     return matchingSkillsHtml.join("\n") + "\n" + unmatchingSkillsHtml.join("\n") + "\n" + undefinedSkillsHtml.join("\n");
 }
 
-function addVacancy(vacancy, index, selector, isRecommended) {
+function addVacancy(vacancy, index, selector, isRecommended, suffix) {
     let desciptionHtml = vacancy.description.replace(/\n/g, '<br>');
     let additionalClass = isRecommended ? 'alert-warning' : '';
     let hasNoUndefinedSkills = getUndefinedSkills(vacancy, getSkillsFilter()).length === 0;
@@ -866,10 +867,10 @@ function addVacancy(vacancy, index, selector, isRecommended) {
                 (vacancy.candidatesPerPlace ? "<p>Конкурс: ~"+vacancy.candidatesPerPlace+" чел/место</p>\n" : "") +
         "       <p class=\"mb-0\">Требования:</p>\n" +
         "       <p>"+getSkillsHtml(vacancy)+"</p>\n" +
-        "       <button class=\"btn btn-outline-secondary btn-block dropdown-toggle mb-3\" data-toggle=\"collapse\" data-target=\"#description" + index + "\" aria-expanded=\"true\" aria-controls=\"description" + index + "\">\n" +
+        "       <button class=\"btn btn-outline-secondary btn-block dropdown-toggle mb-3\" data-toggle=\"collapse\" data-target=\"#description" + index + suffix +"\" aria-expanded=\"true\" aria-controls=\"description" + index + suffix +"\">\n" +
         "           Описание вакансии\n" +
         "       </button>\n" +
-        "       <p id=\"description" + index + "\" class=\"collapse\">\n" + desciptionHtml + "</p>\n" +
+        "       <p id=\"description" + index + suffix + "\" class=\"collapse\">\n" + desciptionHtml + "</p>\n" +
         buttonHtml +
         "   </div>"+
         "</div>";
