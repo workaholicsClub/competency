@@ -20,11 +20,22 @@ catch (\PDOException $exception) {
 }
 
 $professionCode = $_REQUEST['professionCode'];
-$coursesQuery = $pdo->prepare('SELECT DISTINCT c.* FROM courses c
-        LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
-        LEFT JOIN links_skills_professions lsp ON lsc.skillId = lsp.skillId
-        LEFT JOIN professions p ON lsp.professionId = p.id
-    WHERE p.code = ? AND c.inArchive != 1');
+$coursesQuery = $pdo->prepare('SELECT 
+	*,
+	SUM(isProfession) AS profSkills,
+    COUNT(*)-SUM(isProfession) AS nonProfSkills,
+    SUM(isProfession) > COUNT(*)-SUM(isProfession) AS hasMoreProfSkills,
+    SUM(isProfession)/COUNT(*) AS profSkillsRate
+FROM (
+	SELECT c.*, MAX(p.`code` = ?) AS isProfession FROM courses c
+			LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
+			LEFT JOIN links_skills_professions lsp ON lsc.skillId = lsp.skillId
+			LEFT JOIN professions p ON lsp.professionId = p.id
+	WHERE c.inArchive != 1
+	GROUP BY c.id, lsc.skillId
+) sq
+GROUP BY id
+HAVING profSkillsRate >= 0.6');
 
 $skillsQuery = $pdo->prepare('SELECT s.name, lsc.skillLevel FROM links_skills_courses lsc
 	LEFT JOIN skills s ON lsc.skillId = s.id

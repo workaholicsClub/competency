@@ -31,7 +31,7 @@
     <title>Сам себе академик: курсы</title>
 </head>
 
-<body>
+<body class="navbar-padding">
 
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2XFBS"
@@ -39,7 +39,7 @@
 <!-- End Google Tag Manager (noscript) -->
 
 <nav class="navbar navbar-expand-md fixed-top navbar-light bg-light visible-sm-flex">
-    <a href="?" class="header"><h1 class="h4">Курсы<br><small class="text-muted">Разработчик PHP</small> </h1></a>
+    <h1 class="h4"><a href="/" class="header">Курсы</a><br><a href="?" class="header"><small class="text-muted"></small></a></h1>
 
     <div class="navbar-buttons">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
@@ -48,7 +48,7 @@
         </button>
 
         <button class="navbar-toggler ml-1" type="button" data-toggle="collapse" data-target="#backpackCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать портфель">
-            <img src="/assets/images/backpack.svg">
+            <span class="backpack-icon"></span>
             <span class="backpackCount hidableCount" style="display: none;">0</span>
         </button>
     </div>
@@ -57,7 +57,7 @@
     </div>
 
     <div class="collapse navbar-collapse" id="backpackCollapse">
-        <button class="btn btn-lg btn-block btn-primary mb-2 search-finish" data-toggle="collapse" data-target="#backpackCollapse">Завершить подбор</button>
+        <button class="btn btn-lg btn-block btn-primary mb-2 search-finish" data-toggle="collapse" data-target="#backpackCollapse">Перейти к оформлению</button>
         <h3>Выбранные курсы</h3>
         <div class="list-group" id="backpackCollapseList">
             Выбранных курсов нет
@@ -67,7 +67,7 @@
 
 <nav class="navbar navbar-expand-md fixed-top navbar-light bg-light invisible-sm">
     <div class="container">
-        <a href="?" class="header"><h1>Курсы&nbsp;<small class="text-muted"></small> </h1></a>
+        <h1><a href="/" class="header">Курсы</a>&nbsp;<a href="?" class="header"><small class="text-muted"></small></a></h1>
 
         <div class="dropdown">
             <button class="btn btn-primary btn-lg btn-backpack" type="button" data-toggle="modal"  data-target="#backpackModal">
@@ -93,7 +93,7 @@
                         <div class="col-md-12">
 
                             <div class="navbar-alert alert alert-success backpack-filter-alert mb-0" role="alert" style="display: none">
-                                В поиске учитываются навыки курсов из портфеля (можно включить обратно в фильтре)
+                                В поиске учитываются навыки курсов из портфеля
 
                                 <div class="alert-btn-container">
                                     <button class="btn btn-success btn-turnoff" data-dismiss="alert">
@@ -117,7 +117,15 @@
                                 </div>
                             </div>
 
-                            <div class="swiper-pagination visible-sm"></div>
+                            <div class="bullet-fraction-pagination visible-sm">
+                                <div class="fraction-bullets">
+                                    <span class="fraction-bullet active"></span>
+                                    <span class="fraction-bullet"></span>
+                                    <span class="fraction-bullet"></span>
+                                </div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+
                             <div class="swiper-button-prev visible-sm"></div>
                             <div class="swiper-button-next visible-sm"></div>
                         </div>
@@ -189,9 +197,8 @@
             <label class="h3">Развиваемые навыки</label>
             <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
                 <i class="fas fa-plus-circle"></i>
-                Добавить развиваемые навыки
+                Выбрать развиваемые навыки
             </button>
-            <small class="form-text text-muted">После выбора навыка укажите текущий уровень владения</small>
         </div>
 
         <div class="form-check pb-3">
@@ -432,7 +439,7 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-lg btn-block btn-primary search-finish" data-dismiss="modal">Завершить подбор</button>
+                            <button class="btn btn-lg btn-block btn-primary search-finish" data-dismiss="modal">Перейти к оформлению</button>
                         </div>
                     </div>
                 </div>

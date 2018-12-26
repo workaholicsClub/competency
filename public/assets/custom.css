@@ -1,4 +1,4 @@
-body {
+body.navbar-padding {
     min-height: 75rem;
     padding-top: 6rem;
 }
@@ -40,6 +40,22 @@ body {
 .btn-backpack img {
     width: 32px;
     margin-top: -6px;
+}
+
+.navbar-toggler.active {
+    background: #007bff;
+    color: white;
+}
+
+.backpack-icon {
+    background: url('/assets/images/backpack.svg');
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+
+.active .backpack-icon {
+    background: url('/assets/images/backpack-white.svg');
 }
 
 .alert .btn-turnoff {
@@ -116,8 +132,6 @@ body {
 
 .priceBadge {
     font-size: 1.2rem;
-    position: absolute;
-    right: 1rem;
 }
 
 .noSkillsDefined, .noVacanciesFound {
@@ -161,11 +175,6 @@ body {
 .addSkillButton i, .addRequirementButton i {
     font-size: 2.5rem;
     color: #0069d9;
-}
-
-.priceBadge {
-    position: absolute;
-    right: 1rem;
 }
 
 .addSkillsContainer span::after, .updateSkillsContainer span::after {
@@ -369,6 +378,51 @@ a.header, a.header:visited, a.header:hover, a.header:active {
     width: 100%;
     position: fixed;
     left: 0;
+}
+
+
+.bullet-fraction-pagination {
+    position: fixed;
+    bottom: 10px;
+    width: 100px;
+    left: 50%;
+    margin-left: -50px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 1;
+    padding: 10px;
+    border-radius: 0.25em;
+}
+
+.bullet-fraction-pagination .swiper-pagination {
+    position: static;
+}
+
+.fraction-bullets {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 50px;
+    margin: auto;
+}
+
+.fraction-bullet {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #007bff;
+    opacity: 0.5;
+}
+
+.fraction-bullet.active {
+    opacity: 1;
+}
+
+.swiper-pagination-bullet {
+    width: 16px;
+    height: 16px;
 }
 
 @media (max-width: 768px) {

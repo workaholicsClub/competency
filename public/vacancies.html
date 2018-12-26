@@ -11,10 +11,10 @@
     <title>Сам себе академик: вакансии</title>
 </head>
 
-<body>
+<body class="navbar-padding">
 
 <nav class="navbar navbar-expand-md fixed-top navbar-light bg-light visible-sm-flex">
-    <a href="?" class="header"><h1 class="h5">Вакансии<br><small class="text-muted">Разработчик PHP</small> </h1></a>
+    <h1 class="h5"><a href="/" class="header">Вакансии</a><br><a href="?" class="header"><small class="text-muted"></small></a></h1>
 
     <div class="navbar-buttons">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
@@ -33,7 +33,7 @@
 
 <nav class="navbar navbar-expand-md fixed-top navbar-light bg-light invisible-sm">
     <div class="container">
-        <a href="?" class="header"><h1>Вакансии&nbsp;<small class="text-muted"></small> </h1></a>
+        <h1><a href="/" class="header">Вакансии</a>&nbsp;<a href="?" class="header"><small class="text-muted"></small></a></h1>
 
         <button class="btn btn-primary btn-lg btn-recommend" type="button" data-toggle="modal" data-target="#addVacancySkillsModal">
             Автоподбор вакансии
@@ -66,7 +66,15 @@
                             </div>
                         </div>
 
-                        <div class="swiper-pagination visible-sm"></div>
+                        <div class="bullet-fraction-pagination visible-sm">
+                            <div class="fraction-bullets">
+                                <span class="fraction-bullet active"></span>
+                                <span class="fraction-bullet"></span>
+                                <span class="fraction-bullet"></span>
+                            </div>
+                            <div class="swiper-pagination"></div>
+                        </div>
+
                         <div class="swiper-button-prev visible-sm"></div>
                         <div class="swiper-button-next visible-sm"></div>
                     </div>
@@ -82,9 +90,8 @@
             <label class="h3">Ваши навыки</label>
             <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
                 <i class="fas fa-plus-circle"></i>
-                Добавить мои навыки
+                Выбрать мои навыки
             </button>
-            <small class="form-text text-muted">После выбора навыка укажите текущий уровень владения</small>
         </div>
         <div class="skillContainer">
 

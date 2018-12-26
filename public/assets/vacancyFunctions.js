@@ -577,10 +577,26 @@ function setupSlider() {
         },
         pagination: {
             el: '.swiper-pagination',
-            type: 'progressbar'
+            type: 'fraction'
         },
         on: {
-            update: function () {
+            slideChange: function () {
+                let isFirst = this.isBeginning;
+                let isLast = this.isEnd;
+
+                $('.fraction-bullet').removeClass('active');
+
+                if (isFirst && !isLast) {
+                    $('.fraction-bullet').first().addClass('active');
+                }
+
+                if (isLast && !isFirst) {
+                    $('.fraction-bullet').last().addClass('active');
+                }
+
+                if (!isFirst && !isLast) {
+                    $('.fraction-bullet:eq(1)').addClass('active');
+                }
             }
         }
     });
@@ -850,7 +866,7 @@ function addVacancy(vacancy, index, selector, isRecommended) {
                 (vacancy.candidatesPerPlace ? "<p>Конкурс: ~"+vacancy.candidatesPerPlace+" чел/место</p>\n" : "") +
         "       <p class=\"mb-0\">Требования:</p>\n" +
         "       <p>"+getSkillsHtml(vacancy)+"</p>\n" +
-        "       <button class=\"btn btn-outline-secondary btn-block mb-3\" data-toggle=\"collapse\" data-target=\"#description" + index + "\" aria-expanded=\"true\" aria-controls=\"description" + index + "\">\n" +
+        "       <button class=\"btn btn-outline-secondary btn-block dropdown-toggle mb-3\" data-toggle=\"collapse\" data-target=\"#description" + index + "\" aria-expanded=\"true\" aria-controls=\"description" + index + "\">\n" +
         "           Описание вакансии\n" +
         "       </button>\n" +
         "       <p id=\"description" + index + "\" class=\"collapse\">\n" + desciptionHtml + "</p>\n" +

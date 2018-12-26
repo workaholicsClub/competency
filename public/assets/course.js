@@ -279,10 +279,47 @@ function useBackpackSkills() {
     return $('#useBackpackSkills').is(':checked');
 }
 
+function declensionUnits(number, unitsName) {
+    let declensionVariants = {
+        'ак. час': ['ак. час', 'ак. часа', 'ак. часов'],
+        'день': ['день', 'дня', 'дней'],
+        'час': ['час', 'часа', 'часов'],
+        'урок': ['урок', 'урока', 'уроков'],
+        'модуль': ['модуль', 'модуля', 'модулей'],
+        'минута': ['минута', 'минуты', 'минут'],
+        'месяц': ['месяц', 'месяца', 'месяцев'],
+        'неделя': ['неделя', 'недели', 'недель']
+    };
+
+    if (typeof declensionVariants[unitsName] == 'undefined') {
+        return unitsName;
+    }
+
+    let unitVariants = declensionVariants[unitsName];
+    let lastDigit = parseInt(number.toString().substr(-1));
+
+    if (number <= 10 || number >= 20) {
+        if (lastDigit === 1) {
+            return unitVariants[0];
+        }
+
+        if (lastDigit < 5 && lastDigit > 1) {
+            return unitVariants[1];
+        }
+
+        if (lastDigit >= 5 || lastDigit === 0) {
+            return unitVariants[2];
+        }
+    }
+    else {
+        return unitVariants[2];
+    }
+}
+
 function getCourseAttributesHTML(course) {
     let certificateShortNames = {
         'Нет': 'Без сертификата',
-        'Собственный': 'Собственый сертификат',
+        'Собственный': 'Собственный сертификат',
         'Государственного образца': 'Государственный сертификат'
     };
 
@@ -301,7 +338,7 @@ function getCourseAttributesHTML(course) {
     }
 
     attributes.push(certificateShortNames[course.certificate]);
-    attributes.push(course.duration + ' ' + course.durationUnits);
+    attributes.push(course.duration + ' ' + declensionUnits(course.duration, course.durationUnits));
 
     return attributes.join('&nbsp;&bull;&nbsp;\n');
 }
@@ -328,16 +365,18 @@ function getCourseDataHTML(course, skipButton, index) {
         ? ""
         : "<a href=\"#\" class=\"btn btn-primary btn-block d-flex justify-content-center add-to-backpack mt-1\" data-course-id=\""+course.id+"\"><img src=\"/assets/images/backpack-white.svg\"></img>&nbsp;Добавить в портфель</a>";
 
-    let visitButtonHTML = "<a href=\"" + course.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-course mt-1\" data-course-id=\""+course.id+"\"><i class=\"fas fa-external-link-square-alt\"></i>&nbsp;Перейти к курсу</a>";
+    let visitButtonHTML = "<a href=\"" + course.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-course mt-1\" data-course-id=\""+course.id+"\"><i class=\"fas fa-external-link-square-alt\"></i>&nbsp;Перейти к странице курса</a>";
 
-    let difficultyText = useBackpackSkills()
+    let difficultyText = useBackpackSkills() && backpack.length > 0
         ? 'Сложность курса с учетом портфеля'
         : 'Сложность курса для вас';
 
-    return "<span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
-        "<h4><a class=\"courseLink\" href=\"" + course.url + "\" target=\"_blank\">" + course.title + "&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a></h4>\n" +
+    return "<h4 class=\"d-flex align-items-start\">" +
+        "    <a class=\"courseLink\" href=\"" + course.url + "\" target=\"_blank\">" + course.title + "&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>" +
+        "    <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
+        "</h4>\n" +
         "<h6 class=\"text-muted\">" +course.platform+ "</h6>\n" +
-        "<p class='mt-1'>" + difficultyText + ": " + getCourseHardnessHTML(course, index) + "</p>\n" +
+        "<p class=\"mt-1\">" + attributesHTML + "</p>\n" +
         (
             showMatchingSkills
                 ? (
@@ -351,10 +390,15 @@ function getCourseDataHTML(course, skipButton, index) {
                     "<p>" + skillsHTML + "</p>\n"
                 )
         ) + "\n" +
-        "<p class=\"mb-0\">Требования:</p>\n" +
-        "<p>" + requirementsHTML + "</p>\n" +
-        "<p class=\"mt-1\">" + attributesHTML + "</p>\n" +
-        "<button class=\"btn btn-outline-secondary btn-block mb-3\" data-toggle=\"collapse\" data-target=\"#description"+course.id+"\" aria-expanded=\"true\" aria-controls=\"description"+course.id+"\">\n" +
+        (
+            hasRequirements
+            ? (
+                    "<p class=\"mb-0\">Нужно знать:</p>\n" +
+                    "<p>" + requirementsHTML + "</p>\n"
+            ) : ''
+        ) + "\n" +
+        "<p class='mt-1'>" + difficultyText + ":<br>" + getCourseHardnessHTML(course, index) + "</p>\n" +
+        "<button class=\"btn btn-outline-secondary btn-block dropdown-toggle mb-3\" data-toggle=\"collapse\" data-target=\"#description"+course.id+"\" aria-expanded=\"true\" aria-controls=\"description"+course.id+"\">\n" +
         "    Посмотреть описание курса\n" +
         "</button>\n" +
         "<p id=\"description"+course.id+"\" class=\"collapse\">\n" +
@@ -381,8 +425,10 @@ function getBackpackCourseDataHTML(course) {
     let price = getCoursePriceText(course);
     let attributesHTML = getCourseAttributesHTML(course);
 
-    return "<span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
-        "<h4><a class=\"courseLink\" href=\"" + course.url + "\" target=\"_blank\">" + course.title + "&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a></h4>\n" +
+    return "<h4 class=\"d-flex align-items-start\">>" +
+        "    <a class=\"courseLink\" href=\"" + course.url + "\" target=\"_blank\">" + course.title + "&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>" +
+        "    <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
+        "</h4>\n" +
         "<h6 class=\"text-muted\">" +course.platform+ "</h6>\n" +
         "<p class=\"mt-1\">" + attributesHTML + "</p>\n";
 }
@@ -1230,5 +1276,9 @@ $(function () {
                 $('.sendPlan').text('Ошибка! Отправить еще раз').attr('disabled', false);
             });
 
+    });
+
+    $(document).on('click', '.navbar-toggler', function () {
+        $(this).toggleClass('active');
     });
 });

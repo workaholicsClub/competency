@@ -236,5 +236,9 @@ $(function () {
         updateFilterCounter();
         scrollToTop();
         search();
-    })
+    });
+
+    $(document).on('click', '.navbar-toggler', function () {
+        $(this).toggleClass('active');
+    });
 });
