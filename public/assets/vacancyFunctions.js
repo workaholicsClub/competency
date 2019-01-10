@@ -581,6 +581,9 @@ function setupSlider() {
             type: 'fraction'
         },
         on: {
+            init: function () {
+                window.scrollTo(0,0);
+            },
             slideChange: function () {
                 let isFirst = this.isBeginning;
                 let isLast = this.isEnd;
@@ -598,6 +601,8 @@ function setupSlider() {
                 if (!isFirst && !isLast) {
                     $('.fraction-bullet:eq(1)').addClass('active');
                 }
+
+                window.scrollTo(0,0);
             }
         }
     });
@@ -1057,7 +1062,7 @@ function drawFilter() {
 }
 
 function isMobile() {
-    return $('.navbar-toggler').is(':visible');
+    return $('.visible-sm-flex').is(':visible');
 }
 
 function updateFilterCounter() {
@@ -1098,4 +1103,48 @@ function updateFilterCounter() {
     else {
         $('.filterCount').show();
     }
+}
+
+function ucfirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function getVacanciesInRange(vacancies) {
+    let salaryMinMax = getVacanciesSalaryRange(vacancies);
+
+    let vacanciesInRange = vacancies.filter(function (vacancy) {
+        let vacancySalary = {
+            from: vacancy.salary.from ? vacancy.salary.from : 0,
+            to: vacancy.salary.to ? vacancy.salary.to : salaryMinMax.max
+        };
+
+        let vacancySalaryIsInRange = !( vacancySalary.from > to || vacancySalary.to < from );
+
+        return vacancySalaryIsInRange;
+    });
+
+    return vacanciesInRange;
+}
+
+function getSkillsForSalaryRange(from, to, vacancies) {
+    if (!vacancies) {
+        vacancies = getVacanciesList();
+    }
+
+    let vacanciesInRange = getVacanciesInRange(vacancies);
+
+    let rangeSkills = {};
+    vacanciesInRange.forEach(function (vacancy) {
+        vacancy.skills.map(function (skillData) {
+            if (typeof rangeSkills[skillData.title] === "undefined" && skillData.mandatory === true) {
+                rangeSkills[skillData.title] = skillData.level;
+            }
+
+            if (rangeSkills[skillData.title] > skillData.level) {
+                rangeSkills[skillData.title] = skillData.level;
+            }
+        });
+    });
+
+    return rangeSkills;
 }

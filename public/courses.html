@@ -26,42 +26,44 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/css/swiper.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/css/ion.rangeSlider.min.css"/>
     <link rel="stylesheet" href="/assets/custom.css" type="text/css">
 
     <title>Сам себе академик: курсы</title>
 </head>
 
-<body class="navbar-padding">
+<body class="navbar-padding navbar-padding-courses">
 
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2XFBS"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<nav class="navbar navbar-expand-md fixed-top navbar-light bg-light visible-sm-flex">
-    <h1 class="h4"><a href="/" class="header">Курсы</a><br><a href="?" class="header"><small class="text-muted"></small></a></h1>
+<nav class="navbar navbar-courses navbar-expand-md fixed-top navbar-light bg-light visible-sm-flex">
+    <div class="navbar-header">
+        <h1 class="h4"><a href="/" class="header">Курсы</a><br><a href="?" class="header"><small class="text-muted"></small></a></h1>
 
-    <div class="navbar-buttons">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
-            <span class="fas fa-filter"></span>
-            <span class="filterCount" style="display: none;">0</span>
-        </button>
-
-        <button class="navbar-toggler ml-1" type="button" data-toggle="collapse" data-target="#backpackCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать портфель">
-            <span class="backpack-icon"></span>
-            <span class="backpackCount hidableCount" style="display: none;">0</span>
-        </button>
+        <div class="navbar-buttons">
+            <button class="btn btn-outline-secondary ml-1 mt-3" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
+                Фильтр
+                <span class="filterCount" style="display: none;">0</span>
+            </button>
+        </div>
     </div>
 
-    <div class="collapse navbar-collapse place-filter-here" id="filterCollapse">
+    <div class="aim-wrapper">
+        <input type="text" class="aim-slider aim mobile-aim" value="" style="display: none"/>
     </div>
 
-    <div class="collapse navbar-collapse" id="backpackCollapse">
-        <button class="btn btn-lg btn-block btn-primary mb-2 search-finish" data-toggle="collapse" data-target="#backpackCollapse">Перейти к оформлению</button>
+    <div class="collapse navbar-collapse place-filter-here pt-1" id="filterCollapse">
+    </div>
+
+    <div class="collapse navbar-collapse pt-1" id="backpackCollapse">
         <h3>Выбранные курсы</h3>
         <div class="list-group" id="backpackCollapseList">
             Выбранных курсов нет
         </div>
+        <button class="btn btn-lg btn-block btn-primary mb-2 search-finish" data-toggle="collapse" data-target="#backpackCollapse">Перейти к оформлению</button>
     </div>
 </nav>
 
@@ -70,13 +72,11 @@
         <h1><a href="/" class="header">Курсы</a>&nbsp;<a href="?" class="header"><small class="text-muted"></small></a></h1>
 
         <div class="dropdown">
-            <button class="btn btn-primary btn-lg btn-backpack" type="button" data-toggle="modal"  data-target="#backpackModal">
-                <img src="/assets/images/backpack-white.svg">
-                Курсов в портфеле: <span class="backpackCount">0</span>
-            </button>
-
             <div class="dropdown-menu bp-4 backpack-dropdown-full" >
             </div>
+        </div>
+        <div class="aim-wrapper">
+            <input type="text" class="aim-slider aim desktop-aim" value="" style="display: none"/>
         </div>
     </div>
 </nav>
@@ -92,15 +92,15 @@
                     <div class="row">
                         <div class="col-md-12">
 
-                            <div class="navbar-alert alert alert-success backpack-filter-alert mb-0" role="alert" style="display: none">
-                                В поиске учитываются навыки курсов из портфеля
+                            <div class="navbar-alert alert alert-success backpack-filter-alert mb-2" role="alert" style="display: none">
+                                В поиске учитываются навыки выбранных курсов
 
                                 <div class="alert-btn-container">
-                                    <button class="btn btn-success btn-turnoff" data-dismiss="alert">
-                                        Отключить
+                                    <button class="btn btn-success" data-dismiss="alert">
+                                        ОК
                                     </button>
-                                    <button class="btn btn-outline-success" data-dismiss="alert">
-                                        Скрыть сообщение
+                                    <button class="btn btn-outline-success btn-turnoff" data-dismiss="alert">
+                                        Отключить
                                     </button>
                                 </div>
                             </div>
@@ -118,16 +118,16 @@
                             </div>
 
                             <div class="bullet-fraction-pagination visible-sm">
+                                <div class="swiper-button-prev visible-sm"></div>
                                 <div class="fraction-bullets">
                                     <span class="fraction-bullet active"></span>
                                     <span class="fraction-bullet"></span>
                                     <span class="fraction-bullet"></span>
                                 </div>
+                                <div class="swiper-button-next visible-sm"></div>
                                 <div class="swiper-pagination"></div>
                             </div>
 
-                            <div class="swiper-button-prev visible-sm"></div>
-                            <div class="swiper-button-next visible-sm"></div>
                         </div>
                     </div>
 
@@ -201,11 +201,11 @@
             </button>
         </div>
 
-        <div class="form-check pb-3">
+        <div class="form-check pb-3 backpackSkillsLabel" style="display: none">
             <input id="useBackpackSkills" class="form-check-input"
                     name="useBackpackSkills" type="checkbox"
                     value="1" checked="checked">
-            <label class="form-check-label" for="useBackpackSkills">Учитывать навыки курсов в портфеле</label>
+            <label class="form-check-label" for="useBackpackSkills">Учитывать навыки выбранных курсов</label>
         </div>
 
         <div class="skillContainer">
@@ -221,23 +221,9 @@
                 <div class="form-row coursePrice">
                     <div class="col form-group">
 
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">От</div>
-                            </div>
-                            <input type="number" min="10000" max="100000" step="5000" value="30000" id="from" class="form-control">
-                        </div>
-
-                    </div>
-                    <div class="col form-group">
-
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">До</div>
-                            </div>
-                            <input type="number" min="30000" max="500000" step="5000" value="50000" id="to" class="form-control">
-                        </div>
-
+                        <input type="text" class="from-to-slider" id="from-to" value="" />
+                        <input type="hidden" id="from">
+                        <input type="hidden" id="to">
                     </div>
                 </div>
             </div>
@@ -420,7 +406,7 @@
 
         </div>
     </form>
-    <button class="btn btn-primary btn-block visible-sm" data-toggle="collapse" data-target="#filterCollapse">Показать</button>
+    <button class="btn btn-primary btn-block visible-sm mb-5" data-toggle="collapse" data-target="#filterCollapse">Показать</button>
 </div>
 
 <div class="modal fade modal-scrollable" id="backpackModal" tabindex="-1" role="dialog" aria-labelledby="backpackModalTitle" aria-hidden="true">
@@ -530,6 +516,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.2/bootstrap-slider.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.3.0/snap.svg-min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/js/swiper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/js/ion.rangeSlider.min.js"></script>
 
 <script type="text/javascript" src="https://smtpjs.com/v2/smtp.js"></script>
 

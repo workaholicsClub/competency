@@ -265,14 +265,14 @@ function getCourseHardnessHTML(course, level) {
     let hardnessIndex = getHardnessIndex(course, level);
 
     if (hardnessIndex === 2) {
-        return "<span class='badge badge-warning'>средний</span>";
+        return "Средней сложности";
     }
 
     if (hardnessIndex === 3) {
-        return "<span class='badge badge-danger'>трудный</span>";
+        return "Трудный";
     }
 
-    return "<span class='badge badge-success'>легкий</span>";
+    return "Легкий";
 }
 
 function useBackpackSkills() {
@@ -316,7 +316,7 @@ function declensionUnits(number, unitsName) {
     }
 }
 
-function getCourseAttributesHTML(course) {
+function getCourseAttributesHTML(course, index) {
     let certificateShortNames = {
         'Нет': 'Без сертификата',
         'Собственный': 'Собственный сертификат',
@@ -325,6 +325,7 @@ function getCourseAttributesHTML(course) {
 
     let attributes = [
         course.format,
+        getCourseHardnessHTML(course, index),
         course.hasTeacher ? 'С преподавателем' : 'Без преподавателя',
         course.hasPractice ? 'С практикой' : 'Без практики'
     ];
@@ -356,23 +357,20 @@ function getCourseDataHTML(course, skipButton, index) {
     let matchingSkillsHTML = getMatchingSkillsHTML(course.skills, skillsFilter, false);
     let skillsHTML = getSkillsHTML(course, skillsFilter);
     let hasRequirements = Object.keys(course.requirements).length > 0;
+    let courseToSalary = aimPretteifyNumber( getCourseSalary(course) );
     let requirementsHTML = hasRequirements
         ? getRequirementsHTML(course, skillsFilter)
         : "нет";
 
-    let attributesHTML = getCourseAttributesHTML(course);
+    let attributesHTML = getCourseAttributesHTML(course, index);
     let buttonHTML = skipButton
         ? ""
-        : "<a href=\"#\" class=\"btn btn-primary btn-block d-flex justify-content-center add-to-backpack mt-1\" data-course-id=\""+course.id+"\"><img src=\"/assets/images/backpack-white.svg\"></img>&nbsp;Добавить в портфель</a>";
+        : "<a href=\"#\" class=\"btn btn-primary btn-block d-flex justify-content-center add-to-backpack mt-1\" data-course-id=\""+course.id+"\">Выбрать (+" + courseToSalary + " к ЗП)</a>";
 
     let visitButtonHTML = "<a href=\"" + course.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-course mt-1\" data-course-id=\""+course.id+"\"><i class=\"fas fa-external-link-square-alt\"></i>&nbsp;Перейти к странице курса</a>";
 
-    let difficultyText = useBackpackSkills() && backpack.length > 0
-        ? 'Сложность курса с учетом портфеля'
-        : 'Сложность курса для вас';
-
     return "<h4 class=\"d-flex align-items-start\">" +
-        "    <a class=\"courseLink\" href=\"" + course.url + "\" target=\"_blank\">" + course.title + "&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>" +
+        course.title +
         "    <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
         "</h4>\n" +
         "<h6 class=\"text-muted\">" +course.platform+ "</h6>\n" +
@@ -397,7 +395,6 @@ function getCourseDataHTML(course, skipButton, index) {
                     "<p>" + requirementsHTML + "</p>\n"
             ) : ''
         ) + "\n" +
-        "<p class='mt-1'>" + difficultyText + ":<br>" + getCourseHardnessHTML(course, index) + "</p>\n" +
         "<button class=\"btn btn-outline-secondary btn-block dropdown-toggle mb-3\" data-toggle=\"collapse\" data-target=\"#description"+course.id+"\" aria-expanded=\"true\" aria-controls=\"description"+course.id+"\">\n" +
         "    Посмотреть описание курса\n" +
         "</button>\n" +
@@ -499,8 +496,11 @@ function getNormalizedValue(item, items, callback, maximum) {
     return itemValue / maximum;
 }
 
-function getWeightenedSkillsCount(course) {
-    let skillsCount = getSkillCount(getVacanciesList());
+function getWeightenedSkillsCount(course, skillsCount) {
+    if (!skillsCount) {
+        skillsCount = getSkillCount(getVacanciesList());
+    }
+
     let maxCount = Object.keys(skillsCount).reduce(function (prevMaxCount, skillName) {
         let skillCount = skillsCount[skillName] || 0;
         if (skillCount > prevMaxCount) {
@@ -676,14 +676,26 @@ function getCoursePriceRange(courses) {
 function updateCourseFromTo() {
     let priceRange = getCoursePriceRange(getCoursesList());
     $('[id^=from]')
-        .attr('min', priceRange.min)
-        .attr('max', priceRange.max)
         .attr('value', priceRange.min);
 
     $('[id^=to]')
-        .attr('min', priceRange.min)
-        .attr('max', priceRange.max)
         .attr('value', priceRange.max);
+
+    $('.from-to-slider').ionRangeSlider({
+        skin: "round",
+        type: "double",
+        min: priceRange.min,
+        max: priceRange.max,
+        from: priceRange.min,
+        to: priceRange.max,
+        step: 1000,
+        grid: true,
+        onChange: function (data) {
+            let fieldIndex = isMobile() ? "0" : "1";
+            $('#from_'+fieldIndex).val(data.from);
+            $('#to_'+fieldIndex).val(data.to);
+        }
+    });
 }
 
 function getCoursesFilter() {
@@ -911,6 +923,7 @@ function addCourseToBackpack(course) {
     redrawBackpack();
     updateSkillCards();
     showBackpackSkillsAlert();
+    updateProgress();
 
     if (hasNoCoursesForNextStep()) {
         showSuccess();
@@ -939,11 +952,13 @@ function updateBackpackData() {
 
 function hideBackpackSkillsAlert() {
     $('.navbar-alert').hide();
+    $('.backpackSkillsLabel').hide();
 }
 
 function showBackpackSkillsAlert() {
     if ( useBackpackSkills() ) {
         $('.navbar-alert').show();
+        $('.backpackSkillsLabel').show();
     }
 }
 
@@ -1089,6 +1104,245 @@ function addCourseSkillsToFilter(courseId) {
     });
 }
 
+function getGradeLabel(salary) {
+    let salaryRange = getVacanciesSalaryRange(getVacanciesList());
+    let juniorBorder = salaryRange.max/3;
+    let seniorBorder = salaryRange.max*2/3;
+
+    if (salary == 0) {
+        return "с нуля";
+    }
+
+    if (salary < juniorBorder) {
+        return "младший";
+    }
+
+    if (salary > seniorBorder) {
+        return "старший";
+    }
+
+    return "специалист";
+}
+
+function updateAimLabelsPosition($slider) {
+    $('#handlePositionFrom, #handlePositionTo').remove();
+
+    let $fromLabel = $slider.find('.irs-from');
+    let $toLabel = $slider.find('.irs-to');
+    let $singleLabel = $slider.find('.irs-single');
+
+    let barWidth = $slider.find('.irs').outerWidth();
+    let handleWidth = $slider.find('.irs-handle').outerWidth();
+    let triangleWidth = 6;
+
+    let sliderLeft = $slider.offset().left - handleWidth/2;
+    let fromHandleLeft = $slider.find('.irs-handle.from').offset().left;
+    let toHandleLeft = $slider.find('.irs-handle.to').offset().left;
+    let magicShiftPx = 2;
+
+    let fromLabelLeft = fromHandleLeft - $fromLabel.width()/2 - handleWidth/2 - sliderLeft + magicShiftPx;
+    let toLabelLeft = toHandleLeft - $toLabel.width()/2 - handleWidth/2 - sliderLeft + magicShiftPx;
+
+    let fromLabelLeftPercent = fromLabelLeft/barWidth * 100;
+    let toLabelLeftPercent = toLabelLeft/barWidth * 100;
+
+    if (fromLabelLeft < 0) {
+        let triangleLeft = fromHandleLeft - triangleWidth/2 - sliderLeft + magicShiftPx;
+        $(document.body).append('<style id="handlePositionFrom">.irs-from:before{left: ' + triangleLeft + 'px!important;}</style>');
+
+        fromLabelLeft = 0;
+        fromLabelLeftPercent = 0;
+    }
+
+    if (toLabelLeft + $toLabel.width() > window.outerWidth) {
+        let triangleLeft = $toLabel.width() - magicShiftPx;
+        $(document.body).append('<style id="handlePositionTo">.irs-to:before{left: ' + triangleLeft + 'px!important;}</style>');
+
+        toLabelLeft = toHandleLeft - $toLabel.width();
+        toLabelLeftPercent = toLabelLeft/barWidth * 100;
+    }
+
+    let fromLabelRight = fromLabelLeft + $fromLabel.width();
+
+    if (fromLabelRight > toLabelLeft) {
+        $fromLabel.css('visibility', 'hidden');
+        $toLabel.css('visibility', 'hidden');
+        $singleLabel.css('visibility', 'visible');
+    } else
+    {
+        $fromLabel.css('visibility', 'visible');
+        $toLabel.css('visibility', 'visible');
+        $singleLabel.css('visibility', 'hidden');
+    }
+
+    $fromLabel.css('left', fromLabelLeftPercent+'%');
+    $toLabel.css('left', toLabelLeftPercent+'%');
+}
+
+function updateLabels(from, to, $slider) {
+    let $fromLabel = $slider.find('.irs-from');
+    let $toLabel = $slider.find('.irs-to');
+    let $singleLabel = $slider.find('.irs-single');
+    let fromText = getGradeLabel(from);
+    let toText = getGradeLabel(to);
+    let singleText = ucfirst(fromText) + ' → ' + toText;
+
+    if (fromText === toText) {
+        singleText = ucfirst(fromText) + ' +' + aimPretteifyNumber(to - from) + ' к ЗП';
+    }
+
+    if (from === 0) {
+        $fromLabel.text(ucfirst(fromText));
+    } else {
+        $fromLabel.text('Сейчас: ' + fromText);
+    }
+    $toLabel.text('В планах: '+toText);
+    $singleLabel.text(singleText);
+
+    updateAimLabelsPosition($slider);
+}
+
+function addCourseProgress() {
+    let progressHTML = "<div class=\"progress aim-progress\">\n" +
+        "  <div class=\"progress-bar bg-danger\" role=\"progressbar\" style=\"width: 0%\" aria-valuenow=\"0\" aria-valuemin=\"0\" aria-valuemax=\"100\">" +
+        "    <span class='progress-label'>ЗП: 0 ₽</span>\n" +
+        "  </div>\n" +
+        "</div>";
+
+    $('.aim-wrapper .irs-bar').append(progressHTML);
+}
+
+function aimPretteifyNumber(number) {
+    if (number === 0) {
+        return "ЗП: 0 ₽";
+    }
+
+    return Math.round(number/1000) + " тыс.";
+}
+
+function getAim() {
+    let aimSelector = isMobile() ? '.mobile-aim' : '.desktop-aim';
+
+    return $(aimSelector);
+}
+
+function getAimFromTo() {
+    return {
+        from: parseInt( getAim().val().split(';')[0] ),
+        to: parseInt( getAim().val().split(';')[1] )
+    }
+}
+
+function updateProgress(from, to) {
+    let $label = $('.aim-wrapper .progress-label');
+    let $progress = $('.aim-wrapper .progress-bar');
+
+    if (!from) {
+        from = getAimFromTo().from;
+    }
+
+    if (!to) {
+        to = getAimFromTo().to;
+    }
+
+    let selectedCoursesSalary = backpack.reduce(function (total, selectedCourse) {
+        return total + getCourseSalary(selectedCourse);
+    }, 0);
+
+    let maxIncrease = to - from;
+    let percent = (selectedCoursesSalary / maxIncrease) * 100;
+
+    if (percent > 100) {
+        percent = 100;
+        selectedCoursesSalary = maxIncrease;
+        showSuccess();
+    }
+
+    $progress.css('width', percent+'%');
+    $label.css('left', percent+'%');
+    $label.text( aimPretteifyNumber(from + selectedCoursesSalary) );
+}
+
+function initAimSlider() {
+    let salary = getVacanciesSalaryRange(getVacanciesList());
+
+    let toPosition = (salary.max+salary.min)/2;
+
+    $('.aim').ionRangeSlider({
+        skin: "round",
+        type: "double",
+        grid: true,
+        min: 0,
+        max: salary.max,
+        from: 0,
+        to: toPosition,
+        prettify: aimPretteifyNumber,
+        onChange: function (data) {
+            updateLabels(data.from, data.to, $(data.slider));
+            updateProgress(data.from, data.to);
+            $('.progress-label').text('...');
+        },
+        onFinish: processInputChanges
+    });
+
+    updateLabels(0, toPosition, getAim().data('ionRangeSlider').result.slider);
+    addCourseProgress();
+}
+
+function getWeightenedSkillsCountForSalary(skills, vacancies) {
+    let skillsCount = getSkillCount(vacancies);
+
+    let maxCount = Object.keys(skillsCount).reduce(function (prevMaxCount, skillName) {
+        let skillCount = skillsCount[skillName] || 0;
+        if (skillCount > prevMaxCount) {
+            return skillCount;
+        }
+
+        return prevMaxCount;
+    }, 0);
+
+    let skillWeights = Object.keys(skillsCount).reduce(function (weightAggregator, skillName) {
+        weightAggregator[skillName] = skillsCount[skillName] / maxCount;
+        return weightAggregator;
+    }, {});
+
+    let weightenedCount = Object.keys(skills).reduce(function (countAggregator, skillName) {
+        let skillWeight = skillWeights[skillName] || 0;
+        return countAggregator + skillWeight;
+    }, 0);
+
+    return weightenedCount;
+}
+
+function getCourseSalary(course, from, to, vacancies) {
+    if (!from) {
+        from = getAimFromTo().from;
+    }
+
+    if (!to) {
+        to = getAimFromTo().to;
+    }
+
+    if (!vacancies) {
+        vacancies = getVacanciesList();
+    }
+
+    let skillsForRange = getSkillsForSalaryRange(from, to, vacancies);
+
+    let vacanciesInRange = getVacanciesInRange(vacancies);
+    let neededSkillsCount = getWeightenedSkillsCountForSalary(skillsForRange, vacanciesInRange);
+    let courseSkillsCount = getWeightenedSkillsCountForSalary(course.skills, vacanciesInRange);
+
+    return courseSkillsCount/neededSkillsCount * (to-from);
+}
+
+
+function processInputChanges() {
+    updateFilterCounter();
+    updateProgress();
+    search();
+}
+
 $(function () {
     enableTooltips();
 
@@ -1100,6 +1354,7 @@ $(function () {
     updateCourseFromTo();
     updatePageTitle();
     updateFilterCounter();
+    initAimSlider();
 
     search();
 
@@ -1242,10 +1497,7 @@ $(function () {
         updateFilterCounter();
     });
 
-    $(document).on('change input click', 'input:not(#allSkills input, #emailField)', function () {
-        updateFilterCounter();
-        search();
-    });
+    $(document).on('change input click', 'input:not(#allSkills input, #emailField, .aim)', processInputChanges);
 
     $(document).on('click', '.skillBlock .close', function () {
         search();
@@ -1284,7 +1536,7 @@ $(function () {
 
     });
 
-    $(document).on('click', '.navbar-toggler', function () {
-        $(this).toggleClass('active');
+    $(document).on('click', '.navbar .btn', function () {
+        $(this).toggleClass('btn-outline-secondary').toggleClass('btn-primary');
     });
 });

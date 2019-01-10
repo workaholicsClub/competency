@@ -1,6 +1,49 @@
+.bg-light {
+    background-color: rgb(238, 239, 240)!important;
+}
+
+.irs--round .irs-bar {
+    top: 33px;
+    height: 9px;
+}
+
+.irs--round .irs-grid-pol, .irs--round .irs-line {
+    background: rgba(0,0,0,0.4);
+}
+
+.irs--round .irs-grid-text {
+    color: rgba(0,0,0,0.4);
+}
+
 body.navbar-padding {
     min-height: 75rem;
     padding-top: 6rem;
+}
+
+body.navbar-padding-courses {
+    padding-top: 10rem;
+}
+
+.navbar-courses {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.navbar-courses .container {
+    flex-direction: column;
+}
+
+.navbar-header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.aim-wrapper {
+    margin-bottom: 0.5rem;
+    width: 100%;
 }
 
 .navbar-buttons {
@@ -8,8 +51,7 @@ body.navbar-padding {
 }
 
 .navbar-buttons button {
-    height: 3rem;
-    width: 3rem;
+    position: relative;
 }
 
 .navbar-buttons button.btn-recommend {
@@ -23,7 +65,7 @@ body.navbar-padding {
     margin-top: 1rem;
 }
 
-.navbar-toggler .backpackCount, .navbar-toggler .filterCount {
+.navbar .btn .backpackCount, .navbar .btn .filterCount {
     display: block;
     width: 1rem;
     height: 1rem;
@@ -33,7 +75,7 @@ body.navbar-padding {
     color: white;
     background: red;
     border-radius: 50%;
-    margin: -2rem 0 0 -0.2rem;
+    margin: -50% 0 0 75%;
     position: absolute;
 }
 
@@ -42,7 +84,7 @@ body.navbar-padding {
     margin-top: -6px;
 }
 
-.navbar-toggler.active {
+.btn-outline-secondary.active {
     background: #007bff;
     color: white;
 }
@@ -56,6 +98,37 @@ body.navbar-padding {
 
 .active .backpack-icon {
     background: url('/assets/images/backpack-white.svg');
+}
+
+.progress {
+    background: transparent;
+    height: 9px;
+}
+
+.progress-label {
+    display: block;
+    background: #dc3545!important;
+    padding: 3px 5px;
+    border-radius: 4px;
+    margin-left: -2rem;
+    width: 4rem;
+    left: 0%;
+    bottom: -2.2rem;
+    position: absolute;
+}
+
+.progress-label:after {
+    position: absolute;
+    display: block;
+    content: "";
+    top: -6px;
+    left: 50%;
+    width: 0;
+    height: 0;
+    margin-left: -3px;
+    overflow: hidden;
+    border: 3px solid transparent;
+    border-bottom-color: #dc3545;
 }
 
 .alert .btn-turnoff {
@@ -355,20 +428,18 @@ a.header, a.header:visited, a.header:hover, a.header:active {
 }
 
 .swiper-button-next, .swiper-button-prev {
-    top: 50vh;
-    position: fixed;
     width: 15px;
     height: 31px;
 }
 
 .swiper-button-next {
     right: 5px;
-    background: url('/assets/images/chevron-right-small.png');
+    background: url('/assets/images/chevron-right-small.png') no-repeat;
 }
 
 .swiper-button-prev {
     left: 5px;
-    background: url('/assets/images/chevron-left-small.png');
+    background: url('/assets/images/chevron-left-small.png') no-repeat;
 }
 
 .swiper-pagination-progressbar {
@@ -384,9 +455,9 @@ a.header, a.header:visited, a.header:hover, a.header:active {
 .bullet-fraction-pagination {
     position: fixed;
     bottom: 10px;
-    width: 100px;
+    width: 150px;
     left: 50%;
-    margin-left: -50px;
+    margin-left: -75px;
     display: flex;
     flex-direction: column;
     background: rgba(255, 255, 255, 0.7);
@@ -425,6 +496,19 @@ a.header, a.header:visited, a.header:hover, a.header:active {
     height: 16px;
 }
 
+.btn-aim {
+    animation: progressFill 6s -.1s ease-in-out forwards;
+    transition: all 0.3s ease 0s;
+}
+
+.btn-aim.btn-in-progress {
+    color: #fff;
+    background: linear-gradient(to right, rgba(0, 123, 255, 1) 1%, rgba(0, 123, 255, 0.5) 1%);
+    background-size: 0% 100%;
+    background-position: 0% 100%;
+    border-color: #007bff;
+}
+
 @media (max-width: 768px) {
     .addVacancySkillsButton {
     }
@@ -452,4 +536,9 @@ a.header, a.header:visited, a.header:hover, a.header:active {
     .selected-title {
         max-width: 90%;
     }
+}
+
+@keyframes progressFill {
+    from { background-position: right bottom;}
+    to   { background-position: left bottom;}
 }

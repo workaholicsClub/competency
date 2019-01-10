@@ -140,7 +140,6 @@ $(function () {
         toggleSkillsResult();
     });
 
-
     $(document).on('change input', '.skillSlider', function () {
         let $skillBlock = $(this).closest('.alert');
         $skillBlock.removeClass('alert-danger').addClass('alert-primary');
