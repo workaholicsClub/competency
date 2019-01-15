@@ -75,6 +75,20 @@ function getMatchingCourseSkills(skills, filter, isRequirements) {
     return matchingSkills;
 }
 
+function getAllSkillsExceptMatching(skills, filter, isRequirements) {
+    let matchingSkills = getMatchingCourseSkills(skills, filter, isRequirements);
+    let courseSkillNames = Object.keys(skills);
+    let resultSkills = [];
+
+    courseSkillNames.forEach(function (skillName) {
+        if (matchingSkills.indexOf(skillName) === -1) {
+            resultSkills.push(skillName);
+        }
+    });
+
+    return resultSkills;
+}
+
 function getUnmatchingCourseSkills(skills, filter, isRequirements) {
     let courseSkillNames = Object.keys(skills);
     let unmatchingSkills = [];
@@ -142,10 +156,8 @@ function getMatchingSkillsHTML(skills, filter, isRequirements) {
     let matchingSkills = getMatchingCourseSkills(skills, filter, isRequirements);
     let matchingSkillsHtml = matchingSkills.map(function (skillName) {
         let levelText = getLevelText(skills[skillName]);
-        let badgeText = isRequirements
-            ? skillName + ':&nbsp; ' + levelText
-            : skillName + ':&nbsp; улучшение до ' + levelText;
-        return '<span class="badge badge-success" data-toggle="tooltip" title="' + matchLabel + '">'+badgeText+'</span>';
+        let badgeText = skillName + ':&nbsp; ' + levelText;
+        return '<span class="badge badge-secondary" data-toggle="tooltip" title="' + matchLabel + '">+ '+badgeText+'</span>';
     });
 
     return matchingSkillsHtml.join("\n") + "\n";
@@ -174,7 +186,7 @@ function getSkillsPropHTML(skills, filter, isRequirements) {
     let unmatchingSkillsHtml = unmatchingSkills.map(function (skillName) {
         let levelText = getLevelText(skills[skillName]);
         let badgeText = skillName + ':&nbsp;' + levelText;
-        return '<span class="badge badge-secondary" data-toggle="tooltip" title="' + unmatchLabel + '">'+badgeText+'</span>';
+        return '<span class="badge badge-secondary" data-toggle="tooltip" title="' + unmatchLabel + '">- '+badgeText+'</span>';
     });
 
     let allUndefinedSkillsHtml = sortedUndefinedSkills.map(function (skillName) {
@@ -204,7 +216,7 @@ function getSkillsPropHTML(skills, filter, isRequirements) {
     let undefinedSkillsPlainHTML = allUndefinedSkillsHtml.join("\n");
 
     return matchingSkillsHtml +
-        (isRequirements ? "" : equalSkillsHtml.join("\n") + "\n") +
+        equalSkillsHtml.join("\n") + "\n" +
         unmatchingSkillsHtml.join("\n") + "\n" +
         (hasUndefinedSkills
             ? (truncateUndefined ? undefinedSkillsTruncatedHTML : undefinedSkillsPlainHTML)
@@ -352,10 +364,12 @@ function getCourseDataHTML(course, skipButton, index) {
     let descriptionHTML = course.description || "";
     let price = getCoursePriceText(course);
     let filter = getCoursesFilter();
-    let skillsFilter = applyBackpackSkills(filter.skills, index);
+    let skillsFilter = applyBackpackSkills( applySalaryRangeSkills( filter.skills ), index);
     let showMatchingSkills = useBackpackSkills() && hasMatchingSkills(course.skills, skillsFilter, false);
     let matchingSkillsHTML = getMatchingSkillsHTML(course.skills, skillsFilter, false);
     let skillsHTML = getSkillsHTML(course, skillsFilter);
+    let additionalSkills = getAllSkillsExceptMatching(course.skills, skillsFilter, false);
+    let hasAdditionalSkills = additionalSkills.length > 0;
     let hasRequirements = Object.keys(course.requirements).length > 0;
     let courseToSalary = aimPretteifyNumber( getCourseSalary(course) );
     let requirementsHTML = hasRequirements
@@ -367,9 +381,9 @@ function getCourseDataHTML(course, skipButton, index) {
         ? ""
         : "<a href=\"#\" class=\"btn btn-primary btn-block d-flex justify-content-center add-to-backpack mt-1\" data-course-id=\""+course.id+"\">Выбрать (+" + courseToSalary + " к ЗП)</a>";
 
-    let visitButtonHTML = "<a href=\"" + course.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-course mt-1\" data-course-id=\""+course.id+"\"><i class=\"fas fa-external-link-square-alt\"></i>&nbsp;Перейти к странице курса</a>";
+    let visitButtonHTML = "<a href=\"" + course.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-course mt-1\" data-course-id=\""+course.id+"\">Страница курса&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>";
 
-    return "<h4 class=\"d-flex align-items-start\">" +
+    return "<h4 class=\"d-flex align-items-start justify-content-between\">" +
         course.title +
         "    <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
         "</h4>\n" +
@@ -378,14 +392,14 @@ function getCourseDataHTML(course, skipButton, index) {
         (
             showMatchingSkills
                 ? (
-                    "<p class=\"mt-1 mb-0\">Навыки, которые вы улучшите:</p>\n" +
+                    "<p class=\"mt-1 mb-0\">Нужные навыки:</p>\n" +
                     "<p>" + matchingSkillsHTML + "</p>\n" +
-                    "<p class=\"mt-1 mb-0\">Прочие навыки курса:</p>\n" +
-                    "<p>" + skillsHTML + "</p>\n"
+                    (hasAdditionalSkills ? "<p class=\"mt-1 mb-0\">Прочие навыки:</p>\n" +
+                    "<p>" + skillsHTML + "</p>\n" : "")
                 )
-                : (
+                : (hasAdditionalSkills ?
                     "<p class=\"mt-1 mb-0\">Навыки курса:</p>\n" +
-                    "<p>" + skillsHTML + "</p>\n"
+                    "<p>" + skillsHTML + "</p>\n" : ""
                 )
         ) + "\n" +
         (
@@ -396,7 +410,7 @@ function getCourseDataHTML(course, skipButton, index) {
             ) : ''
         ) + "\n" +
         "<button class=\"btn btn-outline-secondary btn-block dropdown-toggle mb-3\" data-toggle=\"collapse\" data-target=\"#description"+course.id+"\" aria-expanded=\"true\" aria-controls=\"description"+course.id+"\">\n" +
-        "    Посмотреть описание курса\n" +
+        "    Описание курса\n" +
         "</button>\n" +
         "<p id=\"description"+course.id+"\" class=\"collapse\">\n" +
             descriptionHTML +
@@ -404,13 +418,13 @@ function getCourseDataHTML(course, skipButton, index) {
         buttonHTML +
         visitButtonHTML +
         "<button class=\"btn btn-outline-primary btn-block btn-similar\" data-course=\""+course.id+"\">\n" +
-        "    Подобрать похожие курсы\n" +
+        "    Похожие курсы\n" +
         "</button>\n";
 }
 
 function getCourseCardHTML(course, skipButton, index) {
     let courseHTML = "<div class=\"swiper-slide\">\n" +
-        "    <div class=\"card-body\">\n" +
+        "    <div class=\"card-body\" data-id='"+course.id+"' data-sort='"+course.sortIndex+"'>\n" +
             getCourseDataHTML(course, skipButton, index) +
         "    </div>\n" +
         "</div>";
@@ -474,6 +488,40 @@ function applyBackpackSkills(currentSkills, level) {
     return skillsAfterLearn;
 }
 
+function applySalaryRangeSkills(currentSkills) {
+    let from = getAimFromTo().from;
+    let to = getAimFromTo().to;
+    let vacancies = getVacanciesList();
+
+    let skillsForRange = getSkillsForSalaryRange(from, to, vacancies);
+    let skillsWithSalarySkills = JSON.parse(JSON.stringify(currentSkills));
+
+        Object.keys(skillsForRange).forEach(function (skillName) {
+            let isSkillInFilter = typeof skillsWithSalarySkills[skillName] !== 'undefined';
+
+            if (!isSkillInFilter) {
+                skillsWithSalarySkills[skillName] = 0;
+            }
+        });
+
+    return skillsWithSalarySkills;
+}
+
+function getCurrentProfessionSkills() {
+    let professionName = getCurrentProfessionName();
+    return getSkillsList()[professionName];
+}
+
+function getBaseProfessionSkillNames() {
+    return getCurrentProfessionSkills().reduce(function (result, currentSkill) {
+        if (currentSkill.isBase) {
+            result.push(currentSkill.name);
+        }
+
+        return result;
+    }, []);
+}
+
 function getMaximumValue(items, callback) {
     let maximum = items.reduce(function (prevMax, currentItem) {
         let currentValue = callback(currentItem);
@@ -524,9 +572,70 @@ function getWeightenedSkillsCount(course, skillsCount) {
 }
 
 function getWeightenedSkillsCountStep(course) {
-    let step = 5;
+    let step = 1;
     let skillsCount = getWeightenedSkillsCount(course);
-    return Math.round(skillsCount / 5) * 5;
+    let steppedCount = Math.round(skillsCount / step) * step;
+    if (steppedCount === 0) {
+        steppedCount = 1;
+    }
+
+    return steppedCount;
+}
+
+function getBaseSkillsCount(course) {
+    let baseSkills = getBaseProfessionSkillNames();
+    return Object.keys(course.skills).reduce(function (count, currentSkillName) {
+        let isBaseSkill = baseSkills.indexOf(currentSkillName) !== -1;
+        return isBaseSkill ? count+1 : count;
+    }, 0);
+}
+
+function getCoursesListWithHardnessAndSortIndex() {
+    let clonedList = JSON.parse( JSON.stringify( getCoursesList() ) );
+
+    let skillsFilter = applyBackpackSkills(getCoursesFilter().skills);
+    let isLocalFilterEmpty = Object.keys(skillsFilter).length === 0;
+    let getCoursePrice = function (course) { return course.price };
+    let getCourseRequirementsCount = function (course) { return Object.keys(course.requirements).length };
+    let getMatchedSkillsCount = function (course) { return isLocalFilterEmpty ? 0 : getMatchingCourseSkills(course.skills, skillsFilter, false).length; }
+
+    let priceMaximum = getMaximumValue(clonedList, getCoursePrice);
+    let weightenedSkillsMaximum = getMaximumValue(clonedList, getWeightenedSkillsCountStep);
+    let requirementsMaximum = getMaximumValue(clonedList, getCourseRequirementsCount);
+    let hardnessMaximum = getMaximumValue(clonedList, getCourseHardness);
+    let matchedSkillsMaximum = getMaximumValue(clonedList, getMatchedSkillsCount);
+    let baseSkillsMaximum = getMaximumValue(clonedList, getBaseSkillsCount);
+
+    let getCourseSortIndex = function (course, courses) {
+        let price = 1-getNormalizedValue(course, courses, getCoursePrice, priceMaximum);
+        let weightenedSkills = getNormalizedValue(course, courses, getWeightenedSkillsCountStep, weightenedSkillsMaximum);
+        let requirements = 1-getNormalizedValue(course, courses, getCourseRequirementsCount, requirementsMaximum);
+        let hardness = 1-getNormalizedValue(course, courses, getCourseHardness, hardnessMaximum);
+        let matchedSkillsCount = matchedSkillsMaximum ? getNormalizedValue(course, courses, getMatchedSkillsCount, matchedSkillsMaximum) : 0;
+        let baseSkillsCount = baseSkillsMaximum ? getNormalizedValue(course, courses, getBaseSkillsCount, baseSkillsMaximum) : 0;
+
+        return Math.round(matchedSkillsCount * 1000000) +
+            Math.round(price * 100000) +
+            Math.round(baseSkillsCount * 10000) +
+            Math.round(weightenedSkills * 1000) +
+            Math.round(hardness * 100) +
+            Math.round(requirements * 10);
+    };
+
+    let listWithSortIndex = clonedList.map(function (course) {
+        course.sortIndex = getCourseSortIndex(course, clonedList);
+        course.hardness = getHardnessIndex(course);
+        return course;
+    });
+
+    return listWithSortIndex;
+}
+
+function courseMatchesSkills(course, skillsFilter) {
+    let matchedSkillsCount = getMatchingCourseSkills(course.skills, skillsFilter, false).length;
+    let hasMatchedSkills = matchedSkillsCount > 0;
+    let isFilterEmpty = Object.keys(skillsFilter).length === 0;
+    return hasMatchedSkills || isFilterEmpty;
 }
 
 function courseMatchesFilterParameters(course) {
@@ -554,44 +663,6 @@ function courseMatchesFilterParameters(course) {
     return courseMatches;
 }
 
-function getCoursesListWithHardnessAndSortIndex() {
-    let clonedList = JSON.parse( JSON.stringify( getCoursesList() ) );
-
-    let skillsFilter = applyBackpackSkills(getCoursesFilter().skills);
-    let isLocalFilterEmpty = Object.keys(skillsFilter).length === 0;
-    let getCoursePrice = function (course) { return course.price };
-    let getCourseRequirementsCount = function (course) { return Object.keys(course.requirements).length };
-    let getMatchedSkillsCount = function (course) { return isLocalFilterEmpty ? 0 : getMatchingCourseSkills(course.skills, skillsFilter, false).length; }
-
-    let priceMaximum = getMaximumValue(clonedList, getCoursePrice);
-    let weightenedSkillsMaximum = getMaximumValue(clonedList, getWeightenedSkillsCountStep);
-    let requirementsMaximum = getMaximumValue(clonedList, getCourseRequirementsCount);
-    let hardnessMaximum = getMaximumValue(clonedList, getCourseHardness);
-    let matchedSkillsMaximum = getMaximumValue(clonedList, getMatchedSkillsCount);
-
-    let getCourseSortIndex = function (course, courses) {
-        let price = getNormalizedValue(course, courses, getCoursePrice, priceMaximum);
-        let weightenedSkills = 1-getNormalizedValue(course, courses, getWeightenedSkillsCountStep, weightenedSkillsMaximum);
-        let requirements = getNormalizedValue(course, courses, getCourseRequirementsCount, requirementsMaximum);
-        let hardness = getNormalizedValue(course, courses, getCourseHardness, hardnessMaximum);
-        let matchedSkillsCount = matchedSkillsMaximum ? 1-getNormalizedValue(course, courses, getMatchedSkillsCount, matchedSkillsMaximum) : 0;
-
-        return Math.round(matchedSkillsCount * 1000000000) +
-            Math.round(price * 10000000) +
-            Math.round(weightenedSkills * 100000) +
-            Math.round(hardness * 1000) +
-            Math.round(requirements * 10);
-    };
-
-    let listWithSortIndex = clonedList.map(function (course) {
-        course.sortIndex = getCourseSortIndex(course, clonedList);
-        course.hardness = getHardnessIndex(course);
-        return course;
-    });
-
-    return listWithSortIndex;
-}
-
 function skipBackpackCourses(course) {
     if (!backpack) {
         return true;
@@ -609,48 +680,68 @@ function skipBackpackCourses(course) {
 }
 
 function findCourses(filter) {
-    let skillsFilter = applyBackpackSkills(filter.skills);
+    let skillsFilter = applyBackpackSkills( applySalaryRangeSkills( filter.skills ) );
     let courses = getCoursesListWithHardnessAndSortIndex();
 
     return courses
         .filter(function (course) {
-            let matchedSkillsCount = getMatchingCourseSkills(course.skills, skillsFilter, false).length;
-            let hasMatchedSkills = matchedSkillsCount > 0;
-            let isFilterEmpty = Object.keys(skillsFilter).length === 0;
-            return hasMatchedSkills || isFilterEmpty;
+            return courseMatchesSkills(course, skillsFilter);
         })
         .filter(courseMatchesFilterParameters)
         .filter(skipBackpackCourses)
         .sort(function (courseA, courseB) {
+            let moveAUp = -1;
+            let moveBUp = 1;
+
             let ratingA = courseA.sortIndex;
             let ratingB = courseB.sortIndex;
             let aSkills = Object.keys(courseA.skills);
             let bSkills = Object.keys(courseB.skills);
             let aRequirements = Object.keys(courseA.requirements) || [];
             let bRequirements = Object.keys(courseB.requirements) || [];
+            let aHasRequirementsAndBNot = aRequirements.length > 0 && bRequirements.length === 0;
+            let bHasRequirementsAndANot = bRequirements.length > 0 && aRequirements.length === 0;
+            let aForKidsAndBNot = courseA.forKids && !courseB.forKids;
+            let bForKidsAndANot = courseB.forKids && !courseA.forKids;
 
-            let aHasBrequirements = aSkills.reduce(function (result, aSkillName) {
+            let aSkillsHaveBrequirements = aSkills.reduce(function (result, aSkillName) {
                 return result || bRequirements.indexOf(aSkillName) !== -1;
             }, false);
 
-            let bHasArequirements = bSkills.reduce(function (result, bSkillName) {
+            let bSkillsHaveArequirements = bSkills.reduce(function (result, bSkillName) {
                 return result || aRequirements.indexOf(bSkillName) !== -1;
             }, false);
 
-            if (aHasBrequirements) {
-                return -1;
+            if (bForKidsAndANot) {
+                return moveAUp;
             }
 
-            if (bHasArequirements) {
-                return 1;
+            if (aForKidsAndBNot) {
+                return moveBUp;
+            }
+
+            if (aSkillsHaveBrequirements) {
+                return moveAUp;
+            }
+
+            if (bSkillsHaveArequirements) {
+                return moveBUp;
+            }
+
+            if (bHasRequirementsAndANot) {
+                return moveAUp;
+            }
+
+            if (aHasRequirementsAndBNot) {
+                return moveBUp;
             }
 
             if (ratingA > ratingB) {
-                return 1;
+                return moveAUp;
             }
 
             if (ratingA < ratingB) {
-                return -1;
+                return moveBUp;
             }
 
             return 0;
@@ -730,21 +821,19 @@ function search() {
     }
 
     $('.coursesList').css('opacity', '0.3');
-    setTimeout(function () {
-        $('.coursesList').html('');
+    $('.coursesList').html('');
 
-        let courses = findCourses( getCoursesFilter() );
-        courses.forEach(function (course) {
-            addCourse(course);
-        });
+    let courses = findCourses( getCoursesFilter() );
+    courses.forEach(function (course) {
+        addCourse(course);
+    });
 
-        $('.coursesList').attr('style', '');
-        if (courses.length === 0) {
-            $('.coursesList').append("<p class=\"h4 px-3 py-2\">Подходящие курсы не найдены</p>");
-        }
+    $('.coursesList').attr('style', '');
+    if (courses.length === 0) {
+        $('.coursesList').append("<p class=\"h4 px-3 py-2\">Подходящие курсы не найдены</p>");
+    }
 
-        updateSlider();
-    }, 200)
+    updateSlider();
 }
 
 function hasSkills() {
@@ -1121,7 +1210,7 @@ function getGradeLabel(salary) {
         return "старший";
     }
 
-    return "специалист";
+    return "средний";
 }
 
 function updateAimLabelsPosition($slider) {
@@ -1266,7 +1355,8 @@ function updateProgress(from, to) {
 function initAimSlider() {
     let salary = getVacanciesSalaryRange(getVacanciesList());
 
-    let toPosition = (salary.max+salary.min)/2;
+    let juniorMaxSalary = Math.floor(salary.max / 3000 ) * 1000;
+    let toPosition = juniorMaxSalary;
 
     $('.aim').ionRangeSlider({
         skin: "round",
@@ -1276,6 +1366,7 @@ function initAimSlider() {
         max: salary.max,
         from: 0,
         to: toPosition,
+        step: 1000,
         prettify: aimPretteifyNumber,
         onChange: function (data) {
             updateLabels(data.from, data.to, $(data.slider));
@@ -1329,13 +1420,12 @@ function getCourseSalary(course, from, to, vacancies) {
 
     let skillsForRange = getSkillsForSalaryRange(from, to, vacancies);
 
-    let vacanciesInRange = getVacanciesInRange(vacancies);
+    let vacanciesInRange = getVacanciesInRange(from, to, vacancies);
     let neededSkillsCount = getWeightenedSkillsCountForSalary(skillsForRange, vacanciesInRange);
     let courseSkillsCount = getWeightenedSkillsCountForSalary(course.skills, vacanciesInRange);
 
     return courseSkillsCount/neededSkillsCount * (to-from);
 }
-
 
 function processInputChanges() {
     updateFilterCounter();

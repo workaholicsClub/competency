@@ -18,9 +18,34 @@ catch (\PDOException $exception) {
     $jsonOutput = false;
 }
 
-$skillsQuery = $pdo->prepare('SELECT p.name AS profName, s.id AS id, s.name AS name FROM professions p
-	LEFT JOIN links_skills_professions lsp ON p.id = lsp.professionId
+$skillsQuery = $pdo->prepare('SELECT 
+	p.name AS profName,
+    s.id AS id,
+    s.name AS name,
+    MAX(lrc.id) IS NOT NULL AS isBase,
+    MAX(t10.isTop10) AS isTop10,
+    t10.vacancyCount
+
+FROM professions p
+    LEFT JOIN links_skills_professions lsp ON p.id = lsp.professionId
     LEFT JOIN skills s ON lsp.skillId = s.id
+    LEFT JOIN links_requirements_courses lrc ON s.id = lrc.skillId
+    LEFT JOIN (
+		SELECT professionId, skillId, vacancyCount, rowNum <= 10 AS isTop10 FROM (
+			SELECT IF(@prefProv = s.professionId, @ctr := @ctr + 1, @ctr := 1) AS rowNum, @prefProv := s.professionId, s.*
+				FROM (
+					SELECT p.id AS professionId, lsp.skillId, COUNT(*) AS vacancyCount FROM professions p
+						LEFT JOIN links_skills_professions lsp ON p.id = lsp.professionId
+						LEFT JOIN links_skills_vacancies lsv ON lsp.skillId = lsv.skillId
+						LEFT JOIN vacancies v ON lsv.vacancyId = v.id
+					WHERE p.id = v.professionId
+					GROUP BY p.id, lsp.skillId
+					ORDER BY p.id, COUNT(*) DESC
+				) s
+				JOIN (SELECT @ctr := 0, @prevPof = 0) AS var
+		) sv
+    ) t10 ON s.id = t10.skillId
+GROUP BY p.id, s.id
 ORDER BY p.id, s.name');
 
 $skillsQuery->execute();
@@ -28,8 +53,11 @@ $jsonOutput = [];
 
 while ($skill = $skillsQuery->fetch()) {
     $jsonOutput[ $skill['profName'] ][] = [
-        'id' => $skill['id'],
-        'name' => $skill['name']
+        'id'           => $skill['id'],
+        'name'         => $skill['name'],
+        'isBase'       => boolval($skill['isBase']),
+        'isPopular'    => boolval($skill['isTop10']),
+        'vacancyCount' => intval($skill['vacancyCount']),
     ];
 }
 
@@ -37,4 +65,12 @@ if ($jsonOutput === false) {
     $jsonOutput = [];
 }
 
-echo json_encode($jsonOutput);
+
+if ($_GET['format'] == 'script') {
+    echo "function getSkillsList() {
+        return " . json_encode($jsonOutput) . ";
+    }";
+}
+else {
+    echo json_encode($jsonOutput);
+}

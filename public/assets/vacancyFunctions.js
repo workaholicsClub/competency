@@ -1022,9 +1022,9 @@ function scrollToTop() {
     window.scroll({top: 0});
 }
 
-function updatePageTitle() {
+function getCurrentProfessionName() {
     let pageCode = location.pathname.split('/')[1];
-    let titles = {
+    let professionNames = {
         'php-developer': 'Разработчик PHP',
         'hr-manager': 'HR менеджер',
         'pr-specialist': 'PR специалист',
@@ -1044,7 +1044,11 @@ function updatePageTitle() {
         'game-artist-3d': 'Игровой художник 3D'
     };
 
-    let pageTitle = titles[pageCode] || '';
+    return professionNames[pageCode] || false;
+}
+
+function updatePageTitle() {
+    let pageTitle = getCurrentProfessionName() || '';
     $('h1 small').html(pageTitle);
 }
 
@@ -1109,8 +1113,11 @@ function ucfirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function getVacanciesInRange(vacancies) {
+function getVacanciesInRange(from, to, vacancies) {
     let salaryMinMax = getVacanciesSalaryRange(vacancies);
+    if (to < salaryMinMax.min) {
+        to = salaryMinMax.min;
+    }
 
     let vacanciesInRange = vacancies.filter(function (vacancy) {
         let vacancySalary = {
@@ -1131,7 +1138,7 @@ function getSkillsForSalaryRange(from, to, vacancies) {
         vacancies = getVacanciesList();
     }
 
-    let vacanciesInRange = getVacanciesInRange(vacancies);
+    let vacanciesInRange = getVacanciesInRange(from, to, vacancies);
 
     let rangeSkills = {};
     vacanciesInRange.forEach(function (vacancy) {
