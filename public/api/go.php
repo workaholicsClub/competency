@@ -20,7 +20,7 @@ catch (\PDOException $exception) {
 
 $userEmail = $_REQUEST['from'];
 
-$coursesQuery = $pdo->prepare('SELECT url FROM courses WHERE id = ?');
+$coursesQuery = $pdo->prepare('SELECT url, partnerUrl FROM courses WHERE id = ?');
 $coursesQuery->execute([$_REQUEST['courseId']]);
 $course = $coursesQuery->fetch();
 
@@ -38,4 +38,6 @@ if ($userEmail) {
     }
 }
 
-header('Location: '.$course['url']);
+$targetUrl = $course['partnerUrl'] ? $course['partnerUrl'] : $course['url'];
+
+header('Location: '.$targetUrl);
