@@ -1113,9 +1113,9 @@ function ucfirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function getVacanciesInRange(from, to, vacancies) {
+function getVacanciesInRange(from, to, vacancies, takeMinVacancy) {
     let salaryMinMax = getVacanciesSalaryRange(vacancies);
-    if (to < salaryMinMax.min) {
+    if (to < salaryMinMax.min && takeMinVacancy) {
         to = salaryMinMax.min;
     }
 
@@ -1125,6 +1125,11 @@ function getVacanciesInRange(from, to, vacancies) {
             to: vacancy.salary.to ? vacancy.salary.to : salaryMinMax.max
         };
 
+        let salaryNotDefined = vacancySalary.from === 0 && vacancySalary.to === 0;
+        if (salaryNotDefined) {
+            return false;
+        }
+
         let vacancySalaryIsInRange = !( vacancySalary.from > to || vacancySalary.to < from );
 
         return vacancySalaryIsInRange;
@@ -1133,12 +1138,12 @@ function getVacanciesInRange(from, to, vacancies) {
     return vacanciesInRange;
 }
 
-function getSkillsForSalaryRange(from, to, vacancies) {
+function getSkillsForSalaryRange(from, to, vacancies, takeMinVacancy) {
     if (!vacancies) {
         vacancies = getVacanciesList();
     }
 
-    let vacanciesInRange = getVacanciesInRange(from, to, vacancies);
+    let vacanciesInRange = getVacanciesInRange(from, to, vacancies, takeMinVacancy);
 
     let rangeSkills = {};
     vacanciesInRange.forEach(function (vacancy) {

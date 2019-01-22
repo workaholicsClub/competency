@@ -262,7 +262,7 @@ function getHardnessIndex(course, level) {
 
     let hardnessIndex = 1;
 
-    if (hardnessPercent >= 10) {
+    if (hardnessPercent >= 5) {
         hardnessIndex = 2;
     }
 
@@ -371,10 +371,12 @@ function getCourseDataHTML(course, skipButton, index) {
     let additionalSkills = getAllSkillsExceptMatching(course.skills, skillsFilter, false);
     let hasAdditionalSkills = additionalSkills.length > 0;
     let hasRequirements = Object.keys(course.requirements).length > 0;
-    let courseToSalary = aimPretteifyNumber( getCourseSalary(course) );
+    let courseToSalary = aimPrettifyNumber( getCourseSalary(course) );
     let requirementsHTML = hasRequirements
         ? getRequirementsHTML(course, skillsFilter)
         : "нет";
+
+    let considerLabel = course.hasPartnerUrl;
 
     let attributesHTML = getCourseAttributesHTML(course, index);
     let buttonHTML = skipButton
@@ -385,7 +387,10 @@ function getCourseDataHTML(course, skipButton, index) {
 
     return "<h4 class=\"d-flex align-items-start justify-content-between\">" +
         course.title +
-        "    <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
+        "    <div class=\"badges\">\n" +
+        "        <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
+        (considerLabel ? "        <span class=\"badge badge-warning mt-1\">Обратите внимание</span>\n" : "") +
+        "    </div>\n" +
         "</h4>\n" +
         "<h6 class=\"text-muted\">" +course.platform+ "</h6>\n" +
         "<p class=\"mt-1\">" + attributesHTML + "</p>\n" +
@@ -488,21 +493,35 @@ function applyBackpackSkills(currentSkills, level) {
     return skillsAfterLearn;
 }
 
-function applySalaryRangeSkills(currentSkills) {
+function applySalaryRangeSkills(filterSkills) {
     let from = getAimFromTo().from;
     let to = getAimFromTo().to;
     let vacancies = getVacanciesList();
 
-    let skillsForRange = getSkillsForSalaryRange(from, to, vacancies);
-    let skillsWithSalarySkills = JSON.parse(JSON.stringify(currentSkills));
+    let takeMinVacancy = true;
+    let skipMinVacancy = !takeMinVacancy;
+    let neededSkills = getSkillsForSalaryRange(from, to, vacancies, takeMinVacancy);
+    let currentSkills = from > 0
+        ? getSkillsForSalaryRange(0, from, vacancies, skipMinVacancy)
+        : {};
 
-        Object.keys(skillsForRange).forEach(function (skillName) {
-            let isSkillInFilter = typeof skillsWithSalarySkills[skillName] !== 'undefined';
+    let skillsWithSalarySkills = JSON.parse(JSON.stringify(filterSkills));
 
-            if (!isSkillInFilter) {
-                skillsWithSalarySkills[skillName] = 0;
-            }
-        });
+    Object.keys(currentSkills).forEach(function (skillName) {
+        let isSkillInFilter = typeof skillsWithSalarySkills[skillName] !== 'undefined';
+
+        if (!isSkillInFilter) {
+            skillsWithSalarySkills[skillName] = currentSkills[skillName];
+        }
+    });
+
+    Object.keys(neededSkills).forEach(function (skillName) {
+        let isSkillInFilter = typeof skillsWithSalarySkills[skillName] !== 'undefined';
+
+        if (!isSkillInFilter) {
+            skillsWithSalarySkills[skillName] = 0;
+        }
+    });
 
     return skillsWithSalarySkills;
 }
@@ -828,10 +847,13 @@ function search() {
         addCourse(course);
     });
 
-    $('.coursesList').attr('style', '');
     if (courses.length === 0) {
         $('.coursesList').append("<p class=\"h4 px-3 py-2\">Подходящие курсы не найдены</p>");
     }
+
+    setTimeout(function () {
+        $('.coursesList').attr('style', '');
+    }, 200);
 
     updateSlider();
 }
@@ -1277,7 +1299,7 @@ function updateLabels(from, to, $slider) {
     let singleText = ucfirst(fromText) + ' → ' + toText;
 
     if (fromText === toText) {
-        singleText = ucfirst(fromText) + ' +' + aimPretteifyNumber(to - from) + ' к ЗП';
+        singleText = ucfirst(fromText) + ' +' + aimPrettifyNumber(to - from) + ' к ЗП';
     }
 
     if (from === 0) {
@@ -1301,7 +1323,7 @@ function addCourseProgress() {
     $('.aim-wrapper .irs-bar').append(progressHTML);
 }
 
-function aimPretteifyNumber(number) {
+function aimPrettifyNumber(number) {
     if (number === 0) {
         return "ЗП: 0 ₽";
     }
@@ -1349,7 +1371,7 @@ function updateProgress(from, to) {
 
     $progress.css('width', percent+'%');
     $label.css('left', percent+'%');
-    $label.text( aimPretteifyNumber(from + selectedCoursesSalary) );
+    $label.text( aimPrettifyNumber(from + selectedCoursesSalary) );
 }
 
 function initAimSlider() {
@@ -1367,7 +1389,7 @@ function initAimSlider() {
         from: 0,
         to: toPosition,
         step: 1000,
-        prettify: aimPretteifyNumber,
+        prettify: aimPrettifyNumber,
         onChange: function (data) {
             updateLabels(data.from, data.to, $(data.slider));
             updateProgress(data.from, data.to);

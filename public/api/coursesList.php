@@ -35,7 +35,7 @@ FROM (
 	GROUP BY c.id, lsc.skillId
 ) sq
 GROUP BY id
-HAVING profSkillsRate >= 0.6');
+HAVING profSkillsRate >= 0.5');
 
 $skillsQuery = $pdo->prepare('SELECT s.name, lsc.skillLevel FROM links_skills_courses lsc
 	LEFT JOIN skills s ON lsc.skillId = s.id
@@ -67,6 +67,7 @@ if ($professionCode) {
             "platform"      => $course['platform'],
             "title"         => $course['name'],
             "url"           => '/api/go.php?courseId='.$course['id'],
+            "hasPartnerUrl" => !empty($course['partnerUrl']),
             "format"        => $course['format'],
             "hasTeacher"    => boolval($course['hasTeacher']),
             "hasPractice"   => boolval($course['hasPractice']),

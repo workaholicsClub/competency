@@ -128,6 +128,12 @@ body.navbar-padding-courses {
     background: url('/assets/images/backpack-white.svg');
 }
 
+.badges {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
 .progress {
     background: transparent;
     height: 9px;
