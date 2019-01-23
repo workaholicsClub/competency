@@ -385,13 +385,13 @@ function getCourseDataHTML(course, skipButton, index) {
 
     let visitButtonHTML = "<a href=\"" + course.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-course mt-1\" data-course-id=\""+course.id+"\">Страница курса&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>";
 
-    return "<h4 class=\"d-flex align-items-start justify-content-between\">" +
-        course.title +
-        "    <div class=\"badges\">\n" +
+    return "<h5 class=\"d-flex align-items-start justify-content-between\">" +
+        "    <span class='course-title'>" + course.title + "</span>" +
+        "    <div class=\"badges ml-2\">\n" +
         "        <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
-        (considerLabel ? "        <span class=\"badge badge-warning mt-1\">Обратите внимание</span>\n" : "") +
+        (considerLabel ? "        <span class=\"badge badge-warning mt-1\">Обратите<br>внимание</span>\n" : "") +
         "    </div>\n" +
-        "</h4>\n" +
+        "</h5>\n" +
         "<h6 class=\"text-muted\">" +course.platform+ "</h6>\n" +
         "<p class=\"mt-1\">" + attributesHTML + "</p>\n" +
         (

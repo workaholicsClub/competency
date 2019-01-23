@@ -131,7 +131,7 @@ body.navbar-padding-courses {
 .badges {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: stretch;
 }
 
 .progress {
@@ -551,6 +551,10 @@ a.header, a.header:visited, a.header:hover, a.header:active {
         position: fixed;
         z-index: 100;
         margin-right: 15px;
+    }
+
+    h5 .course-title {
+        max-width: 66%;
     }
 }
 
