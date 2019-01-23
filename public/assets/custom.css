@@ -1,3 +1,7 @@
+img.load-progress {
+    margin: auto;
+}
+
 .bg-light {
     background-color: rgb(238, 239, 240)!important;
 }
@@ -48,6 +52,8 @@ body.navbar-padding-courses {
 
 .navbar-buttons {
     display: flex;
+    position: absolute;
+    right: 1em;
 }
 
 .navbar-buttons button {
@@ -93,18 +99,15 @@ body.navbar-padding-courses {
     background: transparent;
 }
 
-.navbar .btn .backpackCount, .navbar .btn .filterCount {
-    display: block;
-    width: 1rem;
-    height: 1rem;
-    text-align: center;
-    line-height: 1rem;
-    font-size: 1rem;
-    color: white;
-    background: red;
-    border-radius: 50%;
-    margin: -50% 0 0 75%;
-    position: absolute;
+.navbar-buttons .btn {
+    font-size: 75%;
+    padding: .375em;
+}
+
+.title-buttons-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .btn-backpack img {
@@ -132,6 +135,119 @@ body.navbar-padding-courses {
     display: flex;
     flex-direction: column;
     align-items: stretch;
+}
+
+.resumeSkill {
+    border: 2px dashed #6c757d;
+    display: flex;
+    padding: .25em .4em;
+    font-size: 75%;
+    line-height: 1;
+    text-align: left;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    color: #6c757d;
+    margin-bottom: .4em;
+    font-weight: 500;
+    overflow: hidden;
+}
+
+.resumeSkill .fas {
+    flex-grow: 1;
+    margin-left: .2em;
+    cursor: pointer;
+}
+
+.resumeSkill:hover .fas {
+    display: inline-block;
+}
+
+.resumeSkill span {
+    flex-grow: 100;
+}
+
+.resumeSkill.complete {
+    background: #28a745;
+    color: white;
+    border: 2px solid #28a745;
+}
+
+.resumeSkill.started {
+    background: rgba(40, 167, 69, 0.2);
+    border: 2px solid #28a745;
+}
+
+.resumeSkill.add {
+    text-align: center;
+    color: white;
+    background: #007bff;
+    border: 2px solid #007bff;
+    justify-content: center;
+    display: block;
+    width: 100%;
+}
+
+.editable-text {
+    border-bottom: 1px dashed #000;
+    cursor: pointer;
+}
+
+.editable-text::after {
+    font-family: Font Awesome\ 5 Free;
+    font-weight: 900;
+    content: "\f303";
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    margin-left: .4em;
+    font-size: 90%;
+}
+
+.editable-wrapper {
+    display: flex;
+    align-items: flex-end;
+}
+
+.editable-wrapper input,  .editable-wrapper select, .editable-wrapper button {
+    display: none;
+}
+
+.editable-wrapper.editing .editable-text {
+    display: none;
+}
+
+.editable-wrapper.editing input, .editable-wrapper.editing select, .editable-wrapper.editing button {
+    display: inline;
+}
+
+.collapse-toggle, .collapse-toggle:hover, .collapse-toggle:active {
+    color: black;
+}
+
+.collapse-toggle::after {
+    font-family: Font Awesome\ 5 Free;
+    font-weight: 900;
+    content: "\f106";
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    margin-left: .4em;
+    font-size: 90%;
+}
+
+.collapse-toggle.collapsed::after {
+    content: "\f107";
+}
+
+.count-badges {
+    float: right;
 }
 
 .progress {
@@ -559,6 +675,10 @@ a.header, a.header:visited, a.header:hover, a.header:active {
 }
 
 @media (min-width: 768px) {
+    .resumeSkill .fas {
+        display: none;
+    }
+
     .visible-sm, .visible-sm-flex {
         display: none!important;
     }

@@ -1,5 +1,9 @@
+function clone(data) {
+    return JSON.parse(JSON.stringify(data));
+}
+
 function getSkillLevels() {
-    return ['Сведения', 'Основы', 'Уверенный', 'Глубокий'];
+    return ['Не знаю', 'Основы', 'Уверенный', 'Глубокий'];
 }
 
 function addSkill(skillName, skillLevel, autoSearch) {
@@ -675,7 +679,6 @@ function addSkillToPopup(allSkills, selector) {
             "        </div>\n" +
             "        <div class=\"form-group col-5 mb-0 px-0\">\n" +
             "        <select class=\"custom-select\">\n" +
-            "           <option selected value=0>Сведения</option>\n" +
             "           <option value=1>Основы</option>\n" +
             "           <option value=2>Уверенный</option>\n" +
             "           <option value=3>Глубокий</option>\n" +
@@ -1054,6 +1057,8 @@ function updatePageTitle() {
 
 function updateFieldsAndLabelIds(html, index) {
     return html
+        .replace(/href=["']#(.*?)["']/g, 'href="#$1_'+index+'"')
+        .replace(/aria-controls=["'](.*?)["']/g, 'aria-controls="$1_'+index+'"')
         .replace(/id=["'](.*?)["']/g, 'id="$1_'+index+'"')
         .replace(/for=["'](.*?)["']/g, 'for="$1_'+index+'"');
 }
@@ -1125,14 +1130,17 @@ function getVacanciesInRange(from, to, vacancies, takeMinVacancy) {
             to: vacancy.salary.to ? vacancy.salary.to : salaryMinMax.max
         };
 
-        let salaryNotDefined = vacancySalary.from === 0 && vacancySalary.to === 0;
+        let salaryNotDefined = vacancy.salary.from === 0 && vacancy.salary.to === 0;
         if (salaryNotDefined) {
             return false;
         }
 
         let vacancySalaryIsInRange = !( vacancySalary.from > to || vacancySalary.to < from );
+        let isRageWiderVacancy = from >= vacancySalary.from && to <= vacancySalary.to;
 
-        return vacancySalaryIsInRange;
+        let takeVacancy = vacancySalaryIsInRange && !isRageWiderVacancy;
+
+        return takeVacancy;
     });
 
     return vacanciesInRange;
@@ -1152,11 +1160,38 @@ function getSkillsForSalaryRange(from, to, vacancies, takeMinVacancy) {
                 rangeSkills[skillData.title] = skillData.level;
             }
 
-            if (rangeSkills[skillData.title] > skillData.level) {
+            if (rangeSkills[skillData.title] < skillData.level) {
                 rangeSkills[skillData.title] = skillData.level;
             }
         });
     });
 
     return rangeSkills;
+}
+
+function joinSkillLevels(skillsWithLevelsA, skillsWithLevelsB) {
+    let joinedSkills = clone(skillsWithLevelsA);
+
+    Object.keys(skillsWithLevelsB).forEach(function (skillName) {
+        if ( typeof(joinedSkills[skillName]) === 'undefined' ) {
+            joinedSkills[skillName] = skillsWithLevelsB[skillName];
+        }
+        else {
+            if (joinedSkills[skillName] < skillsWithLevelsB[skillName]) {
+                joinedSkills[skillName] = skillsWithLevelsB[skillName];
+            }
+        }
+    });
+
+    return joinedSkills;
+}
+
+function overwriteSkillLevels(skillsWithLevelsA, skillsWithLevelsB) {
+    let joinedSkills = clone(skillsWithLevelsA);
+
+    Object.keys(skillsWithLevelsB).forEach(function (skillName) {
+        joinedSkills[skillName] = skillsWithLevelsB[skillName];
+    });
+
+    return joinedSkills;
 }

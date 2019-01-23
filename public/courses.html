@@ -44,9 +44,18 @@
         <h1 class="h4"><a href="/" class="header">Курсы</a><br><a href="?" class="header"><small class="text-muted"></small></a></h1>
 
         <div class="navbar-buttons">
-            <button class="btn btn-outline-secondary ml-1 mt-3" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
+            <button class="btn btn-outline-primary ml-1 resume-btn" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
+                Резюме
+                <span class="badge badge-secondary main-incomplete-count">0</span>
+                <span class="badge badge-success main-complete-count">0</span>
+            </button>
+            <button class="btn btn-outline-secondary ml-1 filter-btn" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
                 Фильтр
-                <span class="filterCount" style="display: none;">0</span>
+                <span class="badge badge-danger filterCount" style="display: none;">0</span>
+            </button>
+            <button class="btn btn-outline-secondary ml-1" type="button" data-toggle="collapse" data-target="#backpackCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать портфель">
+                Курсы
+                <span class="badge badge-danger backpackCount hidableCount" style="display: none;">0</span>
             </button>
         </div>
     </div>
@@ -63,18 +72,24 @@
         <div class="list-group" id="backpackCollapseList">
             Выбранных курсов нет
         </div>
-        <button class="btn btn-lg btn-block btn-primary mb-2 search-finish" data-toggle="collapse" data-target="#backpackCollapse">Перейти к оформлению</button>
+        <button class="btn btn-lg btn-block btn-primary my-2 search-finish" data-toggle="collapse" data-target="#backpackCollapse">Перейти к оформлению</button>
     </div>
 </nav>
 
 <nav class="navbar navbar-courses navbar-expand-md fixed-top navbar-light bg-light invisible-sm">
     <div class="container">
-        <h1><a href="/" class="header">Курсы</a>&nbsp;<a href="?" class="header"><small class="text-muted"></small></a></h1>
+        <div class="title-buttons-wrapper">
+            <h1><a href="/" class="header">Курсы</a>&nbsp;<a href="?" class="header"><small class="text-muted"></small></a></h1>
+            <div class="dropdown">
+                <button class="btn btn-primary btn-lg btn-backpack" type="button" data-toggle="modal"  data-target="#backpackModal">
+                    Выбрано <span class="backpackCount badge badge-danger">0</span>
+                </button>
 
-        <div class="dropdown">
-            <div class="dropdown-menu bp-4 backpack-dropdown-full" >
+                <div class="dropdown-menu bp-4 backpack-dropdown-full" >
+                </div>
             </div>
         </div>
+
         <div class="aim-wrapper">
             <input type="text" class="aim-slider aim desktop-aim" value="" style="display: none"/>
         </div>
@@ -107,13 +122,13 @@
 
                             <div class="searchResults swiper-container visible-sm">
                                 <div class="coursesList swiper-wrapper" id="mobileList">
-                                    <img src="/assets/images/Rolling-1s-200px.svg">
+                                    <img class="load-progress" src="/assets/images/Rolling-1s-200px.svg">
                                 </div>
                             </div>
 
                             <div class="searchResults invisible-sm">
                                 <div class="coursesList" id="desktopList">
-                                    <img src="/assets/images/Rolling-1s-200px.svg">
+                                    <img class="load-progress" src="/assets/images/Rolling-1s-200px.svg">
                                 </div>
                             </div>
 
@@ -192,8 +207,8 @@
 </div>
 
 <div class="take-filter-from-here" style="display: none">
-    <form class="">
-        <div class="form-group">
+    <form class="pb-5 mb-5">
+        <div class="form-group" style="display: none">
             <label class="h3">Развиваемые навыки</label>
             <button class="addSkillButton" data-toggle="modal" data-target="#addSkillModal" type="button">
                 <i class="fas fa-plus-circle"></i>
@@ -201,17 +216,67 @@
             </button>
         </div>
 
-        <div class="form-check pb-3 backpackSkillsLabel" style="display: none">
-            <input id="useBackpackSkills" class="form-check-input"
-                    name="useBackpackSkills" type="checkbox"
-                    value="1" checked="checked">
-            <label class="form-check-label" for="useBackpackSkills">Учитывать навыки выбранных курсов</label>
+        <a class="h5 collapse-toggle" data-toggle="collapse" href="#resumeCollapse" role="button" aria-expanded="true" aria-controls="resumeCollapse">
+            Ваше резюме
+        </a>
+        <div class="form-group resume mt-3 collapse show" id="resumeCollapse">
+            <p class="my-0 editable-wrapper">
+                <span class="h4 editable-text">Иван Иванов</span>
+                <input class="form-control edit" value="">
+                <button class="btn btn-primary ml-1">&#10004;</button>
+            </p>
+            <p class="my-0 editable-wrapper">
+                <label class="my-0">Желаемая зарплата:&nbsp;</label>
+                <span class="editable-text salary">0 руб</span>
+                <input class="form-control edit" value="">
+                <button class="btn btn-primary ml-1">&#10004;</button>
+            </p>
+            <p class="my-0 editable-wrapper">
+                <label class="my-0">Опыт работы:&nbsp;</label>
+                <span class="editable-text exp">менее 1 года</span>
+                <input class="form-control edit" value="">
+                <button class="btn btn-primary ml-1">&#10004;</button>
+            </p>
+
+            <p class="mt-2 mb-0">
+                <label class="my-0">Ключевые навыки:</label>
+                <span class="count-badges">
+                    <span class="badge badge-secondary main-incomplete-count">0</span>
+                    <span class="badge badge-success main-complete-count">0</span>
+                </span>
+            </p>
+            <div class="resumeSkills mainSkills my-0">
+            </div>
+
+            <a class="mt-2 mb-0 collapse-toggle collapsed" data-toggle="collapse" href="#otherSkillsCollapse" role="button" aria-expanded="true" aria-controls="otherSkillsCollapse">
+                Дополнительные навыки
+            </a>
+            <span class="count-badges">
+                <span class="badge badge-secondary other-incomplete-count">0</span>
+                <span class="badge badge-success other-complete-count">0</span>
+            </span>
+            <div class="resumeSkills otherSkills my-0 collapse" id="otherSkillsCollapse">
+            </div>
+
+            <button class="resumeSkill add mt-2" data-toggle="modal" data-target="#addSkillModal" type="button">+ Добавить навык</button>
+
         </div>
 
         <div class="skillContainer">
-
         </div>
-        <div class="form-group">
+
+        <a class="h5 collapse-toggle" data-toggle="collapse" href="#filterFieldsCollapse" role="button" aria-expanded="true" aria-controls="filterFieldsCollapse">
+            Фильтр
+        </a>
+
+        <div class="form-group collapse show mt-3" id="filterFieldsCollapse">
+            <div class="form-check backpackSkillsLabel" style="display: none">
+                <input id="useBackpackSkills" class="form-check-input"
+                        name="useBackpackSkills" type="checkbox"
+                        value="1" checked="checked">
+                <label class="form-check-label" for="useBackpackSkills">Учитывать навыки выбранных курсов</label>
+            </div>
+
             <div class="form-group pt-3">
                 <label class="d-block h4">Стоимость</label>
                 <div class="form-check py-1">
@@ -410,10 +475,9 @@
                 </div>
             </div>
 
-
+            <button class="btn btn-primary btn-block mb-5 filter-apply" data-toggle="collapse" data-target="#filterCollapse">Показать</button>
         </div>
     </form>
-    <button class="btn btn-primary btn-block visible-sm mb-5" data-toggle="collapse" data-target="#filterCollapse">Показать</button>
 </div>
 
 <div class="modal fade modal-scrollable" id="backpackModal" tabindex="-1" role="dialog" aria-labelledby="backpackModalTitle" aria-hidden="true">

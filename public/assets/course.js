@@ -1,60 +1,27 @@
 let backpack = [];
+let manualAddedSkills = {};
+let manualDeletedSkills = [];
+let manualChangedSkills = {};
 
 function addCourseSkill(skillName, skillLevel) {
-    let skillsFilter = {};
-    skillsFilter[skillName] = 0;
-
-    let maxLevels = getMaxCourseLevels(skillsFilter);
-    let maxLevel = getLevelText(maxLevels[skillName]);
-    let skillLevelDefined = (typeof (skillLevel) === "string" || typeof (skillLevel) === "number") && skillLevel !== "Текущий уровень";
-    if (!skillLevelDefined) {
-        skillLevel = 0;
+    let wasDeleted = manualDeletedSkills.indexOf(skillName) !== -1;
+    if (wasDeleted) {
+        let skillIndex = manualDeletedSkills.indexOf(skillName);
+        manualDeletedSkills.splice(skillIndex, 1);
     }
 
-    let skillLevelIndex = parseInt(skillLevel);
-    let maxLevelIndex = maxLevels[skillName];
-
-    let colorClass = 'alert-primary';
-    let progressClass = '';
-    let progressValue = 0;
-    if (skillLevelDefined && skillLevelIndex >= maxLevelIndex) {
-        colorClass = 'alert-success';
-        progressClass = 'bg-success';
-        progressValue = 100;
-    }
-
-    let skillHTML = "<div class=\"alert "+colorClass+" d-flex justify-content-between skillBlock\" role=\"alert\">\n" +
-        "    <div class=\"levelHeaderContainer\">\n" +
-        "       <h4 class=\"alert-heading\">"+skillName+"</h4>\n" +
-        "       <button type=\"button\" class=\"close align-self-start\" data-dismiss=\"alert\">×</button>\n" +
-        "    </div>\n" +
-        "    <div class='row'>\n" +
-        "        <div class='col-6'>\n" +
-        "            <h6>До обучения</h6>\n" +
-        "            <select class=\"custom-select skillSlider\">\n" +
-                        getSkillLevels().map(function (skillText, index) {
-                            let isSelected = skillLevel === index.toString();
-                            return "       <option value="+index+" "+(isSelected?"selected":"")+">"+skillText+"</option>\n";
-                        }).join("\n") +
-        "            </select>\n" +
-        "        </div>\n" +
-        "        <div class='col-6 afterLearnContainer'>\n" +
-        "            <h6>Максимальный уровень курсов</h6>" +
-        "            <span class='maxLearn'>" + maxLevel + "</span>\n" +
-        "        </div>\n" +
-        "    </div>\n" +
-        "    <div class='row'>\n" +
-        "        <div class='col-12'>\n" +
-        "            <div class=\"progress mt-3\">\n" +
-        "                <div class=\"progress-bar "+progressClass+"\" role=\"progressbar\" style=\"width: "+progressValue+"%\" aria-valuenow=\""+progressValue+"\" aria-valuemin=\"0\" aria-valuemax=\"100\">" +
-        "            </div>\n" +
-        "        </div>\n" +
-        "    </div>\n" +
-        "</div>\n";
-
-    $('.skillContainer').append(skillHTML);
-    toggleAdditionalSkills();
+    manualAddedSkills[skillName] = skillLevel;
     search();
+}
+
+function deleteCourseSkill(skillName) {
+    if (manualDeletedSkills.indexOf(skillName) === -1) {
+        manualDeletedSkills.push(skillName);
+    }
+
+    if (typeof (manualAddedSkills[skillName]) !== 'undefined') {
+        delete manualAddedSkills[skillName];
+    }
 }
 
 function getMatchingCourseSkills(skills, filter, isRequirements) {
@@ -178,19 +145,19 @@ function getSkillsPropHTML(skills, filter, isRequirements) {
     let matchingSkillsHtml = isRequirements ? getMatchingSkillsHTML(skills, filter, isRequirements) : '';
 
     let equalSkillsHtml = unchangedSkills.map(function (skillName) {
-        let levelText = getLevelText(skills[skillName]);
+        let levelText = getCourseLevelText(skills[skillName]);
         let badgeText = skillName + ':&nbsp;' + levelText;
         return '<span class="badge badge-secondary" data-toggle="tooltip" title="' + equalLabel + '">'+badgeText+'</span>';
     });
 
     let unmatchingSkillsHtml = unmatchingSkills.map(function (skillName) {
-        let levelText = getLevelText(skills[skillName]);
+        let levelText = getCourseLevelText(skills[skillName]);
         let badgeText = skillName + ':&nbsp;' + levelText;
         return '<span class="badge badge-secondary" data-toggle="tooltip" title="' + unmatchLabel + '">- '+badgeText+'</span>';
     });
 
     let allUndefinedSkillsHtml = sortedUndefinedSkills.map(function (skillName) {
-        let levelText = getLevelText(skills[skillName]);
+        let levelText = getCourseLevelText(skills[skillName]);
         let badgeText = skillName + ':&nbsp;' + levelText;
         return '<a href="#" class="badge badge-secondary" data-skill="'+skillName+'" data-toggle="tooltip" title="Навык не указан в списке развиваемых">'+badgeText+'</a>';
     });
@@ -300,7 +267,8 @@ function declensionUnits(number, unitsName) {
         'модуль': ['модуль', 'модуля', 'модулей'],
         'минута': ['минута', 'минуты', 'минут'],
         'месяц': ['месяц', 'месяца', 'месяцев'],
-        'неделя': ['неделя', 'недели', 'недель']
+        'неделя': ['неделя', 'недели', 'недель'],
+        'год': ['год', 'года', 'лет']
     };
 
     if (typeof declensionVariants[unitsName] == 'undefined') {
@@ -441,7 +409,7 @@ function getBackpackCourseDataHTML(course) {
     let price = getCoursePriceText(course);
     let attributesHTML = getCourseAttributesHTML(course);
 
-    return "<h4 class=\"d-flex align-items-start\">>" +
+    return "<h4 class=\"d-flex align-items-start\">" +
         "    <a class=\"courseLink\" href=\"" + course.url + "\" target=\"_blank\">" + course.title + "&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>" +
         "    <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
         "</h4>\n" +
@@ -469,12 +437,29 @@ function addCourse(course) {
     $('#desktopList').append(courseHTML);
 }
 
+function getBackpackSkills() {
+    let backpackSkills = {};
+
+    backpack.forEach(function (course) {
+        Object.keys(course.skills).forEach(function (skillName) {
+            let isSkillInFilter = typeof backpackSkills[skillName] !== 'undefined';
+            let isSkillWeaker = isSkillInFilter && backpackSkills[skillName] < course.skills[skillName];
+
+            if (isSkillWeaker || !isSkillInFilter) {
+                backpackSkills[skillName] = course.skills[skillName];
+            }
+        });
+    });
+
+    return backpackSkills;
+}
+
 function applyBackpackSkills(currentSkills, level) {
     if (!useBackpackSkills()) {
         return currentSkills;
     }
 
-    let skillsAfterLearn = JSON.parse(JSON.stringify(currentSkills));
+    let skillsAfterLearn = clone(currentSkills);
     let coursesToApply = typeof (level) === 'number'
         ? backpack.slice(0, level)
         : backpack;
@@ -505,15 +490,7 @@ function applySalaryRangeSkills(filterSkills) {
         ? getSkillsForSalaryRange(0, from, vacancies, skipMinVacancy)
         : {};
 
-    let skillsWithSalarySkills = JSON.parse(JSON.stringify(filterSkills));
-
-    Object.keys(currentSkills).forEach(function (skillName) {
-        let isSkillInFilter = typeof skillsWithSalarySkills[skillName] !== 'undefined';
-
-        if (!isSkillInFilter) {
-            skillsWithSalarySkills[skillName] = currentSkills[skillName];
-        }
-    });
+    let skillsWithSalarySkills = joinSkillLevels(filterSkills, currentSkills);
 
     Object.keys(neededSkills).forEach(function (skillName) {
         let isSkillInFilter = typeof skillsWithSalarySkills[skillName] !== 'undefined';
@@ -785,19 +762,22 @@ function getCoursePriceRange(courses) {
 
 function updateCourseFromTo() {
     let priceRange = getCoursePriceRange(getCoursesList());
+    let minPrice = Math.floor(priceRange.min / 1000) * 1000;
+    let maxPrice = Math.ceil(priceRange.max / 1000) * 1000;
+
     $('[id^=from]')
-        .attr('value', priceRange.min);
+        .attr('value', minPrice);
 
     $('[id^=to]')
-        .attr('value', priceRange.max);
+        .attr('value', maxPrice);
 
     $('.from-to-slider').ionRangeSlider({
         skin: "round",
         type: "double",
-        min: priceRange.min,
-        max: priceRange.max,
-        from: priceRange.min,
-        to: priceRange.max,
+        min: minPrice,
+        max: maxPrice,
+        from: minPrice,
+        to: maxPrice,
         step: 1000,
         grid: true,
         onChange: function (data) {
@@ -833,6 +813,165 @@ function isSuccessShown() {
     return $('.searchSuccess').is(':visible');
 }
 
+function updateResumeSalary() {
+    let neededSalary = getAimFromTo().to;
+    $('.resume .salary').text(neededSalary + ' руб');
+}
+
+function getResumeSkillBadgeHTML(skillName, backpackSkills, neededSkills) {
+    let currentLevel = typeof (backpackSkills[skillName]) !== 'undefined' ? backpackSkills[skillName] : 0;
+    let neededLevel = typeof (neededSkills[skillName]) !== 'undefined' ? neededSkills[skillName] : 1;
+    let isComplete = currentLevel >= neededLevel;
+    let isStarted = currentLevel > 0;
+
+    let levelText = getLevelText(neededLevel);
+    let badgeText = skillName + ':&nbsp; ' + levelText;
+    let completenessClass = isComplete
+        ? "complete"
+        : (isStarted ? "started" : "");
+
+    return "<span class=\"resumeSkill "+completenessClass+"\" data-skill='"+skillName+"'>" +
+        "    <span>"+badgeText+"</span>" +
+        //"    <i class=\"fas fa-pencil-alt\"></i>" + //TODO: тут предполагаю редактирование текущего уровня навыка
+        "    <i class=\"fas fa-trash-alt\"></i>" +
+        "</span>";
+}
+
+function filterByWeightMargin(skillNames, minWeight, reverseFilter) {
+    let skillWeights = getSkillWeights(getVacanciesList());
+
+    return skillNames.filter(function (skillName) {
+        let skillWeight = typeof (skillWeights[skillName]) !== 'undefined' ? skillWeights[skillName] : 0;
+        if (reverseFilter === true) {
+            return skillWeight < minWeight;
+        }
+        else {
+            return skillWeight >= minWeight;
+        }
+    });
+}
+
+function includeBaseSkills(skillNames) {
+    let baseSkills = getBaseProfessionSkillNames();
+    let resultSkillNames = clone(skillNames);
+    baseSkills.forEach(function (baseSkillName) {
+        if (resultSkillNames.indexOf(baseSkillName) === -1) {
+            resultSkillNames.push(baseSkillName);
+        }
+    });
+
+    return resultSkillNames;
+}
+
+function excludeFromSkills(currentSkillNames, excludedSkillNames) {
+    let resultSkillNames = [];
+    currentSkillNames.forEach(function (skillName) {
+        if (excludedSkillNames.indexOf(skillName) === -1) {
+            resultSkillNames.push(skillName);
+        }
+    });
+
+    return resultSkillNames;
+}
+
+function excludeBaseSkills(currentSkillNames) {
+    let baseSkills = getBaseProfessionSkillNames();
+    return excludeFromSkills(currentSkillNames, baseSkills);
+}
+
+function excludeDeletedSkills(currentSkillNames) {
+    return excludeFromSkills(currentSkillNames, manualDeletedSkills);
+}
+
+function addManualSkills(currentSkillNames) {
+    let resultSkillNames = clone(currentSkillNames);
+
+    Object.keys(manualAddedSkills).forEach(function (manualSkillName) {
+        let skillIndex = currentSkillNames.indexOf(manualSkillName);
+        if (skillIndex !== -1) {
+            resultSkillNames.splice(skillIndex, 1);
+        }
+
+        resultSkillNames.push(manualSkillName);
+    });
+
+    return resultSkillNames;
+}
+
+function excludeManualAddedSkills(currentSkillNames) {
+    return excludeFromSkills(currentSkillNames, Object.keys(manualAddedSkills));
+}
+
+function countCompleted(skillNames, backpackSkills, neededSkills) {
+    return skillNames.reduce(function (counter, skillName) {
+        let currentLevel = typeof (backpackSkills[skillName]) !== 'undefined' ? backpackSkills[skillName] : 0;
+        let neededLevel = typeof (neededSkills[skillName]) !== 'undefined' ? neededSkills[skillName] : 1;
+        let isComplete = currentLevel >= neededLevel;
+
+        if (isComplete) {
+            counter++;
+        }
+
+        return counter;
+    }, 0);
+}
+
+function updateResumeSkills() {
+    let from = getAimFromTo().from;
+    let to = getAimFromTo().to;
+    let currentSkillsTo = from;
+    let vacancies = getVacanciesList();
+    let takeMinVacancy = true;
+    let skipMinVacancy = !takeMinVacancy;
+
+    let neededSkills = getSkillsForSalaryRange(from, to, vacancies, takeMinVacancy);
+    neededSkills = overwriteSkillLevels(neededSkills, manualAddedSkills);
+
+    let currentSkills = currentSkillsTo > 0
+                            ? getSkillsForSalaryRange(0, currentSkillsTo, vacancies, skipMinVacancy)
+                            : {};
+
+    let mainSkillNames = filterByWeightMargin(Object.keys(neededSkills), 0.6);
+    mainSkillNames = includeBaseSkills(mainSkillNames);
+    mainSkillNames = excludeDeletedSkills(mainSkillNames);
+    mainSkillNames = sortSkillsByCount(mainSkillNames);
+    mainSkillNames = addManualSkills(mainSkillNames);
+
+    let reverseFilter = true;
+    let otherSkillNames = filterByWeightMargin(Object.keys(neededSkills), 0.6, reverseFilter);
+    otherSkillNames = excludeBaseSkills(otherSkillNames);
+    otherSkillNames = excludeDeletedSkills(otherSkillNames);
+    otherSkillNames = excludeManualAddedSkills(otherSkillNames);
+    otherSkillNames = sortSkillsByCount(otherSkillNames);
+
+    let backpackSkills = getBackpackSkills();
+    currentSkills = joinSkillLevels(currentSkills, backpackSkills);
+
+    let mainSkillsHTML = mainSkillNames.map(function (skillName) {
+        return getResumeSkillBadgeHTML(skillName, currentSkills, neededSkills);
+    }).join("\n");
+
+    let otherSkillsHTML = otherSkillNames.map(function (skillName) {
+        return getResumeSkillBadgeHTML(skillName, currentSkills, neededSkills);
+    }).join("\n");
+
+    let totalMainSkills = mainSkillNames.length;
+    let completedMainSkills = countCompleted(mainSkillNames, currentSkills, neededSkills);
+    let incompletedMainSkills = totalMainSkills - completedMainSkills;
+
+    let totalOtherSkills = otherSkillNames.length;
+    let completedOtherSkills = countCompleted(otherSkillNames, currentSkills, neededSkills);
+    let incompletedOtherSkills = totalOtherSkills - completedOtherSkills;
+
+    $('.mainSkills').html( mainSkillsHTML );
+    $('.otherSkills').html( otherSkillsHTML );
+
+    $('.main-incomplete-count').text(incompletedMainSkills);
+    $('.main-complete-count').text(completedMainSkills);
+    $('.other-incomplete-count').text(incompletedOtherSkills);
+    $('.other-complete-count').text(completedOtherSkills);
+}
+
 function search() {
     updateSlider();
     if (isSuccessShown()) {
@@ -848,7 +987,10 @@ function search() {
     });
 
     if (courses.length === 0) {
-        $('.coursesList').append("<p class=\"h4 px-3 py-2\">Подходящие курсы не найдены</p>");
+        $('.coursesList').append(
+            "<div class='notFound-wrapper'><p class=\"h4 py-2\">Подходящие курсы не найдены</p>" +
+            "<p class='mt-4'><button class='btn btn-primary search-finish'>Завершить подбор</button></p></div>"
+        );
     }
 
     setTimeout(function () {
@@ -920,8 +1062,13 @@ function updateStartCourseSkills() {
     addStartSkills( top5 );
 }
 
-function getLevelText(levelNumber) {
+function getCourseLevelText(levelNumber) {
     let levelNames = ["сведения", "основы", "уверенный", "глубокий"];
+    return levelNames[levelNumber];
+}
+
+function getLevelText(levelNumber) {
+    let levelNames = ["не знаю", "основы", "уверенный", "глубокий"];
     return levelNames[levelNumber];
 }
 
@@ -1035,10 +1182,7 @@ function addCourseToBackpack(course) {
     updateSkillCards();
     showBackpackSkillsAlert();
     updateProgress();
-
-    if (hasNoCoursesForNextStep()) {
-        showSuccess();
-    }
+    updateResumeSkills();
 }
 
 function updateBackpackData() {
@@ -1213,6 +1357,8 @@ function addCourseSkillsToFilter(courseId) {
     Object.keys(course.skills).forEach(function (skillName) {
         addCourseSkill(skillName);
     });
+
+    updateResumeSkills();
 }
 
 function getGradeLabel(salary) {
@@ -1366,7 +1512,6 @@ function updateProgress(from, to) {
     if (percent > 100) {
         percent = 100;
         selectedCoursesSalary = maxIncrease;
-        showSuccess();
     }
 
     $progress.css('width', percent+'%');
@@ -1378,7 +1523,7 @@ function initAimSlider() {
     let salary = getVacanciesSalaryRange(getVacanciesList());
 
     let juniorMaxSalary = Math.floor(salary.max / 3000 ) * 1000;
-    let toPosition = juniorMaxSalary;
+    let toPosition = juniorMaxSalary - 1000;
 
     $('.aim').ionRangeSlider({
         skin: "round",
@@ -1400,9 +1545,12 @@ function initAimSlider() {
 
     updateLabels(0, toPosition, getAim().data('ionRangeSlider').result.slider);
     addCourseProgress();
+
+    updateResumeSalary();
+    updateResumeSkills();
 }
 
-function getWeightenedSkillsCountForSalary(skills, vacancies) {
+function getSkillWeights(vacancies) {
     let skillsCount = getSkillCount(vacancies);
 
     let maxCount = Object.keys(skillsCount).reduce(function (prevMaxCount, skillName) {
@@ -1418,6 +1566,12 @@ function getWeightenedSkillsCountForSalary(skills, vacancies) {
         weightAggregator[skillName] = skillsCount[skillName] / maxCount;
         return weightAggregator;
     }, {});
+
+    return skillWeights;
+}
+
+function getWeightenedSkillsCountForSalary(skills, vacancies) {
+    let skillWeights = getSkillWeights(vacancies);
 
     let weightenedCount = Object.keys(skills).reduce(function (countAggregator, skillName) {
         let skillWeight = skillWeights[skillName] || 0;
@@ -1440,9 +1594,10 @@ function getCourseSalary(course, from, to, vacancies) {
         vacancies = getVacanciesList();
     }
 
-    let skillsForRange = getSkillsForSalaryRange(from, to, vacancies);
+    let takeMinVacancy = true;
+    let skillsForRange = getSkillsForSalaryRange(from, to, vacancies, takeMinVacancy);
 
-    let vacanciesInRange = getVacanciesInRange(from, to, vacancies);
+    let vacanciesInRange = getVacanciesInRange(from, to, vacancies, takeMinVacancy);
     let neededSkillsCount = getWeightenedSkillsCountForSalary(skillsForRange, vacanciesInRange);
     let courseSkillsCount = getWeightenedSkillsCountForSalary(course.skills, vacanciesInRange);
 
@@ -1452,6 +1607,8 @@ function getCourseSalary(course, from, to, vacancies) {
 function processInputChanges() {
     updateFilterCounter();
     updateProgress();
+    updateResumeSalary();
+    updateResumeSkills();
     search();
 }
 
@@ -1509,10 +1666,11 @@ $(function () {
         updateFilterCounter();
     });
 
-    $(document).on('click', '[data-skill]', function () {
+    $(document).on('click', '[data-skill]:not(.resumeSkill)', function () {
         let skillName = $(this).attr('data-skill');
         addCourseSkill(skillName);
         updateFilterCounter();
+        updateResumeSkills();
     });
 
     $(document).on('change', '.skillSelect', function () {
@@ -1520,6 +1678,18 @@ $(function () {
         if (skillName) {
             addCourseSkill(skillName);
         }
+
+        updateResumeSkills();
+    });
+
+    $(document).on('click', '.resumeSkill .fa-trash-alt', function () {
+        let $trigger = $(this).closest('.resumeSkill');
+        let skillName = $trigger.data('skill');
+
+        deleteCourseSkill(skillName);
+        updateFilterCounter();
+        updateResumeSkills();
+        search();
     });
 
     $(document).on('click', '#startSearch', function (event) {
@@ -1577,6 +1747,7 @@ $(function () {
         });
         toggleSkillsResult();
         updateFilterCounter();
+        updateResumeSkills();
         scrollToTop();
         search();
     });
@@ -1605,11 +1776,11 @@ $(function () {
                 $('#to').val(value).trigger('input');
             }
         }
-
-        updateFilterCounter();
     });
 
-    $(document).on('change input click', 'input:not(#allSkills input, #emailField, .aim)', processInputChanges);
+    $(document).on('change input click', 'input:not(#allSkills input, #emailField, .aim)', function () {
+        $('.filter-btn').removeClass('btn-outline-secondary').addClass('btn-primary');
+    });
 
     $(document).on('click', '.skillBlock .close', function () {
         search();
@@ -1650,5 +1821,75 @@ $(function () {
 
     $(document).on('click', '.navbar .btn', function () {
         $(this).toggleClass('btn-outline-secondary').toggleClass('btn-primary');
+    });
+
+    $(document).on('click', '.filter-btn', function () {
+        $('#resumeCollapse_0').collapse('hide');
+        $('#filterFieldsCollapse_0').collapse('show');
+    });
+
+    $(document).on('click', '.resume-btn', function () {
+        $('#resumeCollapse_0').collapse('show');
+        $('#filterFieldsCollapse_0').collapse('hide');
+    });
+
+    $(document).on('click', '.filter-apply', function (event) {
+        event.preventDefault();
+        processInputChanges();
+        $('.filter-btn').removeClass('btn-primary').addClass('btn-outline-secondary');
+    });
+
+    $(document).on('click', '.editable-text', function () {
+        let $trigger = $(this);
+        let $container = $trigger.closest('.editable-wrapper');
+        let $input = $container.find('input, select');
+        let $text = $container.find('.editable-text');
+        let currentValue = $text.text();
+
+        if ($text.hasClass('salary')) {
+            currentValue = parseInt(currentValue);
+        }
+
+        if ($text.hasClass('exp')) {
+            if (currentValue === "менее 1 года") {
+                currentValue = 0;
+            }
+            else {
+                currentValue = parseInt(currentValue);
+            }
+        }
+
+        $input.val(currentValue);
+        $container.addClass('editing');
+    });
+
+    $(document).on('click', '.editable-wrapper button', function () {
+        let $button = $(this);
+        let $container = $button.closest('.editable-wrapper');
+        let $input = $container.find('input, select');
+        let $text = $container.find('.editable-text');
+        let newValue = $input.val();
+
+        if ($text.hasClass('salary')) {
+            let slider = getAim().data('ionRangeSlider');
+            slider.update({to: newValue});
+            let aimData = getAimFromTo();
+            updateLabels(aimData.from, aimData.to, $(slider.result.slider));
+            updateProgress(aimData.from, aimData.to);
+            processInputChanges();
+            newValue += ' руб';
+        }
+
+        if ($text.hasClass('exp')) {
+            if (newValue === "0") {
+                newValue = "менее 1 года";
+            }
+            else {
+                newValue += " " + declensionUnits(newValue, 'год');
+            }
+        }
+
+        $text.text(newValue);
+        $container.removeClass('editing');
     });
 });
