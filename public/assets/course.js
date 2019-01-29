@@ -124,7 +124,7 @@ function getMatchingSkillsHTML(skills, filter, isRequirements) {
     let matchingSkillsHtml = matchingSkills.map(function (skillName) {
         let levelText = getLevelText(skills[skillName]);
         let badgeText = skillName + ':&nbsp; ' + levelText;
-        return '<span class="badge badge-secondary" data-toggle="tooltip" title="' + matchLabel + '">+ '+badgeText+'</span>';
+        return '<span class="badge badge-secondary toggle-skills" data-toggle="tooltip" title="' + matchLabel + '">+ '+badgeText+'</span>';
     });
 
     return matchingSkillsHtml.join("\n") + "\n";
@@ -147,19 +147,19 @@ function getSkillsPropHTML(skills, filter, isRequirements) {
     let equalSkillsHtml = unchangedSkills.map(function (skillName) {
         let levelText = getCourseLevelText(skills[skillName]);
         let badgeText = skillName + ':&nbsp;' + levelText;
-        return '<span class="badge badge-secondary" data-toggle="tooltip" title="' + equalLabel + '">'+badgeText+'</span>';
+        return '<span class="badge badge-secondary toggle-skills" data-toggle="tooltip" title="' + equalLabel + '">'+badgeText+'</span>';
     });
 
     let unmatchingSkillsHtml = unmatchingSkills.map(function (skillName) {
         let levelText = getCourseLevelText(skills[skillName]);
         let badgeText = skillName + ':&nbsp;' + levelText;
-        return '<span class="badge badge-secondary" data-toggle="tooltip" title="' + unmatchLabel + '">- '+badgeText+'</span>';
+        return '<span class="badge badge-secondary toggle-skills" data-toggle="tooltip" title="' + unmatchLabel + '">- '+badgeText+'</span>';
     });
 
     let allUndefinedSkillsHtml = sortedUndefinedSkills.map(function (skillName) {
         let levelText = getCourseLevelText(skills[skillName]);
         let badgeText = skillName + ':&nbsp;' + levelText;
-        return '<a href="#" class="badge badge-secondary" data-skill="'+skillName+'" data-toggle="tooltip" title="Навык не указан в списке развиваемых">'+badgeText+'</a>';
+        return '<a href="#" class="badge badge-secondary toggle-skills" data-skill="'+skillName+'" data-toggle="tooltip" title="Навык не указан в списке развиваемых">'+badgeText+'</a>';
     });
 
     let hasUndefinedSkills = undefinedSkills.length > 0;
@@ -349,9 +349,11 @@ function getCourseDataHTML(course, skipButton, index) {
     let attributesHTML = getCourseAttributesHTML(course, index);
     let buttonHTML = skipButton
         ? ""
-        : "<a href=\"#\" class=\"btn btn-primary btn-block d-flex justify-content-center add-to-backpack mt-1\" data-course-id=\""+course.id+"\">Выбрать (+" + courseToSalary + " к ЗП)</a>";
+        : "<a href=\"#\" class=\"btn btn-primary btn-block d-flex justify-content-center add-to-backpack mt-1\" data-course-id=\""+course.id+"\">" +
+          "  <i class=\"fas fa-shopping-basket\"></i> В корзину (+" + courseToSalary + " к ЗП)" +
+          "</a>";
 
-    let visitButtonHTML = "<a href=\"" + course.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-course mt-1\" data-course-id=\""+course.id+"\">Страница курса&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>";
+    let visitButtonHTML = "<a href=\"" + course.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-course mt-1\" data-course-id=\""+course.id+"\">Сайт курса&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>";
 
     return "<h5 class=\"d-flex align-items-start justify-content-between\">" +
         "    <span class='course-title'>" + course.title + "</span>" +
@@ -365,16 +367,17 @@ function getCourseDataHTML(course, skipButton, index) {
         (
             showMatchingSkills
                 ? (
-                    "<p class=\"mt-1 mb-0\">Нужные навыки:</p>\n" +
+                    "<p class=\"mt-1 mb-0\">Подходящие навыки курса:</p>\n" +
                     "<p>" + matchingSkillsHTML + "</p>\n" +
                     (hasAdditionalSkills ? "<p class=\"mt-1 mb-0\">Прочие навыки:</p>\n" +
                     "<p>" + skillsHTML + "</p>\n" : "")
                 )
                 : (hasAdditionalSkills ?
-                    "<p class=\"mt-1 mb-0\">Навыки курса:</p>\n" +
+                    "<p class=\"mt-1 mb-0\">Дополнительные навыки курса:</p>\n" +
                     "<p>" + skillsHTML + "</p>\n" : ""
                 )
         ) + "\n" +
+        "<p class=\"mt-1 visible-sm\"><a href=\"#\" class=\"toggle-skills dashedLink\">Какие еще навыки нужны?</a></p>\n" +
         (
             hasRequirements
             ? (
@@ -389,10 +392,7 @@ function getCourseDataHTML(course, skipButton, index) {
             descriptionHTML +
         "</p>\n" +
         buttonHTML +
-        visitButtonHTML +
-        "<button class=\"btn btn-outline-primary btn-block btn-similar\" data-course=\""+course.id+"\">\n" +
-        "    Похожие курсы\n" +
-        "</button>\n";
+        visitButtonHTML;
 }
 
 function getCourseCardHTML(course, skipButton, index) {
@@ -1612,6 +1612,26 @@ function processInputChanges() {
     search();
 }
 
+function highlightTopNavButtons(clickedButton) {
+    let $button = $(clickedButton);
+    $button.addClass('active');
+
+    if ($button.data('class') === "secondary") {
+        $button
+            .toggleClass('btn-secondary')
+            .toggleClass('btn-outline-secondary');
+    }
+    else {
+        $button
+            .toggleClass('btn-primary')
+            .toggleClass('btn-success');
+    }
+}
+
+function showSkillList() {
+    $('.resume-btn').trigger('click');
+}
+
 $(function () {
     enableTooltips();
 
@@ -1819,19 +1839,45 @@ $(function () {
 
     });
 
-    $(document).on('click', '.navbar .btn', function () {
-        $(this).toggleClass('btn-outline-secondary').toggleClass('btn-primary');
+    $(document).on('click', '.navbar .btn:not(.filter-btn, .resume-btn)', function () {
+        highlightTopNavButtons(this);
     });
 
-    $(document).on('click', '.filter-btn', function () {
-        $('#resumeCollapse_0').collapse('hide');
-        $('#filterFieldsCollapse_0').collapse('show');
+    $(document).on('click', '.filter-btn, .resume-btn', function () {
+        let $button = $(this);
+        let isFilterButtonClicked = $button.hasClass('filter-btn');
+        let $filterPanel = $('#filterCollapse');
+        let panelNeedsCollapse = $button.hasClass('active');
+
+        highlightTopNavButtons(this);
+
+        $filterPanel.collapse('show');
+        if (isFilterButtonClicked) {
+            $('.resume-btn')
+                .removeClass('active')
+                .removeClass('btn-success')
+                .addClass('btn-primary');
+            $('#resumeCollapse_0').collapse('hide');
+            $('#filterFieldsCollapse_0').collapse('show');
+        }
+        else {
+            $('.filter-btn')
+                .removeClass('active')
+                .removeClass('btn-secondary')
+                .addClass('btn-outline-secondary');
+            $('#resumeCollapse_0').collapse('show');
+            $('#filterFieldsCollapse_0').collapse('hide');
+        }
+
+        if (panelNeedsCollapse) {
+            $filterPanel.collapse('hide');
+            $('.navbar .btn').removeClass('active');
+            $('.resume-btn').removeClass('btn-success').addClass('btn-primary');
+            $('.filter-btn').removeClass('btn-secondary').addClass('btn-outline-secondary');
+        }
     });
 
-    $(document).on('click', '.resume-btn', function () {
-        $('#resumeCollapse_0').collapse('show');
-        $('#filterFieldsCollapse_0').collapse('hide');
-    });
+    $(document).on('click', '.toggle-skills', showSkillList);
 
     $(document).on('click', '.filter-apply', function (event) {
         event.preventDefault();

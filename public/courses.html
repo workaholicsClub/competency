@@ -32,7 +32,7 @@
     <title>Сам себе академик: курсы</title>
 </head>
 
-<body class="navbar-padding navbar-padding-courses col-scroll-body">
+<body class="navbar-padding navbar-padding-courses">
 
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2XFBS"
@@ -44,16 +44,16 @@
         <h1 class="h4"><a href="/" class="header">Курсы</a><br><a href="?" class="header"><small class="text-muted"></small></a></h1>
 
         <div class="navbar-buttons">
-            <button class="btn btn-outline-primary ml-1 resume-btn" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
+            <button class="btn btn-primary ml-1 resume-btn" type="button" data-class="primary" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
                 Резюме
                 <span class="badge badge-secondary main-incomplete-count">0</span>
                 <span class="badge badge-success main-complete-count">0</span>
             </button>
-            <button class="btn btn-outline-secondary ml-1 filter-btn" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
+            <button class="btn btn-outline-secondary ml-1 filter-btn" type="button" data-class="secondary" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать фильтр">
                 Фильтр
                 <span class="badge badge-danger filterCount" style="display: none;">0</span>
             </button>
-            <button class="btn btn-outline-secondary ml-1" type="button" data-toggle="collapse" data-target="#backpackCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать портфель">
+            <button class="btn btn-outline-secondary ml-1" type="button" data-class="secondary" data-toggle="collapse" data-target="#backpackCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Показать портфель">
                 Курсы
                 <span class="badge badge-danger backpackCount hidableCount" style="display: none;">0</span>
             </button>
@@ -99,11 +99,11 @@
 <div class="wrapper">
     <div class="pb-5">
         <div class="container">
-            <div class="row course-scroll-wrapper">
-                <div id="filterDesktop" class="col-md-4 bg-light py-4 filterCol invisible-sm place-filter-here col-scroll">
+            <div class="row">
+                <div id="filterDesktop" class="col-md-4 bg-light py-4 filterCol invisible-sm place-filter-here">
                 </div>
 
-                <div class="col-md-8 searchResultsContainer col-scroll">
+                <div class="col-md-8 searchResultsContainer">
                     <div class="row">
                         <div class="col-md-12">
 
@@ -278,7 +278,7 @@
             </div>
 
             <div class="form-group pt-3">
-                <label class="d-block h4">Стоимость</label>
+                <label class="d-block h4">Стоимость курса</label>
                 <div class="form-check py-1">
                     <input type="checkbox" class="form-check-input" value="on" id="cf">
                     <label class="form-check-label" for="cf">Только бесплатные</label>
@@ -300,21 +300,21 @@
                             name="hardness_1" type="checkbox"
                             data-type="multicheckbox" data-code="hardness"
                             value="1">
-                    <label class="form-check-label" for="hardness_1">Легкая</label>
+                    <label class="form-check-label" for="hardness_1">Легкий</label>
                 </div>
                 <div class="form-check">
                     <input id="hardness_2" class="form-check-input"
                             name="hardness_2" type="checkbox"
                             data-type="multicheckbox" data-code="hardness"
                             value="2">
-                    <label class="form-check-label" for="hardness_2">Средняя</label>
+                    <label class="form-check-label" for="hardness_2">Средний</label>
                 </div>
                 <div class="form-check">
                     <input id="hardness_3" class="form-check-input"
                             name="hardness_3" type="checkbox"
                             data-type="multicheckbox" data-code="hardness"
                             value="3">
-                    <label class="form-check-label" for="hardness_3">Трудная</label>
+                    <label class="form-check-label" for="hardness_3">Трудный</label>
                 </div>
             </div>
 
@@ -422,13 +422,13 @@
             </div>
 
             <div class="form-group pt-3">
-                <label class="h4">Преподаватель</label>
+                <label class="h4">Обучение с преподаватель</label>
                 <div class="form-check">
                     <input id="hasTeacher_1" class="form-check-input"
                             name="hasTeacher_1" type="checkbox"
                             data-type="multicheckbox" data-code="hasTeacher"
                             value="true">
-                    <label class="form-check-label" for="hasTeacher_1">Есть</label>
+                    <label class="form-check-label" for="hasTeacher_1">Да</label>
                 </div>
                 <div class="form-check">
                     <input id="hasTeacher_2" class="form-check-input"
@@ -440,13 +440,13 @@
             </div>
 
             <div class="form-group pt-3">
-                <label class="h4">Помощь в трудоустройстве</label>
+                <label class="h4">Оказывают помощь в трудоустройстве</label>
                 <div class="form-check">
                     <input id="jobPlacement_1" class="form-check-input"
                             name="jobPlacement_1" type="checkbox"
                             data-type="multicheckbox" data-code="jobPlacement"
                             value="true">
-                    <label class="form-check-label" for="jobPlacement_1">Есть</label>
+                    <label class="form-check-label" for="jobPlacement_1">Да</label>
                 </div>
                 <div class="form-check">
                     <input id="jobPlacement_2" class="form-check-input"

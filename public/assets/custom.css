@@ -25,7 +25,7 @@ body.navbar-padding {
 }
 
 body.navbar-padding-courses {
-    padding-top: 10rem;
+    padding-top: 9.5rem;
 }
 
 .navbar-courses {
@@ -69,34 +69,6 @@ body.navbar-padding-courses {
 
 .navbar-alert button {
     margin-top: 1rem;
-}
-
-.col-scroll-body {
-    height: 100vh;
-    overflow: hidden;
-}
-
-.scroll-wrapper {
-    height: 100vh;
-    padding-top: 6rem;
-    margin-top: -6rem;
-}
-
-.course-scroll-wrapper {
-    height: 100vh;
-    padding-top: 10rem;
-    margin-top: -10rem;
-}
-
-.col-scroll {
-    overflow: auto;
-    -ms-overflow-style: none;
-    overflow: -moz-scrollbars-none;
-}
-
-.col-scroll::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
 }
 
 .navbar-buttons .btn {
@@ -248,6 +220,11 @@ body.navbar-padding-courses {
 
 .count-badges {
     float: right;
+}
+
+.add-to-backpack .fas {
+    font-size: 145%;
+    margin-right: 0.25em;
 }
 
 .progress {
@@ -578,18 +555,22 @@ a.header, a.header:visited, a.header:hover, a.header:active {
 }
 
 .swiper-button-next, .swiper-button-prev {
-    width: 15px;
+    width: 35px;
     height: 31px;
 }
 
 .swiper-button-next {
     right: 5px;
     background: url('/assets/images/chevron-right-small.png') no-repeat;
+    background-position-x: 10px;
+    z-index: 999;
 }
 
 .swiper-button-prev {
     left: 5px;
     background: url('/assets/images/chevron-left-small.png') no-repeat;
+    background-position-x: 10px;
+    z-index: 999;
 }
 
 .swiper-pagination-progressbar {
@@ -605,9 +586,9 @@ a.header, a.header:visited, a.header:hover, a.header:active {
 .bullet-fraction-pagination {
     position: fixed;
     bottom: 10px;
-    width: 150px;
+    width: 190px;
     left: 50%;
-    margin-left: -75px;
+    margin-left: -95px;
     display: flex;
     flex-direction: column;
     background: rgba(255, 255, 255, 0.7);
