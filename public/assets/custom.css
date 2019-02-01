@@ -640,6 +640,38 @@ a.header, a.header:visited, a.header:hover, a.header:active {
     border-color: #007bff;
 }
 
+.skill {
+    padding: 0.25em 0.5em;
+    white-space: nowrap;
+    border: 1px solid #ced4da;
+    display: inline-block;
+    margin-bottom: 0.25em;
+    border-radius: 1em;
+}
+
+.skill-strength {
+    height: 1rem;
+    width: 1rem;
+    display: inline-flex;
+    align-items: flex-end;
+}
+
+.skill-strength span {
+    display: block;
+    width: 25%;
+    background: blue;
+    margin-right: 1px;
+}
+
+.skill-strength span:nth-child(1) {height: 25%;}
+.skill-strength span:nth-child(2) {height: 50%;}
+.skill-strength span:nth-child(3) {height: 75%;}
+.skill-strength span:nth-child(4) {height: 100%;}
+
+.skill-strength.level0 span:nth-child(4), .skill-strength.level0 span:nth-child(3), .skill-strength.level0 span:nth-child(2) {opacity: 0.2;}
+.skill-strength.level1 span:nth-child(4), .skill-strength.level1 span:nth-child(3) {opacity: 0.2;}
+.skill-strength.level2 span:nth-child(4) {opacity: 0.2;}
+
 @media (max-width: 768px) {
     .addVacancySkillsButton {
     }

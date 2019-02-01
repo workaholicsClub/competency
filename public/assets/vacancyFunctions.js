@@ -1025,8 +1025,15 @@ function scrollToTop() {
     window.scroll({top: 0});
 }
 
-function getCurrentProfessionName() {
-    let pageCode = location.pathname.split('/')[1];
+function getProfessionCodeFromUrl() {
+    return location.pathname.split('/')[1];
+}
+
+function getCurrentProfessionName(pageCode) {
+    if (!pageCode) {
+        pageCode = getProfessionCodeFromUrl();
+    }
+
     let professionNames = {
         'php-developer': 'Разработчик PHP',
         'hr-manager': 'HR менеджер',

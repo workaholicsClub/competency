@@ -56,142 +56,45 @@ function getAllSkillsExceptMatching(skills, filter, isRequirements) {
     return resultSkills;
 }
 
-function getUnmatchingCourseSkills(skills, filter, isRequirements) {
-    let courseSkillNames = Object.keys(skills);
-    let unmatchingSkills = [];
-
-    courseSkillNames.forEach(function (skillName) {
-        let isInFilter = typeof filter[skillName] !== 'undefined';
-        let levelNotMatches = isRequirements
-            ? isInFilter && skills[skillName] > filter[skillName]
-            : isInFilter && skills[skillName] < filter[skillName];
-
-        if (levelNotMatches) {
-            unmatchingSkills.push(skillName);
-        }
-    });
-
-    return unmatchingSkills;
-}
-
-function getUnchangedCourseSkills(skills, filter) {
-    let courseSkillNames = Object.keys(skills);
-    let equalSkills = [];
-
-    courseSkillNames.forEach(function (skillName) {
-        let isInFilter = typeof filter[skillName] !== 'undefined';
-        let levelEqual = isInFilter && skills[skillName] === filter[skillName];
-
-        if (levelEqual) {
-            equalSkills.push(skillName);
-        }
-    });
-
-    return equalSkills;
-}
-
-function getUndefinedCourseSkills(skills, filter) {
-    let courseSkillNames = Object.keys(skills);
-    let undefinedSkills = [];
-
-    courseSkillNames.forEach(function (skillName) {
-        let isNotInFilter = typeof filter[skillName] === 'undefined';
-
-        if (isNotInFilter) {
-            undefinedSkills.push(skillName);
-        }
-    });
-
-    return undefinedSkills;
-}
-
-function isFilterEmpty() {
-    let skillsFilter = getSkillsFilter();
-    return Object.keys(skillsFilter).length === 0;
-}
-
 function hasMatchingSkills(skills, filter, isRequirements) {
     let matchingSkills = getMatchingCourseSkills(skills, filter, isRequirements);
     return matchingSkills.length > 0;
 }
 
 function getMatchingSkillsHTML(skills, filter, isRequirements) {
-    let matchLabel = isRequirements
-        ? 'Текущее владение навыком подходит под требования'
-        : 'Пройдя курс, вы улучшите этот навык';
-
     let matchingSkills = getMatchingCourseSkills(skills, filter, isRequirements);
     let matchingSkillsHtml = matchingSkills.map(function (skillName) {
-        let levelText = getLevelText(skills[skillName]);
-        let badgeText = skillName + ':&nbsp; ' + levelText;
-        return '<span class="badge badge-secondary toggle-skills" data-toggle="tooltip" title="' + matchLabel + '">+ '+badgeText+'</span>';
+        let skillLevel = skills[skillName];
+        return getSkillHTML(skillName, skillLevel);
     });
 
     return matchingSkillsHtml.join("\n") + "\n";
 }
 
 function getSkillsPropHTML(skills, filter, isRequirements) {
-    let unchangedSkills = getUnchangedCourseSkills(skills, filter);
-    let undefinedSkills = getUndefinedCourseSkills(skills, filter);
-    let unmatchingSkills = getUnmatchingCourseSkills(skills, filter, isRequirements);
-    let sortedUndefinedSkills = sortSkillsByCount(undefinedSkills);
-
-    let equalLabel = "Пройдя этот курс вы можете систематизировать ваши знания";
-
-    let unmatchLabel = isRequirements
-        ? 'Текущего владения навыком недостаточно для прохождения курса'
-        : 'Пройдя курс, вы вряд-ли получите дополнительные знания';
-
-    let matchingSkillsHtml = isRequirements ? getMatchingSkillsHTML(skills, filter, isRequirements) : '';
-
-    let equalSkillsHtml = unchangedSkills.map(function (skillName) {
-        let levelText = getCourseLevelText(skills[skillName]);
-        let badgeText = skillName + ':&nbsp;' + levelText;
-        return '<span class="badge badge-secondary toggle-skills" data-toggle="tooltip" title="' + equalLabel + '">'+badgeText+'</span>';
+    let skillNames = Object.keys(skills);
+    let skillsHTML = skillNames.map(function (skillName) {
+        let skillLevel = skills[skillName];
+        return getSkillHTML(skillName, skillLevel);
     });
 
-    let unmatchingSkillsHtml = unmatchingSkills.map(function (skillName) {
-        let levelText = getCourseLevelText(skills[skillName]);
-        let badgeText = skillName + ':&nbsp;' + levelText;
-        return '<span class="badge badge-secondary toggle-skills" data-toggle="tooltip" title="' + unmatchLabel + '">- '+badgeText+'</span>';
-    });
-
-    let allUndefinedSkillsHtml = sortedUndefinedSkills.map(function (skillName) {
-        let levelText = getCourseLevelText(skills[skillName]);
-        let badgeText = skillName + ':&nbsp;' + levelText;
-        return '<a href="#" class="badge badge-secondary toggle-skills" data-skill="'+skillName+'" data-toggle="tooltip" title="Навык не указан в списке развиваемых">'+badgeText+'</a>';
-    });
-
-    let hasUndefinedSkills = undefinedSkills.length > 0;
-    let many = 6;
-    let hasManyUndefinedSkills = allUndefinedSkillsHtml.length > many;
-    let truncateUndefined = !isRequirements && !isFilterEmpty() && hasManyUndefinedSkills;
-
-    let top3UndefinedSkillsHTML = allUndefinedSkillsHtml;
-    let restUndefinedSkillsHTML = [];
-
-    if (hasManyUndefinedSkills) {
-        top3UndefinedSkillsHTML = allUndefinedSkillsHtml.slice(0, 3);
-        restUndefinedSkillsHTML = allUndefinedSkillsHtml.slice(3, allUndefinedSkillsHtml.length);
-    }
-
-    let undefinedSkillsTruncatedHTML = top3UndefinedSkillsHTML.join("\n") + '<a href=\"#\" class=\"badge badge-secondary undefinedSkillsTrigger\" data-toggle=\"tooltip\" title=\"+'+restUndefinedSkillsHTML.length+
-        ' навыков, не указанных в фильтре\">+'+restUndefinedSkillsHTML.length+' навыков...</a>\n' +
-        "<span class=\"hiddenSkills\" style=\"display: none;\">" +
-        restUndefinedSkillsHTML.join("\n") +
-        "</span>";
-    let undefinedSkillsPlainHTML = allUndefinedSkillsHtml.join("\n");
-
-    return matchingSkillsHtml +
-        equalSkillsHtml.join("\n") + "\n" +
-        unmatchingSkillsHtml.join("\n") + "\n" +
-        (hasUndefinedSkills
-            ? (truncateUndefined ? undefinedSkillsTruncatedHTML : undefinedSkillsPlainHTML)
-            : "");
+    return skillsHTML.join("\n");
 }
 
 function getSkillsHTML(course, filter) {
     return getSkillsPropHTML(course.skills, filter, false);
+}
+
+function getAdditionalSkillsHTML(course, filter) {
+    let skills = course.skills;
+    let additionalSkillNames = getAllSkillsExceptMatching(course.skills, filter, false);
+
+    let skillsHTML = additionalSkillNames.map(function (skillName) {
+        let skillLevel = skills[skillName];
+        return getSkillHTML(skillName, skillLevel);
+    });
+
+    return skillsHTML.join("\n");
 }
 
 function getRequirementsHTML(course, filter) {
@@ -215,7 +118,7 @@ function getCourseMaxLevels() {
     return maxLevel;
 }
 
-function getCourseHardness(course, level) {
+function getCourseHardness(course, level, skipUserLevels) {
     let skillsFilter = applyBackpackSkills(getCoursesFilter().skills, level);
     let userLevels = summSkills(skillsFilter);
     let userUpgradeLevels = getCourseTotalLevels(course)-userLevels;
@@ -224,108 +127,8 @@ function getCourseHardness(course, level) {
     return Math.round(userUpgradeLevels/maxLevels * 100);
 }
 
-function getHardnessIndex(course, level) {
-    let hardnessPercent = getCourseHardness(course, level);
-
-    let hardnessIndex = 1;
-
-    if (hardnessPercent >= 5) {
-        hardnessIndex = 2;
-    }
-
-    if (hardnessPercent > 50) {
-        hardnessIndex = 3;
-    }
-
-    return hardnessIndex;
-}
-
-function getCourseHardnessHTML(course, level) {
-    let hardnessIndex = getHardnessIndex(course, level);
-
-    if (hardnessIndex === 2) {
-        return "Средней сложности";
-    }
-
-    if (hardnessIndex === 3) {
-        return "Трудный";
-    }
-
-    return "Легкий";
-}
-
 function useBackpackSkills() {
     return $('#useBackpackSkills').is(':checked');
-}
-
-function declensionUnits(number, unitsName) {
-    let declensionVariants = {
-        'ак. час': ['ак. час', 'ак. часа', 'ак. часов'],
-        'день': ['день', 'дня', 'дней'],
-        'час': ['час', 'часа', 'часов'],
-        'урок': ['урок', 'урока', 'уроков'],
-        'модуль': ['модуль', 'модуля', 'модулей'],
-        'минута': ['минута', 'минуты', 'минут'],
-        'месяц': ['месяц', 'месяца', 'месяцев'],
-        'неделя': ['неделя', 'недели', 'недель'],
-        'год': ['год', 'года', 'лет']
-    };
-
-    if (typeof declensionVariants[unitsName] == 'undefined') {
-        return unitsName;
-    }
-
-    let unitVariants = declensionVariants[unitsName];
-    let lastDigit = parseInt(number.toString().substr(-1));
-
-    if (number <= 10 || number >= 20) {
-        if (lastDigit === 1) {
-            return unitVariants[0];
-        }
-
-        if (lastDigit < 5 && lastDigit > 1) {
-            return unitVariants[1];
-        }
-
-        if (lastDigit >= 5 || lastDigit === 0) {
-            return unitVariants[2];
-        }
-    }
-    else {
-        return unitVariants[2];
-    }
-}
-
-function getCourseAttributesHTML(course, index) {
-    let certificateShortNames = {
-        'Нет': 'Без сертификата',
-        'Собственный': 'Собственный сертификат',
-        'Государственного образца': 'Государственный сертификат'
-    };
-
-    let attributes = [
-        course.format,
-        getCourseHardnessHTML(course, index),
-        course.hasTeacher ? 'С преподавателем' : 'Без преподавателя',
-        course.hasPractice ? 'С практикой' : 'Без практики'
-    ];
-
-    if (course.jobPlacement) {
-        attributes.push('Помощь в трудоустройстве');
-    }
-
-    if (course.forKids) {
-        attributes.push('Подходит детям и школьникам');
-    }
-
-    attributes.push(certificateShortNames[course.certificate]);
-    attributes.push(course.duration + ' ' + declensionUnits(course.duration, course.durationUnits));
-
-    return attributes.join('&nbsp;&bull;&nbsp;\n');
-}
-
-function getCoursePriceText(course) {
-    return course.price === 0 ? 'Бесплатно' : course.price + ' руб';
 }
 
 function getCourseDataHTML(course, skipButton, index) {
@@ -335,7 +138,7 @@ function getCourseDataHTML(course, skipButton, index) {
     let skillsFilter = applyBackpackSkills( applySalaryRangeSkills( filter.skills ), index);
     let showMatchingSkills = useBackpackSkills() && hasMatchingSkills(course.skills, skillsFilter, false);
     let matchingSkillsHTML = getMatchingSkillsHTML(course.skills, skillsFilter, false);
-    let skillsHTML = getSkillsHTML(course, skillsFilter);
+    let additionalSkillsHTML = getAdditionalSkillsHTML(course, skillsFilter);
     let additionalSkills = getAllSkillsExceptMatching(course.skills, skillsFilter, false);
     let hasAdditionalSkills = additionalSkills.length > 0;
     let hasRequirements = Object.keys(course.requirements).length > 0;
@@ -350,31 +153,31 @@ function getCourseDataHTML(course, skipButton, index) {
     let buttonHTML = skipButton
         ? ""
         : "<a href=\"#\" class=\"btn btn-primary btn-block d-flex justify-content-center add-to-backpack mt-1\" data-course-id=\""+course.id+"\">" +
-          "  <i class=\"fas fa-shopping-basket\"></i> В корзину (+" + courseToSalary + " к ЗП)" +
+          "  <i class=\"fas fa-heart\"></i> Сохранить (+" + courseToSalary + " к ЗП)" +
           "</a>";
 
     let visitButtonHTML = "<a href=\"" + course.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-course mt-1\" data-course-id=\""+course.id+"\">Сайт курса&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>";
 
     return "<h5 class=\"d-flex align-items-start justify-content-between\">" +
-        "    <span class='course-title'>" + course.title + "</span>" +
+        "    <a class='course-title' href='/course.html?id="+course.id+"&from="+getProfessionCodeFromUrl()+"' target=\"_blank\">" + course.title + "</a>" +
         "    <div class=\"badges ml-2\">\n" +
         "        <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
         (considerLabel ? "        <span class=\"badge badge-warning mt-1\">Обратите<br>внимание</span>\n" : "") +
         "    </div>\n" +
         "</h5>\n" +
         "<h6 class=\"text-muted\">" +course.platform+ "</h6>\n" +
-        "<p class=\"mt-1\">" + attributesHTML + "</p>\n" +
+        "<p class=\"mt-1 text-info\">" + attributesHTML + "</p>\n" +
         (
             showMatchingSkills
                 ? (
                     "<p class=\"mt-1 mb-0\">Подходящие навыки курса:</p>\n" +
                     "<p>" + matchingSkillsHTML + "</p>\n" +
                     (hasAdditionalSkills ? "<p class=\"mt-1 mb-0\">Прочие навыки:</p>\n" +
-                    "<p>" + skillsHTML + "</p>\n" : "")
+                    "<p>" + additionalSkillsHTML + "</p>\n" : "")
                 )
                 : (hasAdditionalSkills ?
                     "<p class=\"mt-1 mb-0\">Дополнительные навыки курса:</p>\n" +
-                    "<p>" + skillsHTML + "</p>\n" : ""
+                    "<p>" + additionalSkillsHTML + "</p>\n" : ""
                 )
         ) + "\n" +
         "<p class=\"mt-1 visible-sm\"><a href=\"#\" class=\"toggle-skills dashedLink\">Какие еще навыки нужны?</a></p>\n" +
@@ -1327,25 +1130,6 @@ function updateSkillCards() {
 
         setProgress(percent, $progress, progressColor);
     });
-}
-
-function getTimeInDays(course) {
-    let time = course.duration;
-    let units = course.durationUnits;
-    let daysCoefficient = {
-        'ак. час': 45*60/28800,
-        'день': 1,
-        'час': 1/8,
-        'урок': 1/8,
-        'модуль': 4/8,
-        'минута': 1*60/28800,
-        'месяц': 30,
-        'неделя': 7
-    };
-
-    let timeInDays = time * daysCoefficient[units];
-
-    return timeInDays;
 }
 
 function addCourseSkillsToFilter(courseId) {
