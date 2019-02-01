@@ -2,9 +2,24 @@ function loadCourseData(courseId) {
     return loadApiData("/api/courseData.php", {id: courseId});
 }
 
+function changeTextOnly($elem, newText) {
+    return $elem.contents()
+                .filter(function() {
+                    return this.nodeType === 3;
+                })
+                .first()
+                .replaceWith(newText);
+}
+
 function getCoursePageHTML(courseData) {
     let hasRequirements = Object.keys(courseData.requirements).length > 0;
     let description = (courseData.description || "").replace("\n", "<br>");
+    let savedIds = getCookie('backpack');
+    let isCourseInBackpack = savedIds && savedIds.indexOf(courseData.id) !== -1;
+
+    let saveButton = isCourseInBackpack
+        ? "<button class=\"btn btn-success btn-lg btn-block disabled\" disabled='disabled'><i class=\"fas fa-check\"></i> Курс сохранен</button>\n"
+        : "<button class=\"btn btn-primary btn-lg btn-block add-to-backpack\" data-course-id=\""+courseData.id+"\"><i class=\"fas fa-heart\"></i> Сохранить</button>\n";
 
     return "<h1>" + courseData.title + "</h1>\n" +
         "<p class='text-secondary'>от " + courseData.platform + "</p>\n" +
@@ -27,7 +42,7 @@ function getCoursePageHTML(courseData) {
         "<div class=\"duration h5\">&asymp; " + getHumanReadableTime(courseData) + "</div>\n" +
         "</p>\n" +
         "\n" +
-        "<button class=\"btn btn-primary btn-lg btn-block add-to-backpack\" data-course-id=\""+courseData.id+"\"><i class=\"fas fa-heart\"></i> Сохранить</button>\n" +
+        saveButton +
         "<a class=\"btn btn-outline-secondary btn-lg btn-block mb-4\" href=\"" + courseData.url + "\" target=\"_blank\">Сайт курса&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>\n"
 }
 
@@ -36,6 +51,16 @@ function updatePageTitleAndLink() {
     let pageTitle = getCurrentProfessionName(professionCode) || '';
     $('h1 small').html(pageTitle);
     $('.courses-list-link').attr('href', '/'+professionCode+'/courses');
+}
+
+function addToBackpackLite(courseId) {
+    let savedIds = getCookie('backpack');
+    if (!savedIds) {
+        savedIds = [];
+    }
+
+    savedIds.push(courseId);
+    setCookie('backpack', savedIds);
 }
 
 $(function () {
@@ -48,4 +73,21 @@ $(function () {
             let courseHTML = getCoursePageHTML(courseData);
             $('.course-data').html(courseHTML);
         });
+
+    $(document).on('click', '.add-to-backpack', function () {
+        let $button = $(this);
+        let courseId = $button.data('course-id');
+        addToBackpackLite(courseId);
+
+        $button
+            .removeClass('btn-primary add-to-backpack')
+            .addClass('btn-success disabled')
+            .attr('disabled', 'disabled');
+        changeTextOnly($button, ' Курс сохранен');
+
+        $button.find('.fas')
+            .removeClass('fa-heart')
+            .addClass('fa-check');
+
+    });
 });

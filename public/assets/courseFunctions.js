@@ -1,3 +1,51 @@
+let backpack = false;
+
+function getBackpack() {
+    if (backpack === false) {
+        loadBackpack();
+    }
+
+    return backpack;
+}
+
+function pushToBackpack(course) {
+    backpack.push(course);
+    saveBackpack();
+}
+
+function loadBackpack() {
+    let savedIds = getCookie('backpack');
+    backpack = [];
+
+    if (savedIds) {
+        savedIds.forEach(function (courseId) {
+            let course = getCourseById(courseId);
+            backpack.push(course);
+        });
+    }
+}
+
+function getBackpackIds() {
+    let courseIds = getBackpack().reduce(function (ids, course) {
+        ids.push(course.id);
+        return ids;
+    }, []);
+
+    return courseIds;
+}
+
+function saveBackpack() {
+    setCookie('backpack', getBackpackIds());
+}
+
+function getCookie(name) {
+    return Cookies.getJSON(name);
+}
+
+function setCookie(name, value) {
+    Cookies.set(name, value);
+}
+
 function loadApiData(url, data) {
     let promise = $.Deferred();
 
@@ -226,6 +274,26 @@ function getHumanReadableTime(course) {
 
 function getCoursePriceText(course) {
     return course.price === 0 ? 'Бесплатно' : formatNumber(course.price) + '&nbsp;&#8381;';
+}
+
+function getCourseById(courseId) {
+    let foundCourse = false;
+    getCoursesList().forEach(function (course) {
+        if (course.id === courseId) {
+            foundCourse = course;
+        }
+    });
+
+    return foundCourse;
+}
+
+function isCourseInBackpack(course) {
+    let courseIds = getBackpackIds();
+    return courseIds.indexOf(course.id) !== -1;
+}
+
+function getCoursePageUrl(course) {
+    return "/course.html?id="+course.id+"&from="+getProfessionCodeFromUrl();
 }
 
 function getParameterByName(name, url) {

@@ -1,4 +1,3 @@
-let backpack = [];
 let manualAddedSkills = {};
 let manualDeletedSkills = [];
 let manualChangedSkills = {};
@@ -159,7 +158,7 @@ function getCourseDataHTML(course, skipButton, index) {
     let visitButtonHTML = "<a href=\"" + course.url + "\" target=\"_blank\" class=\"btn btn-primary btn-block go-to-course mt-1\" data-course-id=\""+course.id+"\">Сайт курса&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>";
 
     return "<h5 class=\"d-flex align-items-start justify-content-between\">" +
-        "    <a class='course-title' href='/course.html?id="+course.id+"&from="+getProfessionCodeFromUrl()+"' target=\"_blank\">" + course.title + "</a>" +
+        "    <a class='course-title' href='"+getCoursePageUrl(course)+"' target=\"_blank\">" + course.title + "</a>" +
         "    <div class=\"badges ml-2\">\n" +
         "        <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
         (considerLabel ? "        <span class=\"badge badge-warning mt-1\">Обратите<br>внимание</span>\n" : "") +
@@ -213,7 +212,7 @@ function getBackpackCourseDataHTML(course) {
     let attributesHTML = getCourseAttributesHTML(course);
 
     return "<h4 class=\"d-flex align-items-start\">" +
-        "    <a class=\"courseLink\" href=\"" + course.url + "\" target=\"_blank\">" + course.title + "&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>" +
+        "    <a class=\"courseLink\" href=\"" + getCoursePageUrl(course) + "\" target=\"_blank\">" + course.title + "</a>" +
         "    <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
         "</h4>\n" +
         "<h6 class=\"text-muted\">" +course.platform+ "</h6>\n" +
@@ -243,7 +242,7 @@ function addCourse(course) {
 function getBackpackSkills() {
     let backpackSkills = {};
 
-    backpack.forEach(function (course) {
+    getBackpack().forEach(function (course) {
         Object.keys(course.skills).forEach(function (skillName) {
             let isSkillInFilter = typeof backpackSkills[skillName] !== 'undefined';
             let isSkillWeaker = isSkillInFilter && backpackSkills[skillName] < course.skills[skillName];
@@ -264,8 +263,8 @@ function applyBackpackSkills(currentSkills, level) {
 
     let skillsAfterLearn = clone(currentSkills);
     let coursesToApply = typeof (level) === 'number'
-        ? backpack.slice(0, level)
-        : backpack;
+        ? getBackpack().slice(0, level)
+        : getBackpack();
 
     coursesToApply.forEach(function (course) {
         Object.keys(course.skills).forEach(function (skillName) {
@@ -463,11 +462,11 @@ function courseMatchesFilterParameters(course) {
 }
 
 function skipBackpackCourses(course) {
-    if (!backpack) {
+    if (!getBackpack()) {
         return true;
     }
 
-    let backpackCourseIds = backpack.reduce(function (result, course) {
+    let backpackCourseIds = getBackpack().reduce(function (result, course) {
         result.push(course.id);
         return result;
     }, []);
@@ -920,7 +919,7 @@ function hasNoCoursesForNextStep() {
 }
 
 function updateBackpackCounters() {
-    let courseCount = backpack.length;
+    let courseCount = getBackpack().length;
     $('.backpackCount').html(courseCount);
 
     if (courseCount === 0) {
@@ -970,7 +969,7 @@ function updateFilterCounter() {
 function redrawBackpack() {
     $('#backpackPopupList, #backpackCollapseList').html('');
 
-    backpack.forEach(function (course) {
+    getBackpack().forEach(function (course) {
         let courseHTML = getCourseBackpackCardHTML(course);
         $('#backpackPopupList, #backpackCollapseList').append(courseHTML);
     });
@@ -979,13 +978,21 @@ function redrawBackpack() {
 }
 
 function addCourseToBackpack(course) {
-    backpack.push(course);
+    if (course) {
+        pushToBackpack(course);
+    }
 
     redrawBackpack();
     updateSkillCards();
-    showBackpackSkillsAlert();
+    if (getBackpack().length > 0) {
+        showBackpackSkillsAlert();
+    }
     updateProgress();
     updateResumeSkills();
+}
+
+function initBackpack() {
+    addCourseToBackpack(false);
 }
 
 function updateBackpackData() {
@@ -993,16 +1000,16 @@ function updateBackpackData() {
     let allVacancies = getVacanciesList();
     let vacanciesPercent = Math.round(vacancies.length / allVacancies.length * 100);
 
-    let totalPrice = backpack.reduce(function (prevPrice, course) {
+    let totalPrice = getBackpack().reduce(function (prevPrice, course) {
         return prevPrice + course.price;
     }, 0);
 
-    let totalDuration = backpack.reduce(function (prevDuration, course) {
+    let totalDuration = getBackpack().reduce(function (prevDuration, course) {
         return prevDuration + getTimeInDays(course);
     }, 0);
     totalDuration = Math.ceil(totalDuration);
 
-    $('.totalCount').text(backpack.length);
+    $('.totalCount').text(getBackpack().length);
     $('.totalDuration').text(totalDuration);
     $('.totalCost').text(totalPrice);
     $('.vacanciesPercent').text(vacanciesPercent);
@@ -1038,7 +1045,7 @@ function sendBackpackToEmail() {
     let promise = $.Deferred();
     let formData = $('#emailPlanForm').serializeArray();
 
-    backpack.map(function (course) {
+    getBackpack().map(function (course) {
         formData.push({name: 'courseId[]', value: course.id});
     });
 
@@ -1061,23 +1068,12 @@ function sendBackpackToEmail() {
     return promise;
 }
 
-function getCourseById(courseId) {
-    let foundCourse = false;
-    getCoursesList().forEach(function (course) {
-        if (course.id === courseId) {
-            foundCourse = course;
-        }
-    });
-
-    return foundCourse;
-}
-
 function enableTooltips() {
     $('[data-toggle="tooltip"]').tooltip();
 }
 
 function isBackpackNotEmpty() {
-    return backpack.length > 0;
+    return getBackpack().length > 0;
 }
 
 function updateSkillCards() {
@@ -1286,7 +1282,7 @@ function updateProgress(from, to) {
         to = getAimFromTo().to;
     }
 
-    let selectedCoursesSalary = backpack.reduce(function (total, selectedCourse) {
+    let selectedCoursesSalary = getBackpack().reduce(function (total, selectedCourse) {
         return total + getCourseSalary(selectedCourse);
     }, 0);
 
@@ -1428,6 +1424,7 @@ $(function () {
     updatePageTitle();
     updateFilterCounter();
     initAimSlider();
+    initBackpack();
 
     search();
 
@@ -1451,7 +1448,7 @@ $(function () {
     $(document).on('input change click', '#useBackpackSkills', function () {
         let isChecked = useBackpackSkills();
         if (isChecked) {
-            if (backpack.length > 0) {
+            if (getBackpack().length > 0) {
                 showBackpackSkillsAlert();
             }
         }
