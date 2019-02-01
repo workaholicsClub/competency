@@ -91,4 +91,4 @@ header("Content-type: text/xml");
 ?>
 
 
-</urlset><?php
+</urlset>
