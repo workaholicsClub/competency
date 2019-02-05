@@ -1,0 +1,2 @@
+Sitemap: https://self.academy/api/sitemap.php
+Disallow: /api/
