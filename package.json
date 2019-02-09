@@ -1,0 +1,30 @@
+{
+  "name": "competency",
+  "version": "1.0.0",
+  "description": "``` sudo apt-get install docker.io sudo usermod -aG docker $(whoami) # чтобы можно было работать с dockerом от текущего пользователя sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose sudo chmod +x /usr/local/bin/docker-compose ``` После установки нужно перелогинится",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "tests"
+  },
+  "scripts": {
+    "init:es": "node scripts/init-es etc/database/dump.sql",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/workaholicsClub/competency.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/workaholicsClub/competency/issues"
+  },
+  "homepage": "https://github.com/workaholicsClub/competency#readme",
+  "devDependencies": {
+    "node-fetch": "^2.3.0",
+    "underscore": "^1.9.1",
+    "underscore.string": "^3.3.5"
+  }
+}

@@ -1727,4 +1727,27 @@ $(function () {
         $text.text(newValue);
         $container.removeClass('editing');
     });
+
+    function doFullTextSearch() {
+        const input = document.getElementById('search');
+        if (!input) {
+            console.error('Потеряли инпут для поиска');
+            return;
+        }
+
+        fetch(`./coursesList.js?search=${input.value}`)
+            .then(result => result.text())
+            .then(text => {
+                const script = document.createElement('script');
+                script.innerHTML = text;
+                document.body.appendChild(script);
+                console.warn(getSearchResults());
+            })
+    }
+    $(document).on('click', '.search__do', doFullTextSearch);
+    $(document).on('keydown', '.search__value', function(e) {
+        if (e.which === 13) {
+            doFullTextSearch();
+        }
+    });
 });

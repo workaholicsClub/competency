@@ -1,5 +1,7 @@
 <?php
 
+require '../../vendor/autoload.php';
+use Elasticsearch\ClientBuilder;
 $jsonOutput = false;
 
 $user = getenv('MYSQL_USER');
@@ -20,6 +22,7 @@ catch (\PDOException $exception) {
 }
 
 $professionCode = $_REQUEST['professionCode'];
+$search = $_REQUEST['search'];
 $coursesQuery = $pdo->prepare('SELECT 
 	*,
 	SUM(isProfession) AS profSkills,
@@ -91,6 +94,35 @@ if ($jsonOutput === false) {
     $jsonOutput = [];
 }
 
-echo "function getCoursesList() {
+$searchResults = [];
+if ($search) {
+    $esClient = ClientBuilder::create()
+        ->setHosts([ 'elasticsearch' ])
+        ->build();
+    $params = [
+        'index' => 'courses',
+        'type' => '_doc',
+        'body' => [
+            'query' => [
+                'match' => [
+                    'description' => [
+                        'query' => $search,
+                        'fuzziness' => 'AUTO',
+                        'operator' => 'and'
+                    ]
+                ]
+            ]
+        ]
+    ];
+    $searchResults = $esClient->search($params);
+}
+
+echo "
+function getCoursesList() {
     return " . json_encode($jsonOutput) . ";
-}";
+}
+
+function getSearchResults() {
+    return " . json_encode($searchResults) . ";
+}
+";

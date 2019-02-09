@@ -3,6 +3,7 @@ require '../../vendor/autoload.php';
 
 use Competencies\Mail\MailgunMailer;
 use Competencies\Routes;
+use Elasticsearch\ClientBuilder;
 use Slim\App;
 use Spot\Config;
 use Spot\Locator;
