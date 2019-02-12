@@ -1,6 +1,6 @@
 <?php
 
-const BASE_URL = 'https://self.acedemy/';
+const BASE_URL = 'https://self.academy/';
 
 $jsonOutput = false;
 
@@ -83,7 +83,7 @@ header("Content-type: text/xml");
 <?php
     foreach ($urls as $url) {
         echo "<url>
-    <loc><![CDATA[{$url['loc']}]]></loc>
+    <loc><![CDATA[ {$url['loc']} ]]></loc>
     <lastmod>{$url['lastmod']}</lastmod>
     <priority>{$url['priority']}</priority>
 </url>\n";

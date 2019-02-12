@@ -1,2 +1,3 @@
-Sitemap: https://self.academy/api/sitemap.php
+Sitemap: https://self.academy/sitemap.xml
+User-agent: *
 Disallow: /api/
