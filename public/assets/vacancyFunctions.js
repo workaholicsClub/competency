@@ -575,6 +575,9 @@ function addSkillsToList(skillNames, selector) {
 function setupSlider() {
     let slider = new Swiper ('.swiper-container', {
         direction: 'horizontal',
+        spaceBetween: 5,
+        centeredSlides: true,
+        slidesPerView: 1,
         loop: false,
         navigation: {
             nextEl: '.swiper-button-next',

@@ -78,6 +78,8 @@ if ($professionCode) {
             "duration"      => intval($course['duration']),
             "durationUnits" => $course['durationUnits'],
             "price"         => floatval($course['price']),
+            "coupon"        => $course['coupon'] ? $course['coupon'] : false,
+            "couponDiscount" => $course['couponDiscount'] ? floatval($course['couponDiscount']) : false,
             "description"   => $course['description'],
             "skills"        => $skills,
             "requirements"  => $requirements,

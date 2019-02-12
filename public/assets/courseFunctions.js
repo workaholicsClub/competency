@@ -20,7 +20,9 @@ function loadBackpack() {
     if (savedIds) {
         savedIds.forEach(function (courseId) {
             let course = getCourseById(courseId);
-            backpack.push(course);
+            if (course !== false) {
+                backpack.push(course);
+            }
         });
     }
 }
@@ -272,8 +274,8 @@ function getHumanReadableTime(course) {
     return humanReadable;
 }
 
-function getCoursePriceText(course) {
-    return course.price === 0 ? 'Бесплатно' : formatNumber(course.price) + '&nbsp;&#8381;';
+function getCoursePriceText(price) {
+    return price === 0 ? 'Бесплатно' : formatNumber(price) + '&nbsp;&#8381;';
 }
 
 function getCourseById(courseId) {

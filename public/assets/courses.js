@@ -132,7 +132,7 @@ function useBackpackSkills() {
 
 function getCourseDataHTML(course, skipButton, index) {
     let descriptionHTML = course.description || "";
-    let price = getCoursePriceText(course);
+    let price = getCoursePriceText(course.price);
     let filter = getCoursesFilter();
     let skillsFilter = applyBackpackSkills( applySalaryRangeSkills( filter.skills ), index);
     let showMatchingSkills = useBackpackSkills() && hasMatchingSkills(course.skills, skillsFilter, false);
@@ -148,6 +148,14 @@ function getCourseDataHTML(course, skipButton, index) {
 
     let considerLabel = course.hasPartnerUrl;
 
+    let priceBadgeHTML = "        <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n";
+    let considerLabelHTML = considerLabel ? "        <span class=\"badge badge-warning mt-1\">Обратите<br>внимание</span>\n" : "";
+    if (course.coupon) {
+        let discountPrice = getCoursePriceText(course.price * (1-course.couponDiscount/100));
+        priceBadgeHTML = "        <span class=\"badge badge-secondary priceBadge\"><del>" + price + "</del><br>" + discountPrice + "</span>\n";
+        considerLabelHTML = "        <span class=\"badge badge-warning mt-1\">-"+course.couponDiscount+"% по коду<br>"+course.coupon+"</span>\n"
+    }
+
     let attributesHTML = getCourseAttributesHTML(course, index);
     let buttonHTML = skipButton
         ? ""
@@ -160,8 +168,8 @@ function getCourseDataHTML(course, skipButton, index) {
     return "<h5 class=\"d-flex align-items-start justify-content-between\">" +
         "    <a class='course-title' href='"+getCoursePageUrl(course)+"' target=\"_blank\">" + course.title + "</a>" +
         "    <div class=\"badges ml-2\">\n" +
-        "        <span class=\"badge badge-secondary priceBadge\">" + price + "</span>\n" +
-        (considerLabel ? "        <span class=\"badge badge-warning mt-1\">Обратите<br>внимание</span>\n" : "") +
+                 priceBadgeHTML +
+                 considerLabelHTML +
         "    </div>\n" +
         "</h5>\n" +
         "<h6 class=\"text-muted\">" +course.platform+ "</h6>\n" +
@@ -199,16 +207,16 @@ function getCourseDataHTML(course, skipButton, index) {
 
 function getCourseCardHTML(course, skipButton, index) {
     let courseHTML = "<div class=\"swiper-slide\">\n" +
-        "    <div class=\"card-body\" data-id='"+course.id+"' data-sort='"+course.sortIndex+"'>\n" +
+        "    <div class='card bg-white'><div class=\"card-body\" data-id='"+course.id+"' data-sort='"+course.sortIndex+"'>\n" +
             getCourseDataHTML(course, skipButton, index) +
-        "    </div>\n" +
+        "    </div></div>\n" +
         "</div>";
 
     return courseHTML;
 }
 
 function getBackpackCourseDataHTML(course) {
-    let price = getCoursePriceText(course);
+    let price = getCoursePriceText(course.price);
     let attributesHTML = getCourseAttributesHTML(course);
 
     return "<h4 class=\"d-flex align-items-start\">" +

@@ -21,6 +21,15 @@ function getCoursePageHTML(courseData) {
         ? "<button class=\"btn btn-success btn-lg btn-block disabled\" disabled='disabled'><i class=\"fas fa-check\"></i> Курс сохранен</button>\n"
         : "<button class=\"btn btn-primary btn-lg btn-block add-to-backpack\" data-course-id=\""+courseData.id+"\"><i class=\"fas fa-heart\"></i> Сохранить</button>\n";
 
+    let priceBadge = "<div class=\"price display-4\">"+getCoursePriceText(courseData.price)+"</div>\n";
+    if (courseData.coupon) {
+        let discountPrice = courseData.price * (1-courseData.couponDiscount/100);
+        priceBadge = "<div class='discount'>Скидка <b>"+courseData.couponDiscount+"%</b> по промокоду <b>"+courseData.coupon+"</b></div><div class=\"price\">" +
+            "<span class='display-4'>"+getCoursePriceText(discountPrice)+"</span>" +
+            "<del>"+getCoursePriceText(courseData.price)+"</del>" +
+            "</div>\n";
+    }
+
     return "<h1>" + courseData.title + "</h1>\n" +
         "<p class='text-secondary'>от " + courseData.platform + "</p>\n" +
         "<p class='text-info'>" + getCourseAttributesHTML(courseData) + "</p>\n" +
@@ -38,7 +47,7 @@ function getCoursePageHTML(courseData) {
         "<p>" + description + "</p>\n" +
         "\n" +
         "<p>\n" +
-        "<div class=\"price display-4\">"+getCoursePriceText(courseData)+"</div>\n" +
+        priceBadge +
         "<div class=\"duration h5\">&asymp; " + getHumanReadableTime(courseData) + "</div>\n" +
         "</p>\n" +
         "\n" +

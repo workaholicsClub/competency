@@ -520,9 +520,7 @@ body.navbar-padding-courses {
 }
 
 .searchResults.invisible-sm .swiper-slide {
-    border: 1px solid rgba(0,0,0,.125);
-    border-radius: .25rem;
-    margin-bottom: .25rem!important;
+    margin-bottom: .5rem!important;
 }
 
 .selected-title {
