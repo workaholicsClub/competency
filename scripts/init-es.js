@@ -32,7 +32,15 @@ function getRawJSONData() {
 }
 
 function prepareESJSONData(rawData) {
-  return rawData.reduce((result, item) => {
+  return rawData.reduce((result, _item) => {
+    const item = {
+      ..._item,
+      // времянка для поиска по ВСЕМУ тексту
+      availableText: Object.keys(_item)
+        .filter(key => typeof _item[key] === 'string')
+        .map(key => _item[key])
+        .join('|||'),
+    };
     return `${result}{"index":{"_id":"${item.id}"}}\n${JSON.stringify(item)}\n`;
   }, '');
 }

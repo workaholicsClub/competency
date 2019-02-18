@@ -105,7 +105,7 @@ if ($search) {
         'body' => [
             'query' => [
                 'match' => [
-                    'description' => [
+                    'availableText' => [
                         'query' => $search,
                         'fuzziness' => 'AUTO',
                         'operator' => 'and'
@@ -123,6 +123,6 @@ function getCoursesList() {
 }
 
 function getSearchResults() {
-    return " . json_encode($searchResults) . ";
+    return " . json_encode($searchResults['hits']['hits']) . ";
 }
 ";
