@@ -23,7 +23,7 @@ catch (\PDOException $exception) {
 
 $professionCode = $_REQUEST['professionCode'];
 $search = $_REQUEST['search'];
-$coursesQuery = $pdo->prepare('SELECT 
+$noTextCoursesQuery = $pdo->prepare('SELECT 
 	*,
 	SUM(isProfession) AS profSkills,
     COUNT(*)-SUM(isProfession) AS nonProfSkills,
@@ -48,9 +48,63 @@ $requirementsQuery = $pdo->prepare('SELECT s.name, lrc.skillLevel FROM links_req
 	LEFT JOIN skills s ON lrc.skillId = s.id
 WHERE lrc.courseId = ?');
 
+function get_id($course)
+{
+    return ($course['_source']['id']);
+}
 
 if ($professionCode) {
-    $coursesQuery->execute([$professionCode]);
+    if ($search) {
+        $esClient = ClientBuilder::create()
+            ->setHosts([ 'elasticsearch' ])
+            ->build();
+        $params = [
+            'index' => 'courses',
+            'type' => '_doc',
+            'body' => [
+                'query' => [
+                    'match' => [
+                        'availableText' => [
+                            'query' => $search,
+                            'fuzziness' => 'AUTO',
+                            'operator' => 'and'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $searchResults = $esClient->search($params);
+        $courseIds = array_map(get_id, $searchResults['hits']['hits']);
+        $placeholders = '?';
+        if (count($courseIds) > 0) {
+            $placeholders = str_repeat ('?, ',  count ($courseIds) - 1) . '?';
+        } else {
+            $courseIds = [ -1 ];
+        }
+        $matchedTextCoursesQuery = $pdo->prepare("SELECT 
+            *,
+            SUM(isProfession) AS profSkills,
+            COUNT(*)-SUM(isProfession) AS nonProfSkills,
+            SUM(isProfession) > COUNT(*)-SUM(isProfession) AS hasMoreProfSkills,
+            SUM(isProfession)/COUNT(*) AS profSkillsRate
+        FROM (
+            SELECT c.*, MAX(p.`code` = ?) AS isProfession FROM courses c
+                    LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
+                    LEFT JOIN links_skills_professions lsp ON lsc.skillId = lsp.skillId
+                    LEFT JOIN professions p ON lsp.professionId = p.id
+            WHERE c.inArchive != 1
+                    AND c.id IN ($placeholders)
+            GROUP BY c.id, lsc.skillId
+        ) sq
+        GROUP BY id
+        HAVING profSkillsRate >= 0.5");
+        $matchedTextCoursesQuery->execute(array_merge([$professionCode], $courseIds));
+        $coursesQuery = $matchedTextCoursesQuery;
+    } else {
+        $noTextCoursesQuery->execute([$professionCode]);
+        $coursesQuery = $noTextCoursesQuery;
+    }
     $jsonOutput = [];
     while ($course = $coursesQuery->fetch()) {
         $skills = [];
@@ -94,35 +148,5 @@ if ($jsonOutput === false) {
     $jsonOutput = [];
 }
 
-$searchResults = [];
-if ($search) {
-    $esClient = ClientBuilder::create()
-        ->setHosts([ 'elasticsearch' ])
-        ->build();
-    $params = [
-        'index' => 'courses',
-        'type' => '_doc',
-        'body' => [
-            'query' => [
-                'match' => [
-                    'availableText' => [
-                        'query' => $search,
-                        'fuzziness' => 'AUTO',
-                        'operator' => 'and'
-                    ]
-                ]
-            ]
-        ]
-    ];
-    $searchResults = $esClient->search($params);
-}
-
-echo "
-function getCoursesList() {
-    return " . json_encode($jsonOutput) . ";
-}
-
-function getSearchResults() {
-    return " . json_encode($searchResults['hits']['hits']) . ";
-}
-";
+header('Content-type: application/json');
+echo json_encode($jsonOutput);

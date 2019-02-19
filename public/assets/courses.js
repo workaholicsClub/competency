@@ -782,32 +782,59 @@ function updateResumeSkills() {
     $('.other-complete-count').text(completedOtherSkills);
 }
 
+function fetchCourses() {
+    const input = document.getElementById('search');
+    const search = input && input.value || undefined;
+    let url = './coursesList.js';
+    if (search) {
+        url = `${url}?search=${input.value}`;
+    }
+
+    return fetch(url)
+        .then(result => result.json())
+        .then(coursesList => {
+            window.getCoursesList = () => coursesList;
+        });
+}
+
+let isFetching = false;
 function search() {
-    updateSlider();
-    if (isSuccessShown()) {
+    if (isFetching) {
         return;
     }
+
+    isFetching = true;
 
     $('.coursesList').css('opacity', '0.3');
     $('.coursesList').html('');
 
-    let courses = findCourses( getCoursesFilter() );
-    courses.forEach(function (course) {
-        addCourse(course);
+    return fetchCourses().then(() => {
+        updateCourseFromTo();
+        updateFilterCounter();
+        updateSlider();
+        if (isSuccessShown()) {
+            return;
+        }
+
+        isFetching = false;
+        let courses = findCourses( getCoursesFilter() );
+        courses.forEach(function (course) {
+            addCourse(course);
+        });
+    
+        if (courses.length === 0) {
+            $('.coursesList').append(
+                "<div class='notFound-wrapper'><p class=\"h4 py-2\">Подходящие курсы не найдены</p>" +
+                "<p class='mt-4'><button class='btn btn-primary search-finish'>Завершить подбор</button></p></div>"
+            );
+        }
+    
+        setTimeout(function () {
+            $('.coursesList').attr('style', '');
+        }, 200);
+    
+        updateSlider();
     });
-
-    if (courses.length === 0) {
-        $('.coursesList').append(
-            "<div class='notFound-wrapper'><p class=\"h4 py-2\">Подходящие курсы не найдены</p>" +
-            "<p class='mt-4'><button class='btn btn-primary search-finish'>Завершить подбор</button></p></div>"
-        );
-    }
-
-    setTimeout(function () {
-        $('.coursesList').attr('style', '');
-    }, 200);
-
-    updateSlider();
 }
 
 function hasSkills() {
@@ -1428,17 +1455,15 @@ $(function () {
     updateStartCourseSkills();
     updateMinSkills();
     updateAllSkills();
-    updateCourseFromTo();
     updatePageTitle();
-    updateFilterCounter();
     initAimSlider();
     initBackpack();
 
-    search();
+    search().then(() => {
+        window.slider = setupSlider();
 
-    window.slider = setupSlider();
-
-    $('#coursesCount').text( getCoursesList().length );
+        $('#coursesCount').text( getCoursesList().length );
+    });
 
     $(document).on('click', '.skillContainer .close', function () {
         updateFilterCounter();
@@ -1728,26 +1753,10 @@ $(function () {
         $container.removeClass('editing');
     });
 
-    function doFullTextSearch() {
-        const input = document.getElementById('search');
-        if (!input) {
-            console.error('Потеряли инпут для поиска');
-            return;
-        }
-
-        fetch(`./coursesList.js?search=${input.value}`)
-            .then(result => result.text())
-            .then(text => {
-                const script = document.createElement('script');
-                script.innerHTML = text;
-                document.body.appendChild(script);
-                console.warn(getSearchResults());
-            })
-    }
-    $(document).on('click', '.search__do', doFullTextSearch);
+    $(document).on('click', '.search__do', search);
     $(document).on('keydown', '.search__value', function(e) {
         if (e.which === 13) {
-            doFullTextSearch();
+            search();
         }
     });
 });
