@@ -76,6 +76,24 @@ body.navbar-padding-courses {
     padding: .375em;
 }
 
+.search {
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: stretch;
+    font-size: 75%;
+}
+
+.search__value {
+    flex: 1;
+}
+
+.search__do {
+    padding: 0 1rem;
+}
+
 .title-buttons-wrapper {
     width: 100%;
     display: flex;

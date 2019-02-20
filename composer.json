@@ -1,6 +1,7 @@
 {
     "require": {
         "mailgun/mailgun-php": "^2.4",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "elasticsearch/elasticsearch": "^6.1"
     }
 }
