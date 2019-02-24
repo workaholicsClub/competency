@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/css/swiper.min.css">
+    <link rel="stylesheet" href="/assets/design/base.css" type="text/css">
+
+    <title>self.academy: курсы</title>
+</head>
+<body>
+
+<header class="d-flex flex-row justify-content-between align-items-start card p-4 top-drawer">
+    <section class="data flex-fill">
+        <a href="#" class="editable-toggle profession-title">PHP-разработчик</a>
+        <div class="input-group">
+            <label class="">Опыт работы:</label>
+            <a href="#" class="editable-toggle">нет</a>
+        </div>
+
+        <div class="input-group">
+            <label class="">Нужные навыки:</label>
+            <a href="#" class="editable-toggle">10</a>
+            <div class="skills-input" style="height: 0px">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label class="">Желаемая зарплата:</label>
+            <a href="#" class="editable-toggle">100 000 &#8381;</a>
+            <div class="salary-input">
+                <div id="salary-input-histogram"></div>
+                <div class="curtain left-curtain">
+                    <div id="salary-input-left-handle" class="salary-handle"></div>
+                </div>
+                <div class="curtain right-curtain">
+                    <div id="salary-input-right-handle" class="salary-handle"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="profile-photo empty">
+        <div class="profile-photo-border">
+            <img src="/assets/images/noun_Cat_171038.svg">
+        </div>
+    </section>
+    <div class="profile-handle"></div>
+</header>
+
+<main>
+    <section class="pagination d-flex flex-row justify-content-center align-items-center">
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+    </section>
+
+    <section class="swiper-container course-list">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide card course-card">
+
+                <div class="card-body" data-id="23" data-sort="105139">
+                    <div class="d-flex flex-row course-card-header">
+                        <h6 class="text-muted flex-fill">от <a href="#">Артем Ивашкевич</a></h6>
+
+                        <a class="course-title" href="/course.html?id=23&from=devops" target="_blank"><i class="fas fa-link"></i></a>
+                        <a href="#" class="top-favourite-toggle"><i class="far fa-heart"></i></a>
+                    </div>
+                    <h5>PHP для начинающих + MySQL с нуля </h5>
+
+                    <p class="mt-0 mb-0 price">48 000 &#8381;</p>
+                    <p class="mt-0 mb-0 text-muted">28 уроков &asymp; 3 месяца по 2 урока в день</p>
+                    <p class="mt-0 text-muted">+4 тыс. к зарплате</p>
+
+                    <p id="description23" class="">
+                        В ходе прохождения этого курса вы освоите основы программирования на PHP и изучите возможности этого языка.
+                        Данный курс предназначен для начинающих и содержит подробные инструкции по настройке окружения:
+                        начиная с установки локального веб-сервера и заканчивая полезными приемами по работе в IDE.
+                        <span class="continue-dots">...</span>
+                        <a href="#" class="continue-toggle">Читать полностью</a>
+                        <span class="continue" style="display: none">В курсе всё изучается очень подробно - начинается обучение с того, как вообще работает PHP.
+                        Рассказывается о современных инструментах и подходах. На мой взгляд, на сегодняшний день это лучший курс по основам PHP,
+                        который позволит освоить базовые принципы в программировании, без которых не обойтись ни одному будущему разработчику.
+                        Здесь вы получите необходимый фундамент, который позволит вам идти дальше, изучая более интересные и сложные темы в программировании</span>
+                    </p>
+
+                    <p class="mt-1 text-info">Онлайн&nbsp;• Средней&nbsp;сложности&nbsp;• Без&nbsp;преподавателя&nbsp;• С&nbsp;практикой&nbsp;• Без&nbsp;сертификата&nbsp;• 28&nbsp;уроков</p>
+
+                    <label class="mt-1 mb-0">Подходящие навыки курса</label>
+                    <p>
+                        <span class="skill">MySQL <span class="skill-strength level1"><span></span><span></span><span></span><span></span></span></span>
+                    </p>
+
+                    <label class="mt-1 mb-0">Прочие навыки</label>
+                    <p>
+                        <span class="skill">PHP <span class="skill-strength level1"><span></span><span></span><span></span><span></span></span></span>
+                        <span class="skill">PHPStorm <span class="skill-strength level1"><span></span><span></span><span></span><span></span></span></span>
+                        <span class="skill">xdebug <span class="skill-strength level1"><span></span><span></span><span></span><span></span></span></span>
+                    </p>
+
+                    <div class="course-buttons d-flex flex-row mt-1">
+                        <button class="btn btn-outline-info flex-fill d-flex justify-content-center btn-favourite mr-3">
+                            <i class="far fa-heart"></i>&nbsp;Сохранить
+                        </button>
+                        <a href="/api/go.php?courseId=23" target="_blank" class="btn btn-outline-info btn-link" data-course-id="23">
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="d-flex flex-row justify-content-center mb-4 p-2">
+    <button class="btn btn-favourites-list flex-fill"><i class="far fa-heart"></i></button>
+    <div class="divisor"></div>
+    <button class="btn btn-filter flex-fill"><i class="fas fa-sliders-h"></i></button>
+</footer>
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/js/swiper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/interactjs@1.3.4/dist/interact.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.1/svg.min.js"></script>
+<script src="histogramInput.js"></script>
+
+<script>
+    function addClonedCourseCards(count) {
+        let $courseCard = $('.course-card');
+        let $container = $('.swiper-wrapper');
+
+        for (let index = 0; index < count; index++) {
+            $container.append($courseCard.clone());
+        }
+
+    }
+
+    function initSlider() {
+        let swiper = new Swiper('.course-list', {
+            slidesPerView: 'auto',
+            centeredSlides: true,
+            spaceBetween: 12,
+            pagination: {
+                el: '.swiper-pagination',
+                type: 'fraction',
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+
+        return swiper;
+    }
+
+    function initTopDrawerSliding() {
+        let высотаПоляВводаЗарплаты = 65;
+        let высотаПоляВводаНавыков = 75;
+        let порогДляПолногоОткрытияВПроцентах = 30;
+        let начальнаяВысотаЗаголовка = $('header').outerHeight();
+
+        let порогИзмененияПоляЗарплаты = начальнаяВысотаЗаголовка + высотаПоляВводаЗарплаты;
+        let порогИзмененияПоляНавыков  = начальнаяВысотаЗаголовка + высотаПоляВводаЗарплаты + высотаПоляВводаНавыков;
+        let порогДляОткрытияПоляЗарплаты = начальнаяВысотаЗаголовка + высотаПоляВводаЗарплаты * порогДляПолногоОткрытияВПроцентах/100;
+        let порогДляОткрытияПоляНавыков = начальнаяВысотаЗаголовка + высотаПоляВводаЗарплаты + высотаПоляВводаНавыков * порогДляПолногоОткрытияВПроцентах/100;
+
+        interact('header')
+            .resizable({
+                edges: { bottom: true },
+                restrictSize: {
+                    min: { height: начальнаяВысотаЗаголовка },
+                    max: { height: начальнаяВысотаЗаголовка + высотаПоляВводаЗарплаты + высотаПоляВводаНавыков}
+                },
+                inertia: true
+            })
+            .on('resizemove', function (событие) {
+                let заголовок = событие.target;
+                let полеЗарплаты = $(заголовок).find('.salary-input').get(0);
+                let полеНавыков = $(заголовок).find('.skills-input').get(0);
+
+                let текущаяВысотаЗаголовка = parseInt(заголовок.style.height);
+                let новаяВысотаЗаголовка = событие.rect.height;
+                let высотаУменьшилась = новаяВысотаЗаголовка < текущаяВысотаЗаголовка;
+                let изменятьВысотуПоляЗарплаты = новаяВысотаЗаголовка < порогИзмененияПоляЗарплаты;
+                let изменятьВысотуПоляНавыков = новаяВысотаЗаголовка >= порогИзмененияПоляЗарплаты && новаяВысотаЗаголовка < порогИзмененияПоляНавыков;
+                let скрытьПолеНавыков = !изменятьВысотуПоляНавыков && высотаУменьшилась;
+                let скрытьПолеЗарплаты = !изменятьВысотуПоляЗарплаты && !изменятьВысотуПоляНавыков && высотаУменьшилась;
+
+                заголовок.style.transition = "";
+                полеЗарплаты.style.transition = "";
+                полеНавыков.style.transition = "";
+
+                if (изменятьВысотуПоляЗарплаты) {
+                    let высотаПоля = событие.rect.height - начальнаяВысотаЗаголовка;
+                    полеЗарплаты.style.height = высотаПоля + 'px';
+                }
+
+                if (изменятьВысотуПоляНавыков) {
+                    let высотаПоля = событие.rect.height - начальнаяВысотаЗаголовка - высотаПоляВводаЗарплаты;
+                    полеНавыков.style.height = высотаПоля + 'px';
+                }
+
+                if (скрытьПолеЗарплаты) {
+                    полеЗарплаты.style.height = '0px';
+                }
+
+                if (скрытьПолеНавыков) {
+                    полеНавыков.style.height = '0px';
+                }
+
+                заголовок.style.height = новаяВысотаЗаголовка + 'px';
+            })
+            .on('resizeend', function (событие) {
+                let заголовок = событие.target;
+                let полеЗарплаты = $(заголовок).find('.salary-input').get(0);
+                let полеНавыков = $(заголовок).find('.skills-input').get(0);
+                let cssАнимацииУвеличения = "height 0.5s ease";
+
+                let высотаЗаголовка = parseInt(заголовок.style.height);
+                let полностьюОткрытьПолеЗарплаты = высотаЗаголовка >= порогДляОткрытияПоляЗарплаты && высотаЗаголовка < порогИзмененияПоляЗарплаты;
+                let полностьюОткрытьПолеНавыков = высотаЗаголовка >= порогДляОткрытияПоляНавыков && высотаЗаголовка <= порогИзмененияПоляНавыков;
+                let закрытьНеоткрытоеПолеЗарплаты = высотаЗаголовка > начальнаяВысотаЗаголовка && высотаЗаголовка < порогДляОткрытияПоляЗарплаты;
+                let закрытьНеоткрытоеПолеНавыков = высотаЗаголовка > порогИзмененияПоляЗарплаты && высотаЗаголовка <= порогДляОткрытияПоляНавыков;
+                console.log(высотаЗаголовка);
+
+                if (полностьюОткрытьПолеЗарплаты) {
+                    заголовок.style.transition = cssАнимацииУвеличения;
+                    полеЗарплаты.style.transition = cssАнимацииУвеличения;
+                    заголовок.style.height = начальнаяВысотаЗаголовка + высотаПоляВводаЗарплаты + 'px';
+                    полеЗарплаты.style.height = высотаПоляВводаЗарплаты + 'px';
+                }
+
+                if (полностьюОткрытьПолеНавыков) {
+                    заголовок.style.transition = cssАнимацииУвеличения;
+                    полеЗарплаты.style.transition = cssАнимацииУвеличения;
+                    полеНавыков.style.transition = cssАнимацииУвеличения;
+                    заголовок.style.height = начальнаяВысотаЗаголовка + высотаПоляВводаЗарплаты + высотаПоляВводаНавыков + 'px';
+                    полеЗарплаты.style.height = высотаПоляВводаЗарплаты + 'px';
+                    полеНавыков.style.height = высотаПоляВводаНавыков + 'px';
+                }
+
+                if (закрытьНеоткрытоеПолеЗарплаты) {
+                    заголовок.style.transition = cssАнимацииУвеличения;
+                    полеЗарплаты.style.transition = cssАнимацииУвеличения;
+                    заголовок.style.height = начальнаяВысотаЗаголовка + 'px';
+                    полеЗарплаты.style.height = '0px';
+                }
+
+                if (закрытьНеоткрытоеПолеНавыков) {
+                    заголовок.style.transition = cssАнимацииУвеличения;
+                    полеНавыков.style.transition = cssАнимацииУвеличения;
+                    заголовок.style.height = начальнаяВысотаЗаголовка + высотаПоляВводаЗарплаты + 'px';
+                    полеНавыков.style.height = '0px';
+                }
+            });
+    }
+
+    $(function () {
+        addClonedCourseCards(30);
+        initSlider();
+        initTopDrawerSliding();
+        makeSalaryInput();
+    });
+
+</script>
+
+</body>
+</html>

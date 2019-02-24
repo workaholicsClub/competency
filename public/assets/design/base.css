@@ -1,0 +1,293 @@
+@font-face {
+    font-family: Gilroy;
+    src: url("/assets/font/Gilroy-Light.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Gilroy;
+    font-weight: bold;
+    src: url("/assets/font/Gilroy-ExtraBold.otf") format("opentype");
+}
+
+
+body {
+    font-family: Gilroy, sans-serif;
+    background: rgb(248, 249, 250);
+}
+
+header {
+    box-sizing: border-box;
+    touch-action: none;
+}
+
+a, a:hover, a:visited, a:active {
+    color: rgb(94, 88, 210);
+}
+
+.top-drawer {
+    border-radius: 0 0 1rem 1rem;
+    font-size: .8rem;
+}
+
+.top-drawer label {
+    font-weight: bold;
+    margin-right: .25rem;
+    margin-bottom: 0;
+}
+
+.top-drawer .input-group {
+    margin-bottom: .5rem;
+}
+
+.editable-toggle {
+    border-bottom: 1px dashed rgb(94, 88, 210);
+}
+
+.profession-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: .5rem;
+    display: inline-block;
+}
+
+.profile-photo {
+    width: 3rem;
+}
+
+.profile-photo.empty {
+    opacity: .3;
+}
+
+.profile-photo-border {
+    border-radius: 3rem;
+    width: 3rem;
+    height: 3rem;
+    overflow: hidden;
+    border: 1px solid black;
+}
+
+.skills-input {
+    width: 100%;
+    height: 75px;
+}
+
+.salary-input {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+#salary-input-histogram {
+    position: absolute;
+}
+
+.curtain {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.1);
+    width: 30%;
+    margin-top: 15px;
+    height: 32px;
+}
+
+.curtain.left-curtain {
+    left: 0;
+}
+
+.curtain.right-curtain {
+    right: 0;
+}
+
+.salary-handle {
+    margin-top: -4px;
+}
+
+.curtain.right-curtain .salary-handle {
+    margin-left: -3px;
+}
+
+.curtain.left-curtain .salary-handle {
+    float: right;
+    margin-right: -3px;
+}
+
+#salary-input-histogram {
+    margin-top: 15px;
+}
+
+.skills-input, .salary-input, header {
+}
+
+.profile-handle {
+    width: 2rem;
+    height: 2px;
+    border: 1px solid black;
+    position: absolute;
+    bottom: .5rem;
+    left: 50%;
+    margin-left: -1rem;
+}
+
+.swiper-container {
+    width: 100%;
+    padding-top: 0.5rem;
+    margin-top: -0.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.course-card {
+    width: 85%;
+    border: none;
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.3);
+}
+
+.course-card .card-body {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.8rem;
+}
+
+.course-card h6 {
+    font-size: 0.8rem;
+}
+
+.course-card h5 {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.course-card-header a {
+    margin-right: .25rem;
+}
+
+.course-card label {
+    font-weight: bold;
+}
+
+.course-card .price {
+    font-size: 2rem;
+}
+
+.course-card .continue-toggle {
+    font-weight: bold;
+    display: block;
+}
+
+.course-card .text-info {
+    color: rgb(94, 88, 210)!important;
+}
+
+.course-buttons .btn {
+    height: 3rem;
+    border-radius: 1.5rem;
+    text-transform: uppercase;
+}
+
+.course-buttons .btn-outline-info {
+    color: rgb(94, 88, 210)!important;
+    border-color: rgb(94, 88, 210)!important;
+}
+
+.course-buttons .btn-outline-info:active, .course-buttons .btn-outline-info:hover {
+    color: white!important;
+    background-color: rgb(94, 88, 210)!important;
+}
+
+.course-buttons .btn-link {
+    width: 3rem;
+    line-height: 2rem;
+    padding-left: 1rem;
+}
+
+.course-buttons .btn-favourite {
+    font-weight: bold;
+    border-width: 2px;
+}
+
+.course-buttons .btn-favourite i {
+    margin-top: 0.15rem;
+    margin-right: 0.4rem;
+}
+
+.swiper-pagination {
+    position: static;
+    width: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    font-size: .8rem;
+    font-weight: bold;
+}
+
+.swiper-button-next, .swiper-button-prev {
+    position: static;
+    background: none;
+    right: initial;
+    left: initial;
+    top: initial;
+    width: auto;
+    height: auto;
+    margin-top: 0;
+}
+
+.swiper-button-prev::before {
+    content: '<';
+}
+
+.swiper-button-next::after {
+    content: '>';
+}
+
+.skill {
+    padding-right: 0.25em;
+    white-space: nowrap;
+    display: inline-block;
+    margin-bottom: 0.25em;
+}
+
+.skill-strength {
+    height: .6rem;
+    width: 1rem;
+    display: inline-flex;
+    align-items: flex-end;
+}
+
+.skill-strength span {
+    display: block;
+    width: 25%;
+    background: rgb(94, 88, 210);
+    margin-right: 1px;
+}
+
+.skill-strength span:nth-child(1) {height: 25%;}
+.skill-strength span:nth-child(2) {height: 50%;}
+.skill-strength span:nth-child(3) {height: 75%;}
+.skill-strength span:nth-child(4) {height: 100%;}
+
+.skill-strength.level0 span:nth-child(4), .skill-strength.level0 span:nth-child(3), .skill-strength.level0 span:nth-child(2) {opacity: 0.2;}
+.skill-strength.level1 span:nth-child(4), .skill-strength.level1 span:nth-child(3) {opacity: 0.2;}
+.skill-strength.level2 span:nth-child(4) {opacity: 0.2;}
+
+footer {
+    margin: auto;
+    width: 40%;
+    background: rgb(94, 88, 210);
+    height: 3rem;
+    border-radius: 1.5rem;
+
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 1.5rem;
+    z-index: 999;
+}
+
+footer .btn {
+    background: rgb(94, 88, 210);
+    color: white;
+    font-size: 1.3rem;
+    height: 100%;
+    line-height: 100%;
+}
+
+footer .divisor {
+    background: white;
+    width: 1px;
+    height: 100%;
+}
