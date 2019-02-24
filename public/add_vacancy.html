@@ -14,7 +14,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Новая вакансия&nbsp;<small class="text-muted">Фронтенд-разработчик</small></h1>
+                <h1>Новая вакансия&nbsp;<small class="text-muted"></small></h1>
             </div>
         </div>
     </div>
@@ -25,15 +25,23 @@
             <div class="col-md-8 addFormContainer">
                 <form class="mainForm">
                     <div class="form-group">
-                        <label class="h3">Название вакансии</label>
-                        <input type="" class="form-control" placeholder="">
+                        <div class="form-row">
+                            <label class="h4">Специальность</label>
+                            <select id="profession" class="form-control" name="profession">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="h4">Название вакансии</label>
+                        <input type="" class="form-control" placeholder="" name="title">
                     </div>
 
                     <div class="form-group">
                         <div class="form-row">
                             <div class="col form-group">
                                 <label>Название организации</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" name="companyName">
                             </div>
                             <div class="col form-group">
                                 <label>Сайт организации</label>
@@ -51,19 +59,6 @@
                     </div>
 
                     <div class="form-row skillContainer">
-
-
-                        <!--div class="alert alert-primary d-flex justify-content-between skillBlock" role="alert">
-                            <div class="levelHeaderContainer">
-                                <h4 class="alert-heading">CRM-системы</h4>
-                                <button type="button" class="close align-self-start" data-dismiss="alert">×</button>
-                            </div>
-                            <select class="custom-select skillSlider">
-                                <option value=1>Знание и выше</option>
-                                <option value=2>Умение применять и выше</option>
-                                <option value=3>Владение в совершенстве</option>
-                            </select>
-                        </div-->
                     </div>
                     
                     <div class="form-group py-3">
@@ -73,37 +68,69 @@
                             <div class="form-row">
                                 <div class="col form-group">
                                     <label for="from">От</label>
-                                    <input type="number" min="10000" max="200000" step="5000" value="100000" id="from" class="form-control">
+                                    <input type="number" min="10000" max="200000" step="5000" value="100000" id="from" class="form-control" name="salaryFrom">
                                 </div>
                                 <div class="col form-group">
                                     <label for="to">До</label>
-                                    <input type="number" min="100000" max="500000" step="5000" value="150000" id="to" class="form-control">
+                                    <input type="number" min="100000" max="500000" step="5000" value="150000" id="to" class="form-control" name="salaryTo">
                                 </div>
                             </div>
                         </div>
                         <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" data-prob-on="1" data-prob-off="0.3">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.3" name="fullTime">
+                            <label class="form-check-label">Полный день</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.3" name="officialEmployment">
                             <label class="form-check-label">Оформление по ТК</label>
                         </div>
                         <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" data-prob-on="1" data-prob-off="0.6">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.6" name="probation">
+                            <label class="form-check-label">Испытательный срок</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.6" name="flexibleSchedule">
                             <label class="form-check-label">Гибкий график</label>
                         </div>
                         <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" data-prob-on="1" data-prob-off="0.7">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.7" name="canBeRemote">
                             <label class="form-check-label">Удаленная работа</label>
                         </div>
                         <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" data-prob-on="1" data-prob-off="0.9">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.9" name="training">
                             <label class="form-check-label">Предоставляется обучение</label>
                         </div>
                         <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" data-prob-on="1" data-prob-off="0.9">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.9" name="food">
                             <label class="form-check-label">Предоставляется питание</label>
                         </div>
                         <div class="form-check py-1">
-                            <input type="checkbox" class="form-check-input" value="on" data-prob-on="1" data-prob-off="0.9">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.9" name="insurance">
                             <label class="form-check-label" contenteditable="true">ДМС</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.9" name="sportAndFitness">
+                            <label class="form-check-label" contenteditable="true">Спорт</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.9" name="communicationsCompensation">
+                            <label class="form-check-label" contenteditable="true">Оплата связи</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.9" name="sickLeaveCompensation">
+                            <label class="form-check-label" contenteditable="true">Оплата больничных</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.9" name="vacationCompensation">
+                            <label class="form-check-label" contenteditable="true">Оплата отпуска</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.9" name="dressCode">
+                            <label class="form-check-label" contenteditable="true">Дресс-код</label>
+                        </div>
+                        <div class="form-check py-1">
+                            <input type="checkbox" class="form-check-input" value="1" data-prob-on="1" data-prob-off="0.9" name="relocationHelp">
+                            <label class="form-check-label" contenteditable="true">Помощь с релокацией</label>
                         </div>
                     </div>
                     <div class="form-group py-3">
@@ -112,12 +139,25 @@
                             <textarea
                                     placeholder="Постарайтесь максимально подробно описать вакансию. Чем больше информации, тем проще соискателю составить первое впечатление о работодателе и принять решение об отклике."
                                     class="form-control"
-                                    rows="4"></textarea>
+                                    rows="4" name="text"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="h3">Публиковать вакансию до</label>
                         <input type="date" class="form-control" placeholder="">
+                    </div>
+
+                    <div>
+                        <div class="form-row mt-3">
+                            <div class="col">
+                                <a class="btn btn-primary btn-block btn-lg saveVacancy" href="#">Сохранить вакансию</a>
+                            </div>
+                        </div>
+                        <div class="form-row mt-1">
+                            <div class="col">
+                                <div class="alert alert-success saveResult"></div>
+                            </div>
+                        </div>
                     </div>
 
                 </form>
@@ -163,13 +203,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="list-group skillList">
-                        <a href="#" class="list-group-item list-group-item-action">Excel</a>
-                        <a href="#" class="list-group-item list-group-item-action">CRM-системы</a>
-                        <a href="#" class="list-group-item list-group-item-action">HTML</a>
-                        <a href="#" class="list-group-item list-group-item-action">CSS</a>
-                        <a href="#" class="list-group-item list-group-item-action">Верстка</a>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
@@ -179,8 +212,7 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
             integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
@@ -192,13 +224,13 @@
     <script>
 
 
-        function addSkill(skillName) {
-            let skillHTML = "<div class=\"alert alert-primary d-flex justify-content-between skillBlock\" role=\"alert\">\n" +
+        function addSkill(skillId,skillName) {
+            let skillHTML = "<div class=\"alert alert-primary d-flex justify-content-between skillBlock\"  data-name = "+skillName+" role=\"alert\">\n" +
                 "    <div class=\"levelHeaderContainer\">\n" +
                 "        <h4 class=\"alert-heading\">"+skillName+"</h4>\n" +
                 "        <button type=\"button\" class=\"close align-self-start\" data-dismiss=\"alert\">×</button>\n" +
                 "    </div>\n" +
-                "    <select class=\"custom-select skillSlider\">\n" +
+                "    <select class=\"custom-select skillSlider\" name=\"skills["+skillId+"]\"'>\n" +
                 "        <option value=1>Знание и выше</option>\n" +
                 "        <option value=2>Умение применять и выше</option>\n" +
                 "        <option value=3>Владение в совершенстве</option>\n" +
@@ -251,8 +283,84 @@
             $('.resumeValue').text(resumesCount);
         }
 
+        function setProfessionSkills(professionSkillsData){
+            let professions = Object.keys(professionSkillsData);
+            $('#profession option').remove();
+            professions.forEach(function (profession, index) {
+                $('#profession').append('<option value="'+profession+'" data-id="'+index+'">'+profession+'</option>');
+                let allSkills = professionSkillsData[profession];
+                 $('.modal-body').append('<div class="list-group skillList" id="'+index+'"></div>');
+                allSkills.forEach(function(skill){
+                     $(".skillList[id=" + index+"]").append('<a href="#" class="list-group-item list-group-item-action" id = '+skill.id+'>'+skill.name+'</a>');
+                });
+
+            });
+        }
+
+        function loadProfessionSkills() {
+            let promise = $.Deferred();
+
+            $.ajax({
+                url: "/api/skills.php",
+                dataType: 'json',
+                success: function (result) {
+                    promise.resolve(result);
+                },
+                error: function (result) {
+                    if (result && result.status === 200) {
+                        promise.resolve(result.responseText);
+                    }
+                    else {
+                        promise.reject(result);
+                    }
+                }
+            });
+
+            return promise;
+        }
+
+        function saveVacancy() {
+            let promise = $.Deferred();
+            let vacancyData = $('.mainForm').serialize();
+            console.log(vacancyData);
+            $.ajax({
+                url: "api/saveVacancy.php",
+                async: false,
+                data: vacancyData,
+                type: "POST",
+                dataType: "json",
+                success: function(result){
+                    promise.resolve(result)
+                },
+                error: function(result){
+                    if (result && result.status === 200) {
+                        promise.resolve(result.responseText);
+                    }
+                    else {
+                        promise.reject(result);
+                    }
+                }
+
+            });
+            return promise;
+        }
+
         $(function () {
+            loadProfessionSkills().then(function (professionSkillsData) {
+                setProfessionSkills(professionSkillsData);
+            });
             updateConversion();
+
+            $(document).on('click', '.addSkillButton', function () {
+                let selectedId = $('#profession option:selected').attr('data-id');
+                $('.skillList').hide();
+                $(".skillList[id=" + selectedId+"]" ).show();
+
+            });
+
+            $(document).on('change','#profession',function(){
+                $('.skillContainer').contents().remove();
+            });
 
             $(document).on('change', '.skillSelect', function () {
                 let skillName = $(this).val();
@@ -273,7 +381,8 @@
             $(document).on('click', '.confirmSkillsAddButton', function () {
                 $('.skillList a.active').each(function () {
                     let skillName = $(this).text();
-                    addSkill(skillName);
+                    let skillId = $(this).attr('id');
+                    addSkill(skillId, skillName);
                     $(this).removeClass('active');
                 });
                 updateConversion();
@@ -300,6 +409,32 @@
 
             $(document).on('change input click', 'input', function () {
                 updateConversion();
+            });
+
+            $(document).on('click', '.saveVacancy', function (event) {
+                event.preventDefault();
+                $('.saveResult').text('Сохраняю...');
+                saveVacancy()
+                    .then(function (result) {
+                        if (result.id) {
+                            $('.saveResult')
+                                .removeClass('alert-success alert-danger')
+                                .addClass('alert-success')
+                                .text('ID: '+result.id);
+                        }
+                        else {
+                            $('.saveResult')
+                                .removeClass('alert-success alert-danger')
+                                .addClass('alert-danger')
+                                .text('Ошибка!');
+                        }
+                    })
+                    .catch(function () {
+                        $('.saveResult')
+                            .removeClass('alert-success alert-danger')
+                            .addClass('alert-danger')
+                            .text('Ошибка!');
+                    });
             });
         });
 
