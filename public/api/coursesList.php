@@ -189,6 +189,16 @@ ORDER BY maxSkillRate DESC, hasPrimary DESC, price ASC');
             "requirements"     => $requirements,
         ];
     };
+
+    usort($jsonOutput, function ($courseA, $courseB) {
+        $skillsA = count($courseA['searchedSkills']);
+        $skillsB = count($courseB['searchedSkills']);
+        if ( $skillsA === $skillsB) {
+            return 0;
+        }
+
+        return $skillsA > $skillsB ? -1 : 1;
+    });
 }
 
 if ($jsonOutput === false) {
