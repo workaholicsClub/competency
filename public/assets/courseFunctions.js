@@ -13,6 +13,20 @@ function pushToBackpack(course) {
     saveBackpack();
 }
 
+function removeFromBackpack(courseId) {
+    let removedCourse = false;
+
+    getBackpack().forEach(function (course, index) {
+        if (course.id === courseId) {
+            removedCourse = backpack.splice(index, 1);
+        }
+    });
+
+    saveBackpack();
+
+    return removedCourse;
+}
+
 function loadBackpack() {
     let savedIds = getCookie('backpack');
     backpack = [];
@@ -34,6 +48,19 @@ function getBackpackIds() {
     }, []);
 
     return courseIds;
+}
+
+function isInBackpack(courseId) {
+    let backpackIds = getBackpackIds();
+    return backpackIds.indexOf(courseId) !== -1;
+}
+
+function isBackbackEmpty() {
+    if (!backpack) {
+        return false;
+    }
+
+    return backpack.length === 0;
 }
 
 function saveBackpack() {
@@ -71,8 +98,8 @@ function loadApiData(url, data) {
     return promise;
 }
 
-function getCourseHardnessHTML(course, level) {
-    let hardnessIndex = getHardnessIndex(course, level);
+function getCourseHardnessHTML(course) {
+    let hardnessIndex = getHardnessIndex(course);
 
     if (hardnessIndex === 2) {
         return "Средней сложности";
@@ -99,8 +126,8 @@ function getCourseHardness(course) {
     return maxSkillLevel;
 }
 
-function getHardnessIndex(course, level) {
-    let hardnessPercent = getCourseHardness(course, level);
+function getHardnessIndex(course) {
+    let hardnessPercent = getCourseHardness(course);
 
     let hardnessIndex = 1;
 
@@ -115,7 +142,7 @@ function getHardnessIndex(course, level) {
     return hardnessIndex;
 }
 
-function getCourseAttributesHTML(course, index) {
+function getCourseAttributesHTML(course) {
     let certificateShortNames = {
         'Нет': 'Без сертификата',
         'Собственный': 'Собственный сертификат',
@@ -124,7 +151,7 @@ function getCourseAttributesHTML(course, index) {
 
     let attributes = [
         course.format,
-        getCourseHardnessHTML(course, index),
+        getCourseHardnessHTML(course),
         course.hasTeacher ? 'С преподавателем' : 'Без преподавателя',
         course.hasPractice ? 'С практикой' : 'Без практики'
     ];
@@ -153,7 +180,8 @@ function declensionUnits(number, unitsName) {
         'минута': ['минута', 'минуты', 'минут'],
         'месяц': ['месяц', 'месяца', 'месяцев'],
         'неделя': ['неделя', 'недели', 'недель'],
-        'год': ['год', 'года', 'лет']
+        'год': ['год', 'года', 'лет'],
+        'вакансия': ['вакансии', 'вакансиям', 'вакансиям']
     };
 
     if (typeof declensionVariants[unitsName] == 'undefined') {
@@ -255,19 +283,19 @@ function getHumanReadableTime(course) {
         humanReadable = 'менее 1 часа';
     }
 
-    if (timeInDays > 1) {
+    if (timeInDays >= 1) {
         humanReadable = getTimeWithUnitsString(timeInDays, 'день');
     }
 
-    if (timeInWeeks > 1) {
+    if (timeInWeeks >= 1) {
         humanReadable = getTimeWithUnitsString(timeInWeeks, 'неделя');
     }
 
-    if (timeInMonths > 1) {
+    if (timeInMonths >= 1) {
         humanReadable = getTimeWithUnitsString(timeInMonths, 'месяц');
     }
 
-    if (timeInYears > 1) {
+    if (timeInYears >= 1) {
         humanReadable = getTimeWithUnitsString(timeInYears, 'год');
     }
 

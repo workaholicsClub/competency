@@ -20,6 +20,10 @@ header {
     touch-action: none;
 }
 
+header.animated {
+    transition: height 0.5s ease;
+}
+
 a, a:hover, a:visited, a:active {
     color: rgb(94, 88, 210);
 }
@@ -66,18 +70,73 @@ a, a:hover, a:visited, a:active {
     border: 1px solid black;
 }
 
-.skills-input {
-    width: 100%;
-    height: 75px;
+.work-experience-input {
+    max-height: calc(2.25rem + 10px);
 }
 
-.salary-input {
+.skills-input.loading, .course-list.loading {
+    background: url('/assets/images/preloader294.gif') 50% 50% no-repeat;
+}
+
+.skills-input.loading {
+    min-height: 10vw;
+}
+
+.course-list.loading {
+    min-height: 100vw;
+}
+
+.skills-input-wrapper, .work-experience-input {
+    width: 100%;
+    flex: 1 1 0%;
+    min-height: 0;
+    height: 0px;
+    overflow: hidden;
+}
+
+.skills-input .skill {
+    padding: 0.25em 0.5em;
+    border: 1px solid #ced4da;
+    display: inline-block;
+    border-radius: 1em;
+    position: relative;
+    overflow: hidden;
+    margin-right: 0.25rem;
+}
+
+.skills-input .skill .delete-skill {
+    position: absolute;
+    background: rgba(0,0,0,0.7);
+    padding: 0.25em 0.5em;
+    left: 0;
+    top: 0;
+    color: white;
+    width: 100%;
+    text-align: center;
+    display: none;
+}
+
+.skills-input .skill:hover .delete-skill {
+    display: block;
+}
+
+.salary-input-wrapper {
     width: 100%;
     overflow: hidden;
     position: relative;
+    height: 100%;
+    max-height: 68px;
 }
 
-#salary-input-histogram {
+header .input-group {
+    min-height: 20px;
+}
+
+header a, header a:active, header a:hover, header a:visited {
+    text-decoration: none;
+}
+
+.salary-input-histogram {
     position: absolute;
 }
 
@@ -110,7 +169,7 @@ a, a:hover, a:visited, a:active {
     margin-right: -3px;
 }
 
-#salary-input-histogram {
+.salary-input-histogram {
     margin-top: 15px;
 }
 
@@ -186,15 +245,17 @@ a, a:hover, a:visited, a:active {
     border-color: rgb(94, 88, 210)!important;
 }
 
-.course-buttons .btn-outline-info:active, .course-buttons .btn-outline-info:hover {
+.course-buttons .btn-outline-info:active,
+.course-buttons .btn-outline-info.active,
+.course-buttons .btn-outline-info:hover {
     color: white!important;
     background-color: rgb(94, 88, 210)!important;
 }
 
-.course-buttons .btn-link {
+.course-buttons .btn-link, .course-buttons .btn-share {
     width: 3rem;
-    line-height: 2rem;
-    padding-left: 1rem;
+    line-height: 2.3rem;
+    font-size: 1.3rem;
 }
 
 .course-buttons .btn-favourite {
@@ -286,8 +347,106 @@ footer .btn {
     line-height: 100%;
 }
 
+footer .icon-background {
+    color: rgb(143, 133, 221);
+    display: none;
+}
+
+footer .btn-favourites-list.active .icon-overlay {
+    margin-left: -35%;
+}
+
+footer .btn-favourites-list.active .fav-count,
+footer .btn-favourites-list.active .icon-background {
+    display: initial;
+}
+
 footer .divisor {
     background: white;
     width: 1px;
     height: 100%;
+}
+
+footer .fav-count {
+    font-size: 75%;
+    display: none;
+}
+
+section.sliding-panel {
+    width: 100vw;
+    height: 0;
+    overflow: scroll;
+
+    position: fixed;
+    bottom: 0;
+    z-index: 900;
+    background: rgb(248, 249, 250);
+    transition: height 0.5s ease;
+
+    font-size: 0.8rem;
+}
+
+section.sliding-panel.show {
+    height: 100vh;
+}
+
+section.filter-panel .group-title-label {
+    font-weight: bold;
+    width: 100%;
+}
+
+section.filter-panel .btn-outline-primary input {
+    display: none;
+}
+
+section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled),
+section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled):active {
+    color: rgb(94, 88, 210);
+    border-color: rgb(94, 88, 210);
+    background-color: transparent;
+    text-transform: uppercase;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    margin-right: 0.25rem;
+}
+
+section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled).active {
+    color: white;
+    border-color: rgb(94, 88, 210);
+    background-color: rgb(94, 88, 210);
+}
+
+section.filter-panel .input-group {
+    margin-bottom: 1.5rem;
+}
+
+section.filter-panel .input-group:last-child {
+    margin-bottom: 6.5rem;
+}
+
+
+section.favourite-panel .course-card {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+section.favourite-panel .course-card:last-child {
+    margin-bottom: 6.5rem;
+}
+
+section.favourite-panel .top-favourite-remove {
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .delete-skill {
+        display: none!important;
+    }
+}
+
+
+@media (min-width: 768px) {
+    .delete-skill-mobile {
+        display: none!important;
+    }
 }
