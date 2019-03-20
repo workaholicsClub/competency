@@ -738,6 +738,12 @@
         $('.profession-title').text( getCurrentProfessionName() );
     }
 
+    (function chromeOnAndroidUrlBarOverlayHack() {
+        if (navigator.userAgent.indexOf("Chrome") && navigator.userAgent.indexOf("Android")) {
+            document.body.classList.add('chrome-on-android');
+        }
+    })();
+
     $(function () {
         let headerInputWidth = 277;
 

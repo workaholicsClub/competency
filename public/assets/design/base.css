@@ -431,6 +431,10 @@ section.sliding-panel.show {
     height: 100vh;
 }
 
+.chrome-on-android section.sliding-panel.show {
+    height: calc(100vh - 56px);
+}
+
 section .section-title {
     font-size: 1.1rem;
     color: black;
