@@ -33,21 +33,15 @@
 
 <header class="d-flex flex-row justify-content-between align-items-start card p-4 top-drawer">
     <section class="data flex-fill d-flex flex-column align-items-start h-100">
-        <a href="#" class="profession-title">...</a>
-
         <div class="input-group">
-            <label class="">Опыт работы:</label>
-            <a href="#" class="editable-toggle work-experience-input-display">нет</a>
-        </div>
+            <label class="request">
+                Я
+                <a href="#" class="editable-toggle profession-title mr-2">...</a>
+                <a href="#" class="editable-toggle work-experience-input-display">без опыта работы</a>
+                хочу
+                <a href="#" class="editable-toggle want-to-input">повысить квалификацию</a>
+            </label>
 
-        <div class="work-experience-input">
-            <select class="form-control mb-2">
-                <option>нет</option>
-                <option>менее года</option>
-                <option>1-2 года</option>
-                <option>3-5 лет</option>
-                <option>более 5 лет</option>
-            </select>
         </div>
 
         <div class="input-group">
@@ -57,42 +51,35 @@
 
         <div class="salary-input-wrapper">
         </div>
-
-        <div class="input-group">
-            <label class="">Нужные навыки:</label>
-            <a href="#" class="editable-toggle skills-input-display">...</a>
-        </div>
-
-        <div class="skills-input-wrapper">
-            <div class="skills-input">
-            </div>
-        </div>
-    </section>
-    <section class="profile-photo empty">
-        <div class="profile-photo-border">
-            <img src="/assets/images/noun_Cat_171038.svg">
-        </div>
     </section>
     <div class="profile-handle"></div>
 </header>
 
 <main>
-    <section class="pagination d-flex flex-row justify-content-center align-items-center">
+    <section class="pagination d-flex flex-row justify-content-center align-items-center no-result-hide">
         <div class="swiper-button-prev"></div>
         <div class="swiper-pagination"></div>
         <div class="swiper-button-next"></div>
     </section>
 
-    <section class="swiper-container">
+    <section class="swiper-container no-result-hide">
         <div class="swiper-wrapper course-list loading">
         </div>
     </section>
+
+    <section class="no-result-show no-result-text p-4 d-flex flex-column" style="display: none!important">
+        <h2>Ой! Такого не нашлось</h2>
+        <p class="flex-fill">Курсов, подходящих по условиям из фильтра, сейчас нет.</p>
+        <button class="btn btn-outline-primary apply-btn">
+            Изменить фильтр
+        </button>
+    </section>
 </main>
 
-<footer class="d-flex flex-row justify-content-center mb-4 p-2">
+<footer class="d-flex flex-row justify-content-center mb-4 p-2 no-result-hide">
     <button class="btn btn-favourites-list flex-fill d-flex align-items-center justify-content-center">
-        <i class="fas fa-heart icon-background"></i>
-        <i class="far fa-heart icon-overlay"></i>
+        <i class="fas fa-bookmark icon-background"></i>
+        <i class="far fa-bookmark icon-overlay"></i>
         <span class="fav-count ml-2">0</span>
     </button>
     <div class="divisor"></div>
@@ -101,6 +88,27 @@
 
 <section class="filter-panel sliding-panel">
     <div class="margin-wrapper m-4">
+        <div class="flex-row d-flex align-items-center justify-content-center mb-4 section-title">
+            <label class="flex-fill text-center mb-0">Фильтры</label>
+            <a class="close-panel-btn" href="#">&times;</a>
+        </div>
+
+        <div class="input-group">
+            <label class="group-title-label">
+                Навыки на основе
+                <span class="skills-input-display">...</span>
+                с ЗП
+                <span class="salary-input-display">...</span>
+            </label>
+
+            <div class="salary-input-wrapper">
+            </div>
+
+            <div class="skills-input-wrapper">
+                <div class="skills-input checkbox-group">
+                </div>
+            </div>
+        </div>
 
         <div class="input-group">
             <label class="group-title-label">Формат курса</label>
@@ -150,11 +158,24 @@
             </div>
         </div>
 
+        <div class="d-flex flex-row justify-content-center mb-4 p-2">
+            <button class="btn btn-outline-primary flex-fill d-flex align-items-center justify-content-center apply-btn">
+                Применить
+            </button>
+        </div>
     </div>
 </section>
 
 <section class="favourite-panel sliding-panel">
-    <div class="margin-wrapper m-4 favourite-list">
+    <div class="margin-wrapper m-4">
+        <div class="flex-row d-flex align-items-center justify-content-center mb-4 section-title">
+            <label class="flex-fill text-center mb-0">Сохраненные курсы</label>
+            <a class="close-panel-btn" href="#">&times;</a>
+        </div>
+
+        <div class="favourite-list">
+
+        </div>
     </div>
 </section>
 
@@ -189,14 +210,14 @@
 <script>
     let currentCourses = false;
 
-    function getSkillHeaderHTML(skillName, level) {
-        return `<span class="skill">
+    function getSkillFilterHTML(skillName, level, rate) {
+        let isChecked = rate >= 35;
+
+        return `<label class="btn btn-outline-primary skill ${ isChecked ? "active" : ""}" data-rate="${rate}">
                 ${skillName}
                 <span class="skill-strength level${level}"><span></span><span></span><span></span><span></span></span>
-                <a class="delete-skill" href="#"><i class="far fa-trash-alt"></i>&nbsp;Удалить</a>
-                <a class="delete-skill-mobile" href="#"><i class="fas fa-times"></i></a>
-                <input type="hidden" name="skills[${skillName}]" value="${level}">
-            </span>`;
+                <input type="checkbox" name="skills[${skillName}]" value="${level}" ${ isChecked ? "checked=\"checked\"" : ""}>
+            </label>`;
     }
 
     function getSkillHTML(skillName, level) {
@@ -223,23 +244,23 @@
         }
 
         let professionNames = {
-            'php-developer': 'Разработчик PHP',
+            'php-developer': 'разработчик PHP',
             'hr-manager': 'HR менеджер',
             'pr-specialist': 'PR специалист',
-            'python-developer': 'Разработчик Python',
-            'golang-developer': 'Разработчик Golang',
-            'javascript-developer': 'Разработчик JavaScript',
+            'python-developer': 'разработчик Python',
+            'golang-developer': 'разработчик Golang',
+            'javascript-developer': 'разработчик JavaScript',
             'ui-ux-designer': 'UI/UX дизайнер',
-            'ios-developer': 'Разработчик iOS',
-            'android-developer': 'Разработчик Android',
-            'internet-marketologist': 'Интернет-маркетолог',
-            'qa-tester': 'Тестировщик',
+            'ios-developer': 'разработчик iOS',
+            'android-developer': 'разработчик Android',
+            'internet-marketologist': 'интернет-маркетолог',
+            'qa-tester': 'тестировщик',
             'devops': 'DevOps специалист',
             'data-scientist': 'Data Scientist',
-            'game-designer': 'Гейм-дизайнер',
-            'project-manager': 'Менеджер интернет-проектов',
-            'game-artist-2d': 'Игровой художник 2D',
-            'game-artist-3d': 'Игровой художник 3D'
+            'game-designer': 'гейм-дизайнер',
+            'project-manager': 'менеджер интернет-проектов',
+            'game-artist-2d': 'игровой художник 2D',
+            'game-artist-3d': 'игровой художник 3D'
         };
 
         return professionNames[pageCode] || false;
@@ -247,7 +268,7 @@
 
     function splitLongText(text, wordLimit) {
         if (!wordLimit) {
-            wordLimit = 50;
+            wordLimit = 25;
         }
 
         let words = text.split(" ");
@@ -274,7 +295,7 @@
                     <div class="d-flex flex-row course-card-header">
                         <h6 class="text-muted flex-fill">от <a href="${course.url}">${course.platform}</a></h6>
                         <a href="#" class="top-favourite-add">
-                            ${isFavourited ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>' }
+                            <i class="fas fa-bookmark"></i>
                         </a>
                     </div>
                     <h5>${course.title}</h5>
@@ -286,7 +307,7 @@
                         ${description[0]}
                         ${description[1] ?
                             '<span class="continue-dots">...</span>' +
-                            '<a href="#" class="continue-toggle">Читать полностью</a>' +
+                            '<a href="#" class="continue-toggle d-flex justify-content-end flex-column"><i class="fas fa-angle-down"></i></a>' +
                             '<span class="continue" style="display: none">' + description[1] + '</span>'
                         : ''}
                     </p>
@@ -295,24 +316,25 @@
 
                     ${searchedSkillsHTML
                         ? (
-                            '<label class="mt-1 mb-0">Нужные навыки</label><p>' + searchedSkillsHTML + '</p>' +
-                            (additionalSkillsHTML ? '<label class="mt-1 mb-0">Дополнительные навыки</label><p>' + additionalSkillsHTML + '</p>' : '')
+                            '<label class="mt-1 mb-0">По окончании курса будете уметь</label><p>' + searchedSkillsHTML +
+                            (additionalSkillsHTML ? '<a href="#" class="continue-toggle">Показать все</a><span class="continue" style="display: none">' + additionalSkillsHTML + '</span>' : '') +
+                            '</p>'
                         )
                         : '<label class="mt-1 mb-0">Навыки</label><p>' + allSkillsHTML + '</p>'
                     }
 
-                    ${requirementsHTML ? '<label class="mt-1 mb-0">Требования</label><p>' + requirementsHTML + '</p>' : ''}
+                    ${requirementsHTML ? '<label class="mt-1 mb-0">Нужно знать</label><p>' + requirementsHTML + '</p>' : ''}
 
-                    <div class="course-buttons d-flex flex-row mt-1">
-                        <button class="btn btn-outline-info flex-fill d-flex justify-content-center btn-favourite mr-2 ${isFavourited ? 'active' : ''}" ${isFavourited ? 'disabled="disabled"' : '' }>
-                            <i class="${isFavourited ? 'fas fa-check' : 'far fa-heart'}"></i>&nbsp;${isFavourited ? 'Сохранен' : 'Сохранить' }
+                    <div class="course-buttons flex-fill d-flex flex-row mt-1">
+                        <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2" data-course-id="${course.id}">
+                            Сайт курса
+                        </a>
+                        <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2 ${isFavourited ? 'active' : ''}" ${isFavourited ? 'disabled="disabled"' : '' }>
+                            <i class="${isFavourited ? 'fas fa-check' : 'far fa-bookmark'}"></i>
                         </button>
                         <a href="${getCoursePageUrl(course)}" target="_blank" class="btn btn-outline-info btn-share mr-2" data-course-id="${course.id}">
-                            <!--i class="fas fa-share-alt"></i-->
-                            <i class="fas fa-link"></i>
-                        </a>
-                        <a href="${course.url}" target="_blank" class="btn btn-outline-info btn-link" data-course-id="${course.id}">
-                            <i class="fas fa-external-link-alt"></i>
+                            <i class="fas fa-share-alt"></i>
+                            <!--i class="fas fa-link"></i-->
                         </a>
                     </div>
                 </div>
@@ -360,16 +382,17 @@
 
     function initTopDrawerSliding() {
         let высотаПоляВводаЗарплаты = 65;
-        let высотаПоляВводаНавыков = 75;
-        let начальнаяВысотаЗаголовка = $('header').outerHeight();
+        let высотаПоляВводаНавыков = 0;
+        let начальнаяВысотаЗаголовка = 136;
+        let максимальнаяВысотаЗаголовка = 204;
         $('header').data('closed-height', начальнаяВысотаЗаголовка);
 
         interact('header')
             .resizable({
                 edges: { bottom: true },
                 restrictSize: {
-                    min: { height: начальнаяВысотаЗаголовка }//,
-                    //max: { height: начальнаяВысотаЗаголовка + высотаПоляВводаЗарплаты + высотаПоляВводаНавыков}
+                    min: { height: начальнаяВысотаЗаголовка },
+                    max: { height: максимальнаяВысотаЗаголовка}
                 },
                 inertia: true
             })
@@ -382,32 +405,61 @@
             });
     }
 
+    function showFooter() {
+        $('footer').css('visibility', '');
+    }
+
+    function toggleFooter() {
+        let $footer = $('footer');
+        let isFooterVisible = $footer.css('visibility') !== 'hidden';
+
+        if (isFooterVisible) {
+            $footer.css('visibility', 'hidden');
+        }
+        else {
+            $footer.css('visibility', '');
+        }
+    }
+
     function initFilter() {
         let debouncedUpdateCourses = debounce(updateCourses, 1500);
 
-        $('.btn-filter').on('click', function () {
+        $(document).on('click', '.btn-filter', function () {
+            $('.filter-panel').toggleClass('show');
+            toggleFooter();
+        });
+
+        $(document).on('click', ' .filter-panel .close-panel-btn, .filter-panel .apply-btn', function () {
+            $('.filter-panel').toggleClass('show');
+            showFooter();
+        });
+
+        $(document).on('click', '.no-result-text .apply-btn', function () {
             $('.filter-panel').toggleClass('show');
         });
 
-        $('.checkbox-group input').on('click', function() {
+
+        $(document).on('click', '.checkbox-group input', function() {
             $(this).closest('label').toggleClass('active');
             debouncedUpdateCourses();
         });
     }
 
     function initFavourites() {
-        $('.btn-favourites-list').on('click', function () {
+        $(document).on('click', '.btn-favourites-list, .favourite-panel .close-panel-btn, .favourite-panel .apply-btn ', function () {
             $('.favourite-panel').toggleClass('show');
+            toggleFooter();
         });
     }
 
     function displaySalaryRange(salaryFrom, salaryTo) {
         let fromThousands = Math.round(salaryFrom / 1000);
+        let toThousands = Math.round(salaryTo / 1000);
 
         $('.salary-input').data('from', salaryFrom);
         $('.salary-input').data('to', salaryTo);
 
-        $('.salary-input-display').html(formatNumber(fromThousands) + '&nbsp;&mdash;&nbsp;'+formatNumber(salaryTo)+'&nbsp;&#8381;');
+        $('.salary-input-display').html(formatNumber(fromThousands) + 'k&nbsp;&mdash;&nbsp;'+formatNumber(toThousands)+'k&nbsp;&#8381;');
     }
 
     function debounce(func, wait, immediate) {
@@ -476,7 +528,7 @@
             .find('.btn-favourite')
             .addClass('active')
             .attr('disabled', true)
-            .html('<i class="fas fa-check"></i> Сохранен');
+            .html('<i class="fas fa-check"></i>');
     }
 
     function disableCourseCardFavouriteState($card) {
@@ -485,14 +537,14 @@
             .find('.btn-favourite')
             .removeClass('active')
             .attr('disabled', false)
-            .html('<i class="far fa-heart"></i> Сохранить');
+            .html('<i class="far fa-bookmark"></i>');
     }
 
     function initCourseCards() {
         $(document).on('click', '.continue-toggle', function (event) {
             event.preventDefault();
 
-            $(this).hide();
+            $(this).attr("style", "display: none!important");
             $(this).siblings('.continue-dots').hide();
             $(this).siblings('.continue').show();
         });
@@ -533,7 +585,7 @@
             professionCode: getProfessionCodeFromUrl(),
             salaryFrom: salaryFrom,
             salaryTo: salaryTo,
-            filterRate: 20
+            filterRate: 10
         });
     }
 
@@ -553,7 +605,7 @@
     }
 
     function makeSalaryInput(wrapperSelector, width) {
-        let wrapper = document.querySelector(wrapperSelector);
+        let wrappers = document.querySelectorAll(wrapperSelector);
 
         return loadHistogramData()
             .then(function (response) {
@@ -564,14 +616,16 @@
                     salaryFrom -= response.step;
                 }
 
-                new SalaryInput(wrapper, {
-                    fromHandle: salaryFrom,
-                    toHandle: salaryTo,
-                    graphWidth: width,
-                    handleHeight: 40,
-                    binValues: response.binValues,
-                    labelsText: response.binLabels,
-                    valueRange: [response.salary.min, response.salary.max]
+                wrappers.forEach(function (wrapper) {
+                    new SalaryInput(wrapper, {
+                        fromHandle: salaryFrom,
+                        toHandle: salaryTo,
+                        graphWidth: width,
+                        handleHeight: 40,
+                        binValues: response.binValues,
+                        labelsText: response.binLabels,
+                        valueRange: [response.salary.min, response.salary.max]
+                    });
                 });
 
                 displaySalaryRange(salaryFrom, salaryTo);
@@ -579,15 +633,13 @@
     }
 
     function drawSkills(response) {
-        let displayText = response.skillsCount +
-            ' (по ' + response.vacanciesCount+ ' ' +
-            declensionUnits( response.vacanciesCount, 'вакансиям')+
-            ')';
+        let displayText = response.vacanciesCount+ ' ' +
+            declensionUnits( response.vacanciesCount, 'вакансий');
 
         $('.skills-input-display').html(displayText);
 
         response.skills.forEach(function (skill) {
-            let skillHTML = getSkillHeaderHTML(skill.title, skill.modeLevel);
+            let skillHTML = getSkillFilterHTML(skill.title, skill.modeLevel, skill.rate);
             $('.skills-input').append(skillHTML);
         });
     }
@@ -611,12 +663,32 @@
             });
     }
 
+    function showNoResults() {
+        $('.no-result-show').attr("style", "");
+        $('.no-result-hide').attr("style", "display: none!important")
+    }
+
+    function hideNoResults() {
+        $('.no-result-show').attr("style", "display: none!important");
+        $('.no-result-hide').attr("style", "");
+    }
+
     function updateCourses() {
         $('.course-list').addClass('loading').html('');
 
         return loadCourses()
             .then(function (response) {
+                let noCourses = response.length === 0;
+
                 $('.course-list').removeClass('loading');
+
+                if (noCourses) {
+                    showNoResults();
+                }
+                else {
+                    hideNoResults();
+                }
+
                 drawCourses(response);
             });
     }
@@ -649,7 +721,8 @@
         let skillsHeight = $('.skills-input').height();
         let gap = 16;
 
-        let maxHeight = closedHeaderHeight + expHeight + salaryHeight + skillsHeight + gap;
+        //let maxHeight = closedHeaderHeight + expHeight + salaryHeight + skillsHeight + gap;
+        let maxHeight = 204;
         $('header')
             .addClass('expanded animated')
             .css('height', maxHeight+'px');
@@ -666,10 +739,12 @@
     }
 
     $(function () {
+        let headerInputWidth = 277;
+
         updatePageTitle();
         initSlider();
         initTopDrawerSliding();
-        makeSalaryInput('.salary-input-wrapper', $('section.data').width())
+        makeSalaryInput('.salary-input-wrapper', headerInputWidth)
             .then(updateSkills)
             .then(updateCourses)
             .then(updateFavourites)

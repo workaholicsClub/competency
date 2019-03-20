@@ -30,13 +30,18 @@ a, a:hover, a:visited, a:active {
 
 .top-drawer {
     border-radius: 0 0 1rem 1rem;
-    font-size: .8rem;
+    font-size: 0.9rem;
 }
 
 .top-drawer label {
     font-weight: bold;
     margin-right: .25rem;
     margin-bottom: 0;
+}
+
+.top-drawer label.request {
+    font-weight: normal;
+    font-size: 1rem;
 }
 
 .top-drawer .input-group {
@@ -48,10 +53,6 @@ a, a:hover, a:visited, a:active {
 }
 
 .profession-title {
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: .5rem;
-    display: inline-block;
 }
 
 .profile-photo {
@@ -86,7 +87,7 @@ a, a:hover, a:visited, a:active {
     min-height: 100vw;
 }
 
-.skills-input-wrapper, .work-experience-input {
+.work-experience-input {
     width: 100%;
     flex: 1 1 0%;
     min-height: 0;
@@ -94,7 +95,7 @@ a, a:hover, a:visited, a:active {
     overflow: hidden;
 }
 
-.skills-input .skill {
+header .skills-input .skill {
     padding: 0.25em 0.5em;
     border: 1px solid #ced4da;
     display: inline-block;
@@ -104,7 +105,7 @@ a, a:hover, a:visited, a:active {
     margin-right: 0.25rem;
 }
 
-.skills-input .skill .delete-skill {
+header .skills-input .skill .delete-skill {
     position: absolute;
     background: rgba(0,0,0,0.7);
     padding: 0.25em 0.5em;
@@ -116,16 +117,18 @@ a, a:hover, a:visited, a:active {
     display: none;
 }
 
-.skills-input .skill:hover .delete-skill {
+header .skills-input .skill:hover .delete-skill {
     display: block;
 }
 
 .salary-input-wrapper {
-    width: 100%;
-    overflow: hidden;
+    width: 277px;
     position: relative;
-    height: 100%;
     max-height: 68px;
+    flex: 1 1 0%;
+    min-height: 0;
+    height: 0px;
+    overflow: hidden;
 }
 
 header .input-group {
@@ -191,6 +194,16 @@ header a, header a:active, header a:hover, header a:visited {
     padding-top: 0.5rem;
     margin-top: -0.5rem;
     padding-bottom: 1.5rem;
+    min-height: 66vh;
+}
+
+.no-result-text {
+    min-height: 76vh;
+}
+
+.no-result-text h2 {
+    font-size: 1.1rem;
+    font-weight: bold;
 }
 
 .course-card {
@@ -209,7 +222,6 @@ header a, header a:active, header a:hover, header a:visited {
 }
 
 .course-card h5 {
-    font-size: 1rem;
     font-weight: bold;
 }
 
@@ -217,17 +229,37 @@ header a, header a:active, header a:hover, header a:visited {
     margin-right: .25rem;
 }
 
+.top-favourite-add {
+    color: #ffcc00!important;
+    font-size: 1.5rem;
+    margin-right: 0!important;
+    position: absolute;
+    top: -0.3rem;
+    right: 1.8rem;
+}
+
 .course-card label {
     font-weight: bold;
+    font-size: 1rem;
 }
 
 .course-card .price {
     font-size: 2rem;
 }
 
+.course-card .continue-toggle::before {
+    content: "\a";
+    display: block;
+}
+
 .course-card .continue-toggle {
     font-weight: bold;
-    display: block;
+    text-align: center;
+    height: 2rem;
+    vertical-align: bottom;
+    margin-top: -2rem;
+    background: linear-gradient(to bottom, transparent, white);
+    position: relative;
 }
 
 .course-card .text-info {
@@ -252,20 +284,21 @@ header a, header a:active, header a:hover, header a:visited {
     background-color: rgb(94, 88, 210)!important;
 }
 
-.course-buttons .btn-link, .course-buttons .btn-share {
+.course-buttons .btn-favourite, .course-buttons .btn-share {
     width: 3rem;
     line-height: 2.3rem;
     font-size: 1.3rem;
 }
 
-.course-buttons .btn-favourite {
+.course-buttons .btn-link {
     font-weight: bold;
     border-width: 2px;
+    line-height: 2.1rem;
+    letter-spacing: 1px;
 }
 
 .course-buttons .btn-favourite i {
-    margin-top: 0.15rem;
-    margin-right: 0.4rem;
+    margin-left: 0.2rem;
 }
 
 .swiper-pagination {
@@ -297,10 +330,11 @@ header a, header a:active, header a:hover, header a:visited {
 }
 
 .skill {
-    padding-right: 0.25em;
+    padding-right: 0.25rem;
     white-space: nowrap;
     display: inline-block;
-    margin-bottom: 0.25em;
+    margin-bottom: 0.25rem;
+    margin-right: 0.7rem;
 }
 
 .skill-strength {
@@ -310,11 +344,19 @@ header a, header a:active, header a:hover, header a:visited {
     align-items: flex-end;
 }
 
+.btn-outline-primary .skill-strength {
+    margin-right: 0.375rem;
+}
+
 .skill-strength span {
     display: block;
     width: 25%;
     background: rgb(94, 88, 210);
     margin-right: 1px;
+}
+
+.btn-outline-primary.active .skill-strength span {
+    background: white;
 }
 
 .skill-strength span:nth-child(1) {height: 25%;}
@@ -353,7 +395,7 @@ footer .icon-background {
 }
 
 footer .btn-favourites-list.active .icon-overlay {
-    margin-left: -35%;
+    margin-left: -31%;
 }
 
 footer .btn-favourites-list.active .fav-count,
@@ -369,7 +411,6 @@ footer .divisor {
 
 footer .fav-count {
     font-size: 75%;
-    display: none;
 }
 
 section.sliding-panel {
@@ -390,9 +431,28 @@ section.sliding-panel.show {
     height: 100vh;
 }
 
+section .section-title {
+    font-size: 1.1rem;
+    color: black;
+}
+
+section .close-panel-btn {
+    color: black!important;
+    font-size: 3rem;
+    line-height: 1.1rem;
+}
+
 section.filter-panel .group-title-label {
     font-weight: bold;
     width: 100%;
+    font-size: 1rem;
+}
+
+section.filter-panel .salary-input-wrapper {
+    height: 68px;
+    width: 277px;
+    flex: none;
+    margin-bottom: 1rem;
 }
 
 section.filter-panel .btn-outline-primary input {
@@ -400,7 +460,9 @@ section.filter-panel .btn-outline-primary input {
 }
 
 section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled),
-section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled):active {
+section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled):active,
+.no-result-text .btn-outline-primary:not(:disabled):not(.disabled),
+.no-result-text .btn-outline-primary:not(:disabled):not(.disabled):active {
     color: rgb(94, 88, 210);
     border-color: rgb(94, 88, 210);
     background-color: transparent;
@@ -410,10 +472,15 @@ section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled):active {
     margin-right: 0.25rem;
 }
 
-section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled).active {
+section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled).active,
+.no-result-text .btn-outline-primary:not(:disabled):not(.disabled).active {
     color: white;
     border-color: rgb(94, 88, 210);
     background-color: rgb(94, 88, 210);
+}
+
+section.filter-paner .salary-input-wrapper {
+
 }
 
 section.filter-panel .input-group {
@@ -424,6 +491,15 @@ section.filter-panel .input-group:last-child {
     margin-bottom: 6.5rem;
 }
 
+section .apply-btn {
+    height: 3rem;
+    border-radius: 1.5rem!important;
+    text-transform: uppercase;
+    border-width: 2px;
+    font-size: 1rem!important;
+    font-weight: bold;
+    letter-spacing: 1.8px;
+}
 
 section.favourite-panel .course-card {
     width: 100%;
