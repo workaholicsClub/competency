@@ -446,9 +446,14 @@
     }
 
     function initFavourites() {
-        $(document).on('click', '.btn-favourites-list, .favourite-panel .close-panel-btn, .favourite-panel .apply-btn ', function () {
+        $(document).on('click', '.btn-favourites-list', function () {
             $('.favourite-panel').toggleClass('show');
             toggleFooter();
+        });
+
+        $(document).on('click', '.favourite-panel .close-panel-btn, .favourite-panel .apply-btn ', function () {
+            $('.favourite-panel').toggleClass('show');
+            showFooter();
         });
     }
 
@@ -572,6 +577,7 @@
 
             if (isBackbackEmpty()) {
                 $('.favourite-panel').removeClass('show');
+                showFooter();
             }
         });
     }
@@ -591,6 +597,7 @@
 
     function loadCourses() {
         let searchFields = $('header input, .filter-panel input').serializeArray();
+        searchFields.push({name: "professionCode", value: getProfessionCodeFromUrl()});
         searchFields.push({name: "searchMode", value: 1});
         searchFields.push({name: "responseFormat", value: "json"});
 

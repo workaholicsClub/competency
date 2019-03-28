@@ -39,32 +39,46 @@ WHERE lrc.courseId = ?');
 
 if ($doSearch) {
 
-    if ($professionCode) {
-        $coursesQuery = $pdo->prepare('SELECT 
-        *,
-        SUM(isProfession) AS profSkills,
-        COUNT(*)-SUM(isProfession) AS nonProfSkills,
-        SUM(isProfession) > COUNT(*)-SUM(isProfession) AS hasMoreProfSkills,
-        SUM(isProfession)/COUNT(*) AS profSkillsRate
-    FROM (
-        SELECT c.*, MAX(p.`code` = ?) AS isProfession FROM courses c
-                LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
-                LEFT JOIN links_skills_professions lsp ON lsc.skillId = lsp.skillId
-                LEFT JOIN professions p ON lsp.professionId = p.id
-        WHERE c.inArchive != 1
-        GROUP BY c.id, lsc.skillId
-    ) sq
-    GROUP BY id
-    HAVING profSkillsRate >= 0.5');
+    if ($professionCode && !$searchMode) {
+        $coursesQuery = $pdo->prepare('SELECT c.*, MAX(skillRate) AS maxSkillRate FROM courses c
+	LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
+	LEFT JOIN (
+		SELECT skillId, COUNT(*) AS skillCount, vcount AS vacanciesCount, COUNT(*)/vcount AS skillRate FROM vacancies v
+			LEFT JOIN links_skills_vacancies lsv ON v.id = lsv.vacancyId
+			LEFT JOIN professions p ON v.professionId = p.id
+			LEFT JOIN (SELECT professionId, COUNT(*) AS vcount FROM vacancies GROUP BY professionId) pcnt ON v.professionId = pcnt.professionId
+		WHERE p.code = ?
+		GROUP BY skillId
+    ) s ON s.skillId = lsc.skillId
+WHERE c.inArchive = 0
+GROUP BY c.id
+ORDER BY MAX(skillRate) DESC, price ASC');
 
         $coursesQuery->execute([$professionCode]);
     }
 
     if ($searchMode) {
-        $courseQuerySQL = "SELECT DISTINCT c.* FROM courses c
+        $courseQuerySQL = "SELECT c.*,
+                   MAX(skillRate) AS maxSkillRate,
+                   SUM(isSearched) AS countSearchedSkills
+            FROM courses c
                 LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
-                LEFT JOIN skills s ON lsc.skillId = s.id
-            WHERE ";
+                LEFT JOIN (
+                    SELECT skillId,
+                           sk.name,
+                           ".(!empty($_REQUEST['skills']) ? 'sk.name IN ("'.implode('", "', array_keys($_REQUEST['skills'])).'")' : '0' )." AS isSearched,
+                           COUNT(*) AS skillCount,
+                           vcount AS vacanciesCount,
+                           COUNT(*)/vcount AS skillRate
+                    FROM vacancies v
+                        LEFT JOIN links_skills_vacancies lsv ON v.id = lsv.vacancyId
+                        LEFT JOIN professions p ON v.professionId = p.id
+                        LEFT JOIN skills sk ON lsv.skillId = sk.id
+                        LEFT JOIN (SELECT professionId, COUNT(*) AS vcount FROM vacancies GROUP BY professionId) pcnt ON v.professionId = pcnt.professionId
+                    WHERE p.code = '${professionCode}'
+                    GROUP BY skillId
+                ) s ON s.skillId = lsc.skillId
+            WHERE c.inArchive = 0 AND ";
         $whereClauses = [];
         $dataArray = [];
         $fields = [
@@ -88,6 +102,7 @@ if ($doSearch) {
         }
 
         $courseQuerySQL .= implode(' AND ', $whereClauses);
+        $courseQuerySQL .= "\nGROUP BY c.id ORDER BY maxSkillRate DESC, countSearchedSkills DESC, price ASC";
         $coursesQuery = $pdo->prepare($courseQuerySQL);
         $coursesQuery->execute($dataArray);
     }
@@ -145,16 +160,6 @@ if ($doSearch) {
             "requirements"     => $requirements,
         ];
     };
-
-    usort($jsonOutput, function ($courseA, $courseB) {
-        $skillsA = count($courseA['searchedSkills']);
-        $skillsB = count($courseB['searchedSkills']);
-        if ( $skillsA === $skillsB) {
-            return 0;
-        }
-
-        return $skillsA > $skillsB ? -1 : 1;
-    });
 }
 
 if ($jsonOutput === false) {

@@ -179,10 +179,10 @@ function drawHandle(elementId, options) {
 function makeSalaryInputHTML(inputId) {
     return `<div id="${inputId}" class="salary-input">
             <div id="${inputId}-histogram" class="salary-input-histogram"></div>
-            <div class="curtain left-curtain">
+            <div class="curtain left-curtain ${inputId}-left-curtain">
                 <div id="${inputId}-left-handle" class="salary-handle salary-input-left-handle"></div>
             </div>
-            <div class="curtain right-curtain">
+            <div class="curtain right-curtain ${inputId}-right-curtain">
                 <div id="${inputId}-right-handle" class="salary-handle  salary-input-right-handle"></div>
             </div>
         </div>`;
@@ -222,7 +222,7 @@ function SalaryInput(wrapper, options) {
             this.setHandlePositions(handleFromPosition, handleToPosition);
         }
 
-        interact('.left-curtain')
+        interact('.'+this.inputId+'-left-curtain')
             .resizable({
                 edges: { right: true },
                 restrictSize: 'parent'
@@ -238,7 +238,7 @@ function SalaryInput(wrapper, options) {
                 instance.triggerEvent('changeFrom', salary);
             });
 
-        interact('.right-curtain')
+        interact('.'+this.inputId+'-right-curtain')
             .resizable({
                 edges: { left: true },
                 restrictSize: 'parent'

@@ -395,7 +395,7 @@ footer .icon-background {
 }
 
 footer .btn-favourites-list.active .icon-overlay {
-    margin-left: -31%;
+    margin-left: -1rem;
 }
 
 footer .btn-favourites-list.active .fav-count,
