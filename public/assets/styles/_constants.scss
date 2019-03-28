@@ -1,0 +1,77 @@
+/* This file must have an underscore at the beginning for it to be imported */
+
+html, body {
+  position: relative;
+  height: 100%!important;
+  min-height: 100%;
+}
+
+/* Main colors */
+$main-color: #6354d2;
+$text-color: #333333;
+
+/* Fonts */
+$font-family: 'Gilroy', Tahoma, Verdana, Segoe, sans-serif;
+$font-size: 16px;
+
+/* Header */
+$header-height: 52px;
+$footer-height: 80px;
+
+/* Retina */
+$retina: "only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx)";
+@mixin retina-background-image($file, $type, $width, $height) {
+  background-image: url($file + '.' + $type);
+  @media #{$retina} {
+    background-image: url($file + '@2x.' + $type);
+    background-size: $width $height;
+  }
+}
+
+// Clearfix
+@mixin clearfix() {
+  &::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+}
+
+// Usage as a mixin
+.element {
+  @include clearfix;
+}
+
+// Media
+$tablet-width: 600px;
+$desktop-width: 1024px;
+
+@mixin tablet {
+  @media (min-width: #{$tablet-width}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$desktop-width}) {
+    @content;
+  }
+}
+
+// Шаблоны стилей
+
+//карточка продукта + инфоблок
+%list-style-type-disc {
+  li {
+    position: relative;
+    padding-left: 20px;
+  }
+  li:before {
+    content: "•";
+    color: $main-color;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 0.8em;
+  }
+}

@@ -6,23 +6,14 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/custom.css">
+    <!--<link rel="stylesheet" href="/assets/custom.css">-->
+    <link rel="stylesheet" href="/assets/styles/main.css">
 
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
 
     <title>Сам себе академик</title>
-    <style>
-        html {
-            position: relative;
-            min-height: 100%;
-        }
-
-        body {
-            margin-bottom: 60px;
-        }
-    </style>
 
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -43,320 +34,62 @@
     </script>
 
 </head>
-<body>
-<main role="main">
-
-    <section class="jumbotron text-center">
+<body class="d-flex flex-column h-100">
+    <main role="main" class="main-content">
         <div class="container">
-            <h1 class="jumbotron-heading">Сам себе академик</h1>
-            <p class="lead text-muted">
-                &laquo;Сам себе академик&raquo; поможет вам подобрать подходящие курсы для того чтобы освоить новую профессию или
-                улучшить навыки, а затем найти подходящую к вашим навыкам работу
-            </p>
-            <p>
-                <a href="#courses" class="btn btn-primary my-2">Посмотреть специальности</a>
-            </p>
-        </div>
-    </section>
-
-    <div class="album py-5" id="courses">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/PHP-logo.svg" alt="Разработчик PHP" height="100px">
-                            <p class="card-text">
-                                Разработчик PHP
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/php-developer/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/php-developer/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/executive-534413_640.jpg" alt="HR менеджер" height="100px">
-                            <p class="card-text">
-                                HR менеджер
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/hr-manager/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/hr-manager/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/pr-specialist.png" alt="PR специалист" height="100px">
-                            <p class="card-text">
-                                PR специалист
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/pr-specialist/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/pr-specialist/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/python.png" alt="Разработчик Python" height="100px">
-                            <p class="card-text">
-                                Разработчик Python
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/python-developer/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/python-developer/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/golang.png" alt="Разработчик Golang" height="100px">
-                            <p class="card-text">
-                                Разработчик Golang
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/golang-developer/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/golang-developer/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/javascript.png" alt="Разработчик JavaScript" height="100px">
-                            <p class="card-text">
-                                Разработчик JavaScript
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/javascript-developer/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/javascript-developer/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/uiux.jpg" alt="UI/UX дизайнер" height="100px">
-                            <p class="card-text">
-                                UI/UX дизайнер
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/ui-ux-designer/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/ui-ux-designer/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/ios.png" alt="Разработчик iOS" height="100px">
-                            <p class="card-text">
-                                Разработчик iOS
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/ios-developer/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/ios-developer/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/android.jpg" alt="Разработчик Android" height="100px">
-                            <p class="card-text">
-                                Разработчик Android
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/android-developer/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/android-developer/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/marketolog.jpg" alt="Интернет-маркетолог" height="100px">
-                            <p class="card-text">
-                                Интернет-маркетолог
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/internet-marketologist/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/internet-marketologist/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/qa.png" alt="Тестировщик" height="100px">
-                            <p class="card-text">
-                                Тестировщик
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/qa-tester/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/qa-tester/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/devops.png" alt="DevOps специалист" height="100px">
-                            <p class="card-text">
-                                DevOps специалист
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/devops/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/devops/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/data-scientist.png" alt="Data Scientist" height="100px">
-                            <p class="card-text">
-                                Data Scientist
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/data-scientist/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/data-scientist/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/game-designer.png" alt="Гейм-дизайнер" height="100px">
-                            <p class="card-text">
-                                Гейм-дизайнер
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/game-designer/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/game-designer/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/pm.jpg" alt="Менеджер интернет-проектов" height="100px">
-                            <p class="card-text">
-                                Менеджер интернет-проектов
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/project-manager/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/project-manager/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/2d-art.jpg" alt="Игровой художник 2D" height="100px">
-                            <p class="card-text">
-                                Игровой художник 2D
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/game-artist-2d/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/game-artist-2d/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <img class="" src="/assets/images/3d-art.jpg" alt="Игровой художник 3D" height="100px">
-                            <p class="card-text">
-                                Игровой художник 3D
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/game-artist-3d/courses" class="btn btn-outline-secondary">Подобрать курсы</a>
-                                    <a href="/game-artist-3d/vacancies" class="btn btn-outline-secondary">Посмотреть вакансии</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+            <section class="logo">
+                <a href="/"><img src="assets/images/logo.png" alt="self.academy"></a>
+            </section>
+            <div class="choose-profession">
+                Я&nbsp;<span>PHP-разработчик</span>, со&nbsp;стажем работы <span>1 год</span>, хочу <span>повысить квалификацию</span>
+                <button class="find">найти курсы</button>
             </div>
         </div>
-    </div>
-
-</main>
+    </main>
+    <footer class="footer mt-auto py-3">
+        <div class="footer-inner container">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="footer-title">
+                        Популярные профессии
+                    </div>
+                    <p>
+                        PHP-разработчик Python-разработчик Golang-разработчик JavaScript-разработчик iOS-разработчик
+                        Android-разработчик UI/UX дизайнер Гейм-дизайнер Игровой художник 2D&nbsp;Игровой художник
+                        3D&nbsp;PR-специалист HR-менеджер Интернет-маркетолог Менеджер интернет-проектов DevOps специалист
+                        Тестировщик Data Scientist
+                    </p>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="footer-title">
+                        Как это работает
+                    </div>
+                    <p>
+                        Self.Academy помогает подобрать обучение
+                        и&nbsp;работу исходя из&nbsp;ваших навыков.
+                    </p>
+                    <p>
+                        Мы&nbsp;используем технологии, которые позволяют вам выбирать обучение лучше и&nbsp;находить
+                        себе достойную работу.
+                    </p>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4 order-lg-first" >
+                    <div class="socials-wrap">
+                        <a href="#"><img src="assets/images/email.svg" alt="email"></a>
+                        <a href="#"><img src="assets/images/telegram.svg" alt="telegram"></a>
+                        <a href="https://www.facebook.com/Selfacademy-409688379595509/"><img src="assets/images/facebook.svg" alt="facebook"></a>
+                    </div>
+                    <div class="text-center">
+                        &copy;&nbsp;[Self] Academy,
+                        <script>
+                            var CurrentYear = new Date().getFullYear();
+                            document.write(CurrentYear)
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 <!-- BEGIN JIVOSITE CODE {literal} -->
 <script type='text/javascript'>

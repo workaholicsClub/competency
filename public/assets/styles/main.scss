@@ -1,0 +1,126 @@
+@charset "utf-8";
+@import "constants";
+@import "fonts";
+
+::-webkit-input-placeholder {color: $text-color;}
+::-moz-placeholder          {color: $text-color;}
+:-moz-placeholder           {color: $text-color;}
+:-ms-input-placeholder      {color: $text-color;}
+
+body {
+  font: normal normal $font-size $font-family;
+  line-height: 120%;
+  color: $text-color;
+}
+
+.main-content {
+  flex: 1 0 auto;
+  background: #fff url(../images/background.png) no-repeat 0 0;
+}
+
+.logo {
+  margin: 5% 0;
+}
+
+.choose-profession {
+  font: normal 300 1.500em/150% $font-family; // font-size: 24px;
+  margin: 0;
+  padding-top: 15%;
+  span {
+    color: $main-color;
+    display: inline-block;
+    border-bottom: 1px dashed $main-color;
+  }
+  .find {
+    display: block;
+    color: #fff;
+    font-size: 0.5em;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+    line-height: 100%;
+    text-align: center;
+    border: solid 2px $main-color;
+    background-color: $main-color;
+    border-radius: 35px;
+    padding: 0.417em 0.833em;
+    margin: 5% 0 1%;
+    cursor: pointer;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+footer {
+  flex-shrink: 0;
+  font-size: 0.875em;
+  .footer-inner {
+    border-top: 1px solid #f8f9fa;
+    padding-top: 7%;
+  }
+  .footer-title {
+    font-weight: bold;
+    margin-bottom: 2%;
+  }
+  .socials-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5%;
+    a {
+      margin: 0 4%;
+    }
+  }
+}
+
+
+
+/* @media */
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) {
+  .choose-profession {
+    font-size: 1.875em; // font-size: 30px;
+    padding-top: 5%;
+  }
+  footer .socials-wrap {
+    margin-bottom: 3%;
+    a {
+      margin: 0 2%;
+    }
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+  .main-content {
+    background-position: 50% 0;
+  }
+  .choose-profession {
+    font-size: 2.250em; // font-size: 36px;
+  }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  .choose-profession {
+    font-size: 2.625em; // font-size: 42px;
+  }
+  .logo, .choose-profession {
+    margin-left: 7%;
+  }
+  footer .footer-inner {
+    padding-top: 4%;
+  }
+  footer .socials-wrap {
+    margin-bottom: 5%;
+    a {
+      margin: 0 3%;
+    }
+  }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+  .choose-profession {
+    font-size: 3.000em; // font-size: 48px;
+  }
+}
