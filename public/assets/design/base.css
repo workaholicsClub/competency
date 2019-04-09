@@ -9,7 +9,6 @@
     src: url("/assets/font/Gilroy-ExtraBold.otf") format("opentype");
 }
 
-
 body {
     font-family: Gilroy, sans-serif;
     background: rgb(248, 249, 250);
@@ -212,6 +211,11 @@ header a, header a:active, header a:hover, header a:visited {
     box-shadow: 5px 5px 20px rgba(0,0,0,0.3);
 }
 
+.course-card.take-a-look {
+    border: solid 3px #ffc108;
+    background-color: #fdfbf3;
+}
+
 .course-card .card-body {
     padding: 0.75rem 1.25rem;
     font-size: 0.8rem;
@@ -297,6 +301,18 @@ header a, header a:active, header a:hover, header a:visited {
     letter-spacing: 1px;
 }
 
+.favourite-list .btn-link, .favourite-list .btn-link:hover {
+    font-weight: bold!important;
+    border-width: 2px;
+    line-height: 2.1rem!important;
+    letter-spacing: 1px;
+    height: 3rem!important;
+    border-radius: 1.5rem;
+    text-transform: uppercase;
+    color: rgb(94, 88, 210)!important;
+    border-color: rgb(94, 88, 210)!important;
+}
+
 .course-buttons .btn-favourite i {
     margin-left: 0.2rem;
 }
@@ -368,7 +384,7 @@ header a, header a:active, header a:hover, header a:visited {
 .skill-strength.level1 span:nth-child(4), .skill-strength.level1 span:nth-child(3) {opacity: 0.2;}
 .skill-strength.level2 span:nth-child(4) {opacity: 0.2;}
 
-footer {
+.view-on-mobile footer {
     margin: auto;
     width: 40%;
     background: rgb(94, 88, 210);
@@ -381,7 +397,7 @@ footer {
     z-index: 999;
 }
 
-footer .btn {
+.view-on-mobile footer .btn {
     background: rgb(94, 88, 210);
     color: white;
     font-size: 1.3rem;
@@ -389,27 +405,27 @@ footer .btn {
     line-height: 100%;
 }
 
-footer .icon-background {
+.view-on-mobile footer .icon-background {
     color: rgb(143, 133, 221);
     display: none;
 }
 
-footer .btn-favourites-list.active .icon-overlay {
+.view-on-mobile footer .btn-favourites-list.active .icon-overlay {
     margin-left: -1rem;
 }
 
-footer .btn-favourites-list.active .fav-count,
-footer .btn-favourites-list.active .icon-background {
+.view-on-mobile footer .btn-favourites-list.active .fav-count,
+.view-on-mobile footer .btn-favourites-list.active .icon-background {
     display: initial;
 }
 
-footer .divisor {
+.view-on-mobile footer .divisor {
     background: white;
     width: 1px;
     height: 100%;
 }
 
-footer .fav-count {
+.view-on-mobile footer .fav-count {
     font-size: 75%;
 }
 
@@ -446,7 +462,8 @@ section .close-panel-btn {
     line-height: 1.1rem;
 }
 
-section.filter-panel .group-title-label {
+section.filter-panel .group-title-label,
+section.skills-data .group-title-label {
     font-weight: bold;
     width: 100%;
     font-size: 1rem;
@@ -459,14 +476,17 @@ section.filter-panel .salary-input-wrapper {
     margin-bottom: 1rem;
 }
 
-section.filter-panel .btn-outline-primary input {
+section.filter-panel .btn-outline-primary input,
+section.skills-data .btn-outline-primary input {
     display: none;
 }
 
 section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled),
 section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled):active,
 .no-result-text .btn-outline-primary:not(:disabled):not(.disabled),
-.no-result-text .btn-outline-primary:not(:disabled):not(.disabled):active {
+.no-result-text .btn-outline-primary:not(:disabled):not(.disabled):active,
+section.skills-data .btn-outline-primary:not(:disabled):not(.disabled),
+section.skills-data .btn-outline-primary:not(:disabled):not(.disabled):active {
     color: rgb(94, 88, 210);
     border-color: rgb(94, 88, 210);
     background-color: transparent;
@@ -477,6 +497,7 @@ section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled):active,
 }
 
 section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled).active,
+section.skills-data .btn-outline-primary:not(:disabled):not(.disabled).active,
 .no-result-text .btn-outline-primary:not(:disabled):not(.disabled).active {
     color: white;
     border-color: rgb(94, 88, 210);
@@ -523,7 +544,6 @@ section.favourite-panel .top-favourite-remove {
         display: none!important;
     }
 }
-
 
 @media (min-width: 768px) {
     .delete-skill-mobile {

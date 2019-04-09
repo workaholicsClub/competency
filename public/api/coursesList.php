@@ -78,7 +78,7 @@ ORDER BY MAX(skillRate) DESC, price ASC');
                     WHERE p.code = '${professionCode}'
                     GROUP BY skillId
                 ) s ON s.skillId = lsc.skillId
-            WHERE c.inArchive = 0 AND ";
+            WHERE c.inArchive = 0 ";
         $whereClauses = [];
         $dataArray = [];
         $fields = [
@@ -101,7 +101,9 @@ ORDER BY MAX(skillRate) DESC, price ASC');
             }
         }
 
-        $courseQuerySQL .= implode(' AND ', $whereClauses);
+        if (!empty($whereClauses)) {
+            $courseQuerySQL .= 'AND '.implode(' AND ', $whereClauses);
+        }
         $courseQuerySQL .= "\nGROUP BY c.id ORDER BY maxSkillRate DESC, countSearchedSkills DESC, price ASC";
         $coursesQuery = $pdo->prepare($courseQuerySQL);
         $coursesQuery->execute($dataArray);

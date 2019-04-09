@@ -26,158 +26,267 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/css/swiper.min.css">
     <link rel="stylesheet" href="/assets/design/base.css" type="text/css">
+    <link rel="stylesheet" href="/assets/design/desktop-override.css" type="text/css">
 
-    <title>self.academy: курсы</title>
+    <title>Жажда знаний: найти свой курс</title>
 </head>
 <body>
 
-<header class="d-flex flex-row justify-content-between align-items-start card p-4 top-drawer">
-    <section class="data flex-fill d-flex flex-column align-items-start h-100">
-        <div class="input-group">
-            <label class="request">
-                Я
-                <a href="#" class="editable-toggle profession-title mr-2">...</a>
-                <a href="#" class="editable-toggle work-experience-input-display">без опыта работы</a>
-                хочу
-                <a href="#" class="editable-toggle want-to-input">повысить квалификацию</a>
-            </label>
+<div class="view-on-desktop d-none d-sm-block d-md-block p-4 container">
+    <header class="d-flex align-items-center px-3 mb-3 ">
+        <img src="/assets/images/header.png" class="mr-2">
+        <span class="flex-fill">Жажда знаний: найди свой курс</span>
+        <div class="dropdown dropleft">
+            <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bookmark icon-background"></i>
+                <i class="far fa-bookmark icon-overlay"></i>
+                <span class="fav-count ml-2">0</span>
+            </button>
+            <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn"></div>
+            <div class="dropdown-backdrop"></div>
+        </div>
+    </header>
+    <div class="d-flex flex-row align-items-start">
+        <section class="skills-section p-4">
+            <section class="data">
+                <div class="input-group">
+                    <label class="request">
+                        Я
+                        <a href="#" class="editable-toggle profession-title mr-2">...</a>
+                        <a href="#" class="editable-toggle work-experience-input-display">без опыта работы</a>
+                        хочу
+                        <a href="#" class="editable-toggle want-to-input">повысить квалификацию</a>
+                    </label>
+
+                </div>
+            </section>
+            <section class="salary-data salary-input-wrapper mb-2">
+            </section>
+            <section class="skills-data input-group">
+                <label class="group-title-label mb-0">
+                    Фильтр по навыкам
+                </label>
+                <div class="skills-filter-text mb-4">
+                    на основе
+                    <span class="skills-input-display">...</span>
+                    с ЗП
+                    <span class="salary-input-display">...</span>
+                </div>
+
+                <div class="skills-input-wrapper">
+                    <div class="skills-input checkbox-group">
+                    </div>
+                </div>
+            </section>
+
+        </section>
+        <div class="flex-fill">
+            <section class="filter-panel">
+                <div class="d-flex flex-row flex-wrap margin-wrapper m-4">
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Формат курса</label>
+                        <label class="btn btn-outline-primary">Интерактивный <input type="checkbox" value="Интерактивный" name="format[]"></label>
+                        <label class="btn btn-outline-primary">Электронный учебник <input type="checkbox" value="Электронный учебник" name="format[]"></label>
+                        <label class="btn btn-outline-primary">Вебинар <input type="checkbox" value="Вебинар" name="format[]"></label>
+                        <label class="btn btn-outline-primary">Интенсив <input type="checkbox" value="Интенсив" name="format[]"></label>
+                        <label class="btn btn-outline-primary">Видеокурс <input type="checkbox" value="Видеокурс" name="format[]"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Место проведения</label>
+                        <label class="btn btn-outline-primary">Онлайн <input type="checkbox" value="Онлайн" name="format[]"></label>
+                        <label class="btn btn-outline-primary">Вечерний <input type="checkbox" value="Вечерняя" name="format[]"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Обучение с преподавателем</label>
+                        <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="hasTeacher[]"></label>
+                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasTeacher[]"></label>
+                    </div>
+
+                    <div class="d-flex flex-row more-group">
+                        <button class="btn btn-outline-primary" id="filter-more-button">+</button>
+                        <label class="more-label" for="filter-more-button">Больше</label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Сертификат</label>
+                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="Нет" name="certificate[]"></label>
+                        <label class="btn btn-outline-primary">Собственный <input type="checkbox" value="Собственный" name="certificate[]"></label>
+                        <label class="btn btn-outline-primary">Гос. образца <input type="checkbox" value="Государственного образца" name="certificate[]"></label>
+                        <label class="btn btn-outline-primary">Международный <input type="checkbox" value="Международный" name="certificate[]"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Практика</label>
+                        <label class="btn btn-outline-primary">Есть <input type="checkbox" value="1" name="hasPractice[]"></label>
+                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasPractice[]"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Оказание помощи в трудоустройстве</label>
+                        <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="jobPlacement[]"></label>
+                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="jobPlacement[]"></label>
+                    </div>
+
+                </div>
+            </section>
+            <main class="no-result-hide course-list px-4"></main>
+            <section class="no-result-show no-result-text p-4 d-flex flex-column" style="display: none!important">
+                <h2>Ой! Такого не нашлось</h2>
+                <p class="flex-fill">Курсов, подходящих по условиям из фильтра, сейчас нет.</p>
+            </section>
 
         </div>
+    </div>
+    <footer></footer>
+</div>
 
-        <div class="input-group">
-            <label class="">Желаемая зарплата:</label>
-            <a href="#" class="editable-toggle salary-input-display">...</a>
-        </div>
+<div class="view-on-mobile d-block d-sm-none d-md-none">
+    <header class="d-flex flex-row justify-content-between align-items-start card p-4 top-drawer">
+        <section class="data flex-fill d-flex flex-column align-items-start h-100">
+            <div class="input-group">
+                <label class="request">
+                    Я
+                    <a href="#" class="editable-toggle profession-title mr-2">...</a>
+                    <a href="#" class="editable-toggle work-experience-input-display">без опыта работы</a>
+                    хочу
+                    <a href="#" class="editable-toggle want-to-input">повысить квалификацию</a>
+                </label>
 
-        <div class="salary-input-wrapper">
-        </div>
-    </section>
-    <div class="profile-handle"></div>
-</header>
+            </div>
 
-<main>
-    <section class="pagination d-flex flex-row justify-content-center align-items-center no-result-hide">
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-pagination"></div>
-        <div class="swiper-button-next"></div>
-    </section>
-
-    <section class="swiper-container no-result-hide">
-        <div class="swiper-wrapper course-list loading">
-        </div>
-    </section>
-
-    <section class="no-result-show no-result-text p-4 d-flex flex-column" style="display: none!important">
-        <h2>Ой! Такого не нашлось</h2>
-        <p class="flex-fill">Курсов, подходящих по условиям из фильтра, сейчас нет.</p>
-        <button class="btn btn-outline-primary apply-btn">
-            Изменить фильтр
-        </button>
-    </section>
-</main>
-
-<footer class="d-flex flex-row justify-content-center mb-4 p-2 no-result-hide">
-    <button class="btn btn-favourites-list flex-fill d-flex align-items-center justify-content-center">
-        <i class="fas fa-bookmark icon-background"></i>
-        <i class="far fa-bookmark icon-overlay"></i>
-        <span class="fav-count ml-2">0</span>
-    </button>
-    <div class="divisor"></div>
-    <button class="btn btn-filter flex-fill"><i class="fas fa-sliders-h"></i></button>
-</footer>
-
-<section class="filter-panel sliding-panel">
-    <div class="margin-wrapper m-4">
-        <div class="flex-row d-flex align-items-center justify-content-center mb-4 section-title">
-            <label class="flex-fill text-center mb-0">Фильтры</label>
-            <a class="close-panel-btn" href="#">&times;</a>
-        </div>
-
-        <div class="input-group">
-            <label class="group-title-label">
-                Навыки на основе
-                <span class="skills-input-display">...</span>
-                с ЗП
-                <span class="salary-input-display">...</span>
-            </label>
+            <div class="input-group">
+                <label class="">Желаемая зарплата:</label>
+                <a href="#" class="editable-toggle salary-input-display">...</a>
+            </div>
 
             <div class="salary-input-wrapper">
             </div>
+        </section>
+        <div class="profile-handle"></div>
+    </header>
+    <main>
+        <section class="pagination d-flex flex-row justify-content-center align-items-center no-result-hide">
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+        </section>
 
-            <div class="skills-input-wrapper">
-                <div class="skills-input checkbox-group">
+        <section class="swiper-container no-result-hide">
+            <div class="swiper-wrapper course-list loading">
+            </div>
+        </section>
+
+        <section class="no-result-show no-result-text p-4 d-flex flex-column" style="display: none!important">
+            <h2>Ой! Такого не нашлось</h2>
+            <p class="flex-fill">Курсов, подходящих по условиям из фильтра, сейчас нет.</p>
+            <button class="btn btn-outline-primary apply-btn">
+                Изменить фильтр
+            </button>
+        </section>
+    </main>
+    <footer class="d-flex flex-row justify-content-center mb-4 p-2 no-result-hide">
+        <button class="btn btn-favourites-list flex-fill d-flex align-items-center justify-content-center">
+            <i class="fas fa-bookmark icon-background"></i>
+            <i class="far fa-bookmark icon-overlay"></i>
+            <span class="fav-count ml-2">0</span>
+        </button>
+        <div class="divisor"></div>
+        <button class="btn btn-filter flex-fill"><i class="fas fa-sliders-h"></i></button>
+    </footer>
+    <section class="filter-panel sliding-panel">
+        <div class="margin-wrapper m-4">
+            <div class="flex-row d-flex align-items-center justify-content-center mb-4 section-title">
+                <label class="flex-fill text-center mb-0">Фильтры</label>
+                <a class="close-panel-btn" href="#">&times;</a>
+            </div>
+
+            <div class="input-group">
+                <label class="group-title-label">
+                    Навыки на основе
+                    <span class="skills-input-display">...</span>
+                    с ЗП
+                    <span class="salary-input-display">...</span>
+                </label>
+
+                <div class="salary-input-wrapper">
+                </div>
+
+                <div class="skills-input-wrapper">
+                    <div class="skills-input checkbox-group">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="input-group">
-            <label class="group-title-label">Формат курса</label>
-            <div class="checkbox-group">
-                <label class="btn btn-outline-primary">Интерактивный <input type="checkbox" value="Интерактивный" name="format[]"></label>
-                <label class="btn btn-outline-primary">Электронный учебник <input type="checkbox" value="Электронный учебник" name="format[]"></label>
-                <label class="btn btn-outline-primary">Вебинар <input type="checkbox" value="Вебинар" name="format[]"></label>
-                <label class="btn btn-outline-primary">Интенсив <input type="checkbox" value="Интенсив" name="format[]"></label>
-                <label class="btn btn-outline-primary">Видеокурс <input type="checkbox" value="Видеокурс" name="format[]"></label>
+            <div class="input-group">
+                <label class="group-title-label">Формат курса</label>
+                <div class="checkbox-group">
+                    <label class="btn btn-outline-primary">Интерактивный <input type="checkbox" value="Интерактивный" name="format[]"></label>
+                    <label class="btn btn-outline-primary">Электронный учебник <input type="checkbox" value="Электронный учебник" name="format[]"></label>
+                    <label class="btn btn-outline-primary">Вебинар <input type="checkbox" value="Вебинар" name="format[]"></label>
+                    <label class="btn btn-outline-primary">Интенсив <input type="checkbox" value="Интенсив" name="format[]"></label>
+                    <label class="btn btn-outline-primary">Видеокурс <input type="checkbox" value="Видеокурс" name="format[]"></label>
 
-                <label class="btn btn-outline-primary">Онлайн <input type="checkbox" value="Онлайн" name="format[]"></label>
-                <label class="btn btn-outline-primary">Вечерний <input type="checkbox" value="Вечерняя" name="format[]"></label>
+                    <label class="btn btn-outline-primary">Онлайн <input type="checkbox" value="Онлайн" name="format[]"></label>
+                    <label class="btn btn-outline-primary">Вечерний <input type="checkbox" value="Вечерняя" name="format[]"></label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="group-title-label">Сертификат</label>
+                <div class="checkbox-group">
+                    <label class="btn btn-outline-primary">Нет <input type="checkbox" value="Нет" name="certificate[]"></label>
+                    <label class="btn btn-outline-primary">Собственный <input type="checkbox" value="Собственный" name="certificate[]"></label>
+                    <label class="btn btn-outline-primary">Гос. образца <input type="checkbox" value="Государственного образца" name="certificate[]"></label>
+                    <label class="btn btn-outline-primary">Международный <input type="checkbox" value="Международный" name="certificate[]"></label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="group-title-label">Практика</label>
+                <div class="checkbox-group">
+                    <label class="btn btn-outline-primary">Есть <input type="checkbox" value="1" name="hasPractice[]"></label>
+                    <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasPractice[]"></label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="group-title-label">Обучение с преподавателем</label>
+                <div class="checkbox-group">
+                    <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="hasTeacher[]"></label>
+                    <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasTeacher[]"></label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="group-title-label">Оказание помощи в трудоустройстве</label>
+                <div class="checkbox-group">
+                    <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="jobPlacement[]"></label>
+                    <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="jobPlacement[]"></label>
+                </div>
+            </div>
+
+            <div class="d-flex flex-row justify-content-center mb-4 p-2">
+                <button class="btn btn-outline-primary flex-fill d-flex align-items-center justify-content-center apply-btn">
+                    Применить
+                </button>
             </div>
         </div>
+    </section>
+    <section class="favourite-panel sliding-panel">
+        <div class="margin-wrapper m-4">
+            <div class="flex-row d-flex align-items-center justify-content-center mb-4 section-title">
+                <label class="flex-fill text-center mb-0">Сохраненные курсы</label>
+                <a class="close-panel-btn" href="#">&times;</a>
+            </div>
 
-        <div class="input-group">
-            <label class="group-title-label">Сертификат</label>
-            <div class="checkbox-group">
-                <label class="btn btn-outline-primary">Нет <input type="checkbox" value="Нет" name="certificate[]"></label>
-                <label class="btn btn-outline-primary">Собственный <input type="checkbox" value="Собственный" name="certificate[]"></label>
-                <label class="btn btn-outline-primary">Гос. образца <input type="checkbox" value="Государственного образца" name="certificate[]"></label>
-                <label class="btn btn-outline-primary">Международный <input type="checkbox" value="Международный" name="certificate[]"></label>
+            <div class="favourite-list">
+
             </div>
         </div>
-
-        <div class="input-group">
-            <label class="group-title-label">Практика</label>
-            <div class="checkbox-group">
-                <label class="btn btn-outline-primary">Есть <input type="checkbox" value="1" name="hasPractice[]"></label>
-                <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasPractice[]"></label>
-            </div>
-        </div>
-
-        <div class="input-group">
-            <label class="group-title-label">Обучение с преподавателем</label>
-            <div class="checkbox-group">
-                <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="hasTeacher[]"></label>
-                <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasTeacher[]"></label>
-            </div>
-        </div>
-
-        <div class="input-group">
-            <label class="group-title-label">Оказание помощи в трудоустройстве</label>
-            <div class="checkbox-group">
-                <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="jobPlacement[]"></label>
-                <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="jobPlacement[]"></label>
-            </div>
-        </div>
-
-        <div class="d-flex flex-row justify-content-center mb-4 p-2">
-            <button class="btn btn-outline-primary flex-fill d-flex align-items-center justify-content-center apply-btn">
-                Применить
-            </button>
-        </div>
-    </div>
-</section>
-
-<section class="favourite-panel sliding-panel">
-    <div class="margin-wrapper m-4">
-        <div class="flex-row d-flex align-items-center justify-content-center mb-4 section-title">
-            <label class="flex-fill text-center mb-0">Сохраненные курсы</label>
-            <a class="close-panel-btn" href="#">&times;</a>
-        </div>
-
-        <div class="favourite-list">
-
-        </div>
-    </div>
-</section>
+    </section>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"
         crossorigin="anonymous"></script>
@@ -194,7 +303,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.1/svg.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script src="/assets/courseFunctions.js"></script>
-<script src="histogramInput.js"></script>
+<script src="/design/histogramInput.js"></script>
 
 <!-- BEGIN JIVOSITE CODE {literal} -->
 <script type='text/javascript'>
@@ -235,7 +344,13 @@
     }
 
     function getProfessionCodeFromUrl() {
-        return getParameterByName('professionCode') || 'qa-tester';
+        let professionCode = getParameterByName('professionCode');
+
+        if (!professionCode) {
+            professionCode = location.pathname.split('/')[1];
+        }
+
+        return professionCode || 'qa-tester';
     }
 
     function getCurrentProfessionName(pageCode) {
@@ -282,7 +397,7 @@
         return [visible, hidden];
     }
 
-    function getCourseHTML(course) {
+    function getMobileCourseHTML(course) {
         let description = splitLongText(course.description);
         let searchedSkillsHTML = course.searchedSkills ? getSkillsHTML(course.searchedSkills) : false;
         let additionalSkillsHTML = course.additionalSkills ? getSkillsHTML(course.additionalSkills) : false;
@@ -290,7 +405,7 @@
         let requirementsHTML = course.requirements ? getSkillsHTML(course.requirements) : false;
         let isFavourited = isInBackpack(course.id);
 
-        return `<div class="swiper-slide card course-card">
+        return `<div class="swiper-slide card course-card ${course.hasPartnerUrl ? 'take-a-look' : ''}">
                 <div class="card-body" data-id="${course.id}">
                     <div class="d-flex flex-row course-card-header">
                         <h6 class="text-muted flex-fill">от <a href="${course.url}">${course.platform}</a></h6>
@@ -341,12 +456,74 @@
             </div>`;
     }
 
+    function getDesktopCourseHTML(course) {
+        let description = splitLongText(course.description, 50);
+        let searchedSkillsHTML = course.searchedSkills ? getSkillsHTML(course.searchedSkills) : false;
+        let additionalSkillsHTML = course.additionalSkills ? getSkillsHTML(course.additionalSkills) : false;
+        let allSkillsHTML = course.skills ? getSkillsHTML(course.skills) : false;
+        let requirementsHTML = course.requirements ? getSkillsHTML(course.requirements) : false;
+        let isFavourited = isInBackpack(course.id);
+
+        return `<div class="card course-card ${course.hasPartnerUrl ? 'take-a-look' : ''}">
+                <div class="card-body" data-id="${course.id}">
+                    <div class="d-flex flex-row justify-content-end course-card-header">
+                        <h6 class="text-muted">от <a href="${course.url}">${course.platform}</a></h6>
+                        <a href="#" class="top-favourite-add">
+                            <i class="fas fa-bookmark"></i>
+                        </a>
+                    </div>
+                    <h5>${course.title}</h5>
+
+                    <p id="description${course.id}" class="">
+                        ${description[0]}
+                        ${description[1] ?
+            '<span class="continue-dots">...</span>' +
+            '<a href="#" class="continue-toggle d-flex justify-content-end flex-column"><i class="fas fa-angle-down"></i></a>' +
+            '<span class="continue" style="display: none">' + description[1] + '</span>'
+            : ''}
+                    </p>
+
+                    <p class="mt-1 text-info">${getCourseAttributesHTML(course)}</p>
+
+                    ${searchedSkillsHTML
+            ? (
+                '<label class="mt-1 mb-0">По окончании курса будете уметь</label><p>' + searchedSkillsHTML +
+                (additionalSkillsHTML ? '<a href="#" class="continue-toggle">Показать все</a><span class="continue" style="display: none">' + additionalSkillsHTML + '</span>' : '') +
+                '</p>'
+            )
+            : '<label class="mt-1 mb-0">Навыки</label><p>' + allSkillsHTML + '</p>'
+            }
+
+                    ${requirementsHTML ? '<label class="mt-1 mb-0">Нужно знать</label><p>' + requirementsHTML + '</p>' : ''}
+
+                    <div class="d-flex flex-row align-items-start justify-content-stretch">
+                        <div class="price-duration-data flex-fill">
+                            <p class="mt-0 mb-0 price">${getCoursePriceText(course.price)}</p>
+                            <p class="mt-0">${getHumanReadableTime(course)}</p>
+                        </div>
+                        <div class="course-buttons flex-fill d-flex flex-row mt-1">
+                            <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2 ${isFavourited ? 'active' : ''}" ${isFavourited ? 'disabled="disabled"' : '' }>
+                                <i class="${isFavourited ? 'fas fa-check' : 'far fa-bookmark'}"></i>
+                            </button>
+                            <a href="${getCoursePageUrl(course)}" target="_blank" class="btn btn-outline-info btn-share mr-2" data-course-id="${course.id}">
+                                <i class="fas fa-share-alt"></i>
+                                <!--i class="fas fa-link"></i-->
+                            </a>
+                            <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2" data-course-id="${course.id}">
+                                Сайт курса
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    }
+
     function getCourseFavouriteHTML(course) {
         return `<div class="card course-card">
                 <div class="card-body" data-id="${course.id}">
                     <div class="d-flex flex-row course-card-header">
                         <h6 class="text-muted flex-fill">от <a href="${course.url}">${course.platform}</a></h6>
-                        <a href="#" class="top-favourite-remove"><i class="fas fa-times"></i></a>
+                        <a href="#" class="top-favourite-remove"><i class="fas fa-trash"></i></a>
                     </div>
                     <h5>${course.title}</h5>
 
@@ -354,6 +531,10 @@
                     <p class="mt-0 text-muted">${getHumanReadableTime(course)}</p>
 
                 <p class="mt-1 text-info">${getCourseAttributesHTML(course)}</p>
+
+                <a href="${course.url}" target="_blank" class="btn btn-outline-info btn-block btn-link" data-course-id="${course.id}">
+                    Сайт курса
+                </a>
             </div>
         </div>`;
     }
@@ -381,8 +562,6 @@
     }
 
     function initTopDrawerSliding() {
-        let высотаПоляВводаЗарплаты = 65;
-        let высотаПоляВводаНавыков = 0;
         let начальнаяВысотаЗаголовка = 136;
         let максимальнаяВысотаЗаголовка = 204;
         $('header').data('closed-height', начальнаяВысотаЗаголовка);
@@ -407,6 +586,10 @@
 
     function showFooter() {
         $('footer').css('visibility', '');
+    }
+
+    function hideFooter() {
+        $('footer').css('visibility', 'hidden');
     }
 
     function toggleFooter() {
@@ -438,10 +621,13 @@
             $('.filter-panel').toggleClass('show');
         });
 
-
-        $(document).on('click', '.checkbox-group input', function() {
+        $(document).on('click', '.checkbox-group input, .filter-panel input', function() {
             $(this).closest('label').toggleClass('active');
             debouncedUpdateCourses();
+        });
+
+        $(document).on('click', '.more-group', function () {
+            $(this).closest('.filter-panel').toggleClass('expanded');
         });
     }
 
@@ -570,7 +756,7 @@
         $(document).on('click', '.top-favourite-remove', function (event) {
             event.preventDefault();
             let courseId = $(this).closest('.card-body').data('id');
-            let $card = $('.course-list .card-body[data-id='+courseId+']');
+            let $card = $('.course-list:visible .card-body[data-id='+courseId+']');
             removeFromBackpack(courseId);
             disableCourseCardFavouriteState($card);
             updateFavourites();
@@ -596,7 +782,7 @@
     }
 
     function loadCourses() {
-        let searchFields = $('header input, .filter-panel input').serializeArray();
+        let searchFields = $('header:visible input, .filter-panel:visible input, .skills-section:visible input').serializeArray();
         searchFields.push({name: "professionCode", value: getProfessionCodeFromUrl()});
         searchFields.push({name: "searchMode", value: 1});
         searchFields.push({name: "responseFormat", value: "json"});
@@ -653,8 +839,11 @@
 
     function drawCourses(response) {
         response.forEach(function (course) {
-            let courseHTML = getCourseHTML(course);
-            $('.course-list').append(courseHTML);
+            let mobileHTML = getMobileCourseHTML(course);
+            let desktopHTML = getDesktopCourseHTML(course);
+
+            $('.view-on-mobile .course-list').append(mobileHTML);
+            $('.view-on-desktop .course-list').append(desktopHTML);
         });
 
         updateSlider();
@@ -671,13 +860,24 @@
     }
 
     function showNoResults() {
+        let isFilterPanelActive = $('.filter-panel.sliding-panel').hasClass('show');
+
         $('.no-result-show').attr("style", "");
-        $('.no-result-hide').attr("style", "display: none!important")
+        $('.no-result-hide').attr("style", "display: none!important");
+        if (isFilterPanelActive) {
+            hideFooter();
+        }
     }
 
     function hideNoResults() {
+        let isNotFilterPanelActive = !$('.filter-panel.sliding-panel').hasClass('show');
+
         $('.no-result-show').attr("style", "display: none!important");
-        $('.no-result-hide').attr("style", "");
+        $('.no-result-hide:not(.filter-panel)').attr("style", "");
+
+        if (isNotFilterPanelActive) {
+            showFooter();
+        }
     }
 
     function updateCourses() {
@@ -722,13 +922,6 @@
     }
 
     function expandHeader() {
-        let closedHeaderHeight = $('header').data('closed-height');
-        let expHeight = $('.work-experience-input select').height();
-        let salaryHeight = parseInt( $('.salary-input-wrapper').css('max-height').replace('px', '') );
-        let skillsHeight = $('.skills-input').height();
-        let gap = 16;
-
-        //let maxHeight = closedHeaderHeight + expHeight + salaryHeight + skillsHeight + gap;
         let maxHeight = 204;
         $('header')
             .addClass('expanded animated')
