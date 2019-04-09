@@ -641,6 +641,68 @@
             </div>`;
     }
 
+    function getDesktopCourseHTML(course) {
+        let description = splitLongText(course.description, 50);
+        let searchedSkillsHTML = course.searchedSkills ? getSkillsHTML(course.searchedSkills) : false;
+        let additionalSkillsHTML = course.additionalSkills ? getSkillsHTML(course.additionalSkills) : false;
+        let allSkillsHTML = course.skills ? getSkillsHTML(course.skills) : false;
+        let requirementsHTML = course.requirements ? getSkillsHTML(course.requirements) : false;
+        let isFavourited = isInBackpack(course.id);
+
+        return `<div class="card course-card ${course.hasPartnerUrl ? 'take-a-look' : ''}">
+                <div class="card-body" data-id="${course.id}">
+                    <div class="d-flex flex-row justify-content-end course-card-header">
+                        <h6 class="text-muted">от <a href="${course.url}">${course.platform}</a></h6>
+                        <a href="#" class="top-favourite-add">
+                            <i class="fas fa-bookmark"></i>
+                        </a>
+                    </div>
+                    <h5>${course.title}</h5>
+
+                    <p id="description${course.id}" class="">
+                        ${description[0]}
+                        ${description[1] ?
+            '<span class="continue-dots">...</span>' +
+            '<a href="#" class="continue-toggle d-flex justify-content-end flex-column"><i class="fas fa-angle-down"></i></a>' +
+            '<span class="continue" style="display: none">' + description[1] + '</span>'
+            : ''}
+                    </p>
+
+                    <p class="mt-1 text-info">${getCourseAttributesHTML(course)}</p>
+
+                    ${searchedSkillsHTML
+            ? (
+                '<label class="mt-1 mb-0">По окончании курса будете уметь</label><p>' + searchedSkillsHTML +
+                (additionalSkillsHTML ? '<a href="#" class="continue-toggle">Показать все</a><span class="continue" style="display: none">' + additionalSkillsHTML + '</span>' : '') +
+                '</p>'
+            )
+            : '<label class="mt-1 mb-0">Навыки</label><p>' + allSkillsHTML + '</p>'
+            }
+
+                    ${requirementsHTML ? '<label class="mt-1 mb-0">Нужно знать</label><p>' + requirementsHTML + '</p>' : ''}
+
+                    <div class="d-flex flex-row align-items-start justify-content-stretch">
+                        <div class="price-duration-data flex-fill">
+                            <p class="mt-0 mb-0 price">${getCoursePriceText(course.price)}</p>
+                            <p class="mt-0">${getHumanReadableTime(course)}</p>
+                        </div>
+                        <div class="course-buttons flex-fill d-flex flex-row mt-1">
+                            <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2 ${isFavourited ? 'active' : ''}" ${isFavourited ? 'disabled="disabled"' : '' }>
+                                <i class="${isFavourited ? 'fas fa-check' : 'far fa-bookmark'}"></i>
+                            </button>
+                            <a href="${getCoursePageUrl(course)}" target="_blank" class="btn btn-outline-info btn-share mr-2" data-course-id="${course.id}">
+                                <i class="fas fa-share-alt"></i>
+                                <!--i class="fas fa-link"></i-->
+                            </a>
+                            <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2" data-course-id="${course.id}">
+                                Сайт курса
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    }
+
     function getCourseFavouriteHTML(course) {
         return `<div class="card course-card">
                 <div class="card-body" data-id="${course.id}">
@@ -784,6 +846,10 @@
         if (isNotFilterPanelActive) {
             $('footer').css('visibility', '');
         }
+    }
+
+    function hideFooter() {
+        $('footer').css('visibility', 'hidden');
     }
 
     function hideFooter() {
@@ -1267,6 +1333,8 @@
     }
 
     function hideNoResults() {
+        let isNotFilterPanelActive = !$('.filter-panel.sliding-panel').hasClass('show');
+
         $('.no-result-show').attr("style", "display: none!important");
         $('.no-result-hide:not(.filter-panel)').attr("style", "");
 
