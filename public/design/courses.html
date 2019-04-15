@@ -134,6 +134,18 @@
                     </div>
 
                     <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Стоимость</label>
+                        <label class="btn btn-outline-primary">Бесплатный <input type="checkbox" value="0" name="price"></label>
+                        <label class="btn btn-outline-primary">Недорогой <input type="checkbox" value="1500" name="price"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Практика</label>
+                        <label class="btn btn-outline-primary">Есть <input type="checkbox" value="1" name="hasPractice[]"></label>
+                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasPractice[]"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
                         <label class="d-inline mr-2 group-title-label">Место проведения</label>
                         <label class="btn btn-outline-primary">Онлайн <input type="checkbox" value="Онлайн" name="format[]"></label>
                         <label class="btn btn-outline-primary">Вечерний <input type="checkbox" value="Вечерняя" name="format[]"></label>
@@ -654,7 +666,7 @@
                     <div class="d-flex flex-row justify-content-end course-card-header">
                         <h6 class="text-muted">от <a href="${course.url}">${course.platform}</a></h6>
                         <a href="#" class="top-favourite-add">
-                            <i class="fas fa-bookmark"></i>
+                            <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
                         </a>
                     </div>
                     <h5>${course.title}</h5>
@@ -1333,8 +1345,6 @@
     }
 
     function hideNoResults() {
-        let isNotFilterPanelActive = !$('.filter-panel.sliding-panel').hasClass('show');
-
         $('.no-result-show').attr("style", "display: none!important");
         $('.no-result-hide:not(.filter-panel)').attr("style", "");
 
