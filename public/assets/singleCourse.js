@@ -16,10 +16,11 @@ function getCoursePageHTML(courseData) {
     let description = (courseData.description || "").replace("\n", "<br>");
     let savedIds = getCookie('backpack');
     let isCourseInBackpack = savedIds && savedIds.indexOf(courseData.id) !== -1;
+    let otherCoursesUrl = '/'+getParameterByName('from')+'/courses/';
 
     let saveButton = isCourseInBackpack
-        ? "<button class=\"btn btn-success btn-lg btn-block disabled\" disabled='disabled'><i class=\"fas fa-check\"></i> Курс сохранен</button>\n"
-        : "<button class=\"btn btn-primary btn-lg btn-block add-to-backpack\" data-course-id=\""+courseData.id+"\"><i class=\"fas fa-heart\"></i> Сохранить</button>\n";
+        ? "<button class=\"btn btn-outline-success btn-lg btn-block disabled\" disabled='disabled'><i class=\"fas fa-check\"></i> Курс сохранен</button>\n"
+        : "<button class=\"btn btn-outline-primary btn-lg btn-block add-to-backpack\" data-course-id=\""+courseData.id+"\"><i class=\"fas fa-bookmark\"></i> Сохранить</button>\n";
 
     let priceBadge = "<div class=\"price display-4\">"+getCoursePriceText(courseData.price)+"</div>\n";
     if (courseData.coupon) {
@@ -52,7 +53,8 @@ function getCoursePageHTML(courseData) {
         "</p>\n" +
         "\n" +
         saveButton +
-        "<a class=\"btn btn-outline-secondary btn-lg btn-block mb-4\" href=\"" + courseData.url + "\" target=\"_blank\">Сайт курса&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>\n"
+        "<a class=\"btn btn-primary btn-lg btn-block mb-4\" href=\"" + courseData.url + "\" target=\"_blank\">Сайт курса&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>\n" +
+        "<a class='btn btn-outline-secondary btn-lg btn-block' href='"+otherCoursesUrl+"'>Посмотреть другие курсы</a>"
 }
 
 function updatePageTitleAndLink() {

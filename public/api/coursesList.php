@@ -1,8 +1,13 @@
 <?php
 
 function makeWhereClauseSQL($field, $values) {
-    $places = str_repeat('?, ', count($values) - 1) . '?';
-    $whereSQL = "${field} IN (${places})";
+    if (is_array($values)) {
+        $places = str_repeat('?, ', count($values) - 1) . '?';
+        $whereSQL = "${field} IN (${places})";
+    }
+    else {
+        $whereSQL = $field === 'c.price' ? "{$field} <= ?" : "${field} = ?";
+    }
     return $whereSQL;
 }
 
@@ -87,17 +92,28 @@ ORDER BY MAX(skillRate) DESC, price ASC');
             "certificate" => "c.certificate",
             "hasPractice" => "c.hasPractice",
             "hasTeacher"  => "c.hasTeacher",
+            "price"       => "c.price",
         ];
 
         foreach ($fields as $requestField => $sqlField) {
-            if ($_REQUEST[$requestField]) {
-                $values = array_values($_REQUEST[$requestField]);
+            if (isset($_REQUEST[$requestField])) {
+                if (is_array($_REQUEST[$requestField])) {
+                    $valueOrValues = array_values($_REQUEST[$requestField]);
+                }
+                else {
+                    $valueOrValues = $_REQUEST[$requestField];
+                }
                 if ($requestField === "skills") {
-                    $values = array_keys($_REQUEST[$requestField]);
+                    $valueOrValues = array_keys($_REQUEST[$requestField]);
                 }
 
-                $dataArray = array_merge($dataArray, $values);
-                $whereClauses[] = makeWhereClauseSQL($sqlField, $values);
+                if (is_array($valueOrValues)) {
+                    $dataArray = array_merge($dataArray, $valueOrValues);
+                }
+                else {
+                    $dataArray[] = $valueOrValues;
+                }
+                $whereClauses[] = makeWhereClauseSQL($sqlField, $valueOrValues);
             }
         }
 

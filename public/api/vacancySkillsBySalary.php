@@ -22,9 +22,9 @@ catch (\PDOException $exception) {
 
 $maxSalary = 1000000;
 $professionCode = $_REQUEST['professionCode'];
-$salaryFrom = $_REQUEST['salaryFrom'] ? $_REQUEST['salaryFrom'] : 0;
-$salaryTo = $_REQUEST['salaryTo'] ? $_REQUEST['salaryTo'] : $maxSalary;
-$filterRate = $_REQUEST['filterRate'] ? $_REQUEST['filterRate'] : 10;
+$salaryFrom = isset($_REQUEST['salaryFrom']) ? $_REQUEST['salaryFrom'] : 0;
+$salaryTo = isset($_REQUEST['salaryTo']) ? $_REQUEST['salaryTo'] : $maxSalary;
+$filterRate = isset($_REQUEST['filterRate']) ? $_REQUEST['filterRate'] : 10;
 $skills = [];
 $jsonOutput = [
     "vacanciesCount" => 0,

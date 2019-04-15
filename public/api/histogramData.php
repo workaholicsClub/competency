@@ -108,12 +108,27 @@ if ($professionCode) {
     $jsonOutput['salary'] = [
         'min' => $min,
         'max' => $max,
-        'mean' => mean($avgSalary),
-        'meanFrom' => mean($salaryFrom),
-        'meanTo' => mean($salaryTo),
-        'median' => median($avgSalary),
-        'medianFrom' => median($salaryFrom),
-        'medianTo' => median($salaryTo),
+        'avg' => [
+            'mean' => mean($avgSalary),
+            'median' => median($avgSalary),
+            'q25' => quartile($avgSalary, 0.25),
+            'q50' => quartile($avgSalary, 0.50),
+            'q75' => quartile($avgSalary, 0.75),
+        ],
+        'from' => [
+            'mean' => mean($salaryFrom),
+            'median' => median($salaryFrom),
+            'q25' => quartile($salaryFrom, 0.25),
+            'q50' => quartile($salaryFrom, 0.50),
+            'q75' => quartile($salaryFrom, 0.75),
+        ],
+        'to' => [
+            'mean' => mean($salaryTo),
+            'median' => median($salaryTo),
+            'q25' => quartile($salaryTo, 0.25),
+            'q50' => quartile($salaryTo, 0.50),
+            'q75' => quartile($salaryTo, 0.75),
+        ],
     ];
 }
 

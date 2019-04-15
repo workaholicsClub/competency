@@ -28,18 +28,17 @@
     <link rel="stylesheet" href="/assets/design/base.css" type="text/css">
     <link rel="stylesheet" href="/assets/design/desktop-override.css" type="text/css">
 
-    <title>Жажда знаний: найти свой курс</title>
+    <title>Жажда знаний: найди свой курс</title>
 </head>
 <body>
 
 <div class="view-on-desktop d-none d-sm-block d-md-block p-4 container">
     <header class="d-flex align-items-center px-3 mb-3 ">
-        <img src="/assets/images/header.png" class="mr-2">
-        <span class="flex-fill">Жажда знаний: найди свой курс</span>
+        <img src="/assets/images/itcher.png" class="mr-2">
+        <span class="flex-fill"></span>
         <div class="dropdown dropleft">
             <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bookmark icon-background"></i>
-                <i class="far fa-bookmark icon-overlay"></i>
+                <i class="fas fa-bookmark"></i>
                 <span class="fav-count ml-2">0</span>
             </button>
             <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn"></div>
@@ -52,19 +51,45 @@
                 <div class="input-group">
                     <label class="request">
                         Я
-                        <a href="#" class="editable-toggle profession-title mr-2">...</a>
-                        <a href="#" class="editable-toggle work-experience-input-display">без опыта работы</a>
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle mr-1" id="professionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">новичок</a>
+                            <span class="dropdown-menu" aria-labelledby="professionMenuButton">
+                                <a class="dropdown-item" href="#">новичок</a>
+                                <a class="dropdown-item profession-title" href="#">...</a>
+                                <a class="dropdown-item" href="#">специалист из другой области</a>
+                            </span>
+                        </span>
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle work-experience-input-display" id="expMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">без опыта работы</a>
+                            <span class="dropdown-menu" aria-labelledby="expMenuButton">
+                                <a class="dropdown-item" href="#">без опыта работы</a>
+                                <a class="dropdown-item" href="#">с небольшим опытом работы</a>
+                                <a class="dropdown-item" href="#">с большим опытом работы</a>
+                            </span>
+                        </span>
                         хочу
-                        <a href="#" class="editable-toggle want-to-input">повысить квалификацию</a>
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle want-to-input" id="wantMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">стать <span class="profession-title-tp"></span></a>
+                            <span class="dropdown-menu" aria-labelledby="wantMenuButton">
+                                <a class="dropdown-item" href="#">стать <span class="profession-title-tp"></span></a>
+                                <a class="dropdown-item" href="#">начать с нуля</a>
+                                <a class="dropdown-item" href="#">продолжить обучение</a>
+                                <a class="dropdown-item" href="#">повысить квалификацию</a>
+                                <a class="dropdown-item" href="#">прокачать навык</a>
+                            </span>
+                        </span>
                     </label>
-
+                    <button class="btn btn-outline-info apply-request" style="display: none">Применить</button>
                 </div>
             </section>
             <section class="salary-data salary-input-wrapper mb-2">
             </section>
             <section class="skills-data input-group">
-                <label class="group-title-label mb-0">
+                <label class="group-title-label filter-group-title-label mb-0">
                     Фильтр по навыкам
+                </label>
+                <label class="group-title-label skill-group-title-label mb-0">
+                    Навыки для прокачки
                 </label>
                 <div class="skills-filter-text mb-4">
                     на основе
@@ -76,6 +101,10 @@
                 <div class="skills-input-wrapper">
                     <div class="skills-input checkbox-group">
                     </div>
+                    <span class="add-skill-wrapper form-inline d-inline-flex mt-2" style="display: none!important">
+                        <input class="form-control add-skill-input">
+                    </span>
+                    <button class="btn btn-outline-primary btn-add-skill">+</button>
                 </div>
             </section>
 
@@ -93,16 +122,23 @@
                     </div>
 
                     <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Стоимость</label>
+                        <label class="btn btn-outline-primary">Бесплатный <input type="checkbox" value="0" name="price"></label>
+                        <label class="btn btn-outline-primary">Недорогой <input type="checkbox" value="1500" name="price"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Практика</label>
+                        <label class="btn btn-outline-primary">Есть <input type="checkbox" value="1" name="hasPractice[]"></label>
+                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasPractice[]"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
                         <label class="d-inline mr-2 group-title-label">Место проведения</label>
                         <label class="btn btn-outline-primary">Онлайн <input type="checkbox" value="Онлайн" name="format[]"></label>
                         <label class="btn btn-outline-primary">Вечерний <input type="checkbox" value="Вечерняя" name="format[]"></label>
                     </div>
 
-                    <div class="d-flex flex-row flex-wrap mr-4">
-                        <label class="d-inline mr-2 group-title-label">Обучение с преподавателем</label>
-                        <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="hasTeacher[]"></label>
-                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasTeacher[]"></label>
-                    </div>
 
                     <div class="d-flex flex-row more-group">
                         <button class="btn btn-outline-primary" id="filter-more-button">+</button>
@@ -118,9 +154,9 @@
                     </div>
 
                     <div class="d-flex flex-row flex-wrap mr-4">
-                        <label class="d-inline mr-2 group-title-label">Практика</label>
-                        <label class="btn btn-outline-primary">Есть <input type="checkbox" value="1" name="hasPractice[]"></label>
-                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasPractice[]"></label>
+                        <label class="d-inline mr-2 group-title-label">Обучение с преподавателем</label>
+                        <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="hasTeacher[]"></label>
+                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasTeacher[]"></label>
                     </div>
 
                     <div class="d-flex flex-row flex-wrap mr-4">
@@ -144,26 +180,56 @@
 
 <div class="view-on-mobile d-block d-sm-none d-md-none">
     <header class="d-flex flex-row justify-content-between align-items-start card p-4 top-drawer">
-        <section class="data flex-fill d-flex flex-column align-items-start h-100">
-            <div class="input-group">
-                <label class="request">
-                    Я
-                    <a href="#" class="editable-toggle profession-title mr-2">...</a>
-                    <a href="#" class="editable-toggle work-experience-input-display">без опыта работы</a>
-                    хочу
-                    <a href="#" class="editable-toggle want-to-input">повысить квалификацию</a>
-                </label>
+        <div class="d-flex flex-row h-100 ">
+            <section class="data d-flex flex-column align-items-start h-100 flex-fill mr-2">
+                <div class="input-group">
+                    <label class="request">
+                        Я
+                        <span class="dropdown">
+                                <a href="#" class="editable-toggle mr-1" id="professionMenuButtonM" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">новичок</a>
+                                <span class="dropdown-menu" aria-labelledby="professionMenuButtonM">
+                                    <a class="dropdown-item" href="#">новичок</a>
+                                    <a class="dropdown-item profession-title" href="#">...</a>
+                                    <a class="dropdown-item" href="#">специалист из другой области</a>
+                                </span>
+                            </span>
+                        <span class="dropdown">
+                                <a href="#" class="editable-toggle work-experience-input-display" id="expMenuButtonM" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">без опыта работы</a>
+                                <span class="dropdown-menu" aria-labelledby="expMenuButtonM">
+                                    <a class="dropdown-item" href="#">без опыта работы</a>
+                                    <a class="dropdown-item" href="#">с небольшим опытом работы</a>
+                                    <a class="dropdown-item" href="#">с большим опытом работы</a>
+                                </span>
+                            </span>
+                        хочу
+                        <span class="dropdown">
+                                <a href="#" class="editable-toggle want-to-input" id="wantMenuButtonM" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">стать <span class="profession-title-tp"></span></a>
+                                <span class="dropdown-menu" aria-labelledby="wantMenuButtonM">
+                                    <a class="dropdown-item" href="#">стать <span class="profession-title-tp"></span></a>
+                                    <a class="dropdown-item" href="#">начать с нуля</a>
+                                    <a class="dropdown-item" href="#">продолжить обучение</a>
+                                    <a class="dropdown-item" href="#">повысить квалификацию</a>
+                                    <a class="dropdown-item" href="#">прокачать навык</a>
+                                </span>
+                            </span>
+                    </label>
+                    <button class="btn btn-outline-info apply-request mt-2" style="display: none">Применить</button>
+                </div>
 
-            </div>
+                <button class="btn btn-outline-info btn-block mt-4 btn-choose-skills">Выбрать навыки</button>
 
-            <div class="input-group">
-                <label class="">Желаемая зарплата:</label>
-                <a href="#" class="editable-toggle salary-input-display">...</a>
-            </div>
+                <div class="input-group salary-input-group">
+                    <label class="">Желаемая зарплата:</label>
+                    <a href="#" class="editable-toggle salary-input-display">...</a>
+                </div>
 
-            <div class="salary-input-wrapper">
-            </div>
-        </section>
+                <div class="salary-input-wrapper">
+                </div>
+            </section>
+            <section class="logo">
+                <img src="/assets/images/itcher_02.png">
+            </section>
+        </div>
         <div class="profile-handle"></div>
     </header>
     <main>
@@ -203,19 +269,25 @@
             </div>
 
             <div class="input-group">
-                <label class="group-title-label">
+                <label class="group-title-label filter-group-title-label">
                     Навыки на основе
                     <span class="skills-input-display">...</span>
                     с ЗП
                     <span class="salary-input-display">...</span>
                 </label>
-
+                <label class="group-title-label skill-group-title-label mb-0">
+                    Навыки для прокачки
+                </label>
                 <div class="salary-input-wrapper">
                 </div>
 
-                <div class="skills-input-wrapper">
+                <div class="skills-input-wrapper w-100">
                     <div class="skills-input checkbox-group">
                     </div>
+                    <span class="add-skill-wrapper form-inline d-inline-flex mt-2" style="display: none!important">
+                        <input class="form-control add-skill-input">
+                    </span>
+                    <button class="btn btn-outline-primary btn-add-skill">+</button>
                 </div>
             </div>
 
@@ -302,6 +374,7 @@
 <script src="https://cdn.jsdelivr.net/npm/interactjs@1.3.4/dist/interact.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.1/svg.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
 <script src="/assets/courseFunctions.js"></script>
 <script src="/design/histogramInput.js"></script>
 
@@ -319,10 +392,31 @@
 <script>
     let currentCourses = false;
 
-    function getSkillFilterHTML(skillName, level, rate) {
+    function getSkillFilterHTML(skillName, level, rate, isUserAdded) {
         let isChecked = rate >= 35;
+        let inputTemplate = getInputTemplate();
 
-        return `<label class="btn btn-outline-primary skill ${ isChecked ? "active" : ""}" data-rate="${rate}">
+        if (inputTemplate === 'novice-continue' || inputTemplate === 'other-novice-continue') {
+            isChecked = rate >= 35 && rate <= 80;
+        }
+
+        if (inputTemplate === 'middle-continue') {
+            isChecked = rate >= 15 && rate <= 70;
+        }
+
+        if (inputTemplate === 'senior-continue') {
+            isChecked = rate <= 70;
+        }
+
+        if (inputTemplate === 'skill') {
+            isChecked = false;
+        }
+
+        if (isUserAdded) {
+            isChecked = true;
+        }
+
+        return `<label class="btn btn-outline-primary skill ${isUserAdded ? 'user-added' : 'system-added'} ${ isChecked ? "active" : ""}" data-rate="${rate}">
                 ${skillName}
                 <span class="skill-strength level${level}"><span></span><span></span><span></span><span></span></span>
                 <input type="checkbox" name="skills[${skillName}]" value="${level}" ${ isChecked ? "checked=\"checked\"" : ""}>
@@ -353,7 +447,7 @@
         return professionCode || 'qa-tester';
     }
 
-    function getCurrentProfessionName(pageCode) {
+    function getCurrentProfessionName(pageCode, useTvPadezh) {
         if (!pageCode) {
             pageCode = getProfessionCodeFromUrl();
         }
@@ -377,8 +471,29 @@
             'game-artist-2d': 'игровой художник 2D',
             'game-artist-3d': 'игровой художник 3D'
         };
+        let professionNamesTP = {
+            'php-developer': 'разработчиком PHP',
+            'hr-manager': 'HR менеджером',
+            'pr-specialist': 'PR специалистом',
+            'python-developer': 'разработчиком Python',
+            'golang-developer': 'разработчиком Golang',
+            'javascript-developer': 'разработчиком JavaScript',
+            'ui-ux-designer': 'UI/UX дизайнером',
+            'ios-developer': 'разработчиком iOS',
+            'android-developer': 'разработчиком Android',
+            'internet-marketologist': 'интернет-маркетологом',
+            'qa-tester': 'тестировщиком',
+            'devops': 'DevOps специалистом',
+            'data-scientist': 'Data Scientist`ом',
+            'game-designer': 'гейм-дизайнером',
+            'project-manager': 'менеджером интернет-проектов',
+            'game-artist-2d': 'игровым художником 2D',
+            'game-artist-3d': 'игровым художником 3D'
+        };
 
-        return professionNames[pageCode] || false;
+        return useTvPadezh
+            ? professionNamesTP[pageCode] || false
+            : professionNames[pageCode] || false;
     }
 
     function splitLongText(text, wordLimit) {
@@ -410,7 +525,7 @@
                     <div class="d-flex flex-row course-card-header">
                         <h6 class="text-muted flex-fill">от <a href="${course.url}">${course.platform}</a></h6>
                         <a href="#" class="top-favourite-add">
-                            <i class="fas fa-bookmark"></i>
+                            <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
                         </a>
                     </div>
                     <h5>${course.title}</h5>
@@ -469,7 +584,7 @@
                     <div class="d-flex flex-row justify-content-end course-card-header">
                         <h6 class="text-muted">от <a href="${course.url}">${course.platform}</a></h6>
                         <a href="#" class="top-favourite-add">
-                            <i class="fas fa-bookmark"></i>
+                            <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
                         </a>
                     </div>
                     <h5>${course.title}</h5>
@@ -557,13 +672,84 @@
         return window.swiper;
     }
 
+    function clearAndHideSkillAdd(elem) {
+        if (!elem) {
+            elem = '.add-skill-input';
+        }
+
+        $(elem).typeahead('val', '');
+        hideSkillAdd(elem);
+    }
+
+    function hideSkillAdd(inputEl) {
+        let inputTemplate = getInputTemplate();
+        if (inputTemplate !== 'skill') {
+            $(inputEl).closest('.add-skill-wrapper').attr("style", "display: none!important");
+        }
+    }
+
+    function showSkillAdd() {
+        $('.add-skill-input').closest('.add-skill-wrapper').attr('style', '');
+    }
+
+    function initSkillAdd() {
+        let inputTemplate = getInputTemplate();
+
+        if (inputTemplate === 'skill') {
+            $('.add-skill-wrapper').attr('style', '');
+        }
+
+
+        loadProfessionSkills()
+            .then(function (skills) {
+                $('.add-skill-input').typeahead(null, {
+                    name: 'skills',
+                    source: function (query, syncResults, asyncResults) {
+                        let results = skills.reduce(function (foundSkills, skillData) {
+                            let lcQuery = query.toLowerCase();
+                            let lcName = skillData.name.toLowerCase();
+
+                            if (lcName.indexOf(lcQuery) != -1) {
+                                foundSkills.push(skillData.name);
+                            }
+
+                            return foundSkills;
+                        }, []);
+                        syncResults(results);
+                    }
+                });
+            });
+
+        $(document).on('typeahead:select typeahead:change', '.add-skill-input', function (event, skillName) {
+            if (skillName === '') {
+                return;
+            }
+
+            let $existingNode = $('input[name="skills['+skillName+']"]');
+            if ($existingNode.length > 0) {
+                $existingNode.closest('.skill').addClass('active');
+                return;
+            }
+
+            let skillLevel = 1;
+            let skillRate = 0;
+            let skillHTML = getSkillFilterHTML(skillName, skillLevel, skillRate, true);
+            $('.skills-input').append(skillHTML);
+
+            clearAndHideSkillAdd(this);
+            updateCourses();
+        });
+
+        $(document).on('click', '.btn-add-skill', showSkillAdd);
+    }
+
     function updateSlider() {
         window.swiper.update();
     }
 
     function initTopDrawerSliding() {
-        let начальнаяВысотаЗаголовка = 136;
-        let максимальнаяВысотаЗаголовка = 204;
+        let начальнаяВысотаЗаголовка = 160;
+        let максимальнаяВысотаЗаголовка = 220;
         $('header').data('closed-height', начальнаяВысотаЗаголовка);
 
         interact('header')
@@ -585,7 +771,11 @@
     }
 
     function showFooter() {
-        $('footer').css('visibility', '');
+        let isNotFilterPanelActive = !$('.filter-panel.sliding-panel').hasClass('show');
+
+        if (isNotFilterPanelActive) {
+            $('footer').css('visibility', '');
+        }
     }
 
     function hideFooter() {
@@ -597,17 +787,41 @@
         let isFooterVisible = $footer.css('visibility') !== 'hidden';
 
         if (isFooterVisible) {
-            $footer.css('visibility', 'hidden');
+            hideFooter();
         }
         else {
-            $footer.css('visibility', '');
+            showFooter();
+        }
+    }
+
+    function activateCheckbox(selector) {
+        let $checkbox = $(selector);
+        let $pill = $checkbox.closest('.btn')
+
+        $checkbox.attr('checked', true);
+        $pill.addClass('active');
+    }
+
+    function setTemplateFilterValues() {
+        let inputTemplate = getInputTemplate();
+
+        if (inputTemplate === 'novice') {
+            activateCheckbox('input[name="price"][value="0"]');
+            activateCheckbox('input[name="hasPractice[]"][value="1"]');
+        }
+
+        if (inputTemplate === 'other-novice') {
+            activateCheckbox('input[name="price"][value="1500"]');
+            activateCheckbox('input[name="hasPractice[]"][value="1"]');
         }
     }
 
     function initFilter() {
         let debouncedUpdateCourses = debounce(updateCourses, 1500);
 
-        $(document).on('click', '.btn-filter', function () {
+        setTemplateFilterValues();
+
+        $(document).on('click', '.btn-filter, .btn-choose-skills', function () {
             $('.filter-panel').toggleClass('show');
             toggleFooter();
         });
@@ -669,15 +883,150 @@
         };
     }
 
+    function matchAttr(attrValue, value) {
+        if (attrValue instanceof Array) {
+            return attrValue.indexOf(value) !== -1;
+        }
+
+        if (attrValue !== false) {
+            return attrValue === value;
+        }
+
+        return true;
+    }
+
+    function matchRule(rule, who, experience, wish) {
+        return matchAttr(rule.who, who) && matchAttr(rule.experience, experience) && matchAttr(rule.wish, wish);
+    }
+
+    function getInputTemplate() {
+        let request = getRequestValuesFromURL();
+        let who = request[0];
+        let experience = request[1];
+        let wish = request[2];
+        let professionName = getCurrentProfessionName();
+
+        let defaultTemplate = 'novice';
+
+        let templateRules = [
+            {
+                who: 'новичок',
+                experience: false,
+                wish: false,
+                template: 'novice',
+                score: 0
+            },
+            {
+                who: 'новичок',
+                experience: false,
+                wish: ['продолжить обучение', 'повысить квалификацию'],
+                template: 'novice-continue',
+                score: 10
+            },
+            {
+                who: 'специалист из другой области',
+                experience: false,
+                wish: false,
+                template: 'other-novice',
+                score: 0
+            },
+            {
+                who: 'специалист из другой области',
+                experience: false,
+                wish: ['продолжить обучение', 'повысить квалификацию'],
+                template: 'other-novice-continue',
+                score: 10
+            },
+            {
+                who: false,
+                experience: false,
+                wish: 'прокачать навык',
+                template: 'skill',
+                score: 100
+            },
+            {
+                who: false,
+                experience: false,
+                wish: 'начать с нуля',
+                template: 'novice',
+                score: 100
+            },
+            {
+                who: professionName,
+                experience: ['с небольшим опытом работы'],
+                wish: false,
+                template: 'middle-continue',
+                score: 50
+            },
+            {
+                who: professionName,
+                experience: ['с большим опытом работы'],
+                wish: false,
+                template: 'senior-continue',
+                score: 50
+            }
+        ];
+
+        let finalRule = templateRules.reduce(function (matchedRule, rule) {
+            let isScoreGreater = (matchedRule && matchedRule.score < rule.score) || (!matchedRule);
+            return matchRule(rule, who, experience, wish) && isScoreGreater
+                ? rule
+                : matchedRule;
+        }, false);
+
+        return finalRule
+            ? finalRule.template
+            : defaultTemplate;
+    }
+
+    function getRequestValuesFromDOM() {
+        return $('.request:visible .editable-toggle').map(function () {
+            return $(this).text();
+        }).toArray();
+    }
+
+    function getRequestValuesFromURL() {
+        let who = getParameterByName('who');
+        let experience = getParameterByName('experience');
+        let wish = getParameterByName('wish');
+
+        return [who, experience, wish];
+    }
+
+    function updateRequestValuesFromURL() {
+        let request = getRequestValuesFromURL();
+
+        $('.request:visible .editable-toggle').each(function (index) {
+            if (request[index]) {
+                $(this).text(request[index]);
+            }
+        });
+    }
+
     function initHeaderInputs() {
         let updateSkillsAndCourses = debounce(function () {
             updateSkills()
                 .then(updateCourses);
         }, 500);
 
-        $('.work-experience-input select').on('change', function () {
-            let newValue = $(this).val();
-            $('.work-experience-input-display').html(newValue);
+        $(document).on('click', '.request .dropdown-item', function () {
+            let itemText = $(this).text();
+            let $toggle = $(this).closest('.dropdown').find('.editable-toggle');
+            let $applyButton = $(this).closest('.input-group').find('.apply-request');
+
+            $toggle.text(itemText);
+            $applyButton.show();
+        });
+
+        $(document).on('click', '.apply-request', function () {
+            let request = getRequestValuesFromDOM();
+
+            let newUrl = new URL(location.href);
+            newUrl.searchParams.set('who', request[0]);
+            newUrl.searchParams.set('experience', request[1]);
+            newUrl.searchParams.set('wish', request[2]);
+
+            location.href = newUrl.toString();
         });
 
         $('.salary-input').on('changeFrom changeTo', function (event) {
@@ -695,7 +1044,7 @@
             updateSkillsAndCourses();
         });
 
-        $('.editable-toggle').on('click', function () {
+        $('.editable-toggle.salary-input-display').on('click', function () {
             let isHeaderExpanded = $('header').hasClass('expanded');
 
             if (isHeaderExpanded) {
@@ -714,7 +1063,7 @@
     }
 
     function enableCourseCardFavouriteState($card) {
-        $card.find('.top-favourite-add .fa-heart').removeClass('far').addClass('fas');
+        $card.find('.top-favourite-add .fa-bookmark').removeClass('far').addClass('fas');
         $card
             .find('.btn-favourite')
             .addClass('active')
@@ -723,7 +1072,7 @@
     }
 
     function disableCourseCardFavouriteState($card) {
-        $card.find('.top-favourite-add .fa-heart').removeClass('fas').addClass('far');
+        $card.find('.top-favourite-add .fa-bookmark').removeClass('fas').addClass('far');
         $card
             .find('.btn-favourite')
             .removeClass('active')
@@ -772,12 +1121,28 @@
         return loadApiData('/api/histogramData.php', {professionCode: getProfessionCodeFromUrl()});
     }
 
+    function loadProfessionSkills() {
+        return loadApiData('/api/skills.php', {format: 'json'})
+            .then(function (response) {
+                let professionName = getCurrentProfessionName();
+                let ucProfessionName = professionName[0].toUpperCase() + professionName.slice(1);
+                return response[ucProfessionName];
+            });
+    }
+
     function loadSkillsData(salaryFrom, salaryTo) {
+        let inputTemplate = getInputTemplate();
+        let filterRate = 10;
+
+        if (inputTemplate === 'middle-continue' || inputTemplate === 'senior-continue') {
+            filterRate = 0;
+        }
+
         return loadApiData('/api/vacancySkillsBySalary.php', {
             professionCode: getProfessionCodeFromUrl(),
             salaryFrom: salaryFrom,
             salaryTo: salaryTo,
-            filterRate: 10
+            filterRate: filterRate
         });
     }
 
@@ -799,11 +1164,27 @@
 
     function makeSalaryInput(wrapperSelector, width) {
         let wrappers = document.querySelectorAll(wrapperSelector);
+        let inputTemplate = getInputTemplate();
 
         return loadHistogramData()
             .then(function (response) {
-                let salaryFrom = response.salary.medianFrom;
-                let salaryTo = response.salary.medianTo;
+                let salaryFrom = response.salary.from.median;
+                let salaryTo = response.salary.to.median;
+
+                if (inputTemplate === 'novice' || inputTemplate === 'other-novice') {
+                    salaryFrom = response.salary.min;
+                    salaryTo = response.salary.to.q25;
+                }
+
+                if (inputTemplate === 'middle-continue') {
+                    salaryFrom = response.salary.from.q25;
+                    salaryTo = response.salary.to.q75;
+                }
+
+                if (inputTemplate === 'senior-continue') {
+                    salaryFrom = response.salary.from.q75;
+                    salaryTo = response.salary.max;
+                }
 
                 if (salaryFrom === salaryTo) {
                     salaryFrom -= response.step;
@@ -826,15 +1207,22 @@
     }
 
     function drawSkills(response) {
+        let inputTemplate = getInputTemplate();
+        if (inputTemplate === 'skill') {
+            return;
+        }
+
         let displayText = response.vacanciesCount+ ' ' +
             declensionUnits( response.vacanciesCount, 'вакансий');
 
+
         $('.skills-input-display').html(displayText);
 
-        response.skills.forEach(function (skill) {
-            let skillHTML = getSkillFilterHTML(skill.title, skill.modeLevel, skill.rate);
-            $('.skills-input').append(skillHTML);
-        });
+        let skillsHTML = response.skills.map(function (skill) {
+            return getSkillFilterHTML(skill.title, skill.modeLevel, skill.rate);
+        }).join("\n");
+
+        $('.skills-input').prepend(skillsHTML);
     }
 
     function drawCourses(response) {
@@ -850,7 +1238,8 @@
     }
 
     function updateSkills() {
-        $('.skills-input').addClass('loading').html('');
+        $('.skills-input').addClass('loading');
+        $('.skills-input .system-added').remove();
 
         return loadSkillsData($('.salary-input').data('from'), $('.salary-input').data('to'))
             .then(function (response) {
@@ -870,14 +1259,10 @@
     }
 
     function hideNoResults() {
-        let isNotFilterPanelActive = !$('.filter-panel.sliding-panel').hasClass('show');
-
         $('.no-result-show').attr("style", "display: none!important");
         $('.no-result-hide:not(.filter-panel)').attr("style", "");
 
-        if (isNotFilterPanelActive) {
-            showFooter();
-        }
+        showFooter();
     }
 
     function updateCourses() {
@@ -918,11 +1303,10 @@
             $('.btn-favourites-list').removeClass('active');
             $('.fav-count').text(0);
         }
-
     }
 
     function expandHeader() {
-        let maxHeight = 204;
+        let maxHeight = 220;
         $('header')
             .addClass('expanded animated')
             .css('height', maxHeight+'px');
@@ -936,10 +1320,19 @@
 
     function updatePageTitle() {
         $('.profession-title').text( getCurrentProfessionName() );
+        $('.profession-title-tp').text( getCurrentProfessionName(false, true) );
+    }
+
+    function initSkills() {
+        let inputTemplate = getInputTemplate();
+
+        if (inputTemplate === 'skill') {
+            $('section.skills-section, section.filter-panel, header.top-drawer').addClass('manual-skills');
+        }
     }
 
     (function chromeOnAndroidUrlBarOverlayHack() {
-        if (navigator.userAgent.indexOf("Chrome") && navigator.userAgent.indexOf("Android")) {
+        if (navigator.userAgent.indexOf("Chrome") !== -1 && navigator.userAgent.indexOf("Android") !== -1) {
             document.body.classList.add('chrome-on-android');
         }
     })();
@@ -948,6 +1341,9 @@
         let headerInputWidth = 277;
 
         updatePageTitle();
+        updateRequestValuesFromURL();
+        initFilter();
+        initSkills();
         initSlider();
         initTopDrawerSliding();
         makeSalaryInput('.salary-input-wrapper', headerInputWidth)
@@ -955,7 +1351,7 @@
             .then(updateCourses)
             .then(updateFavourites)
             .then(initHeaderInputs);
-        initFilter();
+        initSkillAdd();
         initFavourites();
         initCourseCards();
     });

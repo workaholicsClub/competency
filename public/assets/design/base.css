@@ -51,6 +51,10 @@ a, a:hover, a:visited, a:active {
     border-bottom: 1px dashed rgb(94, 88, 210);
 }
 
+.editable-toggle, .editable-toggle:hover {
+    text-decoration: none;
+}
+
 .profession-title {
 }
 
@@ -92,6 +96,14 @@ a, a:hover, a:visited, a:active {
     min-height: 0;
     height: 0px;
     overflow: hidden;
+}
+
+.editable-toggle {
+    white-space: nowrap;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    background-color: rgb(94, 88, 210);
 }
 
 header .skills-input .skill {
@@ -136,6 +148,25 @@ header .input-group {
 
 header a, header a:active, header a:hover, header a:visited {
     text-decoration: none;
+}
+
+header.manual-skills .salary-input-group,
+header.manual-skills .salary-input-wrapper,
+header.manual-skills .profile-handle,
+section.filter-panel.manual-skills .salary-input-wrapper {
+    display: none!important;
+}
+
+.btn-choose-skills {
+    display: none;
+}
+
+header.manual-skills .btn-choose-skills {
+    display: block;
+}
+
+section.logo img{
+    height: 100px;
 }
 
 .salary-input-histogram {
@@ -238,7 +269,7 @@ header a, header a:active, header a:hover, header a:visited {
     font-size: 1.5rem;
     margin-right: 0!important;
     position: absolute;
-    top: -0.3rem;
+    top: -0.45rem;
     right: 1.8rem;
 }
 
@@ -276,14 +307,15 @@ header a, header a:active, header a:hover, header a:visited {
     text-transform: uppercase;
 }
 
-.course-buttons .btn-outline-info {
+.btn-outline-info {
+    border-radius: 1.3rem;
     color: rgb(94, 88, 210)!important;
     border-color: rgb(94, 88, 210)!important;
 }
 
-.course-buttons .btn-outline-info:active,
-.course-buttons .btn-outline-info.active,
-.course-buttons .btn-outline-info:hover {
+.btn-outline-info:active,
+.btn-outline-info.active,
+.btn-outline-info:hover {
     color: white!important;
     background-color: rgb(94, 88, 210)!important;
 }
@@ -383,6 +415,45 @@ header a, header a:active, header a:hover, header a:visited {
 .skill-strength.level0 span:nth-child(4), .skill-strength.level0 span:nth-child(3), .skill-strength.level0 span:nth-child(2) {opacity: 0.2;}
 .skill-strength.level1 span:nth-child(4), .skill-strength.level1 span:nth-child(3) {opacity: 0.2;}
 .skill-strength.level2 span:nth-child(4) {opacity: 0.2;}
+
+.btn-add-skill {
+    font-size: 2rem!important;
+    line-height: 0.8rem;
+    width: 1rem;
+    padding: .395rem 1.25rem .35rem 0.25rem;
+}
+
+.tt-menu {
+    background: white;
+    border: 1px solid #ced4da;
+    width: 100%;
+    border-radius: 0.25em;
+    margin-top: 2px;
+    position: relative;
+}
+
+.tt-suggestion {
+    display: block;
+    width: 100%;
+    padding: .25rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+
+.tt-selectable {
+    color: rgb(94, 88, 210)
+}
+
+.tt-selectable:hover {
+    color: #16181b;
+    text-decoration: none;
+    background-color: #f8f9fa;
+}
 
 .view-on-mobile footer {
     margin: auto;

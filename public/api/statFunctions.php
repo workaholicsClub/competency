@@ -26,3 +26,18 @@ function mode(array $values) {
 
     return $mode;
 }
+
+function quartile($array, $quartile) {
+    sort($array);
+    $pos = (count($array) - 1) * $quartile;
+
+    $base = floor($pos);
+    $rest = $pos - $base;
+
+    if ( isset($array[$base+1]) ) {
+        return $array[$base] + $rest * ($array[$base+1] - $array[$base]);
+    }
+    else {
+        return $array[$base];
+    }
+}
