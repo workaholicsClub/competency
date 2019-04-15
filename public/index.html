@@ -6,14 +6,13 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--<link rel="stylesheet" href="/assets/custom.css">-->
-    <link rel="stylesheet" href="/assets/styles/main.css">
+    <link rel="stylesheet" href="assets/styles/main.css">
 
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-70x70.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
 
-    <title>Сам себе академик</title>
+    <title>Жажда знаний: найти свой курс</title>
 
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -29,7 +28,6 @@
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
         gtag('config', 'UA-113216929-1');
     </script>
 
@@ -41,9 +39,39 @@
                 <a href="/"><img src="assets/images/logo.png" alt="self.academy"></a>
             </section>
             <div class="choose-profession">
-                Я&nbsp;<span>PHP-разработчик</span>, со&nbsp;стажем работы <span>1 год</span>, хочу <span>повысить квалификацию</span>
+                <span>Я</span>
+                <span class="select-box">
+                    <select class="cs-select cs-skin-elastic">
+                        <option value="1" disabled selected>разработчик PHP</option>
+                        <option value="france" data-class="flag-france">домохозяйка</option>
+                        <option value="brazil" data-class="flag-brazil">туниядец</option>
+                        <option value="argentina" data-class="flag-argentina">студент</option>
+                    </select>
+                </span>
+                <span>, со&nbsp;стажем работы</span>
+                <span class="select-box">
+                    <select class="cs-select cs-skin-elastic">
+                        <option value="1" disabled selected>1год</option>
+                        <option value="france" data-class="flag-france">2года</option>
+                        <option value="brazil" data-class="flag-brazil">3года</option>
+                        <option value="argentina" data-class="flag-argentina">4года</option>
+                        <option value="south-africa" data-class="flag-safrica">5лет</option>
+                    </select>
+                </span>
+                , хочу
+                <span class="select-box">
+                    <select class="cs-select cs-skin-elastic">
+                        <option value="" disabled selected>сменить профессию</option>
+                        <option value="france" data-class="flag-france">повысить квалификацию</option>
+                        <option value="brazil" data-class="flag-brazil">найти роботу</option>
+                        <option value="argentina" data-class="flag-argentina">получить больше знаний</option>
+                    </select>
+                </span>
                 <button class="find">найти курсы</button>
             </div>
+        </div>
+        <div>
+
         </div>
     </main>
     <footer class="footer mt-auto py-3">
@@ -91,16 +119,28 @@
         </div>
     </footer>
 
-<!-- BEGIN JIVOSITE CODE {literal} -->
-<script type='text/javascript'>
-    (function(){ var widget_id = 'undd9PhcEl';var d=document;var w=window;function l(){
-        var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
-        s.src = '//code.jivosite.com/script/widget/'+widget_id
-        ; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}
-        if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}
-        else{w.addEventListener('load',l,false);}}})();
-</script>
-<!-- {/literal} END JIVOSITE CODE -->
+    <!-- BEGIN JIVOSITE CODE {literal} -->
+    <script type='text/javascript'>
+        (function(){ var widget_id = 'undd9PhcEl';var d=document;var w=window;function l(){
+            var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
+            s.src = '//code.jivosite.com/script/widget/'+widget_id
+            ; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}
+            if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}
+            else{w.addEventListener('load',l,false);}}})();
+    </script>
+    <!-- {/literal} END JIVOSITE CODE -->
+
+    <!-- Styled select -->
+    <script src="assets/js/classie.js"></script>
+    <script src="assets/js/selectFx.js"></script>
+    <script>
+        (function() {
+            [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {
+                new SelectFx(el);
+            } );
+        })();
+    </script>
+    <!-- /Styled select -->
 
 </body>
 </html>

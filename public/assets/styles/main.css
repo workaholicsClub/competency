@@ -1,4 +1,5 @@
 /* This file must have an underscore at the beginning for it to be imported */
+@import url(cs-select.css);
 html, body {
   position: relative;
   height: 100% !important;
@@ -155,16 +156,28 @@ body {
   background: #fff url(../images/background.png) no-repeat 0 0; }
 
 .logo {
-  margin: 5% 0; }
+  margin: 0; }
 
 .choose-profession {
   font: normal 300 1.5em/150% "Gilroy", Tahoma, Verdana, Segoe, sans-serif;
   margin: 0;
   padding-top: 15%; }
-  .choose-profession span {
-    color: #6354d2;
-    display: inline-block;
-    border-bottom: 1px dashed #6354d2; }
+  .choose-profession .cs-select {
+    line-height: 100%;
+    z-index: unset; }
+    .choose-profession .cs-select .cs-placeholder {
+      z-index: unset;
+      color: #6354d2;
+      line-height: 100%;
+      border-bottom: 1px dashed #6354d2; }
+    .choose-profession .cs-select .cs-options {
+      z-index: 1;
+      background: #fff;
+      border-radius: 0 0 8px 8px;
+      border: 1px solid #6354d2;
+      border-top: none; }
+    .choose-profession .cs-select .cs-selected {
+      color: #6354d2; }
   .choose-profession .find {
     display: block;
     color: #fff;
@@ -181,6 +194,10 @@ body {
     cursor: pointer; }
     .choose-profession .find:focus {
       outline: none; }
+
+.select-box {
+  display: inline-block;
+  line-height: 100%; }
 
 footer {
   flex-shrink: 0;
