@@ -297,6 +297,10 @@ section.logo img{
     position: relative;
 }
 
+.course-card.take-a-look .continue-toggle {
+    background: linear-gradient(to bottom, transparent, #fdfbf3);
+}
+
 .course-card .text-info {
     color: rgb(94, 88, 210)!important;
 }

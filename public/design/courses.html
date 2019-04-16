@@ -292,6 +292,14 @@
             </div>
 
             <div class="input-group">
+                <label class="group-title-label">Стоимость</label>
+                <div class="checkbox-group">
+                    <label class="btn btn-outline-primary">Бесплатный <input type="checkbox" value="0" name="price"></label>
+                    <label class="btn btn-outline-primary">Недорогой <input type="checkbox" value="1500" name="price"></label>
+                </div>
+            </div>
+
+            <div class="input-group">
                 <label class="group-title-label">Формат курса</label>
                 <div class="checkbox-group">
                     <label class="btn btn-outline-primary">Интерактивный <input type="checkbox" value="Интерактивный" name="format[]"></label>
@@ -748,7 +756,7 @@
     }
 
     function initTopDrawerSliding() {
-        let начальнаяВысотаЗаголовка = 160;
+        let начальнаяВысотаЗаголовка = $('.view-on-mobile header').outerHeight()-3;
         let максимальнаяВысотаЗаголовка = 220;
         $('header').data('closed-height', начальнаяВысотаЗаголовка);
 
