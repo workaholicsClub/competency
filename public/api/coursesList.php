@@ -69,19 +69,20 @@ ORDER BY MAX(skillRate) DESC, price ASC');
             FROM courses c
                 LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
                 LEFT JOIN (
-                    SELECT skillId,
+                    SELECT sk.id AS skillId,
                            sk.name,
                            ".(!empty($_REQUEST['skills']) ? 'sk.name IN ("'.implode('", "', array_keys($_REQUEST['skills'])).'")' : '0' )." AS isSearched,
-                           COUNT(*) AS skillCount,
+                           COUNT(v.id) AS skillCount,
                            vcount AS vacanciesCount,
-                           COUNT(*)/vcount AS skillRate
-                    FROM vacancies v
-                        LEFT JOIN links_skills_vacancies lsv ON v.id = lsv.vacancyId
-                        LEFT JOIN professions p ON v.professionId = p.id
-                        LEFT JOIN skills sk ON lsv.skillId = sk.id
-                        LEFT JOIN (SELECT professionId, COUNT(*) AS vcount FROM vacancies GROUP BY professionId) pcnt ON v.professionId = pcnt.professionId
+                           COUNT(v.id)/vcount AS skillRate
+                        FROM skills sk
+                        LEFT JOIN links_skills_vacancies lsv ON sk.id = lsv.skillId
+                        LEFT JOIN vacancies v ON lsv.vacancyId = v.id
+                        LEFT JOIN links_skills_professions lsp ON sk.id = lsp.skillId
+                        LEFT JOIN professions p ON lsp.professionId = p.id
+                        LEFT JOIN (SELECT professionId, COUNT(*) AS vcount FROM vacancies GROUP BY professionId) pcnt ON lsp.professionId = pcnt.professionId
                     WHERE p.code = '${professionCode}'
-                    GROUP BY skillId
+                    GROUP BY sk.id
                 ) s ON s.skillId = lsc.skillId
             WHERE c.inArchive = 0 ";
         $whereClauses = [];
