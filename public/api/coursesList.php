@@ -45,19 +45,25 @@ WHERE lrc.courseId = ?');
 if ($doSearch) {
 
     if ($professionCode && !$searchMode) {
-        $coursesQuery = $pdo->prepare('SELECT c.*, MAX(skillRate) AS maxSkillRate FROM courses c
+        $coursesQuery = $pdo->prepare('
+SELECT c.*,
+       MAX(skillRate) AS maxSkillRate,
+       MAX(isPrimary) AS hasPrimary
+FROM courses c
 	LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
 	LEFT JOIN (
-		SELECT skillId, COUNT(*) AS skillCount, vcount AS vacanciesCount, COUNT(*)/vcount AS skillRate FROM vacancies v
+		SELECT lsv.skillId, COUNT(*) AS skillCount, vcount AS vacanciesCount, COUNT(*)/vcount AS skillRate, lsp.isPrimary
+        FROM vacancies v
 			LEFT JOIN links_skills_vacancies lsv ON v.id = lsv.vacancyId
 			LEFT JOIN professions p ON v.professionId = p.id
+		    LEFT JOIN links_skills_professions lsp ON lsv.skillId = lsp.skillId AND v.professionId = lsp.professionId
 			LEFT JOIN (SELECT professionId, COUNT(*) AS vcount FROM vacancies GROUP BY professionId) pcnt ON v.professionId = pcnt.professionId
 		WHERE p.code = ?
 		GROUP BY skillId
     ) s ON s.skillId = lsc.skillId
 WHERE c.inArchive = 0
 GROUP BY c.id
-ORDER BY MAX(skillRate) DESC, price ASC');
+ORDER BY maxSkillRate DESC, hasPrimary DESC, price ASC');
 
         $coursesQuery->execute([$professionCode]);
     }
@@ -65,7 +71,9 @@ ORDER BY MAX(skillRate) DESC, price ASC');
     if ($searchMode) {
         $courseQuerySQL = "SELECT c.*,
                    MAX(skillRate) AS maxSkillRate,
-                   SUM(isSearched) AS countSearchedSkills
+                   MAX(isPrimary) AS hasPrimary,
+                   SUM(isSearched) AS countSearchedSkills,
+                   price/SUM(isSearched) AS pricePerSearchedSkill
             FROM courses c
                 LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
                 LEFT JOIN (
@@ -74,12 +82,13 @@ ORDER BY MAX(skillRate) DESC, price ASC');
                            ".(!empty($_REQUEST['skills']) ? 'sk.name IN ("'.implode('", "', array_keys($_REQUEST['skills'])).'")' : '0' )." AS isSearched,
                            COUNT(v.id) AS skillCount,
                            vcount AS vacanciesCount,
-                           COUNT(v.id)/vcount AS skillRate
+                           COUNT(v.id)/vcount AS skillRate,
+                           lsp.isPrimary
                         FROM skills sk
                         LEFT JOIN links_skills_vacancies lsv ON sk.id = lsv.skillId
                         LEFT JOIN vacancies v ON lsv.vacancyId = v.id
-                        LEFT JOIN links_skills_professions lsp ON sk.id = lsp.skillId
-                        LEFT JOIN professions p ON lsp.professionId = p.id
+                        LEFT JOIN links_skills_professions lsp ON sk.id = lsp.skillId AND v.professionId = lsp.professionId
+                        LEFT JOIN professions p ON v.professionId = p.id
                         LEFT JOIN (SELECT professionId, COUNT(*) AS vcount FROM vacancies GROUP BY professionId) pcnt ON lsp.professionId = pcnt.professionId
                     WHERE p.code = '${professionCode}'
                     GROUP BY sk.id
@@ -121,7 +130,7 @@ ORDER BY MAX(skillRate) DESC, price ASC');
         if (!empty($whereClauses)) {
             $courseQuerySQL .= 'AND '.implode(' AND ', $whereClauses);
         }
-        $courseQuerySQL .= "\nGROUP BY c.id ORDER BY maxSkillRate DESC, countSearchedSkills DESC, price ASC";
+        $courseQuerySQL .= "\nGROUP BY c.id ORDER BY maxSkillRate DESC, hasPrimary DESC, countSearchedSkills DESC, pricePerSearchedSkill ASC";
         $coursesQuery = $pdo->prepare($courseQuerySQL);
         $coursesQuery->execute($dataArray);
     }
@@ -170,6 +179,7 @@ ORDER BY MAX(skillRate) DESC, price ASC');
             "duration"         => intval($course['duration']),
             "durationUnits"    => $course['durationUnits'],
             "price"            => floatval($course['price']),
+            "pricePerSkill"    => count($searchedCourseSkills) > 0 ? floatval($course['price']/count($searchedCourseSkills)) : 0,
             "coupon"           => $course['coupon'] ? $course['coupon'] : false,
             "couponDiscount"   => $course['couponDiscount'] ? floatval($course['couponDiscount']) : false,
             "description"      => $course['description'],
