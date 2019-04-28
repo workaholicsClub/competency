@@ -19,7 +19,7 @@ catch (\PDOException $exception) {
 }
 
 $vacancyData = [];
-$vacancyFields = ['title', 'companyName', 'salaryFrom', 'salaryTo', 'fullTime','officialEmployment', 'flexibleSchedule', 'probation','canBeRemote',
+$vacancyFields = ['title', 'companyName', 'city', 'salaryFrom', 'salaryTo', 'fullTime','officialEmployment', 'flexibleSchedule', 'probation','canBeRemote',
     'training', 'food', 'sportAndFitness', 'communicationsCompensation', 'sickLeaveCompensation',
     'vacationCompensation', 'dressCode', 'relocationHelp', 'text'];
 
@@ -44,9 +44,9 @@ $skills = isset($_POST['skills']) ? $_POST['skills'] : [];
 $professionQuery = $pdo->prepare("SELECT * FROM professions WHERE name=:profession");
 
 $insertSQL = "INSERT INTO vacancies
-  (professionId, title, companyName, salaryFrom, salaryTo, text, fullTime, officialEmployment, flexibleSchedule, probation, canBeRemote, training, food, sportAndFitness, communicationsCompensation, sickLeaveCompensation, vacationCompensation, dressCode, relocationHelp)
+  (professionId, title, companyName, city, salaryFrom, salaryTo, text, fullTime, officialEmployment, flexibleSchedule, probation, canBeRemote, training, food, sportAndFitness, communicationsCompensation, sickLeaveCompensation, vacationCompensation, dressCode, relocationHelp)
   VALUES
-  (:professionId, :title, :companyName, :salaryFrom, :salaryTo, :text, :fullTime, :officialEmployment, :flexibleSchedule, :probation, :canBeRemote, :training, :food, :sportAndFitness, :communicationsCompensation, :sickLeaveCompensation, :vacationCompensation, :dressCode, :relocationHelp)";
+  (:professionId, :title, :companyName, :city, :salaryFrom, :salaryTo, :text, :fullTime, :officialEmployment, :flexibleSchedule, :probation, :canBeRemote, :training, :food, :sportAndFitness, :communicationsCompensation, :sickLeaveCompensation, :vacationCompensation, :dressCode, :relocationHelp)";
 $insertQuery = $pdo->prepare($insertSQL);
 
 $skillsQuery = $pdo->prepare("INSERT INTO links_skills_vacancies (vacancyId, skillId, skillLevel) VALUES (:vacancyId, :skillId, :skillLevel)");
