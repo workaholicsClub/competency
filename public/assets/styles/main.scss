@@ -146,3 +146,70 @@ footer {
     font-size: 3.000em; // font-size: 48px;
   }
 }
+
+/* STYLED SELECT */
+.transition {
+  transition: all .4s ease-in-out;
+}
+
+.list {
+  display: inline-block;
+  position: relative;
+  margin-left: 6px;
+  ul {
+    text-align: left;
+    position: absolute;
+    padding: 0 20px;
+    top: 1.3em;
+    min-width: 450px;
+    left: -20px;
+    display: none;
+    z-index: 1;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid $main-color;
+    .active {
+      display: block;
+    }
+
+  }
+  li {
+    list-style:none;
+    &:first-child a {
+      color: $main-color;
+    }
+  }
+  a {
+    transition: all .4s;
+    color: $main-color;
+    position: relative;
+    &:after {
+      position: absolute;
+      content: '';
+      height: 5px;
+      width: 0;
+      left: 0;
+      background: lighten($main-color, 20%);
+      bottom: 0;
+      transition: all .4s ease-out;
+    }
+    &:hover {
+      cursor: pointer;
+      color: lighten($main-color, 20%);
+      text-decoration: none;
+      &:after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.placeholder {
+  color: $main-color;
+  border-bottom: 2px dashed;
+  cursor: pointer;
+  &:hover {
+    color: darken($main-color, 10%);
+  }
+}
+/* /STYLED SELECT */

@@ -248,5 +248,59 @@ footer {
 @media (min-width: 1200px) {
   .choose-profession {
     font-size: 3.000em; } }
+/* STYLED SELECT */
+.transition {
+  transition: all .4s ease-in-out; }
+
+.list {
+  display: inline-block;
+  position: relative;
+  margin-left: 6px; }
+  .list ul {
+    text-align: left;
+    position: absolute;
+    padding: 0 20px;
+    top: 1.3em;
+    min-width: 450px;
+    left: -20px;
+    display: none;
+    z-index: 1;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #6354d2; }
+    .list ul .active {
+      display: block; }
+  .list li {
+    list-style: none; }
+    .list li:first-child a {
+      color: #6354d2; }
+  .list a {
+    transition: all .4s;
+    color: #6354d2;
+    position: relative; }
+    .list a:after {
+      position: absolute;
+      content: '';
+      height: 5px;
+      width: 0;
+      left: 0;
+      background: #ada5e7;
+      bottom: 0;
+      transition: all .4s ease-out; }
+    .list a:hover {
+      cursor: pointer;
+      color: #ada5e7;
+      text-decoration: none; }
+      .list a:hover:after {
+        width: 100%; }
+
+.placeholder {
+  color: #6354d2;
+  border-bottom: 2px dashed;
+  cursor: pointer; }
+  .placeholder:hover {
+    color: #4433c0; }
+
+/* /STYLED SELECT */
 
 /*# sourceMappingURL=main.css.map */
