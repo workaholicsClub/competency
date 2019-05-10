@@ -1,6 +1,7 @@
 @charset "utf-8";
 @import "constants";
 @import "fonts";
+@import "cs-select.css";
 
 ::-webkit-input-placeholder {color: $text-color;}
 ::-moz-placeholder          {color: $text-color;}
@@ -19,17 +20,33 @@ body {
 }
 
 .logo {
-  margin: 5% 0;
+  margin: 0;
 }
 
 .choose-profession {
   font: normal 300 1.500em/150% $font-family; // font-size: 24px;
   margin: 0;
   padding-top: 15%;
-  span {
-    color: $main-color;
-    display: inline-block;
-    border-bottom: 1px dashed $main-color;
+
+  .cs-select {
+    line-height: 100%;
+    z-index: unset;
+    .cs-placeholder {
+      z-index: unset;
+      color: $main-color;
+      line-height: 100%;
+      border-bottom: 1px dashed $main-color;
+    }
+    .cs-options {
+      z-index: 1;
+      background: #fff;
+      border-radius: 0 0 8px 8px;
+      border: 1px solid $main-color;
+      border-top: none;
+    }
+    .cs-selected {
+      color: $main-color;
+    }
   }
   .find {
     display: block;
@@ -49,6 +66,11 @@ body {
       outline: none;
     }
   }
+}
+
+.select-box {
+  display: inline-block;
+  line-height: 100%;
 }
 
 footer {
@@ -124,3 +146,70 @@ footer {
     font-size: 3.000em; // font-size: 48px;
   }
 }
+
+/* STYLED SELECT */
+.transition {
+  transition: all .4s ease-in-out;
+}
+
+.list {
+  display: inline-block;
+  position: relative;
+  margin-left: 6px;
+  ul {
+    text-align: left;
+    position: absolute;
+    padding: 0 20px;
+    top: 1.3em;
+    min-width: 450px;
+    left: -20px;
+    display: none;
+    z-index: 1;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid $main-color;
+    .active {
+      display: block;
+    }
+
+  }
+  li {
+    list-style:none;
+    &:first-child a {
+      color: $main-color;
+    }
+  }
+  a {
+    transition: all .4s;
+    color: $main-color;
+    position: relative;
+    &:after {
+      position: absolute;
+      content: '';
+      height: 5px;
+      width: 0;
+      left: 0;
+      background: lighten($main-color, 20%);
+      bottom: 0;
+      transition: all .4s ease-out;
+    }
+    &:hover {
+      cursor: pointer;
+      color: lighten($main-color, 20%);
+      text-decoration: none;
+      &:after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.placeholder {
+  color: $main-color;
+  border-bottom: 2px dashed;
+  cursor: pointer;
+  &:hover {
+    color: darken($main-color, 10%);
+  }
+}
+/* /STYLED SELECT */
