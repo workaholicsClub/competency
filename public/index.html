@@ -36,67 +36,67 @@
     <main role="main" class="main-content">
         <div class="container">
             <section class="logo">
-                <a href="/"><img src="assets/images/logo.png" alt="self.academy"></a>
+                <a href="/"><img src="assets/images/logo.png" alt="Жажда знаний"></a>
             </section>
-            <!--<div class="choose-profession">-->
-                <!--<span>Я</span>-->
-                <!--<span class="select-box">-->
-                    <!--<select class="cs-select cs-skin-elastic">-->
-                        <!--<option value="1" disabled selected>разработчик PHP</option>-->
-                        <!--<option value="france" data-class="flag-france">домохозяйка</option>-->
-                        <!--<option value="brazil" data-class="flag-brazil">туниядец</option>-->
-                        <!--<option value="argentina" data-class="flag-argentina">студент</option>-->
-                    <!--</select>-->
-                <!--</span>-->
-                <!--<span>, со&nbsp;стажем работы</span>-->
-                <!--<span class="select-box">-->
-                    <!--<select class="cs-select cs-skin-elastic">-->
-                        <!--<option value="1" disabled selected>1год</option>-->
-                        <!--<option value="france" data-class="flag-france">2года</option>-->
-                        <!--<option value="brazil" data-class="flag-brazil">3года</option>-->
-                        <!--<option value="argentina" data-class="flag-argentina">4года</option>-->
-                        <!--<option value="south-africa" data-class="flag-safrica">5лет</option>-->
-                    <!--</select>-->
-                <!--</span>-->
-                <!--, хочу-->
-                <!--<span class="select-box">-->
-                    <!--<select class="cs-select cs-skin-elastic">-->
-                        <!--<option value="" disabled selected>сменить профессию</option>-->
-                        <!--<option value="france" data-class="flag-france">повысить квалификацию</option>-->
-                        <!--<option value="brazil" data-class="flag-brazil">найти роботу</option>-->
-                        <!--<option value="argentina" data-class="flag-argentina">получить больше знаний</option>-->
-                    <!--</select>-->
-                <!--</span>-->
-                <!--<button class="find">найти курсы</button>-->
-            <!--</div>-->
+
             <div class="choose-profession">
                 Я
-                <div class="list"><span class="placeholder">разработчик PHP</span>
+                <div class="list who-list"><span class="placeholder">новичок</span>
                     <ul class="list__ul">
-                        <li><a href="">разработчик PHP</a></li>
-                        <li><a href="">домохозяйка</a></li>
-                        <li><a href="">туниядец</a></li>
-                        <li><a href="">студент</a></li>
+                        <li class="non-prof"><a href="">новичок</a></li>
+                        <li><a data-prof='qa-tester' href="">Тестировщик</a></li>
+                        <li><a data-prof='javascript-developer' href="">JavaScript-разработчик</a></li>
+                        <li><a data-prof='php-developer' href="">PHP-разработчик</a></li>
+                        <li><a data-prof='python-developer' href="">Python-разработчик</a></li>
+                        <li><a data-prof='data-scientist' href="">Data Scientist</a></li>
+                        <li><a data-prof='internet-marketologist' href="">Интернет-маркетолог</a></li>
+                        <li><a data-prof='golang-developer' href="">Golang-разработчик</a></li>
+                        <li><a data-prof='ios-developer' href="">iOS-разработчик</a></li>
+                        <li><a data-prof='android-developer' href="">Android-разработчик</a></li>
+                        <li><a data-prof='ui-ux-designer' href="">UI/UX дизайнер</a></li>
+                        <li><a data-prof='game-designer' href="">Гейм-дизайнер</a></li>
+                        <li><a data-prof='game-artist-2d' href="">Игровой художник 2D</a></li>
+                        <li><a data-prof='game-artist-3d' href="">Игровой художник 3D</a></li>
+                        <li><a data-prof='pr-specialist' href="">PR-специалист</a></li>
+                        <li><a data-prof='hr-manager' href="">HR-менеджер</a></li>
+                        <li><a data-prof='project-manager' href="">Менеджер интернет-проектов</a></li>
+                        <li><a data-prof='devops' href="">DevOps специалист</a></li>
+                        <li class="non-prof"><a href="">специалист из другой области</a></li>
+                    </ul>
+                </div><br>
+                <div class="list exp-list"><span class="placeholder">без опыта работы</span>,
+                    <ul class="list__ul">
+                        <li><a href="">без опыта работы</a></li>
+                        <li><a href="">с опытом работы до 3 лет</a></li>
+                        <li><a href="">с опытом работы 3 или более года</a></li>
+                    </ul>
+                </div><br>хочу
+                <div class="list want-list"><span class="placeholder">стать ...</span>
+                    <ul class="list__ul">
+                        <li><a href="" data-prof='php-developer'>стать <span class="who">разработчиком PHP</span></a></li>
+                        <li><a href="" data-prof='hr-manager'>стать <span class="who">HR менеджером</span></a></li>
+                        <li><a href="" data-prof='pr-specialist'>стать <span class="who">PR специалистом</span></a></li>
+                        <li><a href="" data-prof='python-developer'>стать <span class="who">разработчиком Python</span></a></li>
+                        <li><a href="" data-prof='golang-developer'>стать <span class="who">разработчиком Golang</span></a></li>
+                        <li><a href="" data-prof='javascript-developer'>стать <span class="who">разработчиком JavaScript</span></a></li>
+                        <li><a href="" data-prof='ui-ux-designer'>стать <span class="who">UI/UX дизайнером</span></a></li>
+                        <li><a href="" data-prof='ios-developer'>стать <span class="who">разработчиком iOS</span></a></li>
+                        <li><a href="" data-prof='android-developer'>стать <span class="who">разработчиком Android</span></a></li>
+                        <li><a href="" data-prof='internet-marketologist'>стать <span class="who">интернет-маркетологом</span></a></li>
+                        <li><a href="" data-prof='qa-tester'>стать <span class="who">тестировщиком</span></a></li>
+                        <li><a href="" data-prof='devops'>стать <span class="who">DevOps специалистом</span></a></li>
+                        <li><a href="" data-prof='data-scientist'>стать <span class="who">Data Scientist`ом</span></a></li>
+                        <li><a href="" data-prof='game-designer'>стать <span class="who">гейм-дизайнером</span></a></li>
+                        <li><a href="" data-prof='project-manager'>стать <span class="who">менеджером интернет-проектов</span></a></li>
+                        <li><a href="" data-prof='game-artist-2d'>стать <span class="who">игровым художником 2D</span></a></li>
+                        <li><a href="" data-prof='game-artist-3d'>стать <span class="who">игровым художником 3D</span></a></li>
+                        <li class="universal"><a href="">начать с нуля</a></li>
+                        <li class="universal"><a href="">продолжить обучение</a></li>
+                        <li class="universal"><a href="">повысить квалификацию</a></li>
+                        <li class="universal"><a href="">прокачать навык</a></li>
                     </ul>
                 </div>
-                , со&nbsp;стажем работы
-                <div class="list"><span class="placeholder">1 года</span>
-                    <ul class="list__ul">
-                        <li><a href="">1 год</a></li>
-                        <li><a href="">2 года</a></li>
-                        <li><a href="">3 года</a></li>
-                    </ul>
-                </div>
-                , хочу
-                <div class="list"><span class="placeholder">сменить профессию</span>
-                    <ul class="list__ul">
-                        <li><a href="">сменить профессию</a></li>
-                        <li><a href="">повысить квалификацию</a></li>
-                        <li><a href="">найти роботу</a></li>
-                        <li><a href="">получить больше знаний</a></li>
-                    </ul>
-                </div>
-                <button class="find">найти курсы</button>
+                <button class="find disabled" disabled="disabled">подобрать курсы</button>
             </div>
         </div>
         <div>
@@ -108,26 +108,39 @@
             <div class="row">
                 <div class="col-sm-12 col-md-6 col-lg-4">
                     <div class="footer-title">
-                        Популярные профессии
+                        Как это работает
                     </div>
                     <p>
-                        PHP-разработчик Python-разработчик Golang-разработчик JavaScript-разработчик iOS-разработчик
-                        Android-разработчик UI/UX дизайнер Гейм-дизайнер Игровой художник 2D&nbsp;Игровой художник
-                        3D&nbsp;PR-специалист HR-менеджер Интернет-маркетолог Менеджер интернет-проектов DevOps специалист
-                        Тестировщик Data Scientist
+                        &laquo;Жажда знаний&raquo; использует требования работодателей, чтобы найти курсы для освоения
+                        профессии или улучшения навыков
+                    </p>
+                    <p>
+                        Наши технологии подбирают курсы, подходящие под персональные интересы,
+                        карьерные и финансовые цели
                     </p>
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-4">
                     <div class="footer-title">
-                        Как это работает
+                        Популярные профессии
                     </div>
                     <p>
-                        &laquo;Жажда знаний&raquo; поможет вам подобрать подходящие курсы для того чтобы освоить новую профессию или
-                        улучшить навыки, а затем найти подходящую к вашим навыкам работу
-                    </p>
-                    <p>
-                        Мы&nbsp;используем технологии, которые позволяют вам выбирать обучение лучше и&nbsp;находить
-                        себе достойную работу.
+                        <a href="/php-developer/courses">PHP-разработчик</a>,
+                        <a href="/python-developer/courses">Python-разработчик</a>,
+                        <a href="/golang-developer/courses">Golang-разработчик</a>,
+                        <a href="/javascript-developer/courses">JavaScript-разработчик</a>,
+                        <a href="/ios-developer/courses">iOS-разработчик</a>,
+                        <a href="/android-developer/courses">Android-разработчик</a>,
+                        <a href="/ui-ux-designer/courses">UI/UX дизайнер</a>,
+                        <a href="/game-designer/courses">Гейм-дизайнер</a>,
+                        <a href="/game-artist-2d/courses">Игровой художник 2D</a>,
+                        <a href="/game-artist-3d/courses">Игровой художник 3D</a>,
+                        <a href="/pr-specialist/courses">PR-специалист</a>,
+                        <a href="/hr-manager/courses">HR-менеджер</a>,
+                        <a href="/internet-marketologist/courses">Интернет-маркетолог</a>,
+                        <a href="/project-manager/courses">Менеджер интернет-проектов</a>,
+                        <a href="/devops/courses">DevOps специалист</a>,
+                        <a href="/qa-tester/courses">Тестировщик</a>,
+                        <a href="/data-scientist/courses">Data Scientist</a>
                     </p>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-4 order-lg-first" >
@@ -147,6 +160,8 @@
             </div>
         </div>
     </footer>
+
+    <div class="backdrop" style="display: none"></div>
 
     <!-- BEGIN JIVOSITE CODE {literal} -->
     <script type='text/javascript'>
@@ -179,6 +194,22 @@
 
     <script>
         (function() {
+            function showBackdrop() {
+                $('.backdrop').show();
+            }
+
+            function hideBackdrop() {
+                $('.backdrop, .list__ul').hide();
+            }
+
+            function checkAndActivateFindButton() {
+                let canActivate = $('.want-list .placeholder').text() !== 'стать ...';
+                if (canActivate) {
+                    $('.find').removeClass('disabled');
+                    $('.find')[0].removeAttribute('disabled');
+                }
+            }
+
             $('.placeholder').on('click', function (e) {
                 $('.list__ul').hide();
                 $('.list__ul a').show();
@@ -189,6 +220,7 @@
                     }
                 });
                 $(this).closest(".list").find(".list__ul").toggle();
+                showBackdrop();
             });
 
             $('.list__ul a').on('click', function (e) {
@@ -202,7 +234,11 @@
 
                 $(listUl).find('li').eq(index).prependTo(listUl);
                 $(listUl).toggle();
+                hideBackdrop();
+                checkAndActivateFindButton();
             });
+
+            $('.backdrop').on('click', hideBackdrop);
         })();
     </script>
 </body>
