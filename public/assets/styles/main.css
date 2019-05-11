@@ -1,9 +1,10 @@
 /* This file must have an underscore at the beginning for it to be imported */
-@import url(cs-select.css);
+@import "cs-select.css";
 html, body {
   position: relative;
   height: 100% !important;
-  min-height: 100%; }
+  min-height: 100%;
+}
 
 /* Main colors */
 /* Fonts */
@@ -12,294 +13,417 @@ html, body {
 .element::after {
   display: block;
   content: "";
-  clear: both; }
+  clear: both;
+}
 
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-ExtraBold.eot");
   src: local("../fonts/Gilroy ExtraBold"), local("../fonts/Gilroy-ExtraBold"), url("../fonts/Gilroy-ExtraBold.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-ExtraBold.woff") format("woff"), url("../fonts/Gilroy-ExtraBold.ttf") format("truetype");
   font-weight: 800;
-  font-style: normal; }
+  font-style: normal;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-Heavy.eot");
   src: local("../fonts/Gilroy Heavy"), local("../fonts/Gilroy-Heavy"), url("../fonts/Gilroy-Heavy.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-Heavy.woff") format("woff"), url("../fonts/Gilroy-Heavy.ttf") format("truetype");
   font-weight: 900;
-  font-style: normal; }
+  font-style: normal;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-LightItalic.eot");
   src: local("../fonts/Gilroy Light Italic"), local("../fonts/Gilroy-LightItalic"), url("../fonts/Gilroy-LightItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-LightItalic.woff") format("woff"), url("../fonts/Gilroy-LightItalic.ttf") format("truetype");
   font-weight: 300;
-  font-style: italic; }
+  font-style: italic;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-ThinItalic.eot");
   src: local("../fonts/Gilroy Thin Italic"), local("../fonts/Gilroy-ThinItalic"), url("../fonts/Gilroy-ThinItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-ThinItalic.woff") format("woff"), url("../fonts/Gilroy-ThinItalic.ttf") format("truetype");
   font-weight: 100;
-  font-style: italic; }
+  font-style: italic;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-BlackItalic.eot");
   src: local("../fonts/Gilroy Black Italic"), local("../fonts/Gilroy-BlackItalic"), url("../fonts/Gilroy-BlackItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-BlackItalic.woff") format("woff"), url("../fonts/Gilroy-BlackItalic.ttf") format("truetype");
   font-weight: 900;
-  font-style: italic; }
+  font-style: italic;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-BoldItalic.eot");
   src: local("../fonts/Gilroy Bold Italic"), local("../fonts/Gilroy-BoldItalic"), url("../fonts/Gilroy-BoldItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-BoldItalic.woff") format("woff"), url("../fonts/Gilroy-BoldItalic.ttf") format("truetype");
   font-weight: bold;
-  font-style: italic; }
+  font-style: italic;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-SemiBold.eot");
   src: local("../fonts/Gilroy SemiBold"), local("../fonts/Gilroy-SemiBold"), url("../fonts/Gilroy-SemiBold.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-SemiBold.woff") format("woff"), url("../fonts/Gilroy-SemiBold.ttf") format("truetype");
   font-weight: 600;
-  font-style: normal; }
+  font-style: normal;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-UltraLightItalic.eot");
   src: local("../fonts/Gilroy UltraLight Italic"), local("../fonts/Gilroy-UltraLightItalic"), url("../fonts/Gilroy-UltraLightItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-UltraLightItalic.woff") format("woff"), url("../fonts/Gilroy-UltraLightItalic.ttf") format("truetype");
   font-weight: 200;
-  font-style: italic; }
+  font-style: italic;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-SemiBoldItalic.eot");
   src: local("../fonts/Gilroy SemiBold Italic"), local("../fonts/Gilroy-SemiBoldItalic"), url("../fonts/Gilroy-SemiBoldItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-SemiBoldItalic.woff") format("woff"), url("../fonts/Gilroy-SemiBoldItalic.ttf") format("truetype");
   font-weight: 600;
-  font-style: italic; }
+  font-style: italic;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-Light.eot");
   src: local("../fonts/Gilroy Light"), local("../fonts/Gilroy-Light"), url("../fonts/Gilroy-Light.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-Light.woff") format("woff"), url("../fonts/Gilroy-Light.ttf") format("truetype");
   font-weight: 300;
-  font-style: normal; }
+  font-style: normal;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-MediumItalic.eot");
   src: local("../fonts/Gilroy Medium Italic"), local("../fonts/Gilroy-MediumItalic"), url("../fonts/Gilroy-MediumItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-MediumItalic.woff") format("woff"), url("../fonts/Gilroy-MediumItalic.ttf") format("truetype");
   font-weight: 500;
-  font-style: italic; }
+  font-style: italic;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-ExtraBoldItalic.eot");
   src: local("../fonts/Gilroy ExtraBold Italic"), local("../fonts/Gilroy-ExtraBoldItalic"), url("../fonts/Gilroy-ExtraBoldItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-ExtraBoldItalic.woff") format("woff"), url("../fonts/Gilroy-ExtraBoldItalic.ttf") format("truetype");
   font-weight: 800;
-  font-style: italic; }
+  font-style: italic;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-Regular.eot");
   src: local("../fonts/Gilroy Regular"), local("../fonts/Gilroy-Regular"), url("../fonts/Gilroy-Regular.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-Regular.woff") format("woff"), url("../fonts/Gilroy-Regular.ttf") format("truetype");
   font-weight: normal;
-  font-style: normal; }
+  font-style: normal;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-HeavyItalic.eot");
   src: local("../fonts/Gilroy Heavy Italic"), local("../fonts/Gilroy-HeavyItalic"), url("../fonts/Gilroy-HeavyItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-HeavyItalic.woff") format("woff"), url("../fonts/Gilroy-HeavyItalic.ttf") format("truetype");
   font-weight: 900;
-  font-style: italic; }
+  font-style: italic;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-Medium.eot");
   src: local("../fonts/Gilroy Medium"), local("../fonts/Gilroy-Medium"), url("../fonts/Gilroy-Medium.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-Medium.woff") format("woff"), url("../fonts/Gilroy-Medium.ttf") format("truetype");
   font-weight: 500;
-  font-style: normal; }
+  font-style: normal;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-RegularItalic.eot");
   src: local("../fonts/Gilroy Regular Italic"), local("../fonts/Gilroy-RegularItalic"), url("../fonts/Gilroy-RegularItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-RegularItalic.woff") format("woff"), url("../fonts/Gilroy-RegularItalic.ttf") format("truetype");
   font-weight: normal;
-  font-style: italic; }
+  font-style: italic;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-UltraLight.eot");
   src: local("../fonts/Gilroy UltraLight"), local("../fonts/Gilroy-UltraLight"), url("../fonts/Gilroy-UltraLight.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-UltraLight.woff") format("woff"), url("../fonts/Gilroy-UltraLight.ttf") format("truetype");
   font-weight: 200;
-  font-style: normal; }
+  font-style: normal;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-Bold.eot");
   src: local("../fonts/Gilroy Bold"), local("../fonts/Gilroy-Bold"), url("../fonts/Gilroy-Bold.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-Bold.woff") format("woff"), url("../fonts/Gilroy-Bold.ttf") format("truetype");
   font-weight: bold;
-  font-style: normal; }
+  font-style: normal;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-Thin.eot");
   src: local("../fonts/Gilroy Thin"), local("../fonts/Gilroy-Thin"), url("../fonts/Gilroy-Thin.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-Thin.woff") format("woff"), url("../fonts/Gilroy-Thin.ttf") format("truetype");
   font-weight: 100;
-  font-style: normal; }
+  font-style: normal;
+}
 @font-face {
-  font-family: 'Gilroy';
+  font-family: "Gilroy";
   src: url("../fonts/Gilroy-Black.eot");
   src: local("../fonts/Gilroy Black"), local("../fonts/Gilroy-Black"), url("../fonts/Gilroy-Black.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy-Black.woff") format("woff"), url("../fonts/Gilroy-Black.ttf") format("truetype");
   font-weight: 900;
-  font-style: normal; }
+  font-style: normal;
+}
 ::-webkit-input-placeholder {
-  color: #333333; }
+  color: #333333;
+}
 
 ::-moz-placeholder {
-  color: #333333; }
+  color: #333333;
+}
 
 :-moz-placeholder {
-  color: #333333; }
+  color: #333333;
+}
 
 :-ms-input-placeholder {
-  color: #333333; }
+  color: #333333;
+}
 
 body {
   font: normal normal 16px "Gilroy", Tahoma, Verdana, Segoe, sans-serif;
   line-height: 120%;
-  color: #333333; }
+  color: #333333;
+}
+
+a {
+  color: #6354d2;
+}
 
 .main-content {
   flex: 1 0 auto;
-  background: #fff url(../images/background.png) no-repeat 0 0; }
+  background: #fff url(../images/background.png) no-repeat 0 0;
+  background-size: cover;
+}
 
 .logo {
-  margin: 0; }
+  margin: 0;
+}
 
 .choose-profession {
   font: normal 300 1.5em/150% "Gilroy", Tahoma, Verdana, Segoe, sans-serif;
   margin: 0;
-  padding-top: 15%; }
-  .choose-profession .cs-select {
-    line-height: 100%;
-    z-index: unset; }
-    .choose-profession .cs-select .cs-placeholder {
-      z-index: unset;
-      color: #6354d2;
-      line-height: 100%;
-      border-bottom: 1px dashed #6354d2; }
-    .choose-profession .cs-select .cs-options {
-      z-index: 1;
-      background: #fff;
-      border-radius: 0 0 8px 8px;
-      border: 1px solid #6354d2;
-      border-top: none; }
-    .choose-profession .cs-select .cs-selected {
-      color: #6354d2; }
-  .choose-profession .find {
-    display: block;
-    color: #fff;
-    font-size: 0.5em;
-    font-weight: bold;
-    letter-spacing: 0.06em;
-    line-height: 100%;
-    text-align: center;
-    border: solid 2px #6354d2;
-    background-color: #6354d2;
-    border-radius: 35px;
-    padding: 0.417em 0.833em;
-    margin: 5% 0 1%;
-    cursor: pointer; }
-    .choose-profession .find:focus {
-      outline: none; }
+  padding-top: 15%;
+}
+.choose-profession .cs-select {
+  line-height: 100%;
+  z-index: unset;
+}
+.choose-profession .cs-select .cs-placeholder {
+  z-index: unset;
+  color: #6354d2;
+  line-height: 100%;
+  border-bottom: 1px dashed #6354d2;
+}
+.choose-profession .cs-select .cs-options {
+  z-index: 1;
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  border: 1px solid #6354d2;
+  border-top: none;
+}
+.choose-profession .cs-select .cs-selected {
+  color: #6354d2;
+}
+.choose-profession .find {
+  display: block;
+  color: #fff;
+  font-size: 0.6em;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  line-height: 100%;
+  text-align: center;
+  border: solid 2px #6354d2;
+  background-color: #6354d2;
+  border-radius: 35px;
+  padding: 0.417em 0.833em;
+  margin: 5% 0 1%;
+  cursor: pointer;
+}
+.choose-profession .find:focus {
+  outline: none;
+}
+.choose-profession .find.disabled, .choose-profession .find[disabled=disabled] {
+  border: solid 2px #aaa;
+  background-color: #aaa;
+}
+.choose-profession .list__ul {
+  font-size: 0.8em;
+  line-height: 1.5em;
+  z-index: 60;
+}
 
 .select-box {
   display: inline-block;
-  line-height: 100%; }
+  line-height: 100%;
+}
 
 footer {
   flex-shrink: 0;
-  font-size: 0.875em; }
-  footer .footer-inner {
-    border-top: 1px solid #f8f9fa;
-    padding-top: 7%; }
-  footer .footer-title {
-    font-weight: bold;
-    margin-bottom: 2%; }
-  footer .socials-wrap {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 5%; }
-    footer .socials-wrap a {
-      margin: 0 4%; }
+  font-size: 0.875em;
+}
+footer .footer-inner {
+  border-top: 1px solid #f8f9fa;
+  padding-top: 7%;
+}
+footer .footer-title {
+  font-weight: bold;
+  margin-bottom: 2%;
+}
+footer .socials-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5%;
+}
+footer .socials-wrap a {
+  margin: 0 4%;
+}
 
+.backdrop {
+  opacity: 0.37;
+  background-color: #333333;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 50;
+}
+
+@media (max-width: 576px) {
+  .logo img {
+    margin: auto;
+    width: 90%;
+    margin-top: 0;
+  }
+
+  .find {
+    font-size: 0.7em;
+  }
+}
 /* @media */
 @media (min-width: 576px) {
+  .main-content {
+    background-size: auto;
+  }
+
   .choose-profession {
     font-size: 1.875em;
-    padding-top: 5%; }
+    padding-top: 5%;
+  }
+  .choose-profession .list__ul {
+    font-size: 0.6em;
+    line-height: 1.5em;
+  }
 
   footer .socials-wrap {
-    margin-bottom: 3%; }
-    footer .socials-wrap a {
-      margin: 0 2%; } }
+    margin-bottom: 3%;
+  }
+  footer .socials-wrap a {
+    margin: 0 2%;
+  }
+}
 @media (min-width: 768px) {
   .main-content {
-    background-position: 50% 0; }
+    background-position: 50% 0;
+  }
 
   .choose-profession {
-    font-size: 2.250em; } }
+    font-size: 2.25em;
+  }
+  .choose-profession .list__ul {
+    font-size: 0.7em;
+    line-height: 1.6em;
+  }
+}
 @media (min-width: 992px) {
   .choose-profession {
-    font-size: 2.625em; }
+    font-size: 2.625em;
+  }
+  .choose-profession .list__ul {
+    font-size: 0.7em;
+    line-height: 1.6em;
+  }
 
   .logo, .choose-profession {
-    margin-left: 7%; }
+    margin-left: 7%;
+  }
 
   footer .footer-inner {
-    padding-top: 4%; }
+    padding-top: 4%;
+  }
 
   footer .socials-wrap {
-    margin-bottom: 5%; }
-    footer .socials-wrap a {
-      margin: 0 3%; } }
+    margin-bottom: 5%;
+  }
+  footer .socials-wrap a {
+    margin: 0 3%;
+  }
+}
 @media (min-width: 1200px) {
   .choose-profession {
-    font-size: 3.000em; } }
+    font-size: 3em;
+  }
+  .choose-profession .list__ul {
+    font-size: 0.7em;
+    line-height: 1.7em;
+  }
+}
 /* STYLED SELECT */
 .transition {
-  transition: all .4s ease-in-out; }
+  transition: all 0.4s ease-in-out;
+}
 
 .list {
   display: inline-block;
   position: relative;
-  margin-left: 6px; }
-  .list ul {
-    text-align: left;
-    position: absolute;
-    padding: 0 20px;
-    top: 1.3em;
-    min-width: 450px;
-    left: -20px;
-    display: none;
-    z-index: 1;
-    background: #fff;
-    border-radius: 8px;
-    border: 1px solid #6354d2; }
-    .list ul .active {
-      display: block; }
-  .list li {
-    list-style: none; }
-    .list li:first-child a {
-      color: #6354d2; }
-  .list a {
-    transition: all .4s;
-    color: #6354d2;
-    position: relative; }
-    .list a:after {
-      position: absolute;
-      content: '';
-      height: 5px;
-      width: 0;
-      left: 0;
-      background: #ada5e7;
-      bottom: 0;
-      transition: all .4s ease-out; }
-    .list a:hover {
-      cursor: pointer;
-      color: #ada5e7;
-      text-decoration: none; }
-      .list a:hover:after {
-        width: 100%; }
+}
+.list ul {
+  text-align: left;
+  position: absolute;
+  padding: 0 20px;
+  top: 1.3em;
+  min-width: 26em;
+  left: -20px;
+  display: none;
+  z-index: 1;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #6354d2;
+}
+.list ul .active {
+  display: block;
+}
+.list li {
+  list-style: none;
+}
+.list li:first-child a {
+  color: #6354d2;
+}
+.list a {
+  transition: all 0.4s;
+  color: #6354d2;
+  position: relative;
+}
+.list a:after {
+  position: absolute;
+  content: "";
+  height: 5px;
+  width: 0;
+  left: 0;
+  background: #ada5e7;
+  bottom: 0;
+  transition: all 0.4s ease-out;
+}
+.list a:hover {
+  cursor: pointer;
+  color: #ada5e7;
+  text-decoration: none;
+}
+.list a:hover:after {
+  width: 100%;
+}
 
 .placeholder {
   color: #6354d2;
   border-bottom: 2px dashed;
-  cursor: pointer; }
-  .placeholder:hover {
-    color: #4433c0; }
+  cursor: pointer;
+}
+.placeholder:hover {
+  color: #4433c0;
+}
 
 /* /STYLED SELECT */
 

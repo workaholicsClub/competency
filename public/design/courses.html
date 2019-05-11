@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WG2XFBS');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113216929-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-113216929-1');
+    </script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/css/swiper.min.css">
+    <link rel="stylesheet" href="/assets/design/base.css" type="text/css">
+    <link rel="stylesheet" href="/assets/design/desktop-override.css" type="text/css">
+
+    <title>Жажда знаний: найди свой курс</title>
+</head>
+<body>
+
+<div class="view-on-desktop d-none d-sm-block d-md-block p-4 container">
+    <header class="d-flex align-items-center px-3 mb-3 ">
+        <a href="/"><img src="/assets/images/itcher.png" class="mr-2"></a>
+        <span class="flex-fill"></span>
+        <div class="dropdown dropleft">
+            <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bookmark"></i>
+                <span class="fav-count ml-2">0</span>
+            </button>
+            <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn"></div>
+            <div class="dropdown-backdrop"></div>
+        </div>
+    </header>
+    <div class="d-flex flex-row align-items-start">
+        <section class="skills-section p-4">
+            <section class="data">
+                <div class="input-group">
+                    <label class="request">
+                        Я
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle mr-1" id="professionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">новичок</a>
+                            <span class="dropdown-menu" aria-labelledby="professionMenuButton">
+                                <a class="dropdown-item" href="#">новичок</a>
+                                <a class="dropdown-item profession-title" href="#">...</a>
+                                <a class="dropdown-item" href="#">специалист из другой области</a>
+                            </span>
+                        </span>
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle work-experience-input-display" id="expMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">без опыта работы</a>
+                            <span class="dropdown-menu" aria-labelledby="expMenuButton">
+                                <a class="dropdown-item" href="#">без опыта работы</a>
+                                <a class="dropdown-item" href="#">с опытом работы до 3 лет</a>
+                                <a class="dropdown-item" href="#">с опытом работы 3 или более года</a>
+                            </span>
+                        </span>
+                        хочу
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle want-to-input" id="wantMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">стать <span class="profession-title-tp"></span></a>
+                            <span class="dropdown-menu" aria-labelledby="wantMenuButton">
+                                <a class="dropdown-item" href="#">стать <span class="profession-title-tp"></span></a>
+                                <a class="dropdown-item" href="#">начать с нуля</a>
+                                <a class="dropdown-item" href="#">продолжить обучение</a>
+                                <a class="dropdown-item" href="#">повысить квалификацию</a>
+                                <a class="dropdown-item" href="#">прокачать навык</a>
+                            </span>
+                        </span>
+                    </label>
+                    <button class="btn btn-outline-info apply-request" style="display: none">Применить</button>
+                </div>
+            </section>
+            <section class="salary-data salary-input-wrapper mb-2">
+            </section>
+            <section class="skills-data input-group">
+                <label class="group-title-label filter-group-title-label mb-0">
+                    Фильтр по навыкам
+                </label>
+                <label class="group-title-label skill-group-title-label mb-0">
+                    Навыки для прокачки
+                </label>
+                <div class="skills-filter-text mb-4">
+                    на основе
+                    <span class="skills-input-display">...</span>
+                    с ЗП
+                    <span class="salary-input-display">...</span>
+                </div>
+
+                <div class="skills-input-wrapper">
+                    <div class="skills-input checkbox-group">
+                    </div>
+                    <span class="add-skill-wrapper form-inline d-inline-flex mt-2" style="display: none!important">
+                        <input class="form-control add-skill-input">
+                    </span>
+                    <button class="btn btn-outline-primary btn-add-skill">+</button>
+                </div>
+            </section>
+
+        </section>
+        <div class="flex-fill">
+            <section class="filter-panel">
+                <div class="d-flex flex-row flex-wrap margin-wrapper m-4">
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Формат курса</label>
+                        <label class="btn btn-outline-primary">Интерактивный <input type="checkbox" value="Интерактивный" name="format[]"></label>
+                        <label class="btn btn-outline-primary">Электронный учебник <input type="checkbox" value="Электронный учебник" name="format[]"></label>
+                        <label class="btn btn-outline-primary">Вебинар <input type="checkbox" value="Вебинар" name="format[]"></label>
+                        <label class="btn btn-outline-primary">Интенсив <input type="checkbox" value="Интенсив" name="format[]"></label>
+                        <label class="btn btn-outline-primary">Видеокурс <input type="checkbox" value="Видеокурс" name="format[]"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Стоимость</label>
+                        <label class="btn btn-outline-primary">Бесплатный <input type="checkbox" value="0" name="price"></label>
+                        <label class="btn btn-outline-primary">Недорогой <input type="checkbox" value="1500" name="price"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Практика</label>
+                        <label class="btn btn-outline-primary">Есть <input type="checkbox" value="1" name="hasPractice[]"></label>
+                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasPractice[]"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Место проведения</label>
+                        <label class="btn btn-outline-primary">Онлайн <input type="checkbox" value="Онлайн" name="format[]"></label>
+                        <label class="btn btn-outline-primary">Вечерний <input type="checkbox" value="Вечерняя" name="format[]"></label>
+                    </div>
+
+
+                    <div class="d-flex flex-row more-group">
+                        <button class="btn btn-outline-primary" id="filter-more-button">+</button>
+                        <label class="more-label" for="filter-more-button">Больше</label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Сертификат</label>
+                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="Нет" name="certificate[]"></label>
+                        <label class="btn btn-outline-primary">Собственный <input type="checkbox" value="Собственный" name="certificate[]"></label>
+                        <label class="btn btn-outline-primary">Гос. образца <input type="checkbox" value="Государственного образца" name="certificate[]"></label>
+                        <label class="btn btn-outline-primary">Международный <input type="checkbox" value="Международный" name="certificate[]"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Обучение с преподавателем</label>
+                        <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="hasTeacher[]"></label>
+                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasTeacher[]"></label>
+                    </div>
+
+                    <div class="d-flex flex-row flex-wrap mr-4">
+                        <label class="d-inline mr-2 group-title-label">Оказание помощи в трудоустройстве</label>
+                        <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="jobPlacement[]"></label>
+                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="jobPlacement[]"></label>
+                    </div>
+
+                </div>
+            </section>
+            <main class="no-result-hide course-list px-4"></main>
+            <section class="no-result-show no-result-text p-4 d-flex flex-column" style="display: none!important">
+                <h2>Ой! Такого не нашлось</h2>
+                <p class="flex-fill">Курсов, подходящих по условиям из фильтра, сейчас нет.</p>
+            </section>
+
+        </div>
+    </div>
+    <footer></footer>
+</div>
+
+<div class="view-on-mobile d-block d-sm-none d-md-none">
+    <header class="d-flex flex-row justify-content-between align-items-start card p-4 top-drawer">
+        <div class="d-flex flex-row h-100 ">
+            <section class="data d-flex flex-column align-items-start h-100 flex-fill mr-2">
+                <div class="input-group">
+                    <label class="request">
+                        Я
+                        <span class="dropdown">
+                                <a href="#" class="editable-toggle mr-1" id="professionMenuButtonM" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">новичок</a>
+                                <span class="dropdown-menu" aria-labelledby="professionMenuButtonM">
+                                    <a class="dropdown-item" href="#">новичок</a>
+                                    <a class="dropdown-item profession-title" href="#">...</a>
+                                    <a class="dropdown-item" href="#">специалист из другой области</a>
+                                </span>
+                            </span>
+                        <span class="dropdown">
+                                <a href="#" class="editable-toggle work-experience-input-display" id="expMenuButtonM" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">без опыта работы</a>
+                                <span class="dropdown-menu" aria-labelledby="expMenuButtonM">
+                                    <a class="dropdown-item" href="#">без опыта работы</a>
+                                    <a class="dropdown-item" href="#">с опытом работы до 3 лет</a>
+                                    <a class="dropdown-item" href="#">с опытом работы 3 или более года</a>
+                                </span>
+                            </span>
+                        хочу
+                        <span class="dropdown">
+                                <a href="#" class="editable-toggle want-to-input" id="wantMenuButtonM" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">стать <span class="profession-title-tp"></span></a>
+                                <span class="dropdown-menu" aria-labelledby="wantMenuButtonM">
+                                    <a class="dropdown-item" href="#">стать <span class="profession-title-tp"></span></a>
+                                    <a class="dropdown-item" href="#">начать с нуля</a>
+                                    <a class="dropdown-item" href="#">продолжить обучение</a>
+                                    <a class="dropdown-item" href="#">повысить квалификацию</a>
+                                    <a class="dropdown-item" href="#">прокачать навык</a>
+                                </span>
+                            </span>
+                    </label>
+                    <button class="btn btn-outline-info apply-request mt-2" style="display: none">Применить</button>
+                </div>
+
+                <button class="btn btn-outline-info btn-block mt-4 btn-choose-skills">Выбрать навыки</button>
+
+                <div class="input-group salary-input-group">
+                    <label class="">Желаемая зарплата:</label>
+                    <a href="#" class="editable-toggle salary-input-display">...</a>
+                </div>
+
+                <div class="salary-input-wrapper">
+                </div>
+            </section>
+            <section class="logo">
+                <a href="/"><img src="/assets/images/itcher_02.png"></a>
+            </section>
+        </div>
+        <div class="profile-handle"></div>
+    </header>
+    <main>
+        <section class="pagination d-flex flex-row justify-content-center align-items-center no-result-hide">
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+        </section>
+
+        <section class="swiper-container no-result-hide">
+            <div class="swiper-wrapper course-list loading">
+            </div>
+        </section>
+
+        <section class="no-result-show no-result-text p-4 d-flex flex-column" style="display: none!important">
+            <h2>Ой! Такого не нашлось</h2>
+            <p class="flex-fill">Курсов, подходящих по условиям из фильтра, сейчас нет.</p>
+            <button class="btn btn-outline-primary apply-btn">
+                Изменить фильтр
+            </button>
+        </section>
+    </main>
+    <footer class="d-flex flex-row justify-content-center mb-4 p-2 no-result-hide">
+        <button class="btn btn-favourites-list flex-fill d-flex align-items-center justify-content-center">
+            <i class="fas fa-bookmark icon-background"></i>
+            <i class="far fa-bookmark icon-overlay"></i>
+            <span class="fav-count ml-2">0</span>
+        </button>
+        <div class="divisor"></div>
+        <button class="btn btn-filter flex-fill"><i class="fas fa-sliders-h"></i></button>
+    </footer>
+    <section class="filter-panel sliding-panel">
+        <div class="margin-wrapper m-4">
+            <div class="flex-row d-flex align-items-center justify-content-center mb-4 section-title">
+                <label class="flex-fill text-center mb-0">Фильтры</label>
+                <a class="close-panel-btn" href="#">&times;</a>
+            </div>
+
+            <div class="input-group">
+                <label class="group-title-label filter-group-title-label">
+                    Навыки на основе
+                    <span class="skills-input-display">...</span>
+                    с ЗП
+                    <span class="salary-input-display">...</span>
+                </label>
+                <label class="group-title-label skill-group-title-label mb-0">
+                    Навыки для прокачки
+                </label>
+                <div class="salary-input-wrapper">
+                </div>
+
+                <div class="skills-input-wrapper w-100">
+                    <div class="skills-input checkbox-group">
+                    </div>
+                    <span class="add-skill-wrapper form-inline d-inline-flex mt-2" style="display: none!important">
+                        <input class="form-control add-skill-input">
+                    </span>
+                    <button class="btn btn-outline-primary btn-add-skill">+</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="group-title-label">Стоимость</label>
+                <div class="checkbox-group">
+                    <label class="btn btn-outline-primary">Бесплатный <input type="checkbox" value="0" name="price"></label>
+                    <label class="btn btn-outline-primary">Недорогой <input type="checkbox" value="1500" name="price"></label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="group-title-label">Формат курса</label>
+                <div class="checkbox-group">
+                    <label class="btn btn-outline-primary">Интерактивный <input type="checkbox" value="Интерактивный" name="format[]"></label>
+                    <label class="btn btn-outline-primary">Электронный учебник <input type="checkbox" value="Электронный учебник" name="format[]"></label>
+                    <label class="btn btn-outline-primary">Вебинар <input type="checkbox" value="Вебинар" name="format[]"></label>
+                    <label class="btn btn-outline-primary">Интенсив <input type="checkbox" value="Интенсив" name="format[]"></label>
+                    <label class="btn btn-outline-primary">Видеокурс <input type="checkbox" value="Видеокурс" name="format[]"></label>
+
+                    <label class="btn btn-outline-primary">Онлайн <input type="checkbox" value="Онлайн" name="format[]"></label>
+                    <label class="btn btn-outline-primary">Вечерний <input type="checkbox" value="Вечерняя" name="format[]"></label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="group-title-label">Сертификат</label>
+                <div class="checkbox-group">
+                    <label class="btn btn-outline-primary">Нет <input type="checkbox" value="Нет" name="certificate[]"></label>
+                    <label class="btn btn-outline-primary">Собственный <input type="checkbox" value="Собственный" name="certificate[]"></label>
+                    <label class="btn btn-outline-primary">Гос. образца <input type="checkbox" value="Государственного образца" name="certificate[]"></label>
+                    <label class="btn btn-outline-primary">Международный <input type="checkbox" value="Международный" name="certificate[]"></label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="group-title-label">Практика</label>
+                <div class="checkbox-group">
+                    <label class="btn btn-outline-primary">Есть <input type="checkbox" value="1" name="hasPractice[]"></label>
+                    <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasPractice[]"></label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="group-title-label">Обучение с преподавателем</label>
+                <div class="checkbox-group">
+                    <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="hasTeacher[]"></label>
+                    <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasTeacher[]"></label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="group-title-label">Оказание помощи в трудоустройстве</label>
+                <div class="checkbox-group">
+                    <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="jobPlacement[]"></label>
+                    <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="jobPlacement[]"></label>
+                </div>
+            </div>
+
+            <div class="d-flex flex-row justify-content-center mb-4 p-2">
+                <button class="btn btn-outline-primary flex-fill d-flex align-items-center justify-content-center apply-btn">
+                    Применить
+                </button>
+            </div>
+        </div>
+    </section>
+    <section class="favourite-panel sliding-panel">
+        <div class="margin-wrapper m-4">
+            <div class="flex-row d-flex align-items-center justify-content-center mb-4 section-title">
+                <label class="flex-fill text-center mb-0">Сохраненные курсы</label>
+                <a class="close-panel-btn" href="#">&times;</a>
+            </div>
+
+            <div class="favourite-list">
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/js/swiper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/interactjs@1.3.4/dist/interact.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.1/svg.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script src="https://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
+<script src="/assets/courseFunctions.js"></script>
+<script src="/design/histogramInput.js"></script>
+
+<!-- BEGIN JIVOSITE CODE {literal} -->
+<script type='text/javascript'>
+    (function(){ var widget_id = 'undd9PhcEl';var d=document;var w=window;function l(){
+        var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
+        s.src = '//code.jivosite.com/script/widget/'+widget_id
+        ; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}
+        if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}
+        else{w.addEventListener('load',l,false);}}})();
+</script>
+<!-- {/literal} END JIVOSITE CODE -->
+
+<script>
+    let currentCourses = false;
+
+    function getSkillFilterHTML(skillName, level, rate, isUserAdded) {
+        let isChecked = rate >= 35;
+        let inputTemplate = getInputTemplate();
+
+        if (inputTemplate === 'novice-continue' || inputTemplate === 'other-novice-continue') {
+            isChecked = rate >= 35 && rate <= 80;
+        }
+
+        if (inputTemplate === 'middle-continue') {
+            isChecked = rate >= 15 && rate <= 70;
+        }
+
+        if (inputTemplate === 'senior-continue') {
+            isChecked = rate <= 70;
+        }
+
+        if (inputTemplate === 'skill') {
+            isChecked = false;
+        }
+
+        if (isUserAdded) {
+            isChecked = true;
+        }
+
+        return `<label class="btn btn-outline-primary skill ${isUserAdded ? 'user-added' : 'system-added'} ${ isChecked ? "active" : ""}" data-rate="${rate}">
+                ${skillName}
+                <span class="skill-strength level${level}"><span></span><span></span><span></span><span></span></span>
+                <input type="checkbox" name="skills[${skillName}]" value="${level}" ${ isChecked ? "checked=\"checked\"" : ""}>
+            </label>`;
+    }
+
+    function getSkillHTML(skillName, level) {
+        return `<span class="skill">
+                ${skillName}
+                <span class="skill-strength level${level}"><span></span><span></span><span></span><span></span></span>
+            </span>`;
+    }
+
+    function getSkillsHTML(skills) {
+        return Object.keys(skills).map(function (skillName, index) {
+            let level = skills[skillName];
+            return getSkillHTML(skillName, level);
+        }).join("\n");
+    }
+
+    function getProfessionCodeFromUrl() {
+        let professionCode = getParameterByName('professionCode');
+
+        if (!professionCode) {
+            professionCode = location.pathname.split('/')[1];
+        }
+
+        return professionCode || 'qa-tester';
+    }
+
+    function getCurrentProfessionName(pageCode, useTvPadezh) {
+        if (!pageCode) {
+            pageCode = getProfessionCodeFromUrl();
+        }
+
+        let professionNames = {
+            'php-developer': 'разработчик PHP',
+            'hr-manager': 'HR менеджер',
+            'pr-specialist': 'PR специалист',
+            'python-developer': 'разработчик Python',
+            'golang-developer': 'разработчик Golang',
+            'javascript-developer': 'разработчик JavaScript',
+            'ui-ux-designer': 'UI/UX дизайнер',
+            'ios-developer': 'разработчик iOS',
+            'android-developer': 'разработчик Android',
+            'internet-marketologist': 'интернет-маркетолог',
+            'qa-tester': 'тестировщик',
+            'devops': 'DevOps специалист',
+            'data-scientist': 'Data Scientist',
+            'game-designer': 'гейм-дизайнер',
+            'project-manager': 'менеджер интернет-проектов',
+            'game-artist-2d': 'игровой художник 2D',
+            'game-artist-3d': 'игровой художник 3D'
+        };
+        let professionNamesTP = {
+            'php-developer': 'разработчиком PHP',
+            'hr-manager': 'HR менеджером',
+            'pr-specialist': 'PR специалистом',
+            'python-developer': 'разработчиком Python',
+            'golang-developer': 'разработчиком Golang',
+            'javascript-developer': 'разработчиком JavaScript',
+            'ui-ux-designer': 'UI/UX дизайнером',
+            'ios-developer': 'разработчиком iOS',
+            'android-developer': 'разработчиком Android',
+            'internet-marketologist': 'интернет-маркетологом',
+            'qa-tester': 'тестировщиком',
+            'devops': 'DevOps специалистом',
+            'data-scientist': 'Data Scientist`ом',
+            'game-designer': 'гейм-дизайнером',
+            'project-manager': 'менеджером интернет-проектов',
+            'game-artist-2d': 'игровым художником 2D',
+            'game-artist-3d': 'игровым художником 3D'
+        };
+
+        return useTvPadezh
+            ? professionNamesTP[pageCode] || false
+            : professionNames[pageCode] || false;
+    }
+
+    function splitLongText(text, wordLimit) {
+        if (!wordLimit) {
+            wordLimit = 25;
+        }
+
+        let words = text.split(" ");
+        let visible = text;
+        let hidden = false;
+        if (words.length > wordLimit) {
+            visible = words.slice(0, wordLimit).join(" ");
+            hidden = words.slice(wordLimit).join(" ");
+        }
+
+        return [visible, hidden];
+    }
+
+    function getMobileCourseHTML(course) {
+        let description = splitLongText(course.description);
+        let searchedSkillsHTML = course.searchedSkills ? getSkillsHTML(course.searchedSkills) : false;
+        let additionalSkillsHTML = course.additionalSkills ? getSkillsHTML(course.additionalSkills) : false;
+        let allSkillsHTML = course.skills ? getSkillsHTML(course.skills) : false;
+        let requirementsHTML = course.requirements ? getSkillsHTML(course.requirements) : false;
+        let isFavourited = isInBackpack(course.id);
+
+        return `<div class="swiper-slide card course-card ${course.hasPartnerUrl ? 'take-a-look' : ''}">
+                <div class="card-body" data-id="${course.id}">
+                    <div class="d-flex flex-row course-card-header">
+                        <h6 class="text-muted flex-fill">от <a href="${course.url}">${course.platform}</a></h6>
+                        <a href="#" class="top-favourite-add">
+                            <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
+                        </a>
+                    </div>
+                    <h5>${course.title}</h5>
+
+                    <p class="mt-0 mb-0 price">${getCoursePriceText(course.price)}</p>
+                    <p class="mt-0 text-muted">${getHumanReadableTime(course)}</p>
+
+                    <p id="description${course.id}" class="">
+                        ${description[0]}
+                        ${description[1] ?
+                            '<span class="continue-dots">...</span>' +
+                            '<a href="#" class="continue-toggle d-flex justify-content-end flex-column"><i class="fas fa-angle-down"></i></a>' +
+                            '<span class="continue" style="display: none">' + description[1] + '</span>'
+                        : ''}
+                    </p>
+
+                    <p class="mt-1 text-info">${getCourseAttributesHTML(course)}</p>
+
+                    ${searchedSkillsHTML
+                        ? (
+                            '<label class="mt-1 mb-0">По окончании курса будете уметь</label><p>' + searchedSkillsHTML +
+                            (additionalSkillsHTML ? '<a href="#" class="continue-toggle">Показать все</a><span class="continue" style="display: none">' + additionalSkillsHTML + '</span>' : '') +
+                            '</p>'
+                        )
+                        : '<label class="mt-1 mb-0">Навыки</label><p>' + allSkillsHTML + '</p>'
+                    }
+
+                    ${requirementsHTML ? '<label class="mt-1 mb-0">Нужно знать</label><p>' + requirementsHTML + '</p>' : ''}
+
+                    <div class="course-buttons flex-fill d-flex flex-row mt-1">
+                        <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2" data-course-id="${course.id}">
+                            Сайт курса
+                        </a>
+                        <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2 ${isFavourited ? 'active' : ''}" ${isFavourited ? 'disabled="disabled"' : '' }>
+                            <i class="${isFavourited ? 'fas fa-check' : 'far fa-bookmark'}"></i>
+                        </button>
+                        <a href="${getCoursePageUrl(course)}" target="_blank" class="btn btn-outline-info btn-share mr-2" data-course-id="${course.id}">
+                            <i class="fas fa-share-alt"></i>
+                            <!--i class="fas fa-link"></i-->
+                        </a>
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    function getDesktopCourseHTML(course) {
+        let description = splitLongText(course.description, 50);
+        let searchedSkillsHTML = course.searchedSkills ? getSkillsHTML(course.searchedSkills) : false;
+        let additionalSkillsHTML = course.additionalSkills ? getSkillsHTML(course.additionalSkills) : false;
+        let allSkillsHTML = course.skills ? getSkillsHTML(course.skills) : false;
+        let requirementsHTML = course.requirements ? getSkillsHTML(course.requirements) : false;
+        let isFavourited = isInBackpack(course.id);
+
+        return `<div class="card course-card ${course.hasPartnerUrl ? 'take-a-look' : ''}">
+                <div class="card-body" data-id="${course.id}">
+                    <div class="d-flex flex-row justify-content-end course-card-header">
+                        <h6 class="text-muted">от <a href="${course.url}">${course.platform}</a></h6>
+                        <a href="#" class="top-favourite-add">
+                            <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
+                        </a>
+                    </div>
+                    <h5>${course.title}</h5>
+
+                    <p id="description${course.id}" class="">
+                        ${description[0]}
+                        ${description[1] ?
+            '<span class="continue-dots">...</span>' +
+            '<a href="#" class="continue-toggle d-flex justify-content-end flex-column"><i class="fas fa-angle-down"></i></a>' +
+            '<span class="continue" style="display: none">' + description[1] + '</span>'
+            : ''}
+                    </p>
+
+                    <p class="mt-1 text-info">${getCourseAttributesHTML(course)}</p>
+
+                    ${searchedSkillsHTML
+            ? (
+                '<label class="mt-1 mb-0">По окончании курса будете уметь</label><p>' + searchedSkillsHTML +
+                (additionalSkillsHTML ? '<a href="#" class="continue-toggle">Показать все</a><span class="continue" style="display: none">' + additionalSkillsHTML + '</span>' : '') +
+                '</p>'
+            )
+            : '<label class="mt-1 mb-0">Навыки</label><p>' + allSkillsHTML + '</p>'
+            }
+
+                    ${requirementsHTML ? '<label class="mt-1 mb-0">Нужно знать</label><p>' + requirementsHTML + '</p>' : ''}
+
+                    <div class="d-flex flex-row align-items-start justify-content-stretch">
+                        <div class="price-duration-data flex-fill">
+                            <p class="mt-0 mb-0 price">${getCoursePriceText(course.price)}</p>
+                            <p class="mt-0">${getHumanReadableTime(course)}</p>
+                        </div>
+                        <div class="course-buttons flex-fill d-flex flex-row mt-1">
+                            <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2 ${isFavourited ? 'active' : ''}" ${isFavourited ? 'disabled="disabled"' : '' }>
+                                <i class="${isFavourited ? 'fas fa-check' : 'far fa-bookmark'}"></i>
+                            </button>
+                            <a href="${getCoursePageUrl(course)}" target="_blank" class="btn btn-outline-info btn-share mr-2" data-course-id="${course.id}">
+                                <i class="fas fa-share-alt"></i>
+                                <!--i class="fas fa-link"></i-->
+                            </a>
+                            <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2" data-course-id="${course.id}">
+                                Сайт курса
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    function getDesktopCourseHTML(course) {
+        let description = splitLongText(course.description, 50);
+        let searchedSkillsHTML = course.searchedSkills ? getSkillsHTML(course.searchedSkills) : false;
+        let additionalSkillsHTML = course.additionalSkills ? getSkillsHTML(course.additionalSkills) : false;
+        let allSkillsHTML = course.skills ? getSkillsHTML(course.skills) : false;
+        let requirementsHTML = course.requirements ? getSkillsHTML(course.requirements) : false;
+        let isFavourited = isInBackpack(course.id);
+
+        return `<div class="card course-card ${course.hasPartnerUrl ? 'take-a-look' : ''}">
+                <div class="card-body" data-id="${course.id}">
+                    <div class="d-flex flex-row justify-content-end course-card-header">
+                        <h6 class="text-muted">от <a href="${course.url}">${course.platform}</a></h6>
+                        <a href="#" class="top-favourite-add">
+                            <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
+                        </a>
+                    </div>
+                    <h5>${course.title}</h5>
+
+                    <p id="description${course.id}" class="">
+                        ${description[0]}
+                        ${description[1] ?
+            '<span class="continue-dots">...</span>' +
+            '<a href="#" class="continue-toggle d-flex justify-content-end flex-column"><i class="fas fa-angle-down"></i></a>' +
+            '<span class="continue" style="display: none">' + description[1] + '</span>'
+            : ''}
+                    </p>
+
+                    <p class="mt-1 text-info">${getCourseAttributesHTML(course)}</p>
+
+                    ${searchedSkillsHTML
+            ? (
+                '<label class="mt-1 mb-0">По окончании курса будете уметь</label><p>' + searchedSkillsHTML +
+                (additionalSkillsHTML ? '<a href="#" class="continue-toggle">Показать все</a><span class="continue" style="display: none">' + additionalSkillsHTML + '</span>' : '') +
+                '</p>'
+            )
+            : '<label class="mt-1 mb-0">Навыки</label><p>' + allSkillsHTML + '</p>'
+            }
+
+                    ${requirementsHTML ? '<label class="mt-1 mb-0">Нужно знать</label><p>' + requirementsHTML + '</p>' : ''}
+
+                    <div class="d-flex flex-row align-items-start justify-content-stretch">
+                        <div class="price-duration-data flex-fill">
+                            <p class="mt-0 mb-0 price">${getCoursePriceText(course.price)}</p>
+                            <p class="mt-0">${getHumanReadableTime(course)}</p>
+                        </div>
+                        <div class="course-buttons flex-fill d-flex flex-row mt-1">
+                            <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2 ${isFavourited ? 'active' : ''}" ${isFavourited ? 'disabled="disabled"' : '' }>
+                                <i class="${isFavourited ? 'fas fa-check' : 'far fa-bookmark'}"></i>
+                            </button>
+                            <a href="${getCoursePageUrl(course)}" target="_blank" class="btn btn-outline-info btn-share mr-2" data-course-id="${course.id}">
+                                <i class="fas fa-share-alt"></i>
+                                <!--i class="fas fa-link"></i-->
+                            </a>
+                            <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2" data-course-id="${course.id}">
+                                Сайт курса
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    function getCourseFavouriteHTML(course) {
+        return `<div class="card course-card">
+                <div class="card-body" data-id="${course.id}">
+                    <div class="d-flex flex-row course-card-header">
+                        <h6 class="text-muted flex-fill">от <a href="${course.url}">${course.platform}</a></h6>
+                        <a href="#" class="top-favourite-remove"><i class="fas fa-trash"></i></a>
+                    </div>
+                    <h5>${course.title}</h5>
+
+                    <p class="mt-0 mb-0 price">${getCoursePriceText(course.price)}</p>
+                    <p class="mt-0 text-muted">${getHumanReadableTime(course)}</p>
+
+                <p class="mt-1 text-info">${getCourseAttributesHTML(course)}</p>
+
+                <a href="${course.url}" target="_blank" class="btn btn-outline-info btn-block btn-link" data-course-id="${course.id}">
+                    Сайт курса
+                </a>
+            </div>
+        </div>`;
+    }
+
+    function initSlider() {
+        window.swiper = new Swiper('.swiper-container', {
+            slidesPerView: 'auto',
+            centeredSlides: true,
+            spaceBetween: 12,
+            pagination: {
+                el: '.swiper-pagination',
+                type: 'fraction',
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+
+        return window.swiper;
+    }
+
+    function clearAndHideSkillAdd(elem) {
+        if (!elem) {
+            elem = '.add-skill-input';
+        }
+
+        $(elem).typeahead('val', '');
+        hideSkillAdd(elem);
+    }
+
+    function hideSkillAdd(inputEl) {
+        let inputTemplate = getInputTemplate();
+        if (inputTemplate !== 'skill') {
+            $(inputEl).closest('.add-skill-wrapper').attr("style", "display: none!important");
+        }
+    }
+
+    function showSkillAdd() {
+        $('.add-skill-input').closest('.add-skill-wrapper').attr('style', '');
+    }
+
+    function initSkillAdd() {
+        let inputTemplate = getInputTemplate();
+
+        if (inputTemplate === 'skill') {
+            $('.add-skill-wrapper').attr('style', '');
+        }
+
+
+        loadProfessionSkills()
+            .then(function (skills) {
+                $('.add-skill-input').typeahead(null, {
+                    name: 'skills',
+                    source: function (query, syncResults, asyncResults) {
+                        let results = skills.reduce(function (foundSkills, skillData) {
+                            let lcQuery = query.toLowerCase();
+                            let lcName = skillData.name.toLowerCase();
+
+                            if (lcName.indexOf(lcQuery) != -1) {
+                                foundSkills.push(skillData.name);
+                            }
+
+                            return foundSkills;
+                        }, []);
+                        syncResults(results);
+                    }
+                });
+            });
+
+        $(document).on('typeahead:select typeahead:change', '.add-skill-input', function (event, skillName) {
+            if (skillName === '') {
+                return;
+            }
+
+            let $existingNode = $('input[name="skills['+skillName+']"]');
+            if ($existingNode.length > 0) {
+                $existingNode.closest('.skill').addClass('active');
+                return;
+            }
+
+            let skillLevel = 1;
+            let skillRate = 0;
+            let skillHTML = getSkillFilterHTML(skillName, skillLevel, skillRate, true);
+            $('.skills-input').append(skillHTML);
+
+            clearAndHideSkillAdd(this);
+            updateCourses();
+        });
+
+        $(document).on('click', '.btn-add-skill', showSkillAdd);
+    }
+
+    function updateSlider() {
+        window.swiper.update();
+    }
+
+    function initTopDrawerSliding() {
+        let начальнаяВысотаЗаголовка = $('.view-on-mobile header').outerHeight()-3;
+        let максимальнаяВысотаЗаголовка = 220;
+        $('header').data('closed-height', начальнаяВысотаЗаголовка);
+
+        interact('header')
+            .resizable({
+                edges: { bottom: true },
+                restrictSize: {
+                    min: { height: начальнаяВысотаЗаголовка },
+                    max: { height: максимальнаяВысотаЗаголовка}
+                },
+                inertia: true
+            })
+            .on('resizemove', function (событие) {
+                let заголовок = событие.target;
+                заголовок.classList.remove('expanded');
+                заголовок.classList.remove('animated');
+                let новаяВысотаЗаголовка = событие.rect.height;
+                заголовок.style.height = новаяВысотаЗаголовка + 'px';
+            });
+    }
+
+    function showFooter() {
+        let isNotFilterPanelActive = !$('.filter-panel.sliding-panel').hasClass('show');
+
+        if (isNotFilterPanelActive) {
+            $('footer').css('visibility', '');
+        }
+    }
+
+    function hideFooter() {
+        $('footer').css('visibility', 'hidden');
+    }
+
+    function hideFooter() {
+        $('footer').css('visibility', 'hidden');
+    }
+
+    function toggleFooter() {
+        let $footer = $('footer');
+        let isFooterVisible = $footer.css('visibility') !== 'hidden';
+
+        if (isFooterVisible) {
+            hideFooter();
+        }
+        else {
+            showFooter();
+        }
+    }
+
+    function activateCheckbox(selector) {
+        let $checkbox = $(selector);
+        let $pill = $checkbox.closest('.btn')
+
+        $checkbox.attr('checked', true);
+        $pill.addClass('active');
+    }
+
+    function setTemplateFilterValues() {
+        let inputTemplate = getInputTemplate();
+
+        if (inputTemplate === 'novice') {
+            activateCheckbox('input[name="price"][value="0"]');
+            activateCheckbox('input[name="hasPractice[]"][value="1"]');
+        }
+
+        if (inputTemplate === 'other-novice') {
+            activateCheckbox('input[name="price"][value="1500"]');
+            activateCheckbox('input[name="hasPractice[]"][value="1"]');
+        }
+    }
+
+    function initFilter() {
+        let debouncedUpdateCourses = debounce(updateCourses, 1500);
+
+        setTemplateFilterValues();
+
+        $(document).on('click', '.btn-filter, .btn-choose-skills', function () {
+            $('.filter-panel').toggleClass('show');
+            toggleFooter();
+        });
+
+        $(document).on('click', ' .filter-panel .close-panel-btn, .filter-panel .apply-btn', function () {
+            $('.filter-panel').toggleClass('show');
+            showFooter();
+        });
+
+        $(document).on('click', '.no-result-text .apply-btn', function () {
+            $('.filter-panel').toggleClass('show');
+        });
+
+        $(document).on('click', '.checkbox-group input, .filter-panel input', function() {
+            $(this).closest('label').toggleClass('active');
+            debouncedUpdateCourses();
+        });
+
+        $(document).on('click', '.more-group', function () {
+            $(this).closest('.filter-panel').toggleClass('expanded');
+        });
+    }
+
+    function initFavourites() {
+        $(document).on('click', '.btn-favourites-list', function () {
+            $('.favourite-panel').toggleClass('show');
+            toggleFooter();
+        });
+
+        $(document).on('click', '.favourite-panel .close-panel-btn, .favourite-panel .apply-btn ', function () {
+            $('.favourite-panel').toggleClass('show');
+            showFooter();
+        });
+    }
+
+    function displaySalaryRange(salaryFrom, salaryTo) {
+        let fromThousands = Math.round(salaryFrom / 1000);
+        let toThousands = Math.round(salaryTo / 1000);
+
+        $('.salary-input').data('from', salaryFrom);
+        $('.salary-input').data('to', salaryTo);
+
+        $('.salary-input-display').html(formatNumber(fromThousands) + 'k&nbsp;&mdash;&nbsp;'+formatNumber(toThousands)+'k&nbsp;&#8381;');
+    }
+
+    function debounce(func, wait, immediate) {
+        //https://frontender.info/essential-javascript-functions/
+        let timeout;
+        return function() {
+            let context = this, args = arguments;
+            let later = function() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            let callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    }
+
+    function matchAttr(attrValue, value) {
+        if (attrValue instanceof Array) {
+            return attrValue.indexOf(value) !== -1;
+        }
+
+        if (attrValue !== false) {
+            return attrValue === value;
+        }
+
+        return true;
+    }
+
+    function matchRule(rule, who, experience, wish) {
+        return matchAttr(rule.who, who) && matchAttr(rule.experience, experience) && matchAttr(rule.wish, wish);
+    }
+
+    function getInputTemplate() {
+        let request = getRequestValuesFromURL();
+        let who = request[0];
+        let experience = request[1];
+        let wish = request[2];
+        let professionName = getCurrentProfessionName();
+
+        let defaultTemplate = 'novice';
+
+        let templateRules = [
+            {
+                who: 'новичок',
+                experience: false,
+                wish: false,
+                template: 'novice',
+                score: 0
+            },
+            {
+                who: 'новичок',
+                experience: false,
+                wish: ['продолжить обучение', 'повысить квалификацию'],
+                template: 'novice-continue',
+                score: 10
+            },
+            {
+                who: 'специалист из другой области',
+                experience: false,
+                wish: false,
+                template: 'other-novice',
+                score: 0
+            },
+            {
+                who: 'специалист из другой области',
+                experience: false,
+                wish: ['продолжить обучение', 'повысить квалификацию'],
+                template: 'other-novice-continue',
+                score: 10
+            },
+            {
+                who: false,
+                experience: false,
+                wish: 'прокачать навык',
+                template: 'skill',
+                score: 100
+            },
+            {
+                who: false,
+                experience: false,
+                wish: 'начать с нуля',
+                template: 'novice',
+                score: 100
+            },
+            {
+                who: professionName,
+                experience: ['с опытом работы до 3 лет'],
+                wish: false,
+                template: 'middle-continue',
+                score: 50
+            },
+            {
+                who: professionName,
+                experience: ['с опытом работы 3 или более года'],
+                wish: false,
+                template: 'senior-continue',
+                score: 50
+            }
+        ];
+
+        let finalRule = templateRules.reduce(function (matchedRule, rule) {
+            let isScoreGreater = (matchedRule && matchedRule.score < rule.score) || (!matchedRule);
+            return matchRule(rule, who, experience, wish) && isScoreGreater
+                ? rule
+                : matchedRule;
+        }, false);
+
+        return finalRule
+            ? finalRule.template
+            : defaultTemplate;
+    }
+
+    function getRequestValuesFromDOM() {
+        return $('.request:visible .editable-toggle').map(function () {
+            return $(this).text();
+        }).toArray();
+    }
+
+    function getRequestValuesFromURL() {
+        let who = getParameterByName('who');
+        let experience = getParameterByName('experience');
+        let wish = getParameterByName('wish');
+
+        return [who, experience, wish];
+    }
+
+    function updateRequestValuesFromURL() {
+        let request = getRequestValuesFromURL();
+
+        $('.request:visible .editable-toggle').each(function (index) {
+            if (request[index]) {
+                $(this).text(request[index]);
+            }
+        });
+    }
+
+    function initHeaderInputs() {
+        let updateSkillsAndCourses = debounce(function () {
+            updateSkills()
+                .then(updateCourses);
+        }, 500);
+
+        $(document).on('click', '.request .dropdown-item', function () {
+            let itemText = $(this).text();
+            let $toggle = $(this).closest('.dropdown').find('.editable-toggle');
+            let $applyButton = $(this).closest('.input-group').find('.apply-request');
+
+            $toggle.text(itemText);
+            $applyButton.show();
+        });
+
+        $(document).on('click', '.apply-request', function () {
+            let request = getRequestValuesFromDOM();
+
+            let newUrl = new URL(location.href);
+            newUrl.searchParams.set('who', request[0]);
+            newUrl.searchParams.set('experience', request[1]);
+            newUrl.searchParams.set('wish', request[2]);
+
+            location.href = newUrl.toString();
+        });
+
+        $('.salary-input').on('changeFrom changeTo', function (event) {
+            let salaryFrom = $(this).data('from') || 0;
+            let salaryTo = $(this).data('to') || 0;
+
+            if (event.type === 'changeFrom') {
+                salaryFrom = Math.round(event.originalEvent.value);
+            }
+            else {
+                salaryTo = Math.round(event.originalEvent.value);
+            }
+
+            displaySalaryRange(salaryFrom, salaryTo);
+            updateSkillsAndCourses();
+        });
+
+        $('.editable-toggle.salary-input-display').on('click', function () {
+            let isHeaderExpanded = $('header').hasClass('expanded');
+
+            if (isHeaderExpanded) {
+                collapseHeader();
+            }
+            else {
+                expandHeader();
+            }
+        });
+
+        $(document).on('click', '.delete-skill, .delete-skill-mobile', function () {
+            let $skillElement = $(this).closest('.skill');
+            $skillElement.remove();
+            debouncedUpdateCourses();
+        });
+    }
+
+    function enableCourseCardFavouriteState($card) {
+        $card.find('.top-favourite-add .fa-bookmark').removeClass('far').addClass('fas');
+        $card
+            .find('.btn-favourite')
+            .addClass('active')
+            .attr('disabled', true)
+            .html('<i class="fas fa-check"></i>');
+    }
+
+    function disableCourseCardFavouriteState($card) {
+        $card.find('.top-favourite-add .fa-bookmark').removeClass('fas').addClass('far');
+        $card
+            .find('.btn-favourite')
+            .removeClass('active')
+            .attr('disabled', false)
+            .html('<i class="far fa-bookmark"></i>');
+    }
+
+    function initCourseCards() {
+        $(document).on('click', '.continue-toggle', function (event) {
+            event.preventDefault();
+
+            $(this).attr("style", "display: none!important");
+            $(this).siblings('.continue-dots').hide();
+            $(this).siblings('.continue').show();
+        });
+
+        $(document).on('click', '.btn-favourite, .top-favourite-add', function (event) {
+            event.preventDefault();
+            let $card = $(this).closest('.card-body');
+            let courseId = $card.data('id');
+            let course = getCourseById(courseId);
+
+            if (!isInBackpack(courseId)) {
+                pushToBackpack(course);
+                enableCourseCardFavouriteState($card);
+                updateFavourites();
+            }
+        });
+
+        $(document).on('click', '.top-favourite-remove', function (event) {
+            event.preventDefault();
+            let courseId = $(this).closest('.card-body').data('id');
+            let $card = $('.course-list:visible .card-body[data-id='+courseId+']');
+            removeFromBackpack(courseId);
+            disableCourseCardFavouriteState($card);
+            updateFavourites();
+
+            if (isBackbackEmpty()) {
+                $('.favourite-panel').removeClass('show');
+                showFooter();
+            }
+        });
+    }
+
+    function loadHistogramData() {
+        return loadApiData('/api/histogramData.php', {professionCode: getProfessionCodeFromUrl()});
+    }
+
+    function loadProfessionSkills() {
+        return loadApiData('/api/skills.php', {format: 'json'})
+            .then(function (response) {
+                let professionName = getCurrentProfessionName();
+                let ucProfessionName = professionName[0].toUpperCase() + professionName.slice(1);
+                return response[ucProfessionName];
+            });
+    }
+
+    function loadSkillsData(salaryFrom, salaryTo) {
+        let inputTemplate = getInputTemplate();
+        let filterRate = 10;
+
+        if (inputTemplate === 'middle-continue' || inputTemplate === 'senior-continue') {
+            filterRate = 0;
+        }
+
+        return loadApiData('/api/vacancySkillsBySalary.php', {
+            professionCode: getProfessionCodeFromUrl(),
+            salaryFrom: salaryFrom,
+            salaryTo: salaryTo,
+            filterRate: filterRate
+        });
+    }
+
+    function loadCourses() {
+        let searchFields = $('header:visible input, .filter-panel:visible input, .skills-section:visible input').serializeArray();
+        searchFields.push({name: "professionCode", value: getProfessionCodeFromUrl()});
+        searchFields.push({name: "searchMode", value: 1});
+        searchFields.push({name: "responseFormat", value: "json"});
+
+        return loadApiData('/api/coursesList.php', searchFields).then(function (response) {
+            currentCourses = response;
+            return response;
+        });
+    }
+
+    function getCoursesList() {
+        return currentCourses;
+    }
+
+    function makeSalaryInput(wrapperSelector, width) {
+        let wrappers = document.querySelectorAll(wrapperSelector);
+        let inputTemplate = getInputTemplate();
+
+        return loadHistogramData()
+            .then(function (response) {
+                let salaryFrom = response.salary.from.median;
+                let salaryTo = response.salary.to.median;
+
+                if (inputTemplate === 'novice' || inputTemplate === 'other-novice') {
+                    salaryFrom = response.salary.min;
+                    salaryTo = response.salary.to.q25;
+                }
+
+                if (inputTemplate === 'middle-continue') {
+                    salaryFrom = response.salary.from.q25;
+                    salaryTo = response.salary.to.q75;
+                }
+
+                if (inputTemplate === 'senior-continue') {
+                    salaryFrom = response.salary.from.q75;
+                    salaryTo = response.salary.max;
+                }
+
+                if (salaryFrom === salaryTo) {
+                    salaryFrom -= response.step;
+                }
+
+                wrappers.forEach(function (wrapper) {
+                    new SalaryInput(wrapper, {
+                        fromHandle: salaryFrom,
+                        toHandle: salaryTo,
+                        graphWidth: width,
+                        handleHeight: 40,
+                        binValues: response.binValues,
+                        labelsText: response.binLabels,
+                        valueRange: [response.salary.min, response.salary.max]
+                    });
+                });
+
+                displaySalaryRange(salaryFrom, salaryTo);
+            });
+    }
+
+    function drawSkills(response) {
+        let inputTemplate = getInputTemplate();
+        if (inputTemplate === 'skill') {
+            return;
+        }
+
+        let displayText = response.vacanciesCount+ ' ' +
+            declensionUnits( response.vacanciesCount, 'вакансий');
+
+
+        $('.skills-input-display').html(displayText);
+
+        let skillsHTML = response.skills.map(function (skill) {
+            return getSkillFilterHTML(skill.title, skill.modeLevel, skill.rate);
+        }).join("\n");
+
+        $('.skills-input').prepend(skillsHTML);
+    }
+
+    function drawCourses(response) {
+        response.forEach(function (course) {
+            let mobileHTML = getMobileCourseHTML(course);
+            let desktopHTML = getDesktopCourseHTML(course);
+
+            $('.view-on-mobile .course-list').append(mobileHTML);
+            $('.view-on-desktop .course-list').append(desktopHTML);
+        });
+
+        updateSlider();
+    }
+
+    function updateSkills() {
+        $('.skills-input').addClass('loading');
+        $('.skills-input .system-added').remove();
+
+        return loadSkillsData($('.salary-input').data('from'), $('.salary-input').data('to'))
+            .then(function (response) {
+                $('.skills-input').removeClass('loading');
+                drawSkills(response);
+            });
+    }
+
+    function showNoResults() {
+        let isFilterPanelActive = $('.filter-panel.sliding-panel').hasClass('show');
+
+        $('.no-result-show').attr("style", "");
+        $('.no-result-hide').attr("style", "display: none!important");
+        if (isFilterPanelActive) {
+            hideFooter();
+        }
+    }
+
+    function hideNoResults() {
+        $('.no-result-show').attr("style", "display: none!important");
+        $('.no-result-hide:not(.filter-panel)').attr("style", "");
+
+        showFooter();
+    }
+
+    function updateCourses() {
+        $('.course-list').addClass('loading').html('');
+
+        return loadCourses()
+            .then(function (response) {
+                let noCourses = response.length === 0;
+
+                $('.course-list').removeClass('loading');
+
+                if (noCourses) {
+                    showNoResults();
+                }
+                else {
+                    hideNoResults();
+                }
+
+                drawCourses(response);
+            });
+    }
+
+    function updateFavourites() {
+        let courses = getBackpack();
+        if (courses && courses.length > 0) {
+
+            $('.btn-favourites-list').addClass('active');
+            $('.fav-count').text(courses.length);
+
+            let favouriteListHTML = courses.map(function (course) {
+                return getCourseFavouriteHTML(course);
+            }).join("\n");
+
+            $('.favourite-list').html(favouriteListHTML);
+        }
+        else {
+            $('.favourite-list').html('');
+            $('.btn-favourites-list').removeClass('active');
+            $('.fav-count').text(0);
+        }
+    }
+
+    function expandHeader() {
+        let maxHeight = 220;
+        $('header')
+            .addClass('expanded animated')
+            .css('height', maxHeight+'px');
+    }
+
+    function collapseHeader() {
+        $('header')
+            .removeClass('expanded')
+            .css('height', $('header').data('closed-height')+'px');
+    }
+
+    function updatePageTitle() {
+        $('.profession-title').text( getCurrentProfessionName() );
+        $('.profession-title-tp').text( getCurrentProfessionName(false, true) );
+    }
+
+    function initSkills() {
+        let inputTemplate = getInputTemplate();
+
+        if (inputTemplate === 'skill') {
+            $('section.skills-section, section.filter-panel, header.top-drawer').addClass('manual-skills');
+        }
+    }
+
+    (function chromeOnAndroidUrlBarOverlayHack() {
+        if (navigator.userAgent.indexOf("Chrome") !== -1 && navigator.userAgent.indexOf("Android") !== -1) {
+            document.body.classList.add('chrome-on-android');
+        }
+    })();
+
+    $(function () {
+        let headerInputWidth = 277;
+
+        updatePageTitle();
+        updateRequestValuesFromURL();
+        initFilter();
+        initSkills();
+        initSlider();
+        initTopDrawerSliding();
+        makeSalaryInput('.salary-input-wrapper', headerInputWidth)
+            .then(updateSkills)
+            .then(updateCourses)
+            .then(updateFavourites)
+            .then(initHeaderInputs);
+        initSkillAdd();
+        initFavourites();
+        initCourseCards();
+    });
+
+</script>
+
+</body>
+</html>

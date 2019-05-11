@@ -1,0 +1,627 @@
+@font-face {
+    font-family: Gilroy;
+    src: url("/assets/font/Gilroy-Light.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Gilroy;
+    font-weight: bold;
+    src: url("/assets/font/Gilroy-ExtraBold.otf") format("opentype");
+}
+
+body {
+    font-family: Gilroy, sans-serif;
+    background: rgb(248, 249, 250);
+}
+
+header {
+    box-sizing: border-box;
+    touch-action: none;
+}
+
+header.animated {
+    transition: height 0.5s ease;
+}
+
+a, a:hover, a:visited, a:active {
+    color: rgb(94, 88, 210);
+}
+
+.top-drawer {
+    border-radius: 0 0 1rem 1rem;
+    font-size: 0.9rem;
+}
+
+.top-drawer label {
+    font-weight: bold;
+    margin-right: .25rem;
+    margin-bottom: 0;
+}
+
+.top-drawer label.request {
+    font-weight: normal;
+    font-size: 1rem;
+}
+
+.top-drawer .input-group {
+    margin-bottom: .5rem;
+}
+
+.editable-toggle {
+    border-bottom: 1px dashed rgb(94, 88, 210);
+}
+
+.editable-toggle, .editable-toggle:hover {
+    text-decoration: none;
+}
+
+.profession-title {
+}
+
+.profile-photo {
+    width: 3rem;
+}
+
+.profile-photo.empty {
+    opacity: .3;
+}
+
+.profile-photo-border {
+    border-radius: 3rem;
+    width: 3rem;
+    height: 3rem;
+    overflow: hidden;
+    border: 1px solid black;
+}
+
+.work-experience-input {
+    max-height: calc(2.25rem + 10px);
+}
+
+.skills-input.loading, .course-list.loading {
+    background: url('/assets/images/preloader294.gif') 50% 50% no-repeat;
+}
+
+.skills-input.loading {
+    min-height: 10vw;
+}
+
+.course-list.loading {
+    min-height: 100vw;
+}
+
+.work-experience-input {
+    width: 100%;
+    flex: 1 1 0%;
+    min-height: 0;
+    height: 0px;
+    overflow: hidden;
+}
+
+.editable-toggle {
+    white-space: nowrap;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    background-color: rgb(94, 88, 210);
+}
+
+header .skills-input .skill {
+    padding: 0.25em 0.5em;
+    border: 1px solid #ced4da;
+    display: inline-block;
+    border-radius: 1em;
+    position: relative;
+    overflow: hidden;
+    margin-right: 0.25rem;
+}
+
+header .skills-input .skill .delete-skill {
+    position: absolute;
+    background: rgba(0,0,0,0.7);
+    padding: 0.25em 0.5em;
+    left: 0;
+    top: 0;
+    color: white;
+    width: 100%;
+    text-align: center;
+    display: none;
+}
+
+header .skills-input .skill:hover .delete-skill {
+    display: block;
+}
+
+.salary-input-wrapper {
+    width: 277px;
+    position: relative;
+    max-height: 68px;
+    flex: 1 1 0%;
+    min-height: 0;
+    height: 0px;
+    overflow: hidden;
+}
+
+header .input-group {
+    min-height: 20px;
+}
+
+header a, header a:active, header a:hover, header a:visited {
+    text-decoration: none;
+}
+
+header.manual-skills .salary-input-group,
+header.manual-skills .salary-input-wrapper,
+header.manual-skills .profile-handle,
+section.filter-panel.manual-skills .salary-input-wrapper {
+    display: none!important;
+}
+
+.btn-choose-skills {
+    display: none;
+}
+
+header.manual-skills .btn-choose-skills {
+    display: block;
+}
+
+section.logo img{
+    height: 100px;
+}
+
+.salary-input-histogram {
+    position: absolute;
+}
+
+.curtain {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.1);
+    width: 30%;
+    margin-top: 15px;
+    height: 32px;
+}
+
+.curtain.left-curtain {
+    left: 0;
+}
+
+.curtain.right-curtain {
+    right: 0;
+}
+
+.salary-handle {
+    margin-top: -4px;
+}
+
+.curtain.right-curtain .salary-handle {
+    margin-left: -3px;
+}
+
+.curtain.left-curtain .salary-handle {
+    float: right;
+    margin-right: -3px;
+}
+
+.salary-input-histogram {
+    margin-top: 15px;
+}
+
+.skills-input, .salary-input, header {
+}
+
+.profile-handle {
+    width: 2rem;
+    height: 2px;
+    border: 1px solid black;
+    position: absolute;
+    bottom: .5rem;
+    left: 50%;
+    margin-left: -1rem;
+}
+
+.swiper-container {
+    width: 100%;
+    padding-top: 0.5rem;
+    margin-top: -0.5rem;
+    padding-bottom: 1.5rem;
+    min-height: 66vh;
+}
+
+.no-result-text {
+    min-height: 76vh;
+}
+
+.no-result-text h2 {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.course-card {
+    width: 85%;
+    border: none;
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.3);
+}
+
+.course-card.take-a-look {
+    border: solid 3px #ffc108;
+    background-color: #fdfbf3;
+}
+
+.course-card .card-body {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.8rem;
+}
+
+.course-card h6 {
+    font-size: 0.8rem;
+}
+
+.course-card h5 {
+    font-weight: bold;
+}
+
+.course-card-header a {
+    margin-right: .25rem;
+}
+
+.top-favourite-add {
+    color: #ffcc00!important;
+    font-size: 1.5rem;
+    margin-right: 0!important;
+    position: absolute;
+    top: -0.45rem;
+    right: 1.8rem;
+}
+
+.course-card label {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.course-card .price {
+    font-size: 2rem;
+}
+
+.course-card .continue-toggle::before {
+    content: "\a";
+    display: block;
+}
+
+.course-card .continue-toggle {
+    font-weight: bold;
+    text-align: center;
+    height: 2rem;
+    vertical-align: bottom;
+    margin-top: -2rem;
+    background: linear-gradient(to bottom, transparent, white);
+    position: relative;
+}
+
+.course-card.take-a-look .continue-toggle {
+    background: linear-gradient(to bottom, transparent, #fdfbf3);
+}
+
+.course-card .text-info {
+    color: rgb(94, 88, 210)!important;
+}
+
+.course-buttons .btn {
+    height: 3rem;
+    border-radius: 1.5rem;
+    text-transform: uppercase;
+}
+
+.btn-outline-info {
+    border-radius: 1.3rem;
+    color: rgb(94, 88, 210)!important;
+    border-color: rgb(94, 88, 210)!important;
+}
+
+.btn-outline-info:active,
+.btn-outline-info.active,
+.btn-outline-info:hover {
+    color: white!important;
+    background-color: rgb(94, 88, 210)!important;
+}
+
+.course-buttons .btn-favourite, .course-buttons .btn-share {
+    width: 3rem;
+    line-height: 2.3rem;
+    font-size: 1.3rem;
+}
+
+.course-buttons .btn-link {
+    font-weight: bold;
+    border-width: 2px;
+    line-height: 2.1rem;
+    letter-spacing: 1px;
+}
+
+.favourite-list .btn-link, .favourite-list .btn-link:hover {
+    font-weight: bold!important;
+    border-width: 2px;
+    line-height: 2.1rem!important;
+    letter-spacing: 1px;
+    height: 3rem!important;
+    border-radius: 1.5rem;
+    text-transform: uppercase;
+    color: rgb(94, 88, 210)!important;
+    border-color: rgb(94, 88, 210)!important;
+}
+
+.course-buttons .btn-favourite i {
+    margin-left: 0.2rem;
+}
+
+.swiper-pagination {
+    position: static;
+    width: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    font-size: .8rem;
+    font-weight: bold;
+}
+
+.swiper-button-next, .swiper-button-prev {
+    position: static;
+    background: none;
+    right: initial;
+    left: initial;
+    top: initial;
+    width: auto;
+    height: auto;
+    margin-top: 0;
+}
+
+.swiper-button-prev::before {
+    content: '<';
+}
+
+.swiper-button-next::after {
+    content: '>';
+}
+
+.skill {
+    padding-right: 0.25rem;
+    white-space: nowrap;
+    display: inline-block;
+    margin-bottom: 0.25rem;
+    margin-right: 0.7rem;
+}
+
+.skill-strength {
+    height: .6rem;
+    width: 1rem;
+    display: inline-flex;
+    align-items: flex-end;
+}
+
+.btn-outline-primary .skill-strength {
+    margin-right: 0.375rem;
+}
+
+.skill-strength span {
+    display: block;
+    width: 25%;
+    background: rgb(94, 88, 210);
+    margin-right: 1px;
+}
+
+.btn-outline-primary.active .skill-strength span {
+    background: white;
+}
+
+.skill-strength span:nth-child(1) {height: 25%;}
+.skill-strength span:nth-child(2) {height: 50%;}
+.skill-strength span:nth-child(3) {height: 75%;}
+.skill-strength span:nth-child(4) {height: 100%;}
+
+.skill-strength.level0 span:nth-child(4), .skill-strength.level0 span:nth-child(3), .skill-strength.level0 span:nth-child(2) {opacity: 0.2;}
+.skill-strength.level1 span:nth-child(4), .skill-strength.level1 span:nth-child(3) {opacity: 0.2;}
+.skill-strength.level2 span:nth-child(4) {opacity: 0.2;}
+
+.btn-add-skill {
+    font-size: 2rem!important;
+    line-height: 0.8rem;
+    width: 1rem;
+    padding: .395rem 1.25rem .35rem 0.25rem;
+}
+
+.tt-menu {
+    background: white;
+    border: 1px solid #ced4da;
+    width: 100%;
+    border-radius: 0.25em;
+    margin-top: 2px;
+    position: relative;
+}
+
+.tt-suggestion {
+    display: block;
+    width: 100%;
+    padding: .25rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+
+.tt-selectable {
+    color: rgb(94, 88, 210)
+}
+
+.tt-selectable:hover {
+    color: #16181b;
+    text-decoration: none;
+    background-color: #f8f9fa;
+}
+
+.view-on-mobile footer {
+    margin: auto;
+    width: 40%;
+    background: rgb(94, 88, 210);
+    height: 3rem;
+    border-radius: 1.5rem;
+
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 1.5rem;
+    z-index: 999;
+}
+
+.view-on-mobile footer .btn {
+    background: rgb(94, 88, 210);
+    color: white;
+    font-size: 1.3rem;
+    height: 100%;
+    line-height: 100%;
+}
+
+.view-on-mobile footer .icon-background {
+    color: rgb(143, 133, 221);
+    display: none;
+}
+
+.view-on-mobile footer .btn-favourites-list.active .icon-overlay {
+    margin-left: -1rem;
+}
+
+.view-on-mobile footer .btn-favourites-list.active .fav-count,
+.view-on-mobile footer .btn-favourites-list.active .icon-background {
+    display: initial;
+}
+
+.view-on-mobile footer .divisor {
+    background: white;
+    width: 1px;
+    height: 100%;
+}
+
+.view-on-mobile footer .fav-count {
+    font-size: 75%;
+}
+
+section.sliding-panel {
+    width: 100vw;
+    height: 0;
+    overflow: scroll;
+
+    position: fixed;
+    bottom: 0;
+    z-index: 900;
+    background: rgb(248, 249, 250);
+    transition: height 0.5s ease;
+
+    font-size: 0.8rem;
+}
+
+section.sliding-panel.show {
+    height: 100vh;
+}
+
+.chrome-on-android section.sliding-panel.show {
+    height: calc(100vh - 56px);
+}
+
+section .section-title {
+    font-size: 1.1rem;
+    color: black;
+}
+
+section .close-panel-btn {
+    color: black!important;
+    font-size: 3rem;
+    line-height: 1.1rem;
+}
+
+section.filter-panel .group-title-label,
+section.skills-data .group-title-label {
+    font-weight: bold;
+    width: 100%;
+    font-size: 1rem;
+}
+
+section.filter-panel .salary-input-wrapper {
+    height: 68px;
+    width: 277px;
+    flex: none;
+    margin-bottom: 1rem;
+}
+
+section.filter-panel .btn-outline-primary input,
+section.skills-data .btn-outline-primary input {
+    display: none;
+}
+
+section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled),
+section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled):active,
+.no-result-text .btn-outline-primary:not(:disabled):not(.disabled),
+.no-result-text .btn-outline-primary:not(:disabled):not(.disabled):active,
+section.skills-data .btn-outline-primary:not(:disabled):not(.disabled),
+section.skills-data .btn-outline-primary:not(:disabled):not(.disabled):active {
+    color: rgb(94, 88, 210);
+    border-color: rgb(94, 88, 210);
+    background-color: transparent;
+    text-transform: uppercase;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    margin-right: 0.25rem;
+}
+
+section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled).active,
+section.skills-data .btn-outline-primary:not(:disabled):not(.disabled).active,
+.no-result-text .btn-outline-primary:not(:disabled):not(.disabled).active {
+    color: white;
+    border-color: rgb(94, 88, 210);
+    background-color: rgb(94, 88, 210);
+}
+
+section.filter-paner .salary-input-wrapper {
+
+}
+
+section.filter-panel .input-group {
+    margin-bottom: 1.5rem;
+}
+
+section.filter-panel .input-group:last-child {
+    margin-bottom: 6.5rem;
+}
+
+section .apply-btn {
+    height: 3rem;
+    border-radius: 1.5rem!important;
+    text-transform: uppercase;
+    border-width: 2px;
+    font-size: 1rem!important;
+    font-weight: bold;
+    letter-spacing: 1.8px;
+}
+
+section.favourite-panel .course-card {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+section.favourite-panel .course-card:last-child {
+    margin-bottom: 6.5rem;
+}
+
+section.favourite-panel .top-favourite-remove {
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .delete-skill {
+        display: none!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .delete-skill-mobile {
+        display: none!important;
+    }
+}

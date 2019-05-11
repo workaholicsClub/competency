@@ -1,0 +1,173 @@
+.view-on-desktop header {
+    font-size: 1.125rem;
+    font-weight: 300;
+    color: #6354d2;
+    position: sticky;
+    top: 0;
+    background: rgb(248, 249, 250);
+    z-index: 1000;
+}
+.view-on-desktop header img {
+}
+
+.view-on-desktop header .btn {
+    color: black;
+    font-size: 1.125rem;
+    height: 100%;
+    line-height: 100%;
+    font-weight: bold;
+    background: transparent;
+}
+.view-on-desktop header .btn i {
+    color: #ffcc00
+}
+
+.view-on-desktop header .icon-background {
+    color: rgba(99, 84, 210, 0.2);
+    display: none;
+}
+
+.view-on-desktop header .btn-favourites-list.active .icon-overlay {
+    margin-left: -13px;
+}
+
+.view-on-desktop header .btn-favourites-list.active .fav-count,
+.view-on-desktop header .btn-favourites-list.active .icon-background {
+    display: initial;
+}
+
+.view-on-desktop section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled),
+.view-on-desktop section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled):active {
+    border-radius: 1rem;
+    font-size: 0.6875rem;
+    margin-right: 0.25rem;
+    padding: 0.25rem 0.5rem 0.125rem 0.5rem;
+    height: 1.5rem;
+}
+
+.view-on-desktop section.filter-panel .input-group {
+    margin-bottom: 0;
+}
+
+.view-on-desktop section.filter-panel .group-title-label {
+    font-size: 0.875rem;
+    margin-bottom: 0;
+    width: auto;
+}
+
+section.filter-panel .more-group ~ div{
+    display: none!important;
+}
+
+section.filter-panel.expanded .more-group {
+    display: none!important;
+}
+
+section.filter-panel.expanded .more-group ~ div {
+    display: initial!important;
+}
+
+section.filter-panel .more-label {
+    color: #6354d2;
+}
+
+.skills-section {
+    width: 375px;
+    background: white;
+    border-radius: 1rem;
+    border: solid 1px #cfd7de;
+}
+
+.skills-section .salary-input-wrapper {
+    height: 68px;
+}
+
+.skill-group-title-label {
+    display: none;
+}
+
+.manual-skills .salary-data,
+.manual-skills .skills-filter-text,
+.manual-skills .system-added,
+.manual-skills .filter-group-title-label,
+.manual-skills .btn-add-skill {
+    display: none!important;
+}
+
+.manual-skills .skill-group-title-label {
+    display: block!important;
+}
+
+.view-on-desktop .course-list.loading {
+    background: url('/assets/images/preloader294.gif') 50% 20% no-repeat;
+}
+
+.view-on-desktop .course-card {
+    width: 100%;
+    margin-bottom: 1.5rem!important;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 20px 0 #cdd8e3;
+}
+
+.view-on-desktop .favourite-list .course-card {
+    width: 100%;
+    margin-bottom: 1.5rem!important;
+    border-radius: 0;
+    box-shadow: none;
+    border: 0;
+    border-bottom: 1px solid rgba(0,0,0,.15);
+}
+
+.view-on-desktop .favourite-list .course-card:last-child {
+    border-bottom: 0;
+    margin-bottom: 0!important;
+}
+
+.view-on-desktop .course-card .card-body {
+    padding: 2rem;
+    font-size: 0.875rem;
+}
+
+.view-on-desktop .favourite-list .course-card .card-body {
+    padding: 1rem;
+    font-size: 0.8rem;
+}
+
+.view-on-desktop .course-card .price {
+    font-size: 3rem;
+    line-height: 3rem;
+}
+
+.view-on-desktop .favourite-list .course-card .price {
+    font-size: 1rem;
+    line-height: 1rem;
+}
+
+.view-on-desktop .dropdown-menu.favourite-list {
+    width: 500px;
+}
+
+.view-on-desktop .dropdown-menu.show ~ .dropdown-backdrop {
+    right: 0;
+    position: fixed;
+    background: rgba(0,0,0,.15);
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.view-on-desktop .course-card h6 {
+    font-size: 1rem;
+}
+
+.view-on-desktop .favourite-list .course-card h6 {
+    font-size: 0.8rem;
+}
+
+.view-on-desktop .course-card h5 {
+    font-size: 2.25rem;
+}
+
+.view-on-desktop .favourite-list .course-card h5 {
+    font-size: 1rem;
+}

@@ -14,9 +14,14 @@ body {
   color: $text-color;
 }
 
+a {
+  color: $main-color;
+}
+
 .main-content {
   flex: 1 0 auto;
   background: #fff url(../images/background.png) no-repeat 0 0;
+  background-size: cover;
 }
 
 .logo {
@@ -51,7 +56,7 @@ body {
   .find {
     display: block;
     color: #fff;
-    font-size: 0.5em;
+    font-size: 0.6em;
     font-weight: bold;
     letter-spacing: 0.06em;
     line-height: 100%;
@@ -65,6 +70,17 @@ body {
     &:focus {
       outline: none;
     }
+  }
+
+  .find.disabled, .find[disabled="disabled"] {
+    border: solid 2px #aaa;
+    background-color: #aaa;
+  }
+
+  .list__ul {
+    font-size: 0.8em;
+    line-height: 1.5em;
+    z-index: 60;
   }
 }
 
@@ -94,14 +110,45 @@ footer {
   }
 }
 
+.backdrop {
+  opacity: 0.37;
+  background-color: #333333;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 50;
+}
 
+@media (max-width: 576px) {
+  .logo {
+    img {
+      margin: auto;
+      width: 90%;
+      margin-top: 0;
+    }
+  }
+
+  .find {
+    font-size: 0.7em;
+  }
+}
 
 /* @media */
 // Small devices (landscape phones, 576px and up)
 @media (min-width: 576px) {
+  .main-content {
+    background-size: auto;
+  }
   .choose-profession {
     font-size: 1.875em; // font-size: 30px;
     padding-top: 5%;
+
+    .list__ul {
+      font-size: 0.6em;
+      line-height: 1.5em;
+    }
   }
   footer .socials-wrap {
     margin-bottom: 3%;
@@ -118,6 +165,11 @@ footer {
   }
   .choose-profession {
     font-size: 2.250em; // font-size: 36px;
+
+    .list__ul {
+      font-size: 0.7em;
+      line-height: 1.6em;
+    }
   }
 }
 
@@ -125,6 +177,10 @@ footer {
 @media (min-width: 992px) {
   .choose-profession {
     font-size: 2.625em; // font-size: 42px;
+    .list__ul {
+      font-size: 0.7em;
+      line-height: 1.6em;
+    }
   }
   .logo, .choose-profession {
     margin-left: 7%;
@@ -144,6 +200,10 @@ footer {
 @media (min-width: 1200px) {
   .choose-profession {
     font-size: 3.000em; // font-size: 48px;
+    .list__ul {
+      font-size: 0.7em;
+      line-height: 1.7em;
+    }
   }
 }
 
@@ -155,13 +215,12 @@ footer {
 .list {
   display: inline-block;
   position: relative;
-  margin-left: 6px;
   ul {
     text-align: left;
     position: absolute;
     padding: 0 20px;
     top: 1.3em;
-    min-width: 450px;
+    min-width: 26em;
     left: -20px;
     display: none;
     z-index: 1;
