@@ -43,7 +43,7 @@
                 Я
                 <div class="list who-list"><span class="placeholder">новичок</span>
                     <ul class="list__ul">
-                        <li class="non-prof"><a href="">новичок</a></li>
+                        <li class="non-prof active"><a href="">новичок</a></li>
                         <li><a data-prof='qa-tester' href="">Тестировщик</a></li>
                         <li><a data-prof='javascript-developer' href="">JavaScript-разработчик</a></li>
                         <li><a data-prof='php-developer' href="">PHP-разработчик</a></li>
@@ -66,7 +66,7 @@
                 </div><br>
                 <div class="list exp-list"><span class="placeholder">без опыта работы</span>,
                     <ul class="list__ul">
-                        <li><a href="">без опыта работы</a></li>
+                        <li class="active"><a href="">без опыта работы</a></li>
                         <li><a href="">с опытом работы до 3 лет</a></li>
                         <li><a href="">с опытом работы 3 или более года</a></li>
                     </ul>
@@ -145,12 +145,12 @@
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-4 order-lg-first" >
                     <div class="socials-wrap">
-                        <a href="#"><img src="assets/images/email.svg" alt="email"></a>
-                        <a href="#"><img src="assets/images/telegram.svg" alt="telegram"></a>
-                        <a href="https://www.facebook.com/Selfacademy-409688379595509/"><img src="assets/images/facebook.svg" alt="facebook"></a>
+                        <a href="mailto:lup.mail@gmail.com" target="_blank"><img src="assets/images/email.svg" alt="email"></a>
+                        <a href="https://ttttt.me/nedelaikakya" target="_blank"><img src="assets/images/telegram.svg" alt="telegram"></a>
+                        <a href="https://www.facebook.com/Жажда-знаний-1289114597902783/" target="_blank"><img src="assets/images/facebook.svg" alt="facebook"></a>
                     </div>
                     <div class="text-center">
-                        &copy;&nbsp;Skill IT.ch,
+                        &copy;&nbsp;&laquo;Жажда знаний&raquo;,
                         <script>
                             var CurrentYear = new Date().getFullYear();
                             document.write(CurrentYear)
@@ -193,7 +193,10 @@
     <!-- /Styled select -->
 
     <script>
+        const defaultWant = 'стать ...';
+
         (function() {
+
             function showBackdrop() {
                 $('.backdrop').show();
             }
@@ -202,12 +205,88 @@
                 $('.backdrop, .list__ul').hide();
             }
 
-            function checkAndActivateFindButton() {
-                let canActivate = $('.want-list .placeholder').text() !== 'стать ...';
+            function checkAndToggleFindButton() {
+                let profCode = getProfessionCodeFromDOM();
+                let canActivate = $('.want-list .placeholder').text() !== defaultWant && profCode !== false;
                 if (canActivate) {
                     $('.find').removeClass('disabled');
                     $('.find')[0].removeAttribute('disabled');
                 }
+                else {
+                    $('.find').addClass('disabled').attr('disabled', 'disabled');
+                }
+            }
+
+            function getProfessionCodeFromDOM() {
+                let code = $('.list__ul li.active a')
+                    .toArray()
+                    .reduce((aggr, el) => $(el).data('prof') ? $(el).data('prof') : aggr, false);
+
+                return code || false;
+            }
+
+            function findCourses() {
+                let profCode = getProfessionCodeFromDOM();
+                if (profCode === false) {
+                    return;
+                }
+
+                let searchUrl = new URL(location.href);
+                searchUrl.pathname = `/${profCode}/courses`;
+                location.href = searchUrl.toString();
+            }
+
+            function getRequestValuesFromDOM() {
+                let request = $('.who-list .placeholder, .exp-list .placeholder, .want-list .placeholder')
+                    .map((index, el) => $(el).text())
+                    .toArray();
+
+                if (request[2] === defaultWant) {
+                    request[2] = false;
+                }
+                return request;
+            }
+
+            function updateRequestUrl() {
+                let request = getRequestValuesFromDOM();
+                let canUpdateUrl = request[2] !== false;
+
+                let newUrl = new URL(location.href);
+                newUrl.searchParams.set('who', request[0]);
+                newUrl.searchParams.set('experience', request[1]);
+                newUrl.searchParams.set('wish', request[2]);
+
+                if (canUpdateUrl) {
+                    history.pushState({request: request}, '', newUrl.toString());
+                }
+            }
+
+            function updateFormFromUrl() {
+                let url = new URL(location.href);
+                let paramsListsMap = {
+                    'who': '.who-list',
+                    'experience': '.exp-list',
+                    'wish': '.want-list'
+                };
+
+                Object.keys(paramsListsMap).forEach(function (param) {
+                    let value = url.searchParams.get(param);
+                    let listSelector = paramsListsMap[param];
+                    let valueVariants = $(listSelector + ' li')
+                        .map((index, el) => $(el).text())
+                        .toArray();
+
+                    let valueIndex = valueVariants.indexOf(value);
+                    let correctValue = value && valueIndex !== -1;
+
+                    if (correctValue) {
+                        $(listSelector+' .placeholder').text(value);
+                        $(listSelector+' li').removeClass('active');
+                        $(listSelector+' li').eq(valueIndex).addClass('active');
+                    }
+                });
+
+                checkAndToggleFindButton();
             }
 
             $('.placeholder').on('click', function (e) {
@@ -230,15 +309,28 @@
                 var listUl = target.closest(".list__ul");
                 var index = target.parent().index();
 
-                target.closest('.list').find('.placeholder').text(target.text()).css('opacity', '1');
+                target.closest('.list').find('.placeholder')
+                    .text(target.text())
+                    .css('opacity', '1');
 
-                $(listUl).find('li').eq(index).prependTo(listUl);
+                let $listRows = $(listUl).find('li');
+                let $activeRow = target.closest('li');
+                $listRows.eq(index).prependTo(listUl);
+
+                $listRows.removeClass('active');
+                $activeRow.addClass('active');
+
                 $(listUl).toggle();
+
                 hideBackdrop();
-                checkAndActivateFindButton();
+                checkAndToggleFindButton();
+                updateRequestUrl();
             });
 
             $('.backdrop').on('click', hideBackdrop);
+            $('.find').on('click', findCourses);
+
+            updateFormFromUrl();
         })();
     </script>
 </body>
