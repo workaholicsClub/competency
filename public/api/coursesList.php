@@ -72,14 +72,22 @@ ORDER BY maxSkillRate DESC, hasPrimary DESC, price ASC');
         $courseQuerySQL = "SELECT c.*,
                    MAX(skillRate) AS maxSkillRate,
                    MAX(isPrimary) AS hasPrimary,
+                   SUM(countPrimary)-SUM(isPrimary) AS hasOtherPrimary,
                    SUM(isSearched) AS countSearchedSkills,
                    price/SUM(isSearched) AS pricePerSearchedSkill
             FROM courses c
                 LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
                 LEFT JOIN (
+                    SELECT cs.id, SUM(isPrimary) AS countPrimary
+                    FROM courses cs
+                        LEFT JOIN links_skills_courses lscs ON cs.id = lscs.courseId
+                        LEFT JOIN links_skills_professions lsps ON lscs.skillId = lsps.skillId
+                    GROUP BY cs.id
+                ) lspall ON c.id = lspall.id
+                LEFT JOIN (
                     SELECT sk.id AS skillId,
                            sk.name,
-                           ".(!empty($_REQUEST['skills']) ? 'sk.name IN ("'.implode('", "', array_keys($_REQUEST['skills'])).'")' : '0' )." AS isSearched,
+                           " . (!empty($_REQUEST['skills']) ? 'sk.name IN ("' . implode('", "', array_keys($_REQUEST['skills'])) . '")' : '0') . " AS isSearched,
                            COUNT(v.id) AS skillCount,
                            vcount AS vacanciesCount,
                            COUNT(v.id)/vcount AS skillRate,
@@ -130,7 +138,7 @@ ORDER BY maxSkillRate DESC, hasPrimary DESC, price ASC');
         if (!empty($whereClauses)) {
             $courseQuerySQL .= 'AND '.implode(' AND ', $whereClauses);
         }
-        $courseQuerySQL .= "\nGROUP BY c.id ORDER BY maxSkillRate DESC, hasPrimary DESC, countSearchedSkills DESC, pricePerSearchedSkill ASC";
+        $courseQuerySQL .= "\nGROUP BY c.id ORDER BY maxSkillRate DESC, hasPrimary DESC, hasOtherPrimary ASC, countSearchedSkills DESC, pricePerSearchedSkill ASC";
         $coursesQuery = $pdo->prepare($courseQuerySQL);
         $coursesQuery->execute($dataArray);
     }

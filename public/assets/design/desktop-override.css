@@ -8,6 +8,7 @@
     z-index: 1000;
 }
 .view-on-desktop header img {
+    margin-top: -15px;
 }
 
 .view-on-desktop header .btn {
