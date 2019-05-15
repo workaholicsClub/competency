@@ -86,7 +86,7 @@
             </section>
             <section class="skills-data input-group">
                 <label class="group-title-label filter-group-title-label mb-0">
-                    Фильтр по навыкам
+                    Программа обучения
                 </label>
                 <label class="group-title-label skill-group-title-label mb-0">
                     Навыки для прокачки
@@ -270,7 +270,7 @@
 
             <div class="input-group">
                 <label class="group-title-label filter-group-title-label">
-                    Навыки на основе
+                    Программа обучения на основе
                     <span class="skills-input-display">...</span>
                     с ЗП
                     <span class="salary-input-display">...</span>
@@ -562,7 +562,7 @@
                             '<span class="continue" style="display: none">' + description[1] + '</span>'
                             : ''}
                     </p>
-                    <a href="${course.url}" target="_blank" class="" data-course-id="${course.id}">Подробнее на сайте курса</a>
+                    <a href="${course.url}" target="_blank" class="details-link" data-course-id="${course.id}">Подробнее на сайте курса</a>
 
                     <div class="course-buttons flex-fill d-flex flex-row mt-4">
                         <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2" data-course-id="${course.id}">
@@ -620,6 +620,7 @@
                             : ''
                         }
                     </p>
+                    <a href="${course.url}" target="_blank" class="details-link" data-course-id="${course.id}">Подробнее на сайте курса</a>
 
                     <div class="d-flex flex-row align-items-start justify-content-stretch mt-4">
                         <div class="price-duration-data flex-fill">
