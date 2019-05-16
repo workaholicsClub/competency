@@ -1,6 +1,6 @@
 <?php
 
-const BASE_URL = 'https://self.academy/';
+const BASE_URL = 'https://skillit.ch/';
 
 $jsonOutput = false;
 
