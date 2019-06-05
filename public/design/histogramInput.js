@@ -42,7 +42,7 @@ function drawGraph(elementId, options) {
 
     let labelsHeight = getOptionValue('labelsHeight', options);
     let labelsGutter = getOptionValue('labelsGutter', options);
-    let gridHeight = graphHeight-labelsHeight - labelsGutter;
+    let gridHeight = graphHeight - labelsHeight - labelsGutter;
     let gridWidth = graphWidth;
     let gridHeightCount = getOptionValue('gridHeightCount', options);
     let gridWidthCount = options.gridWidthCount || binValues.length;
@@ -58,8 +58,8 @@ function drawGraph(elementId, options) {
     let binGutter = getOptionValue('binGutter', options);
 
     let graph = draw.group();
-
     let grid = draw.group();
+
     for (let yindex = 0; yindex < gridHeightCount; yindex++) {
         for (let xindex = 0; xindex < gridWidthCount; xindex++) {
             let cell = drawGridCell(draw, xindex * gridCellWidth, yindex * gridCellHeight, gridCellWidth, gridCellHeight, gridColor);
@@ -99,7 +99,7 @@ function drawGraph(elementId, options) {
 
         let labelWidth = label.length();
         let x = gridCellWidth * labelIndex - labelWidth/2;
-        let y = graphHeight - labelsHeight;
+        let y = graphHeight - labelsHeight - 1;
 
         if (isFirst) {
             x = 0;
@@ -176,8 +176,18 @@ function drawHandle(elementId, options) {
     return handle;
 }
 
-function makeSalaryInputHTML(inputId) {
-    return `<div id="${inputId}" class="salary-input">
+function makeSalaryInputHTML(inputId, options) {
+    let graphWidth = getOptionValue('graphWidth', options);
+    let graphHeight = getOptionValue('graphHeight', options);
+    let labelsHeight = getOptionValue('labelsHeight', options);
+    let labelsGutter = getOptionValue('labelsGutter', options);
+    let curtainHeight = graphHeight - labelsHeight - labelsGutter;
+
+    return `<style>
+        #${inputId} {width: ${graphWidth}px!important;}
+        #${inputId} .curtain {height: ${curtainHeight}px!important;};
+        </style>
+        <div id="${inputId}" class="salary-input">
             <div id="${inputId}-histogram" class="salary-input-histogram"></div>
             <div class="curtain left-curtain ${inputId}-left-curtain">
                 <div id="${inputId}-left-handle" class="salary-handle salary-input-left-handle"></div>
@@ -200,7 +210,7 @@ function SalaryInput(wrapper, options) {
     this.inputId = generataInputId();
 
     this.init = function () {
-        wrapper.innerHTML = makeSalaryInputHTML(this.inputId);
+        wrapper.innerHTML = makeSalaryInputHTML(this.inputId, this.options);
         let histogramElementId = this.inputId + '-histogram';
         let leftHandleElementId = this.inputId + '-left-handle';
         let rightHandleElementId = this.inputId + '-right-handle';

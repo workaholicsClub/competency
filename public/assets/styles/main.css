@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* This file must have an underscore at the beginning for it to be imported */
 @import "cs-select.css";
 html, body {
@@ -417,12 +418,22 @@ footer .socials-wrap a {
 }
 
 .placeholder {
-  color: #6354d2;
-  border-bottom: 2px dashed;
+  border-radius: 4px;
+  background-color: #e0e5ea;
   cursor: pointer;
+  white-space: nowrap;
+  font-family: Gilroy;
+  font-weight: 300;
+  letter-spacing: normal;
+  color: #333333 !important;
+  padding: 5px 15px;
 }
-.placeholder:hover {
-  color: #4433c0;
+.placeholder::after {
+  margin-left: 8px;
+  content: "";
+  font-family: Font Awesome\ 5 Free;
+  font-weight: 900;
+  font-size: 70%;
 }
 
 /* /STYLED SELECT */

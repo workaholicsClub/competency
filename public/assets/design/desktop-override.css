@@ -1,17 +1,34 @@
 .view-on-desktop header {
     font-size: 1.125rem;
     font-weight: 300;
-    color: #6354d2;
-    position: sticky;
-    top: 0;
     background: rgb(248, 249, 250);
     z-index: 1000;
 }
-.view-on-desktop header img {
-    margin-top: -15px;
+
+.view-on-desktop header.scroll {
+    position: fixed;
+    top: 0;
+    box-shadow: 0 4px 8px 0 #cfd7de;
+    background-color: #ffffff;
+    display: none!important;
+    height: 68px;
+    width: 100%;
 }
 
-.view-on-desktop header .btn {
+.view-on-desktop header.scroll .logo-link {
+    height: 68px;
+    overflow: hidden;
+}
+
+.scroll .view-on-desktop header {
+    display: none!important;
+}
+
+.scroll .view-on-desktop header.scroll {
+    display: flex!important;
+}
+
+.view-on-desktop header .btn-favourites-list {
     color: black;
     font-size: 1.125rem;
     height: 100%;
@@ -37,15 +54,6 @@
     display: initial;
 }
 
-.view-on-desktop section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled),
-.view-on-desktop section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled):active {
-    border-radius: 1rem;
-    font-size: 0.6875rem;
-    margin-right: 0.25rem;
-    padding: 0.25rem 0.5rem 0.125rem 0.5rem;
-    height: 1.5rem;
-}
-
 .view-on-desktop section.filter-panel .input-group {
     margin-bottom: 0;
 }
@@ -54,6 +62,10 @@
     font-size: 0.875rem;
     margin-bottom: 0;
     width: auto;
+}
+
+section.filter-panel .more-group {
+    height: 26px;
 }
 
 section.filter-panel .more-group ~ div{
@@ -68,12 +80,19 @@ section.filter-panel.expanded .more-group ~ div {
     display: initial!important;
 }
 
-section.filter-panel .more-label {
+section.filter-panel .more-label,
+section.filter-panel .more-label:hover {
     color: #6354d2;
+    border-bottom: 1px dashed rgb(94, 88, 210);
+    text-decoration: none;
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-top: 4px;
 }
 
 .skills-section {
-    width: 375px;
+    width: 360px;
+    min-width: 360px;
     background: white;
     border-radius: 1rem;
     border: solid 1px #cfd7de;
@@ -81,6 +100,7 @@ section.filter-panel .more-label {
 
 .skills-section .salary-input-wrapper {
     height: 68px;
+    width: 260px;
 }
 
 .skill-group-title-label {

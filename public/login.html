@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/design/base.css" type="text/css">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-70x70.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+
+    <title>Жажда знаний: вход</title>
+
+    <script>
+        if (document.cookie.indexOf('user_is_admin=true') === -1) {
+            /* Google Tag Manager */
+            (function(w,d,s,l,i) {
+                w[l]=w[l]||[];w[l].push({'gtm.start':
+                        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-WG2XFBS');
+
+            /* Google Analytics */
+            let anScript = document.createElement('script');
+            let firstScript = document.getElementsByTagName('script')[0];
+            anScript.async = true;
+            anScript.src = 'https://www.googletagmanager.com/gtag/js?id=UA-113216929-1';
+            firstScript.parentNode.insertBefore(anScript,firstScript);
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-113216929-1');
+        }
+    </script>
+</head>
+<body>
+    <div class="container pt-4 text-center">
+        <img src="/assets/images/itcher_02.png" width="150" >
+        <h1>Подождите, идет вход</h1>
+        <a href="/">Или вернитесь на главную</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.auth0.com/js/auth0/9.10/auth0.min.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script>
+        function getParameterByName(name, url) {
+            if (!url) {
+                url = window.location.href;
+            }
+
+            name = name.replace(/[\[\]]/g, '\\$&');
+            let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            let results = regex.exec(url);
+            if (!results) {
+                return null;
+            }
+
+            if (!results[2]) {
+                return '';
+            }
+
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        $(function () {
+            let savedRedirectTo = localStorage.getItem('user_redirect_to') || false;
+            let urlRedirectTo = getParameterByName('return_url');
+            let isReturningFromAuth = !Boolean(urlRedirectTo);
+
+            if (isReturningFromAuth) {
+                initAuth();
+                processAuthInfo()
+                    .then(getProfile)
+                    .then(saveProfileData)
+                    .then(() => {
+                        window.location.href = savedRedirectTo;
+                    })
+                    .catch((err) => { err ? console.warn(err) : console.log('undefined err'); });
+            }
+            else {
+                localStorage.setItem('user_redirect_to', urlRedirectTo);
+                initAuth();
+                launchAuth();
+            }
+        });
+
+    </script>
+</body>
+</html>

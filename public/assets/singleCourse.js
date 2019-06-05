@@ -1,3 +1,5 @@
+let currentCourse;
+
 function loadCourseData(courseId) {
     return loadApiData("/api/courseData.php", {id: courseId});
 }
@@ -11,56 +13,90 @@ function changeTextOnly($elem, newText) {
                 .replaceWith(newText);
 }
 
-function getCoursePageHTML(courseData) {
-    let hasRequirements = Object.keys(courseData.requirements).length > 0;
-    let description = (courseData.description || "").replace("\n", "<br>");
-    let savedIds = getCookie('backpack');
-    let isCourseInBackpack = savedIds && savedIds.indexOf(courseData.id) !== -1;
-    let otherCoursesUrl = '/'+getParameterByName('from')+'/courses/';
+function getCoursePageHTML(course) {
+    let description = splitLongText(course.description, 50);
+    let allSkillsHTML = course.skills ? getSkillsHTML(course.skills) : false;
+    let requirementsHTML = course.requirements ? getSkillsHTML(course.requirements) : false;
+    let isFavourited = isInBackpack(course.id);
 
-    let saveButton = isCourseInBackpack
-        ? "<button class=\"btn btn-outline-success btn-lg btn-block disabled\" disabled='disabled'><i class=\"fas fa-check\"></i> Курс сохранен</button>\n"
-        : "<button class=\"btn btn-outline-primary btn-lg btn-block add-to-backpack\" data-course-id=\""+courseData.id+"\"><i class=\"fas fa-bookmark\"></i> Сохранить</button>\n";
+    return `
+            <div class="card course-card">
+                <div class="card-body" data-id="${course.id}">
+                    <div class="d-flex flex-row justify-content-between align-items-start">
+                        <span class="badge badge-course-info">Курс</span>
+                        <div class="d-flex flex-row justify-content-end course-card-header">
+                            <h6 class="text-muted">от <a href="${course.url}">${course.platform}</a></h6>
+                            <a href="#" class="top-favourite-add">
+                                <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <h5>${course.title}</h5>
+                    <p class="mt-1">${getCourseTime(course)} &asymp; ${getHumanReadableTime(course)}</p>
+                    <p class="mt-1 text-info">${getCourseAttributesHTML(course)}</p>
+                    <label class="mt-1 mb-0">По окончании будете уметь</label><p>${allSkillsHTML}</p>
+                    ${requirementsHTML ? '<label class="mt-1 mb-0">Нужно знать</label><p>' + requirementsHTML + '</p>' : ''}
 
-    let priceBadge = "<div class=\"price display-4\">"+getCoursePriceText(courseData.price)+"</div>\n";
-    if (courseData.coupon) {
-        let discountPrice = courseData.price * (1-courseData.couponDiscount/100);
-        priceBadge = "<div class='discount'>Скидка <b>"+courseData.couponDiscount+"%</b> по промокоду <b>"+courseData.coupon+"</b></div><div class=\"price\">" +
-            "<span class='display-4'>"+getCoursePriceText(discountPrice)+"</span>" +
-            "<del>"+getCoursePriceText(courseData.price)+"</del>" +
-            "</div>\n";
-    }
+                    <label class="mt-1 mb-0 d-block"><a href="#" class="add-info closed">Структура курса </a></label>
+                    <div class="add-info-input" style="display: none">
+                        <p class="mb-1"><textarea class="form-control" name="structure"></textarea></p>
+                        <button class="btn btn-outline-info btn-add-info">Добавить информацию</button>
+                    </div>
 
-    return "<h1>" + courseData.title + "</h1>\n" +
-        "<p class='text-secondary'>от " + courseData.platform + "</p>\n" +
-        "<p class='text-info'>" + getCourseAttributesHTML(courseData) + "</p>\n" +
-        "<h5>Навыки курса:</h5>\n" +
-        "<p>\n" +
-            getSkillsHTML(courseData) + "\n" +
-         "</p>\n" +
-        "\n" +
-        (hasRequirements
-            ? ("<h5>Нужно знать:</h5>\n" +
-                 "<p>" + getRequirementsHTML(courseData) + "</p>\n")
-            : ("<h5 class='mb-4'>Не требует начальных знаний</h5>\n")
-        ) +
-        "<h5>Описание:</h5>\n" +
-        "<p>" + description + "</p>\n" +
-        "\n" +
-        "<p>\n" +
-        priceBadge +
-        "<div class=\"duration h5\">&asymp; " + getHumanReadableTime(courseData) + "</div>\n" +
-        "</p>\n" +
-        "\n" +
-        saveButton +
-        "<a class=\"btn btn-primary btn-lg btn-block mb-4\" href=\"" + courseData.url + "\" target=\"_blank\">Сайт курса&nbsp;<i class=\"fas fa-external-link-square-alt\"></i></a>\n" +
-        "<a class='btn btn-outline-secondary btn-lg btn-block' href='"+otherCoursesUrl+"'>Посмотреть другие курсы</a>"
+                    <label class="mt-1 mb-0 d-block"><a href="#" class="add-info closed">Начало занятий </a></label>
+                    <div class="add-info-input" style="display: none">
+                        <p class="mb-1"><textarea class="form-control" name="start"></textarea></p>
+                        <button class="btn btn-outline-info btn-add-info">Добавить информацию</button>
+                    </div>
+
+                    <label class="mt-1 mb-0 d-block"><a href="#" class="add-info closed">Расписание занятий </a></label>
+                    <div class="add-info-input" style="display: none">
+                        <p class="mb-1"><textarea class="form-control" name="schedule"></textarea></p>
+                        <button class="btn btn-outline-info btn-add-info">Добавить информацию</button>
+                    </div>
+
+                    <label class="mt-1 mb-0 d-block"><a href="#" class="add-info closed">Отзывы </a></label>
+                    <div class="add-info-input" style="display: none">
+                        <button class="btn btn-outline-info btn-feedback" data-toggle="modal" data-target="#surveyModal">Добавить отзыв</button>
+                    </div>
+
+                    <p id="description${course.id}" class="mt-4">
+                        ${description}
+                    </p>
+
+                    <div class="row mt-4">
+                        <div class="col price-duration-data">
+                            <p class="mt-0 mb-0 price">${getCoursePriceText(course.price)}</p>
+                        </div>
+                        <div class="col course-buttons d-flex flex-row mt-1">
+                            <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2 ${isFavourited ? 'active' : ''}" ${isFavourited ? 'disabled="disabled"' : '' }>
+                                <i class="${isFavourited ? 'fas fa-check' : 'far fa-bookmark'}"></i>
+                            </button>
+                            <button class="btn btn-outline-info btn-feedback mr-2" data-toggle="modal" data-target="#surveyModal">
+                                <i class="far fa-comment"></i>
+                            </button>
+                            <button class="btn btn-outline-info btn-share mr-2" data-course-id="${course.id}" id="share${course.id}">
+                                <i class="fas fa-share-alt"></i>
+                                <ul class="share-menu dropdown-menu" aria-labelledby="share${course.id}">
+                                    <li class="dropdown-item"><a href="#" data-social="vkontakte">Вконтакте</a></li>
+                                    <li class="dropdown-item"><a href="#" data-social="facebook">Facebook</a></li>
+                                    <li class="dropdown-item"><a href="#" data-social="twitter">Twitter</a></li>
+                                    <li class="dropdown-item"><a href="#" data-social="whatsapp">WhatsApp</a></li>
+                                    <li class="dropdown-item"><a href="#" data-social="telegram">Telegram</a></li>
+                                </ul>
+                            </button>
+                            <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill btn-link mr-2" data-course-id="${course.id}">
+                                Записаться
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
 }
 
 function updatePageTitleAndLink() {
-    let professionCode = getParameterByName('from');
-    let pageTitle = getCurrentProfessionName(professionCode) || '';
-    $('h1 small').html(pageTitle);
+    updatePageTitle();
+    let professionCode = getProfessionCodeFromUrl('from');
     $('.courses-list-link').attr('href', '/'+professionCode+'/courses');
 }
 
@@ -74,31 +110,77 @@ function addToBackpackLite(courseId) {
     setCookie('backpack', savedIds);
 }
 
+function getCourseById(courseId) {
+    return courseId == currentCourse.id ? currentCourse : false;
+}
+
+function updatePageTitle() {
+    let pageCode = getProfessionCodeFromUrl('from');
+    $('.profession-title').text( getCurrentProfessionName(pageCode) );
+    $('.profession-title-tp').text( getCurrentProfessionName(pageCode, true) );
+}
+
+function initHeaderForm() {
+    $(document).on('click', '.request .dropdown-item', function () {
+        let itemText = $(this).text();
+        let $toggle = $(this).closest('.dropdown').find('.editable-toggle');
+        let $allToggles = $('[data-menu="'+$toggle.data('menu')+'"');
+        let $applyButtons = $('.apply-request');
+
+        $allToggles.text(itemText);
+        $applyButtons.show();
+    });
+
+    $(document).on('click', '.apply-request', function () {
+        let request = getRequestValuesFromDOM();
+        let pageCode = getProfessionCodeFromUrl('from');
+
+        let newUrl = new URL(location.origin+'/'+pageCode+'/courses');
+        newUrl.searchParams.set('who', request[0]);
+        newUrl.searchParams.set('experience', request[1]);
+        newUrl.searchParams.set('wish', request[2]);
+
+        location.href = newUrl.toString();
+    });
+}
+
 $(function () {
     let courseId = getParameterByName('id');
 
+    initAuth();
+    initHeaderForm();
     updatePageTitleAndLink();
 
     loadCourseData(courseId)
         .then(function (courseData) {
+            currentCourse = courseData;
             let courseHTML = getCoursePageHTML(courseData);
             $('.course-data').html(courseHTML);
-        });
+        })
+        .then(updateFavourites);
 
-    $(document).on('click', '.add-to-backpack', function () {
+    showProfile();
+    initCourseCards();
+    initScroll();
+
+    checkSession()
+        .then(showProfile);
+
+    $(document).on('click', '.add-info', function () {
         let $button = $(this);
-        let courseId = $button.data('course-id');
-        addToBackpackLite(courseId);
+        let $input = $button.parent().next();
+        $button.toggleClass('closed');
+        $input.toggle();
+    });
 
-        $button
-            .removeClass('btn-primary add-to-backpack')
-            .addClass('btn-success disabled')
-            .attr('disabled', 'disabled');
-        changeTextOnly($button, ' Курс сохранен');
+    $(document).on('click', '.btn-add-info', function () {
+        let $container = $(this).closest('.add-info-input');
+        let $input = $container.find('textarea');
+        let courseId = parseInt( $(this).closest('[data-id]').data('id') );
 
-        $button.find('.fas')
-            .removeClass('fa-heart')
-            .addClass('fa-check');
-
+        saveUpdate(courseId, $input.attr('name'), $input.val())
+            .then(function () {
+                $container.html(`<div class="alert alert-success" role="alert">Спасибо за дополнение! Мы дополним данные этой информацией</div>`)
+            });
     });
 });

@@ -27,6 +27,11 @@ a, a:hover, a:visited, a:active {
     color: rgb(94, 88, 210);
 }
 
+.block-hidden {
+    position: absolute!important;
+    margin-left: -9999px!important;
+}
+
 .top-drawer {
     border-radius: 0 0 1rem 1rem;
     font-size: 0.9rem;
@@ -41,6 +46,7 @@ a, a:hover, a:visited, a:active {
 .top-drawer label.request {
     font-weight: normal;
     font-size: 1rem;
+    line-height: 1.9rem;
 }
 
 .top-drawer .input-group {
@@ -48,7 +54,27 @@ a, a:hover, a:visited, a:active {
 }
 
 .editable-toggle {
-    border-bottom: 1px dashed rgb(94, 88, 210);
+    height: 24px;
+    border-radius: 4px;
+    background-color: #e0e5ea;
+    cursor: pointer;
+    white-space: nowrap;
+
+    font-family: Gilroy;
+    font-size: 16px;
+    line-height: 15px;
+    font-weight: 300;
+    letter-spacing: normal;
+    color: #333333!important;
+    padding: 4px 7px;
+}
+
+.editable-toggle::after {
+    margin-left: 8px;
+    content: '\f0dc';
+    font-family: Font Awesome\ 5 Free;
+    font-weight: 900;
+    font-size: 70%;
 }
 
 .editable-toggle, .editable-toggle:hover {
@@ -98,10 +124,6 @@ a, a:hover, a:visited, a:active {
     overflow: hidden;
 }
 
-.editable-toggle {
-    white-space: nowrap;
-}
-
 .dropdown-item.active, .dropdown-item:active {
     background-color: rgb(94, 88, 210);
 }
@@ -133,13 +155,23 @@ header .skills-input .skill:hover .delete-skill {
 }
 
 .salary-input-wrapper {
-    width: 277px;
     position: relative;
+}
+
+header .salary-input-wrapper {
     max-height: 68px;
     flex: 1 1 0%;
     min-height: 0;
     height: 0px;
     overflow: hidden;
+}
+
+.view-on-mobile header .salary-input-wrapper {
+    width: 260px;
+}
+
+.skills-panel .salary-input-wrapper {
+    height: 80px;
 }
 
 header .input-group {
@@ -163,10 +195,6 @@ section.filter-panel.manual-skills .salary-input-wrapper {
 
 header.manual-skills .btn-choose-skills {
     display: block;
-}
-
-section.logo img{
-    height: 100px;
 }
 
 .salary-input-histogram {
@@ -209,6 +237,32 @@ section.logo img{
 .skills-input, .salary-input, header {
 }
 
+.avatar img {
+    width: 64px;
+    height: 64px;
+    margin-top: -32px;
+    background: white;
+    border-radius: 32px;
+    cursor: pointer;
+}
+
+.avatar img.custom-avatar {
+    border: solid 2px #cfd7de;
+}
+
+.auth .avatar img,
+.auth .avatar a {
+    cursor: default;
+    color: #212529;
+}
+
+.view-on-desktop .avatar a, .view-on-desktop .avatar a:hover, .view-on-desktop .avatar a:visited {
+    font-size: 18px;
+    font-weight: bold;
+    color: #6354d2;
+    text-decoration: none;
+}
+
 .profile-handle {
     width: 2rem;
     height: 2px;
@@ -217,6 +271,18 @@ section.logo img{
     bottom: .5rem;
     left: 50%;
     margin-left: -1rem;
+}
+
+.apply-request {
+    height: 24px;
+    border-radius: 16px!important;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-left: 7px;
 }
 
 .swiper-container {
@@ -237,9 +303,40 @@ section.logo img{
 }
 
 .course-card {
-    width: 85%;
     border: none;
     box-shadow: 5px 5px 20px rgba(0,0,0,0.3);
+}
+
+.add-info::after {
+    content: '\f0d8';
+    font-family: Font Awesome\ 5 Free;
+    font-weight: 900;
+}
+
+.add-info.closed::after {
+    content: '\f0d7';
+}
+
+.swiper-wrapper .course-card {
+    width: 85%;
+}
+
+.course-card .badge-course-info {
+    height: 24px;
+    border-radius: 4px;
+    background-color: #cfd7de;
+    white-space: nowrap;
+    font-family: Gilroy;
+    font-size: 16px;
+    line-height: 15px;
+    font-weight: 300;
+    letter-spacing: normal;
+    color: #333333!important;
+    padding: 4px 7px;
+}
+
+.view-on-mobile .course-card .badge-course-info {
+    font-size: 0.8rem;
 }
 
 .course-card.take-a-look {
@@ -307,6 +404,7 @@ section.logo img{
 
 .course-buttons .btn {
     height: 3rem;
+    min-width: 3rem;
     border-radius: 1.5rem;
     text-transform: uppercase;
 }
@@ -335,6 +433,10 @@ section.logo img{
     border-width: 2px;
     line-height: 2.1rem;
     letter-spacing: 1px;
+}
+
+.view-on-mobile .course-buttons .btn-link {
+    font-size: 0.8rem!important;
 }
 
 .favourite-list .btn-link, .favourite-list .btn-link:hover {
@@ -403,12 +505,12 @@ section.logo img{
 .skill-strength span {
     display: block;
     width: 25%;
-    background: rgb(94, 88, 210);
+    background: #333333;
     margin-right: 1px;
+    border-radius: 1.5px;
 }
 
 .btn-outline-primary.active .skill-strength span {
-    background: white;
 }
 
 .skill-strength span:nth-child(1) {height: 25%;}
@@ -419,13 +521,6 @@ section.logo img{
 .skill-strength.level0 span:nth-child(4), .skill-strength.level0 span:nth-child(3), .skill-strength.level0 span:nth-child(2) {opacity: 0.2;}
 .skill-strength.level1 span:nth-child(4), .skill-strength.level1 span:nth-child(3) {opacity: 0.2;}
 .skill-strength.level2 span:nth-child(4) {opacity: 0.2;}
-
-.btn-add-skill {
-    font-size: 2rem!important;
-    line-height: 0.8rem;
-    width: 1rem;
-    padding: .395rem 1.25rem .35rem 0.25rem;
-}
 
 .tt-menu {
     background: white;
@@ -461,7 +556,7 @@ section.logo img{
 
 .view-on-mobile footer {
     margin: auto;
-    width: 40%;
+    width: 50%;
     background: rgb(94, 88, 210);
     height: 3rem;
     border-radius: 1.5rem;
@@ -504,6 +599,16 @@ section.logo img{
     font-size: 75%;
 }
 
+.view-on-mobile .similar-footer {
+    margin-top: 3rem!important;
+    width: 60%;
+}
+
+.view-on-mobile .similar-footer .btn {
+    font-size: 1.2rem;
+    margin: auto;
+}
+
 section.sliding-panel {
     width: 100vw;
     height: 0;
@@ -538,7 +643,9 @@ section .close-panel-btn {
 }
 
 section.filter-panel .group-title-label,
-section.skills-data .group-title-label {
+section.skills-panel .group-title-label,
+section.skills-data .group-title-label,
+section.existing-skills-data .group-title-label {
     font-weight: bold;
     width: 100%;
     font-size: 1rem;
@@ -551,17 +658,59 @@ section.filter-panel .salary-input-wrapper {
     margin-bottom: 1rem;
 }
 
-section.filter-panel .btn-outline-primary input,
-section.skills-data .btn-outline-primary input {
-    display: none;
+.btn-outline-primary.btn-filter-apply input {
+    display: inline;
+    visibility: hidden;
+    margin-right: 6px;
 }
 
-section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled),
-section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled):active,
-.no-result-text .btn-outline-primary:not(:disabled):not(.disabled),
-.no-result-text .btn-outline-primary:not(:disabled):not(.disabled):active,
-section.skills-data .btn-outline-primary:not(:disabled):not(.disabled),
-section.skills-data .btn-outline-primary:not(:disabled):not(.disabled):active {
+.btn-outline-primary.btn-filter-apply input::before {
+    display: block;
+    visibility: visible;
+    content: '\a';
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    border: solid 1px #a3afbc;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+.btn-outline-primary.btn-filter-apply.active input::before {
+    display: block;
+    visibility: visible;
+    background: url(/assets/images/checkmark-dark.svg) no-repeat;
+    width: 16px;
+    height: 16px;
+    margin: -3px 0 0 0;
+    border: 0;
+}
+
+.btn-outline-primary.btn-filter-apply:not(:disabled):not(.disabled),
+.btn-outline-primary.btn-filter-apply:not(:disabled):not(.disabled):active {
+    height: 24px;
+    border-radius: 4px;
+    background-color: #e2e7ec;
+    border-color: #e2e7ec;
+    font-family: Gilroy;
+    font-size: 11px;
+    line-height: 11px;
+    letter-spacing: 1px;
+    color: #333333;
+    display: inline-flex;
+    flex-direction: row-reverse;
+    padding: .375rem;
+    text-transform: uppercase;
+    margin-right: 0.25rem;
+}
+
+.btn-outline-primary.btn-filter-apply.active:not(:disabled):not(.disabled) {
+    background-color: #ffcc00;
+    border-color: #ffcc00;
+}
+
+.btn-outline-primary.btn-outline-special:not(:disabled):not(.disabled),
+.btn-outline-primary.btn-outline-special:not(:disabled):not(.disabled):active {
     color: rgb(94, 88, 210);
     border-color: rgb(94, 88, 210);
     background-color: transparent;
@@ -571,16 +720,74 @@ section.skills-data .btn-outline-primary:not(:disabled):not(.disabled):active {
     margin-right: 0.25rem;
 }
 
-section.filter-panel .btn-outline-primary:not(:disabled):not(.disabled).active,
-section.skills-data .btn-outline-primary:not(:disabled):not(.disabled).active,
 .no-result-text .btn-outline-primary:not(:disabled):not(.disabled).active {
     color: white;
     border-color: rgb(94, 88, 210);
     background-color: rgb(94, 88, 210);
 }
 
-section.filter-paner .salary-input-wrapper {
+.btn-outline-primary.btn-skill-toggle:not(:disabled):not(.disabled),
+.btn-outline-primary.btn-skill-toggle:not(:disabled):not(.disabled):active,
+.btn-outline-primary.btn-with-plus:not(:disabled):not(.disabled),
+.btn-outline-primary.btn-with-plus:not(:disabled):not(.disabled):active {
+    height: 24px;
+    border-radius: 4px;
+    border: solid 1px #cfd7de;
+    background: transparent;
+    margin-right: 0.25rem;
+    font-family: Gilroy;
+    font-size: 11px;
+    line-height: 11px;
+    letter-spacing: 1px;
+    color: #333333;
+    padding: .375rem .375rem .375rem .75rem;
+}
 
+.btn-with-plus::before {
+    content: '\f067';
+    color: #6354d2;
+    font-family: Font Awesome\ 5 Free;
+    font-weight: 900;
+    margin-right: 5px;
+}
+
+.btn-outline-primary.btn-skill-toggle.active:not(:disabled):not(.disabled),
+.btn-outline-primary.btn-skill-toggle.active:not(:disabled):not(.disabled):active {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    border-radius: 4px;
+    border: solid 1px #ffcc00;
+    background-color: rgba(255, 204, 0, 0.1);
+    margin-right: 0.25rem;
+    font-family: Gilroy;
+    font-size: 11px;
+    line-height: 11px;
+    letter-spacing: 1px;
+    color: #333333;
+    padding: .375rem;
+}
+
+.btn-outline-primary.btn-skill-toggle.active::before {
+    display: inline-block;
+    content: "\a";
+    background: url(/assets/images/checkmark-yellow.svg) no-repeat;
+    width: 16px;
+    height: 16px;
+    margin: -3px 3px 0 0;
+    border: 0;
+}
+
+.btn-outline-primary.btn-skill-toggle.active .skill-strength {
+    margin-left: 3px;
+}
+
+.btn-outline-primary.btn-skill-toggle input {
+    display: none;
+}
+
+.skills-filter-text {
+    font-size: 0.8rem;
 }
 
 section.filter-panel .input-group {
@@ -623,5 +830,11 @@ section.favourite-panel .top-favourite-remove {
 @media (min-width: 768px) {
     .delete-skill-mobile {
         display: none!important;
+    }
+}
+
+@media (min-width: 1260px) {
+    .container {
+        max-width: 1240px;
     }
 }

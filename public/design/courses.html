@@ -4,22 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WG2XFBS');</script>
-    <!-- End Google Tag Manager -->
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113216929-1"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+        if (document.cookie.indexOf('user_is_admin=true') === -1) {
+            /* Google Tag Manager */
+            (function(w,d,s,l,i) {
+                w[l]=w[l]||[];w[l].push({'gtm.start':
+                        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-WG2XFBS');
 
-        gtag('config', 'UA-113216929-1');
+            /* Google Analytics */
+            let anScript = document.createElement('script');
+            let firstScript = document.getElementsByTagName('script')[0];
+            anScript.async = true;
+            anScript.src = 'https://www.googletagmanager.com/gtag/js?id=UA-113216929-1';
+            firstScript.parentNode.insertBefore(anScript,firstScript);
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-113216929-1');
+        }
     </script>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
@@ -27,41 +33,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/css/swiper.min.css">
     <link rel="stylesheet" href="/assets/design/base.css" type="text/css">
     <link rel="stylesheet" href="/assets/design/desktop-override.css" type="text/css">
+    <link rel="stylesheet" href="/assets/design/survey.css" type="text/css">
+
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="Жажда знаний: найди свой курс"/>
+    <meta property="og:image" content="/assets/images/banner_01.png"/>
 
     <title>Жажда знаний: найди свой курс</title>
 </head>
 <body>
 
-<div class="view-on-desktop d-none d-sm-block d-md-block pr-4 pl-4 pb-4 container">
-    <header class="d-flex align-items-center px-3 mb-3 ">
-        <a href="/"><img src="/assets/images/itcher.png" class="mr-2"></a>
-        <span class="flex-fill"></span>
-        <div class="dropdown dropleft">
-            <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bookmark"></i>
-                <span class="fav-count ml-2">0</span>
-            </button>
-            <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn"></div>
-            <div class="dropdown-backdrop"></div>
-        </div>
-    </header>
-    <div class="d-flex flex-row align-items-start">
-        <section class="skills-section p-4">
-            <section class="data">
+<div class="view-on-desktop d-none d-sm-block d-md-block">
+    <header class="">
+        <div class="container wide-container d-flex align-items-center px-3 mb-3">
+            <a href="/"><img src="/assets/images/itcher.png" class="mr-2"></a>
+            <section class="data flex-fill">
                 <div class="input-group">
                     <label class="request">
-                        Я
+                        &mdash;&nbsp;Я
                         <span class="dropdown">
-                            <a href="#" class="editable-toggle mr-1" id="professionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">новичок</a>
-                            <span class="dropdown-menu" aria-labelledby="professionMenuButton">
+                            <a href="#" class="editable-toggle mr-1" data-menu="profession" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">новичок</a>
+                            <span class="dropdown-menu">
                                 <a class="dropdown-item" href="#">новичок</a>
                                 <a class="dropdown-item profession-title" href="#">...</a>
                                 <a class="dropdown-item" href="#">специалист из другой области</a>
                             </span>
                         </span>
                         <span class="dropdown">
-                            <a href="#" class="editable-toggle work-experience-input-display" id="expMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">без опыта работы</a>
-                            <span class="dropdown-menu" aria-labelledby="expMenuButton">
+                            <a href="#" class="editable-toggle work-experience-input-display" data-menu="exp" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">без опыта работы</a>
+                            <span class="dropdown-menu">
                                 <a class="dropdown-item" href="#">без опыта работы</a>
                                 <a class="dropdown-item" href="#">с опытом работы до 3 лет</a>
                                 <a class="dropdown-item" href="#">с опытом работы 3 или более года</a>
@@ -69,8 +69,8 @@
                         </span>
                         хочу
                         <span class="dropdown">
-                            <a href="#" class="editable-toggle want-to-input" id="wantMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">стать <span class="profession-title-tp"></span></a>
-                            <span class="dropdown-menu" aria-labelledby="wantMenuButton">
+                            <a href="#" class="editable-toggle want-to-input" data-menu="want" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">стать <span class="profession-title-tp"></span></a>
+                            <span class="dropdown-menu">
                                 <a class="dropdown-item" href="#">стать <span class="profession-title-tp"></span></a>
                                 <a class="dropdown-item" href="#">начать с нуля</a>
                                 <a class="dropdown-item" href="#">продолжить обучение</a>
@@ -78,133 +78,213 @@
                                 <a class="dropdown-item" href="#">прокачать навык</a>
                             </span>
                         </span>
+                        <button class="btn btn-outline-info apply-request" style="display: none">Подобрать курсы</button>
                     </label>
-                    <button class="btn btn-outline-info apply-request" style="display: none">Применить</button>
                 </div>
             </section>
-            <section class="salary-data salary-input-wrapper mb-2">
-            </section>
-            <section class="skills-data input-group">
-                <label class="group-title-label filter-group-title-label mb-0">
-                    Программа обучения
-                </label>
-                <label class="group-title-label skill-group-title-label mb-0">
-                    Навыки для прокачки
-                </label>
-                <div class="skills-filter-text mb-4">
-                    на основе
-                    <span class="skills-input-display">...</span>
-                    с ЗП
-                    <span class="salary-input-display">...</span>
-                </div>
-
-                <div class="skills-input-wrapper">
-                    <div class="skills-input checkbox-group">
-                    </div>
-                    <span class="add-skill-wrapper form-inline d-inline-flex mt-2" style="display: none!important">
-                        <input class="form-control add-skill-input">
-                    </span>
-                    <button class="btn btn-outline-primary btn-add-skill">+</button>
-                </div>
-            </section>
-
-        </section>
-        <div class="flex-fill">
-            <section class="filter-panel">
-                <div class="d-flex flex-row flex-wrap margin-wrapper m-4">
-                    <div class="d-flex flex-row flex-wrap mr-4">
-                        <label class="d-inline mr-2 group-title-label">Формат курса</label>
-                        <label class="btn btn-outline-primary">Интерактивный <input type="checkbox" value="Интерактивный" name="format[]"></label>
-                        <label class="btn btn-outline-primary">Электронный учебник <input type="checkbox" value="Электронный учебник" name="format[]"></label>
-                        <label class="btn btn-outline-primary">Вебинар <input type="checkbox" value="Вебинар" name="format[]"></label>
-                        <label class="btn btn-outline-primary">Интенсив <input type="checkbox" value="Интенсив" name="format[]"></label>
-                        <label class="btn btn-outline-primary">Видеокурс <input type="checkbox" value="Видеокурс" name="format[]"></label>
-                    </div>
-
-                    <div class="d-flex flex-row flex-wrap mr-4">
-                        <label class="d-inline mr-2 group-title-label">Стоимость</label>
-                        <label class="btn btn-outline-primary">Бесплатный <input type="checkbox" value="0" name="price"></label>
-                        <label class="btn btn-outline-primary">Недорогой <input type="checkbox" value="1500" name="price"></label>
-                    </div>
-
-                    <div class="d-flex flex-row flex-wrap mr-4">
-                        <label class="d-inline mr-2 group-title-label">Практика</label>
-                        <label class="btn btn-outline-primary">Есть <input type="checkbox" value="1" name="hasPractice[]"></label>
-                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasPractice[]"></label>
-                    </div>
-
-                    <div class="d-flex flex-row flex-wrap mr-4">
-                        <label class="d-inline mr-2 group-title-label">Место проведения</label>
-                        <label class="btn btn-outline-primary">Онлайн <input type="checkbox" value="Онлайн" name="format[]"></label>
-                        <label class="btn btn-outline-primary">Вечерний <input type="checkbox" value="Вечерняя" name="format[]"></label>
-                    </div>
-
-
-                    <div class="d-flex flex-row more-group">
-                        <button class="btn btn-outline-primary" id="filter-more-button">+</button>
-                        <label class="more-label" for="filter-more-button">Больше</label>
-                    </div>
-
-                    <div class="d-flex flex-row flex-wrap mr-4">
-                        <label class="d-inline mr-2 group-title-label">Сертификат</label>
-                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="Нет" name="certificate[]"></label>
-                        <label class="btn btn-outline-primary">Собственный <input type="checkbox" value="Собственный" name="certificate[]"></label>
-                        <label class="btn btn-outline-primary">Гос. образца <input type="checkbox" value="Государственного образца" name="certificate[]"></label>
-                        <label class="btn btn-outline-primary">Международный <input type="checkbox" value="Международный" name="certificate[]"></label>
-                    </div>
-
-                    <div class="d-flex flex-row flex-wrap mr-4">
-                        <label class="d-inline mr-2 group-title-label">Обучение с преподавателем</label>
-                        <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="hasTeacher[]"></label>
-                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasTeacher[]"></label>
-                    </div>
-
-                    <div class="d-flex flex-row flex-wrap mr-4">
-                        <label class="d-inline mr-2 group-title-label">Оказание помощи в трудоустройстве</label>
-                        <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="jobPlacement[]"></label>
-                        <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="jobPlacement[]"></label>
-                    </div>
-
-                </div>
-            </section>
-            <main class="no-result-hide course-list px-4"></main>
-            <section class="no-result-show no-result-text p-4 d-flex flex-column" style="display: none!important">
-                <h2>Ой! Такого не нашлось</h2>
-                <p class="flex-fill">Курсов, подходящих по условиям из фильтра, сейчас нет.</p>
-            </section>
-
+            <div class="dropdown dropleft">
+                <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bookmark"></i>
+                    <span class="fav-count ml-2">0</span>
+                </button>
+                <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn"></div>
+                <div class="dropdown-backdrop"></div>
+            </div>
         </div>
+    </header>
+    <header class="scroll">
+        <div class="container wide-container d-flex align-items-center px-3">
+            <a class="logo-link" href="/"><img src="/assets/images/itcher-float.png" class="mr-2"></a>
+            <section class="data flex-fill">
+                <div class="input-group">
+                    <label class="request">
+                        &mdash;&nbsp;Я
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle mr-1" data-menu="profession" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">новичок</a>
+                            <span class="dropdown-menu">
+                                <a class="dropdown-item" href="#">новичок</a>
+                                <a class="dropdown-item profession-title" href="#">...</a>
+                                <a class="dropdown-item" href="#">специалист из другой области</a>
+                            </span>
+                        </span>
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle work-experience-input-display" data-menu="exp" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">без опыта работы</a>
+                            <span class="dropdown-menu">
+                                <a class="dropdown-item" href="#">без опыта работы</a>
+                                <a class="dropdown-item" href="#">с опытом работы до 3 лет</a>
+                                <a class="dropdown-item" href="#">с опытом работы 3 или более года</a>
+                            </span>
+                        </span>
+                        хочу
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle want-to-input" data-menu="want" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">стать <span class="profession-title-tp"></span></a>
+                            <span class="dropdown-menu">
+                                <a class="dropdown-item" href="#">стать <span class="profession-title-tp"></span></a>
+                                <a class="dropdown-item" href="#">начать с нуля</a>
+                                <a class="dropdown-item" href="#">продолжить обучение</a>
+                                <a class="dropdown-item" href="#">повысить квалификацию</a>
+                                <a class="dropdown-item" href="#">прокачать навык</a>
+                            </span>
+                        </span>
+                        <button class="btn btn-outline-info apply-request" style="display: none">Подобрать курсы</button>
+                    </label>
+                </div>
+            </section>
+            <div class="dropdown dropleft">
+                <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bookmark"></i>
+                    <span class="fav-count ml-2">0</span>
+                </button>
+                <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn"></div>
+                <div class="dropdown-backdrop"></div>
+            </div>
+        </div>
+    </header>
+    <div class="pr-4 pl-4 pb-4">
+        <div class="container wide-container d-flex flex-row align-items-start">
+            <section class="skills-section pr-4 pl-4 pb-4">
+                <section class="avatar d-flex flex-column align-items-center mb-4">
+                    <img src="/assets/images/avatar.svg" class="auth-trigger">
+                    <a href="#" class="auth-trigger user-name">Неопознанный Итчер</a>
+                </section>
+                <section class="existing-skills-data input-group mb-4">
+                    <label class="group-title-label filter-group-title-label mb-0">
+                        Мои профессиональные навыки
+                    </label>
+                    <div class="skills-filter-text mb-3">
+                        фильтруют курсы по требованиям к знаниям
+                    </div>
+
+                    <div class="skills-input-wrapper">
+                        <div class="existing-skills-input checkbox-group">
+                        </div>
+                        <span class="add-skill-wrapper form-inline d-inline-flex mt-2" style="display: none!important">
+                            <input class="form-control add-skill-input add-existing-skill-input">
+                        </span>
+                        <button class="btn btn-outline-primary btn-with-plus btn-add-existing-skill">Добавить навык</button>
+                    </div>
+                </section>
+                <section class="salary-data salary-input-wrapper mb-2 block-hidden">
+                </section>
+                <section class="skills-data input-group">
+                    <label class="group-title-label skills-filter-text filter-group-title-label mb-0">
+                        Недостающие проф. навыки на основе
+                        <span class="skills-input-display editable-toggle">...</span>
+                        с ЗП
+                        <span class="salary-input-display editable-toggle">...</span>
+                    </label>
+                    <div class="skills-filter-text mb-3">
+                        фильтруют по содержанию курсов
+                    </div>
+
+                    <div class="skills-input-wrapper">
+                        <div class="skills-input checkbox-group">
+                        </div>
+                        <span class="add-skill-wrapper form-inline d-inline-flex mt-2" style="display: none!important">
+                            <input class="form-control add-skill-input">
+                        </span>
+                        <button class="btn btn-outline-primary btn-with-plus btn-add-skill">Добавить навык</button>
+                    </div>
+                </section>
+            </section>
+            <div class="flex-fill">
+                <section class="filter-panel">
+                    <div class="d-flex flex-row flex-wrap margin-wrapper m-4">
+                        <div class="d-flex flex-row flex-wrap mr-4">
+                            <label class="d-inline mr-2 group-title-label">Формат курса</label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Интерактивный <input type="checkbox" value="Интерактивный" name="format[]"></label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Электронный учебник <input type="checkbox" value="Электронный учебник" name="format[]"></label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Вебинар <input type="checkbox" value="Вебинар" name="format[]"></label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Интенсив <input type="checkbox" value="Интенсив" name="format[]"></label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Видеокурс <input type="checkbox" value="Видеокурс" name="format[]"></label>
+                        </div>
+
+                        <div class="d-flex flex-row flex-wrap mr-4">
+                            <label class="d-inline mr-2 group-title-label">Стоимость</label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Бесплатный <input type="checkbox" value="0" name="price"></label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Недорогой <input type="checkbox" value="1500" name="price"></label>
+                        </div>
+
+                        <div class="d-flex flex-row flex-wrap mr-4">
+                            <label class="d-inline mr-2 group-title-label">Практика</label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Есть <input type="checkbox" value="1" name="hasPractice[]"></label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Нет <input type="checkbox" value="0" name="hasPractice[]"></label>
+                        </div>
+
+                        <div class="d-flex flex-row flex-wrap mr-4">
+                            <label class="d-inline mr-2 group-title-label">Место проведения</label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Онлайн <input type="checkbox" value="Онлайн" name="format[]"></label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Вечерний <input type="checkbox" value="Вечерняя" name="format[]"></label>
+                        </div>
+
+
+                        <div class="d-flex flex-row more-group">
+                            <label class="more-label" for="filter-more-button">Еще фильтры</label>
+                        </div>
+
+                        <div class="d-flex flex-row flex-wrap mr-4">
+                            <label class="d-inline mr-2 group-title-label">Сертификат</label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Нет <input type="checkbox" value="Нет" name="certificate[]"></label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Собственный <input type="checkbox" value="Собственный" name="certificate[]"></label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Гос. образца <input type="checkbox" value="Государственного образца" name="certificate[]"></label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Международный <input type="checkbox" value="Международный" name="certificate[]"></label>
+                        </div>
+
+                        <div class="d-flex flex-row flex-wrap mr-4">
+                            <label class="d-inline mr-2 group-title-label">Обучение с преподавателем</label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Да <input type="checkbox" value="1" name="hasTeacher[]"></label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Нет <input type="checkbox" value="0" name="hasTeacher[]"></label>
+                        </div>
+
+                        <div class="d-flex flex-row flex-wrap mr-4">
+                            <label class="d-inline mr-2 group-title-label">Оказание помощи в трудоустройстве</label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Да <input type="checkbox" value="1" name="jobPlacement[]"></label>
+                            <label class="btn btn-outline-primary btn-filter-apply">Нет <input type="checkbox" value="0" name="jobPlacement[]"></label>
+                        </div>
+
+                    </div>
+                </section>
+                <main class="no-result-hide course-list px-4"></main>
+                <section class="no-result-show no-result-text p-4 d-flex flex-column" style="display: none!important">
+                    <h2>Ой! Такого не нашлось</h2>
+                    <p class="flex-fill">Курсов, подходящих по условиям из фильтра, сейчас нет.</p>
+                </section>
+
+            </div>
+        </div>
+        <footer></footer>
     </div>
-    <footer></footer>
 </div>
 
 <div class="view-on-mobile d-block d-sm-none d-md-none">
-    <header class="d-flex flex-row justify-content-between align-items-start card p-4 top-drawer">
-        <div class="d-flex flex-row h-100 ">
-            <section class="data d-flex flex-column align-items-start h-100 flex-fill mr-2">
-                <div class="input-group">
-                    <label class="request">
-                        Я
-                        <span class="dropdown">
-                                <a href="#" class="editable-toggle mr-1" id="professionMenuButtonM" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">новичок</a>
-                                <span class="dropdown-menu" aria-labelledby="professionMenuButtonM">
-                                    <a class="dropdown-item" href="#">новичок</a>
-                                    <a class="dropdown-item profession-title" href="#">...</a>
-                                    <a class="dropdown-item" href="#">специалист из другой области</a>
+    <header class="avatar d-flex flex-column card p-4 top-drawer">
+        <h5><a href="#" class="auth-trigger user-name">Неопознанный Итчер</a></h5>
+        <div class="d-flex flex-row justify-content-between align-items-start">
+            <div class="d-flex flex-row h-100 ">
+                <section class="data d-flex flex-column align-items-start h-100 flex-fill mr-2">
+                    <div class="input-group">
+                        <label class="request">
+                            &mdash;&nbsp;Я
+                            <span class="dropdown">
+                                    <a href="#" class="editable-toggle mr-1" data-menu="profession" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">новичок</a>
+                                    <span class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">новичок</a>
+                                        <a class="dropdown-item profession-title" href="#">...</a>
+                                        <a class="dropdown-item" href="#">специалист из другой области</a>
+                                    </span>
                                 </span>
-                            </span>
-                        <span class="dropdown">
-                                <a href="#" class="editable-toggle work-experience-input-display" id="expMenuButtonM" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">без опыта работы</a>
-                                <span class="dropdown-menu" aria-labelledby="expMenuButtonM">
-                                    <a class="dropdown-item" href="#">без опыта работы</a>
-                                    <a class="dropdown-item" href="#">с опытом работы до 3 лет</a>
-                                    <a class="dropdown-item" href="#">с опытом работы 3 или более года</a>
+                            <span class="dropdown">
+                                    <a href="#" class="editable-toggle work-experience-input-display" data-menu="exp" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">без опыта работы</a>
+                                    <span class="dropdown-menu" >
+                                        <a class="dropdown-item" href="#">без опыта работы</a>
+                                        <a class="dropdown-item" href="#">с опытом работы до 3 лет</a>
+                                        <a class="dropdown-item" href="#">с опытом работы 3 или более года</a>
+                                    </span>
                                 </span>
-                            </span>
-                        хочу
-                        <span class="dropdown">
-                                <a href="#" class="editable-toggle want-to-input" id="wantMenuButtonM" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">стать <span class="profession-title-tp"></span></a>
-                                <span class="dropdown-menu" aria-labelledby="wantMenuButtonM">
+                            хочу
+                            <span class="dropdown">
+                                <a href="#" class="editable-toggle want-to-input" data-menu="want" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">стать <span class="profession-title-tp"></span></a>
+                                <span class="dropdown-menu">
                                     <a class="dropdown-item" href="#">стать <span class="profession-title-tp"></span></a>
                                     <a class="dropdown-item" href="#">начать с нуля</a>
                                     <a class="dropdown-item" href="#">продолжить обучение</a>
@@ -212,23 +292,23 @@
                                     <a class="dropdown-item" href="#">прокачать навык</a>
                                 </span>
                             </span>
-                    </label>
-                    <button class="btn btn-outline-info apply-request mt-2" style="display: none">Применить</button>
-                </div>
+                            <button class="btn btn-outline-info apply-request mt-2" style="display: none">Подобрать курсы</button>
+                        </label>
+                    </div>
 
-                <button class="btn btn-outline-info btn-block mt-4 btn-choose-skills">Выбрать навыки</button>
+                    <button class="btn btn-outline-info btn-block mt-4 btn-choose-skills">Выбрать навыки</button>
 
-                <div class="input-group salary-input-group">
-                    <label class="">Желаемая зарплата:</label>
-                    <a href="#" class="editable-toggle salary-input-display">...</a>
-                </div>
-
-                <div class="salary-input-wrapper">
-                </div>
-            </section>
-            <section class="logo">
-                <a href="/"><img src="/assets/images/itcher_02.png"></a>
-            </section>
+                    <div class="input-group salary-input-group">
+                        <label class="">Желаемая зарплата:</label>
+                        <a href="#" class="editable-toggle salary-input-display">...</a>
+                    </div>
+                </section>
+                <section class="logo">
+                    <img src="/assets/images/avatar.svg" class="auth-trigger">
+                </section>
+            </div>
+        </div>
+        <div class="salary-input-wrapper">
         </div>
         <div class="profile-handle"></div>
     </header>
@@ -247,7 +327,7 @@
         <section class="no-result-show no-result-text p-4 d-flex flex-column" style="display: none!important">
             <h2>Ой! Такого не нашлось</h2>
             <p class="flex-fill">Курсов, подходящих по условиям из фильтра, сейчас нет.</p>
-            <button class="btn btn-outline-primary apply-btn">
+            <button class="btn btn-outline-primary btn-outline-special apply-btn">
                 Изменить фильтр
             </button>
         </section>
@@ -259,8 +339,68 @@
             <span class="fav-count ml-2">0</span>
         </button>
         <div class="divisor"></div>
+        <button class="btn btn-skills flex-fill"><i class="fas fa-graduation-cap"></i></button>
+        <div class="divisor"></div>
         <button class="btn btn-filter flex-fill"><i class="fas fa-sliders-h"></i></button>
     </footer>
+    <section class="skills-panel sliding-panel">
+        <div class="margin-wrapper m-4">
+            <div class="flex-row d-flex align-items-center justify-content-center mb-4 section-title">
+                <label class="flex-fill text-center mb-0">Навыки</label>
+                <a class="close-panel-btn" href="#">&times;</a>
+            </div>
+
+            <div class="existing-skills-data input-group mb-4">
+                <label class="group-title-label filter-group-title-label mb-0">
+                    Мои профессиональные навыки
+                </label>
+                <div class="skills-filter-text mb-3">
+                    фильтруют курсы по требованиям к знаниям
+                </div>
+
+                <div class="skills-input-wrapper">
+                    <div class="existing-skills-input checkbox-group">
+                    </div>
+                    <span class="add-skill-wrapper form-inline d-inline-flex mt-2" style="display: none!important">
+                            <input class="form-control add-skill-input add-existing-skill-input">
+                        </span>
+                    <button class="btn btn-outline-primary btn-with-plus btn-add-existing-skill">Добавить навык</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="salary-input-wrapper block-hidden">
+                </div>
+            </div>
+
+            <div class="input-group mb-4">
+                <label class="group-title-label filter-group-title-label">
+                    Недостающие проф. навыки на основе
+                    <span class="skills-input-display editable-toggle">...</span>
+                    с ЗП
+                    <span class="salary-input-display editable-toggle">...</span>
+                </label>
+                <label class="group-title-label skill-group-title-label mb-0">
+                    Навыки для прокачки
+                </label>
+
+                <div class="skills-input-wrapper w-100">
+                    <div class="skills-input checkbox-group">
+                    </div>
+                    <span class="add-skill-wrapper form-inline d-inline-flex mt-2" style="display: none!important">
+                            <input class="form-control add-skill-input">
+                        </span>
+                    <button class="btn btn-outline-primary btn-with-plus btn-add-skill">Добавить навык</button>
+                </div>
+            </div>
+
+            <div class="d-flex flex-row justify-content-center mb-4 p-2">
+                <button class="btn btn-outline-primary btn-outline-special flex-fill d-flex align-items-center justify-content-center apply-btn">
+                    Применить
+                </button>
+            </div>
+        </div>
+    </section>
     <section class="filter-panel sliding-panel">
         <div class="margin-wrapper m-4">
             <div class="flex-row d-flex align-items-center justify-content-center mb-4 section-title">
@@ -269,86 +409,63 @@
             </div>
 
             <div class="input-group">
-                <label class="group-title-label filter-group-title-label">
-                    Программа обучения на основе
-                    <span class="skills-input-display">...</span>
-                    с ЗП
-                    <span class="salary-input-display">...</span>
-                </label>
-                <label class="group-title-label skill-group-title-label mb-0">
-                    Навыки для прокачки
-                </label>
-                <div class="salary-input-wrapper">
-                </div>
-
-                <div class="skills-input-wrapper w-100">
-                    <div class="skills-input checkbox-group">
-                    </div>
-                    <span class="add-skill-wrapper form-inline d-inline-flex mt-2" style="display: none!important">
-                        <input class="form-control add-skill-input">
-                    </span>
-                    <button class="btn btn-outline-primary btn-add-skill">+</button>
-                </div>
-            </div>
-
-            <div class="input-group">
                 <label class="group-title-label">Стоимость</label>
                 <div class="checkbox-group">
-                    <label class="btn btn-outline-primary">Бесплатный <input type="checkbox" value="0" name="price"></label>
-                    <label class="btn btn-outline-primary">Недорогой <input type="checkbox" value="1500" name="price"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Бесплатный <input type="checkbox" value="0" name="price"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Недорогой <input type="checkbox" value="1500" name="price"></label>
                 </div>
             </div>
 
             <div class="input-group">
                 <label class="group-title-label">Формат курса</label>
                 <div class="checkbox-group">
-                    <label class="btn btn-outline-primary">Интерактивный <input type="checkbox" value="Интерактивный" name="format[]"></label>
-                    <label class="btn btn-outline-primary">Электронный учебник <input type="checkbox" value="Электронный учебник" name="format[]"></label>
-                    <label class="btn btn-outline-primary">Вебинар <input type="checkbox" value="Вебинар" name="format[]"></label>
-                    <label class="btn btn-outline-primary">Интенсив <input type="checkbox" value="Интенсив" name="format[]"></label>
-                    <label class="btn btn-outline-primary">Видеокурс <input type="checkbox" value="Видеокурс" name="format[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Интерактивный <input type="checkbox" value="Интерактивный" name="format[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Электронный учебник <input type="checkbox" value="Электронный учебник" name="format[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Вебинар <input type="checkbox" value="Вебинар" name="format[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Интенсив <input type="checkbox" value="Интенсив" name="format[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Видеокурс <input type="checkbox" value="Видеокурс" name="format[]"></label>
 
-                    <label class="btn btn-outline-primary">Онлайн <input type="checkbox" value="Онлайн" name="format[]"></label>
-                    <label class="btn btn-outline-primary">Вечерний <input type="checkbox" value="Вечерняя" name="format[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Онлайн <input type="checkbox" value="Онлайн" name="format[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Вечерний <input type="checkbox" value="Вечерняя" name="format[]"></label>
                 </div>
             </div>
 
             <div class="input-group">
                 <label class="group-title-label">Сертификат</label>
                 <div class="checkbox-group">
-                    <label class="btn btn-outline-primary">Нет <input type="checkbox" value="Нет" name="certificate[]"></label>
-                    <label class="btn btn-outline-primary">Собственный <input type="checkbox" value="Собственный" name="certificate[]"></label>
-                    <label class="btn btn-outline-primary">Гос. образца <input type="checkbox" value="Государственного образца" name="certificate[]"></label>
-                    <label class="btn btn-outline-primary">Международный <input type="checkbox" value="Международный" name="certificate[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Нет <input type="checkbox" value="Нет" name="certificate[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Собственный <input type="checkbox" value="Собственный" name="certificate[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Гос. образца <input type="checkbox" value="Государственного образца" name="certificate[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Международный <input type="checkbox" value="Международный" name="certificate[]"></label>
                 </div>
             </div>
 
             <div class="input-group">
                 <label class="group-title-label">Практика</label>
                 <div class="checkbox-group">
-                    <label class="btn btn-outline-primary">Есть <input type="checkbox" value="1" name="hasPractice[]"></label>
-                    <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasPractice[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Есть <input type="checkbox" value="1" name="hasPractice[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Нет <input type="checkbox" value="0" name="hasPractice[]"></label>
                 </div>
             </div>
 
             <div class="input-group">
                 <label class="group-title-label">Обучение с преподавателем</label>
                 <div class="checkbox-group">
-                    <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="hasTeacher[]"></label>
-                    <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="hasTeacher[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Да <input type="checkbox" value="1" name="hasTeacher[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Нет <input type="checkbox" value="0" name="hasTeacher[]"></label>
                 </div>
             </div>
 
             <div class="input-group">
                 <label class="group-title-label">Оказание помощи в трудоустройстве</label>
                 <div class="checkbox-group">
-                    <label class="btn btn-outline-primary">Да <input type="checkbox" value="1" name="jobPlacement[]"></label>
-                    <label class="btn btn-outline-primary">Нет <input type="checkbox" value="0" name="jobPlacement[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Да <input type="checkbox" value="1" name="jobPlacement[]"></label>
+                    <label class="btn btn-outline-primary btn-filter-apply">Нет <input type="checkbox" value="0" name="jobPlacement[]"></label>
                 </div>
             </div>
 
             <div class="d-flex flex-row justify-content-center mb-4 p-2">
-                <button class="btn btn-outline-primary flex-fill d-flex align-items-center justify-content-center apply-btn">
+                <button class="btn btn-outline-primary btn-outline-special flex-fill d-flex align-items-center justify-content-center apply-btn">
                     Применить
                 </button>
             </div>
@@ -368,6 +485,27 @@
     </section>
 </div>
 
+<div class="modal fade" id="surveyModal" tabindex="-1" role="dialog" aria-labelledby="surveyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="surveyModalLabel">Отзыв о курсе</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0 survey-data">
+                <div class="d-flex flex-column align-items-center text-center">
+                    <img src="/assets/images/avatar_facebook.png" class="auth-trigger itcher-avatar mt-4 mb-4">
+                    <button class="btn btn-outline-info auth-trigger mt-4">Пожалуйста, представьтесь</button>
+                    <p>Мы переживаем за качество отзывов</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
@@ -376,14 +514,19 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/js/swiper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/interactjs@1.3.4/dist/interact.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.1/svg.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script src="https://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
+<script src="https://cdn.auth0.com/js/auth0/9.10/auth0.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase.js"></script>
+<script src="https://surveyjs.azureedge.net/1.0.89/survey.jquery.min.js"></script>
 <script src="/assets/courseFunctions.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/share.js"></script>
+<script src="/assets/js/firebase.js"></script>
+<script src="/assets/js/feedback.js"></script>
 <script src="/design/histogramInput.js"></script>
 
 <!-- BEGIN JIVOSITE CODE {literal} -->
@@ -400,124 +543,16 @@
 <script>
     let currentCourses = false;
 
-    function getSkillFilterHTML(skillName, level, rate, isUserAdded) {
-        let isChecked = rate >= 35;
-        let inputTemplate = getInputTemplate();
-
-        if (inputTemplate === 'novice-continue' || inputTemplate === 'other-novice-continue') {
-            isChecked = rate >= 35 && rate <= 80;
-        }
-
-        if (inputTemplate === 'middle-continue') {
-            isChecked = rate >= 15 && rate <= 70;
-        }
-
-        if (inputTemplate === 'senior-continue') {
-            isChecked = rate <= 70;
-        }
-
-        if (inputTemplate === 'skill') {
-            isChecked = false;
-        }
-
+    function getSkillFilterHTML(skillName, level, rate, isChecked, isUserAdded) {
         if (isUserAdded) {
             isChecked = true;
         }
 
-        return `<label class="btn btn-outline-primary skill ${isUserAdded ? 'user-added' : 'system-added'} ${ isChecked ? "active" : ""}" data-rate="${rate}">
+        return `<label class="btn btn-outline-primary btn-skill-toggle skill ${isUserAdded ? 'user-added' : 'system-added'} ${ isChecked ? "active" : ""}" data-rate="${rate}">
                 ${skillName}
                 <span class="skill-strength level${level}"><span></span><span></span><span></span><span></span></span>
                 <input type="checkbox" name="skills[${skillName}]" value="${level}" ${ isChecked ? "checked=\"checked\"" : ""}>
             </label>`;
-    }
-
-    function getSkillHTML(skillName, level) {
-        return `<span class="skill">
-                ${skillName}
-                <span class="skill-strength level${level}"><span></span><span></span><span></span><span></span></span>
-            </span>`;
-    }
-
-    function getSkillsHTML(skills) {
-        return Object.keys(skills).map(function (skillName, index) {
-            let level = skills[skillName];
-            return getSkillHTML(skillName, level);
-        }).join("\n");
-    }
-
-    function getProfessionCodeFromUrl() {
-        let professionCode = getParameterByName('professionCode');
-
-        if (!professionCode) {
-            professionCode = location.pathname.split('/')[1];
-        }
-
-        return professionCode || 'qa-tester';
-    }
-
-    function getCurrentProfessionName(pageCode, useTvPadezh) {
-        if (!pageCode) {
-            pageCode = getProfessionCodeFromUrl();
-        }
-
-        let professionNames = {
-            'php-developer': 'разработчик PHP',
-            'hr-manager': 'HR менеджер',
-            'pr-specialist': 'PR специалист',
-            'python-developer': 'разработчик Python',
-            'golang-developer': 'разработчик Golang',
-            'javascript-developer': 'разработчик JavaScript',
-            'ui-ux-designer': 'UI/UX дизайнер',
-            'ios-developer': 'разработчик iOS',
-            'android-developer': 'разработчик Android',
-            'internet-marketologist': 'интернет-маркетолог',
-            'qa-tester': 'тестировщик',
-            'devops': 'DevOps специалист',
-            'data-scientist': 'Data Scientist',
-            'game-designer': 'гейм-дизайнер',
-            'project-manager': 'менеджер интернет-проектов',
-            'game-artist-2d': 'игровой художник 2D',
-            'game-artist-3d': 'игровой художник 3D'
-        };
-        let professionNamesTP = {
-            'php-developer': 'разработчиком PHP',
-            'hr-manager': 'HR менеджером',
-            'pr-specialist': 'PR специалистом',
-            'python-developer': 'разработчиком Python',
-            'golang-developer': 'разработчиком Golang',
-            'javascript-developer': 'разработчиком JavaScript',
-            'ui-ux-designer': 'UI/UX дизайнером',
-            'ios-developer': 'разработчиком iOS',
-            'android-developer': 'разработчиком Android',
-            'internet-marketologist': 'интернет-маркетологом',
-            'qa-tester': 'тестировщиком',
-            'devops': 'DevOps специалистом',
-            'data-scientist': 'Data Scientist`ом',
-            'game-designer': 'гейм-дизайнером',
-            'project-manager': 'менеджером интернет-проектов',
-            'game-artist-2d': 'игровым художником 2D',
-            'game-artist-3d': 'игровым художником 3D'
-        };
-
-        return useTvPadezh
-            ? professionNamesTP[pageCode] || false
-            : professionNames[pageCode] || false;
-    }
-
-    function splitLongText(text, wordLimit) {
-        if (!wordLimit) {
-            wordLimit = 25;
-        }
-
-        let words = text.split(" ");
-        let visible = text;
-        let hidden = false;
-        if (words.length > wordLimit) {
-            visible = words.slice(0, wordLimit).join(" ");
-            hidden = words.slice(wordLimit).join(" ");
-        }
-
-        return [visible, hidden];
     }
 
     function getMobileCourseHTML(course) {
@@ -530,8 +565,9 @@
 
         return `<div class="swiper-slide card course-card ${course.hasPartnerUrl ? 'take-a-look' : ''}">
                 <div class="card-body" data-id="${course.id}">
-                    <div class="d-flex flex-row course-card-header">
-                        <h6 class="text-muted flex-fill">от <a href="${course.url}">${course.platform}</a></h6>
+                    <div class="d-flex flex-row align-items-center course-card-header">
+                        <span class="badge badge-course-info mr-2">Курс</span>
+                        <h6 class="text-muted flex-fill mb-0">от <a href="${course.url}">${course.platform}</a></h6>
                         <a href="#" class="top-favourite-add">
                             <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
                         </a>
@@ -539,17 +575,17 @@
                     <h5>${course.title}</h5>
 
                     <p class="mt-0 mb-0 price">${getCoursePriceText(course.price)}</p>
-                    <p class="mt-0 text-muted">${getHumanReadableTime(course)}</p>
+                    <p class="mt-0 text-muted">${getCourseTime(course)} &asymp; ${getHumanReadableTime(course)}</p>
 
                     <p class="mt-1 text-info">${getCourseAttributesHTML(course)}</p>
 
                     ${searchedSkillsHTML
                         ? (
-                            '<label class="mt-1 mb-0">Программа курса</label><p>' + searchedSkillsHTML +
+                            '<label class="mt-1 mb-0">По окончании будете уметь</label><p>' + searchedSkillsHTML +
                             (additionalSkillsHTML ? '<a href="#" class="continue-toggle">Показать все</a><span class="continue" style="display: none">' + additionalSkillsHTML + '</span>' : '') +
                             '</p>'
                         )
-                        : '<label class="mt-1 mb-0">Программа курса</label><p>' + allSkillsHTML + '</p>'
+                        : '<label class="mt-1 mb-0">По окончании будете уметь</label><p>' + allSkillsHTML + '</p>'
                     }
 
                     ${requirementsHTML ? '<label class="mt-1 mb-0">Нужно знать</label><p>' + requirementsHTML + '</p>' : ''}
@@ -562,7 +598,7 @@
                             '<span class="continue" style="display: none">' + description[1] + '</span>'
                             : ''}
                     </p>
-                    <a href="${course.url}" target="_blank" class="details-link" data-course-id="${course.id}">Подробнее на сайте курса</a>
+                    <a href="${getCoursePageUrl(course)}" target="_blank" class="details-link" data-course-id="${course.id}">Подробнее на странице курса</a>
 
                     <div class="course-buttons flex-fill d-flex flex-row mt-4">
                         <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2" data-course-id="${course.id}">
@@ -571,10 +607,19 @@
                         <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2 ${isFavourited ? 'active' : ''}" ${isFavourited ? 'disabled="disabled"' : '' }>
                             <i class="${isFavourited ? 'fas fa-check' : 'far fa-bookmark'}"></i>
                         </button>
-                        <a href="${getCoursePageUrl(course)}" target="_blank" class="btn btn-outline-info btn-share mr-2" data-course-id="${course.id}">
+                            <button class="btn btn-outline-info btn-feedback mr-2" data-toggle="modal" data-target="#surveyModal">
+                                <i class="far fa-comment"></i>
+                            </button>
+                        <button class="btn btn-outline-info btn-share mr-2" data-course-id="${course.id}">
                             <i class="fas fa-share-alt"></i>
-                            <!--i class="fas fa-link"></i-->
-                        </a>
+                            <ul class="share-menu dropdown-menu">
+                                <li class="dropdown-item"><a href="#" data-social="vkontakte">Вконтакте</a></li>
+                                <li class="dropdown-item"><a href="#" data-social="facebook">Facebook</a></li>
+                                <li class="dropdown-item"><a href="#" data-social="twitter">Twitter</a></li>
+                                <li class="dropdown-item"><a href="#" data-social="whatsapp">WhatsApp</a></li>
+                                <li class="dropdown-item"><a href="#" data-social="telegram">Telegram</a></li>
+                            </ul>
+                        </button>
                     </div>
                 </div>
             </div>`;
@@ -588,25 +633,29 @@
         let requirementsHTML = course.requirements ? getSkillsHTML(course.requirements) : false;
         let isFavourited = isInBackpack(course.id);
 
-        return `<div class="card course-card ${course.hasPartnerUrl ? 'take-a-look' : ''}">
+        return `
+            <div class="card course-card ${course.hasPartnerUrl ? 'take-a-look' : ''}">
                 <div class="card-body" data-id="${course.id}">
-                    <div class="d-flex flex-row justify-content-end course-card-header">
-                        <h6 class="text-muted">от <a href="${course.url}">${course.platform}</a></h6>
-                        <a href="#" class="top-favourite-add">
-                            <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
-                        </a>
+                    <div class="d-flex flex-row justify-content-between align-items-start">
+                        <span class="badge badge-course-info">Курс</span>
+                        <div class="d-flex flex-row justify-content-end course-card-header">
+                            <h6 class="text-muted">от <a href="${course.url}">${course.platform}</a></h6>
+                            <a href="#" class="top-favourite-add">
+                                <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
+                            </a>
+                        </div>
                     </div>
                     <h5>${course.title}</h5>
-
+                    <p class="mt-1">${getCourseTime(course)} &asymp; ${getHumanReadableTime(course)}</p>
                     <p class="mt-1 text-info">${getCourseAttributesHTML(course)}</p>
 
                     ${searchedSkillsHTML
                             ? (
-                                '<label class="mt-1 mb-0">Программа курса</label><p>' + searchedSkillsHTML +
+                                '<label class="mt-1 mb-0">По окончании будете уметь</label><p>' + searchedSkillsHTML +
                                 (additionalSkillsHTML ? '<a href="#" class="continue-toggle">Показать все</a><span class="continue" style="display: none">' + additionalSkillsHTML + '</span>' : '') +
                                 '</p>'
                             )
-                            : '<label class="mt-1 mb-0">Программа курса</label><p>' + allSkillsHTML + '</p>'
+                            : '<label class="mt-1 mb-0">По окончании будете уметь</label><p>' + allSkillsHTML + '</p>'
                             }
 
                     ${requirementsHTML ? '<label class="mt-1 mb-0">Нужно знать</label><p>' + requirementsHTML + '</p>' : ''}
@@ -620,49 +669,36 @@
                             : ''
                         }
                     </p>
-                    <a href="${course.url}" target="_blank" class="details-link" data-course-id="${course.id}">Подробнее на сайте курса</a>
+                    <a href="${getCoursePageUrl(course)}" target="_blank" class="details-link" data-course-id="${course.id}">Подробнее на странице курса</a>
 
-                    <div class="d-flex flex-row align-items-start justify-content-stretch mt-4">
-                        <div class="price-duration-data flex-fill">
+                    <div class="row mt-4">
+                        <div class="col price-duration-data">
                             <p class="mt-0 mb-0 price">${getCoursePriceText(course.price)}</p>
-                            <p class="mt-0">${getHumanReadableTime(course)}</p>
                         </div>
-                        <div class="course-buttons flex-fill d-flex flex-row mt-1">
+                        <div class="col course-buttons d-flex flex-row mt-1">
                             <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2 ${isFavourited ? 'active' : ''}" ${isFavourited ? 'disabled="disabled"' : '' }>
                                 <i class="${isFavourited ? 'fas fa-check' : 'far fa-bookmark'}"></i>
                             </button>
-                            <a href="${getCoursePageUrl(course)}" target="_blank" class="btn btn-outline-info btn-share mr-2" data-course-id="${course.id}">
+                            <button class="btn btn-outline-info btn-feedback mr-2" data-toggle="modal" data-target="#surveyModal">
+                                <i class="far fa-comment"></i>
+                            </button>
+                            <button class="btn btn-outline-info btn-share mr-2" data-course-id="${course.id}" id="share${course.id}">
                                 <i class="fas fa-share-alt"></i>
-                                <!--i class="fas fa-link"></i-->
-                            </a>
-                            <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2" data-course-id="${course.id}">
+                                <ul class="share-menu dropdown-menu" aria-labelledby="share${course.id}">
+                                    <li class="dropdown-item"><a href="#" data-social="vkontakte">Вконтакте</a></li>
+                                    <li class="dropdown-item"><a href="#" data-social="facebook">Facebook</a></li>
+                                    <li class="dropdown-item"><a href="#" data-social="twitter">Twitter</a></li>
+                                    <li class="dropdown-item"><a href="#" data-social="whatsapp">WhatsApp</a></li>
+                                    <li class="dropdown-item"><a href="#" data-social="telegram">Telegram</a></li>
+                                </ul>
+                            </button>
+                            <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill btn-link mr-2" data-course-id="${course.id}">
                                 Записаться
                             </a>
                         </div>
                     </div>
                 </div>
             </div>`;
-    }
-
-    function getCourseFavouriteHTML(course) {
-        return `<div class="card course-card">
-                <div class="card-body" data-id="${course.id}">
-                    <div class="d-flex flex-row course-card-header">
-                        <h6 class="text-muted flex-fill">от <a href="${course.url}">${course.platform}</a></h6>
-                        <a href="#" class="top-favourite-remove"><i class="fas fa-trash"></i></a>
-                    </div>
-                    <h5>${course.title}</h5>
-
-                    <p class="mt-0 mb-0 price">${getCoursePriceText(course.price)}</p>
-                    <p class="mt-0 text-muted">${getHumanReadableTime(course)}</p>
-
-                <p class="mt-1 text-info">${getCourseAttributesHTML(course)}</p>
-
-                <a href="${course.url}" target="_blank" class="btn btn-outline-info btn-block btn-link" data-course-id="${course.id}">
-                    Сайт курса
-                </a>
-            </div>
-        </div>`;
     }
 
     function initSlider() {
@@ -693,18 +729,18 @@
     }
 
     function hideSkillAdd(inputEl) {
-        let inputTemplate = getInputTemplate();
+        let inputTemplate = getInputTemplateCode();
         if (inputTemplate !== 'skill') {
             $(inputEl).closest('.add-skill-wrapper').attr("style", "display: none!important");
         }
     }
 
     function showSkillAdd() {
-        $('.add-skill-input').closest('.add-skill-wrapper').attr('style', '');
+        $(this).siblings('.add-skill-wrapper').attr('style', '');
     }
 
     function initSkillAdd() {
-        let inputTemplate = getInputTemplate();
+        let inputTemplate = getInputTemplateCode();
 
         if (inputTemplate === 'skill') {
             $('.add-skill-wrapper').attr('style', '');
@@ -731,27 +767,34 @@
                 });
             });
 
-        $(document).on('typeahead:select typeahead:change', '.add-skill-input', function (event, skillName) {
+        $(document).on('typeahead:select typeahead:change', '.add-skill-input, .add-existing-skill-input', function (event, skillName) {
             if (skillName === '') {
                 return;
             }
 
-            let $existingNode = $('input[name="skills['+skillName+']"]');
+            let isExistingSkill = $(event.currentTarget).hasClass('add-existing-skill-input');
+            let $targetContainer = $( isExistingSkill ? '.existing-skills-input' : '.skills-input');
+            let $fromContainer = $( isExistingSkill ? '.skills-input' : '.existing-skills-input');
+
+            let $existingNode = $targetContainer.find('input[name="skills['+skillName+']"]');
             if ($existingNode.length > 0) {
                 $existingNode.closest('.skill').addClass('active');
                 return;
             }
 
+            $existingNode = $('input[name="skills['+skillName+']"]').closest('label');
+            $existingNode.remove();
+
             let skillLevel = 1;
             let skillRate = 0;
-            let skillHTML = getSkillFilterHTML(skillName, skillLevel, skillRate, true);
-            $('.skills-input').append(skillHTML);
+            let skillHTML = getSkillFilterHTML(skillName, skillLevel, skillRate, true, true);
+            $targetContainer.append(skillHTML);
 
             clearAndHideSkillAdd(this);
             updateCourses();
         });
 
-        $(document).on('click', '.btn-add-skill', showSkillAdd);
+        $(document).on('click', '.btn-add-skill, .btn-add-existing-skill', showSkillAdd);
     }
 
     function updateSlider() {
@@ -760,7 +803,7 @@
 
     function initTopDrawerSliding() {
         let начальнаяВысотаЗаголовка = $('.view-on-mobile header').outerHeight()-3;
-        let максимальнаяВысотаЗаголовка = 220;
+        let максимальнаяВысотаЗаголовка = 290;
         $('header').data('closed-height', начальнаяВысотаЗаголовка);
 
         interact('header')
@@ -779,14 +822,6 @@
                 let новаяВысотаЗаголовка = событие.rect.height;
                 заголовок.style.height = новаяВысотаЗаголовка + 'px';
             });
-    }
-
-    function showFooterIfNeeded() {
-        let isNotFilterPanelActive = !isFilterPanelActive();
-
-        if (isNotFilterPanelActive) {
-            $('footer').css('visibility', '');
-        }
     }
 
     function hideFooter() {
@@ -814,7 +849,7 @@
     }
 
     function setTemplateFilterValues() {
-        let inputTemplate = getInputTemplate();
+        let inputTemplate = getInputTemplateCode();
 
         if (inputTemplate === 'novice') {
             activateCheckbox('input[name="price"][value="0"]');
@@ -832,8 +867,13 @@
 
         setTemplateFilterValues();
 
-        $(document).on('click', '.btn-filter, .btn-choose-skills', function () {
+        $(document).on('click', '.btn-filter', function () {
             $('.filter-panel').toggleClass('show');
+            toggleFooter();
+        });
+
+        $(document).on('click', '.btn-choose-skills', function () {
+            $('.skills-panel').toggleClass('show');
             toggleFooter();
         });
 
@@ -910,7 +950,89 @@
         return matchAttr(rule.who, who) && matchAttr(rule.experience, experience) && matchAttr(rule.wish, wish);
     }
 
-    function getInputTemplate() {
+    function getInputTemplate(templateCode) {
+        if (!templateCode) {
+            templateCode = getInputTemplateCode();
+        }
+
+        let templates = {
+            'novice': {
+                skillRateFilter: {
+                    existing: false,
+                    needed: [35, 100]
+                }
+            },
+            'novice-continue': {
+                skillRateFilter: {
+                    existing: [80, 100],
+                    needed: [35, 80]
+                }
+            },
+            'other-novice': {
+
+            },
+            'other-novice-continue': {
+                skillRateFilter: {
+                    existing: [80, 100],
+                    needed: [35, 80]
+                }
+            },
+            'skill': {
+                skillRateFilter: {
+                    existing: false,
+                    needed: false
+                }
+            },
+            'middle-continue': {
+                skillRateFilter: {
+                    existing: [70, 100],
+                    needed: [15, 70]
+                }
+            },
+            'senior-continue': {
+                skillRateFilter: {
+                    existing: [70, 100],
+                    needed: [0, 70]
+                }
+            }
+        };
+
+        return templates[templateCode] || false;
+    }
+
+    function isSkillExisting(skillRate, templateCode) {
+        let template = getInputTemplate(templateCode);
+        if (!template) {
+            return false;
+        }
+
+        if (!template.skillRateFilter.existing) {
+            return false;
+        }
+
+        let fromRate = template.skillRateFilter.existing[0];
+        let toRate = template.skillRateFilter.existing[1];
+
+        return  skillRate > fromRate && skillRate <= toRate;
+    }
+
+    function isSkillNeeded(skillRate, templateCode) {
+        let template = getInputTemplate(templateCode);
+        if (!template) {
+            return true;
+        }
+
+        if (!template.skillRateFilter.needed) {
+            return false;
+        }
+
+        let fromRate = template.skillRateFilter.needed[0];
+        let toRate = template.skillRateFilter.needed[1];
+
+        return  skillRate > fromRate && skillRate <= toRate;
+    }
+
+    function getInputTemplateCode() {
         let request = getRequestValuesFromURL();
         let who = request[0];
         let experience = request[1];
@@ -990,28 +1112,25 @@
             : defaultTemplate;
     }
 
-    function getRequestValuesFromDOM() {
-        return $('.request:visible .editable-toggle').map(function () {
-            return $(this).text();
-        }).toArray();
-    }
-
     function getRequestValuesFromURL() {
         let who = getParameterByName('who');
         let experience = getParameterByName('experience');
         let wish = getParameterByName('wish');
+        let isRequestNotEmpty = Boolean(who) && Boolean(experience) && Boolean(wish);
 
-        return [who, experience, wish];
+        return isRequestNotEmpty ? [who, experience, wish] : false;
     }
 
     function updateRequestValuesFromURL() {
         let request = getRequestValuesFromURL();
 
-        $('.request:visible .editable-toggle').each(function (index) {
-            if (request[index]) {
-                $(this).text(request[index]);
-            }
-        });
+        if (request) {
+            ['profession', 'exp', 'want'].forEach((menuName, menuIndex) => {
+                $('.request [data-menu="' + menuName + '"]').each((index, menuToggle) => {
+                    $(menuToggle).text(request[menuIndex]);
+                });
+            });
+        }
     }
 
     function initHeaderInputs() {
@@ -1023,10 +1142,11 @@
         $(document).on('click', '.request .dropdown-item', function () {
             let itemText = $(this).text();
             let $toggle = $(this).closest('.dropdown').find('.editable-toggle');
-            let $applyButton = $(this).closest('.input-group').find('.apply-request');
+            let $allToggles = $('[data-menu="'+$toggle.data('menu')+'"');
+            let $applyButtons = $('.apply-request');
 
-            $toggle.text(itemText);
-            $applyButton.show();
+            $allToggles.text(itemText);
+            $applyButtons.show();
         });
 
         $(document).on('click', '.apply-request', function () {
@@ -1055,7 +1175,7 @@
             updateSkillsAndCourses();
         });
 
-        $('.editable-toggle.salary-input-display').on('click', function () {
+        $(document).on('click', '.view-on-mobile .editable-toggle.salary-input-display', function () {
             let isHeaderExpanded = $('header').hasClass('expanded');
 
             if (isHeaderExpanded) {
@@ -1073,61 +1193,6 @@
         });
     }
 
-    function enableCourseCardFavouriteState($card) {
-        $card.find('.top-favourite-add .fa-bookmark').removeClass('far').addClass('fas');
-        $card
-            .find('.btn-favourite')
-            .addClass('active')
-            .attr('disabled', true)
-            .html('<i class="fas fa-check"></i>');
-    }
-
-    function disableCourseCardFavouriteState($card) {
-        $card.find('.top-favourite-add .fa-bookmark').removeClass('fas').addClass('far');
-        $card
-            .find('.btn-favourite')
-            .removeClass('active')
-            .attr('disabled', false)
-            .html('<i class="far fa-bookmark"></i>');
-    }
-
-    function initCourseCards() {
-        $(document).on('click', '.continue-toggle', function (event) {
-            event.preventDefault();
-
-            $(this).attr("style", "display: none!important");
-            $(this).siblings('.continue-dots').hide();
-            $(this).siblings('.continue').show();
-        });
-
-        $(document).on('click', '.btn-favourite, .top-favourite-add', function (event) {
-            event.preventDefault();
-            let $card = $(this).closest('.card-body');
-            let courseId = $card.data('id');
-            let course = getCourseById(courseId);
-
-            if (!isInBackpack(courseId)) {
-                pushToBackpack(course);
-                enableCourseCardFavouriteState($card);
-                updateFavourites();
-            }
-        });
-
-        $(document).on('click', '.top-favourite-remove', function (event) {
-            event.preventDefault();
-            let courseId = $(this).closest('.card-body').data('id');
-            let $card = $('.course-list:visible .card-body[data-id='+courseId+']');
-            removeFromBackpack(courseId);
-            disableCourseCardFavouriteState($card);
-            updateFavourites();
-
-            if (isBackbackEmpty()) {
-                $('.favourite-panel').removeClass('show');
-                showFooterIfNeeded();
-            }
-        });
-    }
-
     function loadHistogramData() {
         return loadApiData('/api/histogramData.php', {professionCode: getProfessionCodeFromUrl()});
     }
@@ -1142,7 +1207,7 @@
     }
 
     function loadSkillsData(salaryFrom, salaryTo) {
-        let inputTemplate = getInputTemplate();
+        let inputTemplate = getInputTemplateCode();
         let filterRate = 10;
 
         if (inputTemplate === 'middle-continue' || inputTemplate === 'senior-continue') {
@@ -1158,7 +1223,10 @@
     }
 
     function loadCourses() {
-        let searchFields = $('header:visible input, .filter-panel:visible input, .skills-section:visible input').serializeArray();
+        let isMobile = $('.view-on-mobile').is(':visible');
+        let searchFields = isMobile
+            ? $('.view-on-mobile .skills-input input, .view-on-mobile .filter-panel input').serializeArray()
+            : $('.view-on-desktop .skills-input input, .view-on-desktop .filter-panel input').serializeArray();
         searchFields.push({name: "professionCode", value: getProfessionCodeFromUrl()});
         searchFields.push({name: "searchMode", value: 1});
         searchFields.push({name: "responseFormat", value: "json"});
@@ -1173,9 +1241,9 @@
         return currentCourses;
     }
 
-    function makeSalaryInput(wrapperSelector, width) {
+    function makeSalaryInput(wrapperSelector, width, height) {
         let wrappers = document.querySelectorAll(wrapperSelector);
-        let inputTemplate = getInputTemplate();
+        let inputTemplate = getInputTemplateCode();
 
         return loadHistogramData()
             .then(function (response) {
@@ -1206,7 +1274,8 @@
                         fromHandle: salaryFrom,
                         toHandle: salaryTo,
                         graphWidth: width,
-                        handleHeight: 40,
+                        graphHeight: height,
+                        handleHeight: 53,
                         binValues: response.binValues,
                         labelsText: response.binLabels,
                         valueRange: [response.salary.min, response.salary.max]
@@ -1218,8 +1287,8 @@
     }
 
     function drawSkills(response) {
-        let inputTemplate = getInputTemplate();
-        if (inputTemplate === 'skill') {
+        let inputTemplateCode = getInputTemplateCode();
+        if (inputTemplateCode === 'skill') {
             return;
         }
 
@@ -1229,11 +1298,19 @@
 
         $('.skills-input-display').html(displayText);
 
-        let skillsHTML = response.skills.map(function (skill) {
-            return getSkillFilterHTML(skill.title, skill.modeLevel, skill.rate);
+        let existingSkills = response.skills.filter((skill) => isSkillExisting(skill.rate, inputTemplateCode) );
+        let notExistingSkills = response.skills.filter((skill) => !isSkillExisting(skill.rate, inputTemplateCode) );
+
+        let skillsHTML = notExistingSkills.map(function (skill) {
+            return getSkillFilterHTML(skill.title, skill.modeLevel, skill.rate, isSkillNeeded(skill.rate));
+        }).join("\n");
+
+        let existingSkillsHTML = existingSkills.map(function (skill) {
+            return getSkillFilterHTML(skill.title, skill.modeLevel, skill.rate, true);
         }).join("\n");
 
         $('.skills-input').prepend(skillsHTML);
+        $('.existing-skills-input').prepend(existingSkillsHTML);
     }
 
     function drawCourses(response) {
@@ -1257,10 +1334,6 @@
                 $('.skills-input').removeClass('loading');
                 drawSkills(response);
             });
-    }
-
-    function isFilterPanelActive() {
-        return $('.filter-panel.sliding-panel').hasClass('show');
     }
 
     function showNoResults() {
@@ -1298,28 +1371,8 @@
             });
     }
 
-    function updateFavourites() {
-        let courses = getBackpack();
-        if (courses && courses.length > 0) {
-
-            $('.btn-favourites-list').addClass('active');
-            $('.fav-count').text(courses.length);
-
-            let favouriteListHTML = courses.map(function (course) {
-                return getCourseFavouriteHTML(course);
-            }).join("\n");
-
-            $('.favourite-list').html(favouriteListHTML);
-        }
-        else {
-            $('.favourite-list').html('');
-            $('.btn-favourites-list').removeClass('active');
-            $('.fav-count').text(0);
-        }
-    }
-
     function expandHeader() {
-        let maxHeight = 220;
+        let maxHeight = 290;
         $('header')
             .addClass('expanded animated')
             .css('height', maxHeight+'px');
@@ -1337,11 +1390,24 @@
     }
 
     function initSkills() {
-        let inputTemplate = getInputTemplate();
+        let inputTemplate = getInputTemplateCode();
 
         if (inputTemplate === 'skill') {
             $('section.skills-section, section.filter-panel, header.top-drawer').addClass('manual-skills');
         }
+
+        $(document).on('click', '.btn-skills', function () {
+            $('.skills-panel').toggleClass('show');
+            toggleFooter();
+        });
+
+        $(document).on('click', ' .skills-panel .close-panel-btn, .skills-panel .apply-btn', function () {
+            $('.skills-panel').toggleClass('show');
+            showFooterIfNeeded();
+        });
+
+        $(document).on('click', '.skills-filter-text .editable-toggle', () => $('.salary-data').toggleClass('block-hidden'));
+        $(document).on('click', '.filter-group-title-label .editable-toggle', () => $('.skills-panel .salary-input-wrapper').toggleClass('block-hidden'));
     }
 
     (function chromeOnAndroidUrlBarOverlayHack() {
@@ -1351,19 +1417,28 @@
     })();
 
     $(function () {
-        let headerInputWidth = 277;
+        let graphWidth = 260;
+        let graphHeight = 55;
 
+        initScroll();
+        initAuth();
         updatePageTitle();
         updateRequestValuesFromURL();
         initFilter();
         initSkills();
         initSlider();
         initTopDrawerSliding();
-        makeSalaryInput('.salary-input-wrapper', headerInputWidth)
+
+        checkSession()
+            .then(showProfile);
+
+        makeSalaryInput('.salary-input-wrapper', graphWidth, graphHeight)
             .then(updateSkills)
             .then(updateCourses)
             .then(updateFavourites)
-            .then(initHeaderInputs);
+            .then(initHeaderInputs)
+            .catch((err) => { err ? console.warn(err) : console.log('undefined err'); });
+
         initSkillAdd();
         initFavourites();
         initCourseCards();

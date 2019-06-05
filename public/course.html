@@ -1,67 +1,224 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WG2XFBS');</script>
-    <!-- End Google Tag Manager -->
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113216929-1"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+        if (document.cookie.indexOf('user_is_admin=true') === -1) {
+            /* Google Tag Manager */
+            (function(w,d,s,l,i) {
+                w[l]=w[l]||[];w[l].push({'gtm.start':
+                        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-WG2XFBS');
 
-        gtag('config', 'UA-113216929-1');
+            /* Google Analytics */
+            let anScript = document.createElement('script');
+            let firstScript = document.getElementsByTagName('script')[0];
+            anScript.async = true;
+            anScript.src = 'https://www.googletagmanager.com/gtag/js?id=UA-113216929-1';
+            firstScript.parentNode.insertBefore(anScript,firstScript);
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-113216929-1');
+        }
     </script>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="/assets/custom.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/css/swiper.min.css">
+    <link rel="stylesheet" href="/assets/design/base.css" type="text/css">
+    <link rel="stylesheet" href="/assets/design/desktop-override.css" type="text/css">
+    <link rel="stylesheet" href="/assets/design/survey.css" type="text/css">
+
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="Жажда знаний: найди свой курс"/>
+    <meta property="og:image" content="/assets/images/banner_01.png"/>
 
     <title>Жажда знаний: найди свой курс</title>
 </head>
+<body class="pb-4">
 
-<body class="navbar-padding">
-
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2XFBS"
-                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
-<nav class="navbar navbar-courses navbar-expand-md fixed-top navbar-light bg-light visible-sm-flex">
-    <div class="navbar-header">
-        <h1 class="h4"><a href="/" class="header">Курсы</a><br><a href="?" class="header courses-list-link"><small class="text-muted"></small></a></h1>
-
-        <div class="navbar-buttons">
-            <a class="btn btn-primary ml-1 back-button courses-list-link" href="">К списку курсов</a>
-        </div>
-    </div>
-</nav>
-
-<nav class="navbar navbar-courses navbar-expand-md fixed-top navbar-light bg-light invisible-sm">
-    <div class="container">
-        <div class="title-buttons-wrapper">
-            <h1><a href="/" class="header">Курсы</a>&nbsp;<a href="?" class="header courses-list-link"><small class="text-muted"></small></a></h1>
-            <div class="dropdown">
-                <a class="btn btn-primary btn-lg courses-list-link" href="?">К списку курсов</a>
+<div class="view-on-desktop d-none d-sm-block d-md-block">
+    <header class="">
+        <div class="container wide-container d-flex align-items-center px-3 mb-3">
+            <a href="/"><img src="/assets/images/itcher.png" class="mr-2"></a>
+            <section class="data flex-fill">
+                <div class="input-group">
+                    <label class="request">
+                        &mdash;&nbsp;Я
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle mr-1" data-menu="profession" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">новичок</a>
+                            <span class="dropdown-menu">
+                                <a class="dropdown-item" href="#">новичок</a>
+                                <a class="dropdown-item profession-title" href="#">...</a>
+                                <a class="dropdown-item" href="#">специалист из другой области</a>
+                            </span>
+                        </span>
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle work-experience-input-display" data-menu="exp" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">без опыта работы</a>
+                            <span class="dropdown-menu">
+                                <a class="dropdown-item" href="#">без опыта работы</a>
+                                <a class="dropdown-item" href="#">с опытом работы до 3 лет</a>
+                                <a class="dropdown-item" href="#">с опытом работы 3 или более года</a>
+                            </span>
+                        </span>
+                        хочу
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle want-to-input" data-menu="want" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">стать <span class="profession-title-tp"></span></a>
+                            <span class="dropdown-menu">
+                                <a class="dropdown-item" href="#">стать <span class="profession-title-tp"></span></a>
+                                <a class="dropdown-item" href="#">начать с нуля</a>
+                                <a class="dropdown-item" href="#">продолжить обучение</a>
+                                <a class="dropdown-item" href="#">повысить квалификацию</a>
+                                <a class="dropdown-item" href="#">прокачать навык</a>
+                            </span>
+                        </span>
+                        <button class="btn btn-outline-info apply-request">Подобрать другие курсы</button>
+                    </label>
+                </div>
+            </section>
+            <div class="dropdown dropleft">
+                <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bookmark"></i>
+                    <span class="fav-count ml-2">0</span>
+                </button>
+                <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn"></div>
+                <div class="dropdown-backdrop"></div>
             </div>
         </div>
-    </div>
-</nav>
+    </header>
+    <header class="scroll">
+        <div class="container wide-container d-flex align-items-center px-3">
+            <a class="logo-link" href="/"><img src="/assets/images/itcher-float.png" class="mr-2"></a>
+            <section class="data flex-fill">
+                <div class="input-group">
+                    <label class="request">
+                        &mdash;&nbsp;Я
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle mr-1" data-menu="profession" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">новичок</a>
+                            <span class="dropdown-menu">
+                                <a class="dropdown-item" href="#">новичок</a>
+                                <a class="dropdown-item profession-title" href="#">...</a>
+                                <a class="dropdown-item" href="#">специалист из другой области</a>
+                            </span>
+                        </span>
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle work-experience-input-display" data-menu="exp" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">без опыта работы</a>
+                            <span class="dropdown-menu">
+                                <a class="dropdown-item" href="#">без опыта работы</a>
+                                <a class="dropdown-item" href="#">с опытом работы до 3 лет</a>
+                                <a class="dropdown-item" href="#">с опытом работы 3 или более года</a>
+                            </span>
+                        </span>
+                        хочу
+                        <span class="dropdown">
+                            <a href="#" class="editable-toggle want-to-input" data-menu="want" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">стать <span class="profession-title-tp"></span></a>
+                            <span class="dropdown-menu">
+                                <a class="dropdown-item" href="#">стать <span class="profession-title-tp"></span></a>
+                                <a class="dropdown-item" href="#">начать с нуля</a>
+                                <a class="dropdown-item" href="#">продолжить обучение</a>
+                                <a class="dropdown-item" href="#">повысить квалификацию</a>
+                                <a class="dropdown-item" href="#">прокачать навык</a>
+                            </span>
+                        </span>
+                        <button class="btn btn-outline-info apply-request">Подобрать другие курсы</button>
+                    </label>
+                </div>
+            </section>
+            <div class="dropdown dropleft">
+                <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bookmark"></i>
+                    <span class="fav-count ml-2">0</span>
+                </button>
+                <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn"></div>
+                <div class="dropdown-backdrop"></div>
+            </div>
+        </div>
+    </header>
+</div>
+<div class="view-on-mobile d-block d-sm-none d-md-none">
+    <header class="avatar d-flex flex-column card p-4 top-drawer mb-4">
+        <h5><a href="#" class="auth-trigger user-name">Неопознанный Итчер</a></h5>
+        <div class="d-flex flex-row justify-content-between align-items-start">
+            <div class="d-flex flex-row h-100 ">
+                <section class="data d-flex flex-column align-items-start h-100 flex-fill mr-2">
+                    <div class="input-group">
+                        <label class="request">
+                            &mdash;&nbsp;Я
+                            <span class="dropdown">
+                                    <a href="#" class="editable-toggle mr-1" data-menu="profession" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">новичок</a>
+                                    <span class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">новичок</a>
+                                        <a class="dropdown-item profession-title" href="#">...</a>
+                                        <a class="dropdown-item" href="#">специалист из другой области</a>
+                                    </span>
+                                </span>
+                            <span class="dropdown">
+                                    <a href="#" class="editable-toggle work-experience-input-display" data-menu="exp" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">без опыта работы</a>
+                                    <span class="dropdown-menu" >
+                                        <a class="dropdown-item" href="#">без опыта работы</a>
+                                        <a class="dropdown-item" href="#">с опытом работы до 3 лет</a>
+                                        <a class="dropdown-item" href="#">с опытом работы 3 или более года</a>
+                                    </span>
+                                </span>
+                            хочу
+                            <span class="dropdown">
+                                <a href="#" class="editable-toggle want-to-input" data-menu="want" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">стать <span class="profession-title-tp"></span></a>
+                                <span class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">стать <span class="profession-title-tp"></span></a>
+                                    <a class="dropdown-item" href="#">начать с нуля</a>
+                                    <a class="dropdown-item" href="#">продолжить обучение</a>
+                                    <a class="dropdown-item" href="#">повысить квалификацию</a>
+                                    <a class="dropdown-item" href="#">прокачать навык</a>
+                                </span>
+                            </span>
+                            <button class="btn btn-outline-info apply-request mt-2">Подобрать другие курсы</button>
+                        </label>
+                    </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 course-data">
-            <img class="load-progress" src="/assets/images/Rolling-1s-200px.svg">
+                    <button class="btn btn-outline-info btn-block mt-4 btn-choose-skills">Выбрать навыки</button>
+                </section>
+                <section class="logo">
+                    <img src="/assets/images/avatar.svg" class="auth-trigger">
+                </section>
+            </div>
+        </div>
+    </header>
+</div>
+
+<div class="view-on-desktop d-none d-sm-block d-md-block pb-4">
+    <main class="container wide-container course-data">
+    </main>
+</div>
+<div class="view-on-mobile d-block d-sm-none d-md-none">
+    <main class="container wide-container course-data">
+    </main>
+    <footer class="similar-footer d-flex justify-items-center">
+        <button href="#" class="btn other-courses courses-list-link">Похожие курсы</button>
+    </footer>
+</div>
+
+<div class="modal fade" id="surveyModal" tabindex="-1" role="dialog" aria-labelledby="surveyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="surveyModalLabel">Отзыв о курсе</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0 survey-data">
+                <div class="d-flex flex-column align-items-center text-center">
+                    <img src="/assets/images/avatar_facebook.png" class="auth-trigger itcher-avatar mt-4 mb-4">
+                    <button class="btn btn-outline-info auth-trigger mt-4">Пожалуйста, представьтесь</button>
+                    <p>Мы переживаем за качество отзывов</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -74,11 +231,18 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.2/bootstrap-slider.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.3.0/snap.svg-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/js/swiper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/interactjs@1.3.4/dist/interact.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.1/svg.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-
+<script src="https://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
+<script src="https://cdn.auth0.com/js/auth0/9.10/auth0.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase.js"></script>
+<script src="https://surveyjs.azureedge.net/1.0.89/survey.jquery.min.js"></script>
+<script src="/assets/js/share.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/firebase.js"></script>
+<script src="/assets/js/feedback.js"></script>
 <script src="/assets/vacancyFunctions.js"></script>
 <script src="/assets/courseFunctions.js"></script>
 <script src="/assets/singleCourse.js"></script>
@@ -94,6 +258,6 @@
 </script>
 <!-- {/literal} END JIVOSITE CODE -->
 
-</body>
 
+</body>
 </html>

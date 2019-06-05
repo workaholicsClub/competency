@@ -106,10 +106,10 @@ function getCourseHardnessHTML(course) {
     }
 
     if (hardnessIndex === 3) {
-        return "Трудный";
+        return "Продвинутый";
     }
 
-    return "Легкий";
+    return "Для новичков";
 }
 
 function getCourseHardness(course) {
@@ -127,19 +127,21 @@ function getCourseHardness(course) {
 }
 
 function getHardnessIndex(course) {
-    let hardnessPercent = getCourseHardness(course);
+    let requirementsCount = Object.keys(course.requirements).length;
 
-    let hardnessIndex = 1;
-
-    if (hardnessPercent >= 5) {
-        hardnessIndex = 2;
+    if (requirementsCount === 0) {
+        return 1;
     }
 
-    if (hardnessPercent > 50) {
-        hardnessIndex = 3;
+    if (requirementsCount < 4) {
+        return 2;
     }
 
-    return hardnessIndex;
+    return 3;
+}
+
+function getCourseTime(course) {
+    return course.duration + ' ' + declensionUnits(course.duration, course.durationUnits);
 }
 
 function getCourseAttributesHTML(course) {
@@ -150,8 +152,8 @@ function getCourseAttributesHTML(course) {
     };
 
     let attributes = [
-        course.format,
         getCourseHardnessHTML(course),
+        course.format,
         course.hasTeacher ? 'С преподавателем' : 'Без преподавателя',
         course.hasPractice ? 'С практикой' : 'Без практики'
     ];
@@ -165,7 +167,6 @@ function getCourseAttributesHTML(course) {
     }
 
     attributes.push(certificateShortNames[course.certificate]);
-    attributes.push(course.duration + ' ' + declensionUnits(course.duration, course.durationUnits));
 
     return attributes.join('&nbsp;&bull;&nbsp;\n');
 }
@@ -214,18 +215,18 @@ function formatNumber(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "&nbsp;");
 }
 
-function getSkillHTML(skillName, skillLevel) {
-    return "<span class=\"skill\">" + skillName + " <span class=\"skill-strength level"+skillLevel+"\"><span></span><span></span><span></span><span></span></span></span>";
+function getSkillHTML(skillName, level) {
+    return `<span class="skill">
+                ${skillName}
+                <span class="skill-strength level${level}"><span></span><span></span><span></span><span></span></span>
+            </span>`;
 }
 
-function getSkillsHTML(course) {
-    let skillNames = Object.keys(course.skills);
-    let skillsHTML = skillNames.map(function (skillName) {
-        let skillLevel = course.skills[skillName];
-        return getSkillHTML(skillName, skillLevel);
-    });
-
-    return skillsHTML.join("\n");
+function getSkillsHTML(skills) {
+    return Object.keys(skills).map(function (skillName, index) {
+        let level = skills[skillName];
+        return getSkillHTML(skillName, level);
+    }).join("\n");
 }
 
 function getRequirementsHTML(course) {
@@ -327,6 +328,11 @@ function getCoursePageUrl(course) {
     return "/course.html?id="+course.id+"&from="+getProfessionCodeFromUrl();
 }
 
+function getCoursePageAbsoluteUrl(course) {
+    let relativeUrl = getCoursePageUrl(course);
+    return window.location.origin + relativeUrl;
+}
+
 function getParameterByName(name, url) {
     if (!url) {
         url = window.location.href;
@@ -345,3 +351,243 @@ function getParameterByName(name, url) {
 
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+function splitLongText(text, wordLimit) {
+    if (!wordLimit) {
+        wordLimit = 25;
+    }
+
+    let words = text.split(" ");
+    let visible = text;
+    let hidden = false;
+    if (words.length > wordLimit) {
+        visible = words.slice(0, wordLimit).join(" ");
+        hidden = words.slice(wordLimit).join(" ");
+    }
+
+    return [visible, hidden];
+}
+
+function getCourseFavouriteHTML(course) {
+    return `<div class="card course-card">
+                <div class="card-body" data-id="${course.id}">
+                    <div class="d-flex flex-row course-card-header">
+                        <span class="badge badge-course-info">Курс</span>
+                        <h6 class="text-muted flex-fill">от <a href="${course.url}">${course.platform}</a></h6>
+                        <a href="#" class="top-favourite-remove"><i class="fas fa-trash"></i></a>
+                    </div>
+                    <h5>${course.title}</h5>
+
+                    <p class="mt-0 mb-0 price">${getCoursePriceText(course.price)}</p>
+                    <p class="mt-0 text-muted">${getCourseTime(course)} &asymp; ${getHumanReadableTime(course)}</p>
+
+                <p class="mt-1 text-info">${getCourseAttributesHTML(course)}</p>
+
+                <a href="${course.url}" target="_blank" class="btn btn-outline-info btn-block btn-link" data-course-id="${course.id}">
+                    Записаться
+                </a>
+            </div>
+        </div>`;
+}
+
+function showFooterIfNeeded() {
+    let isNotFilterPanelActive = !isFilterPanelActive();
+
+    if (isNotFilterPanelActive) {
+        $('footer').css('visibility', '');
+    }
+}
+
+function isFilterPanelActive() {
+    return $('.filter-panel.sliding-panel').hasClass('show') || $('.skills-panel.sliding-panel').hasClass('show');
+}
+
+function updateFavourites() {
+    let courses = getBackpack();
+    if (courses && courses.length > 0) {
+
+        $('.btn-favourites-list').addClass('active');
+        $('.fav-count').text(courses.length);
+
+        let favouriteListHTML = courses.map(function (course) {
+            return getCourseFavouriteHTML(course);
+        }).join("\n");
+
+        $('.favourite-list').html(favouriteListHTML);
+    }
+    else {
+        $('.favourite-list').html('');
+        $('.btn-favourites-list').removeClass('active');
+        $('.fav-count').text(0);
+    }
+}
+
+function getRequestValuesFromDOM() {
+    return $('.request:visible .editable-toggle').map(function () {
+        return $(this).text();
+    }).toArray();
+}
+
+function initCourseCards() {
+    $(document).on('click', '.continue-toggle', function (event) {
+        event.preventDefault();
+
+        $(this).attr("style", "display: none!important");
+        $(this).siblings('.continue-dots').hide();
+        $(this).siblings('.continue').show();
+    });
+
+    $(document).on('click', '.btn-favourite, .top-favourite-add', function (event) {
+        event.preventDefault();
+        let $card = $(this).closest('.card-body');
+        let courseId = $card.data('id');
+        let course = getCourseById(courseId);
+
+        if (!isInBackpack(courseId)) {
+            pushToBackpack(course);
+            enableCourseCardFavouriteState($card);
+            updateFavourites();
+        }
+    });
+
+    $(document).on('click', '.top-favourite-remove', function (event) {
+        event.preventDefault();
+        let courseId = $(this).closest('.card-body').data('id');
+        let $card = $('.course-list:visible .card-body[data-id='+courseId+']');
+        removeFromBackpack(courseId);
+        disableCourseCardFavouriteState($card);
+        updateFavourites();
+
+        if (isBackbackEmpty()) {
+            $('.favourite-panel').removeClass('show');
+            showFooterIfNeeded();
+        }
+    });
+
+    $(document).on('click', '.btn-share', function (event) {
+        let $button = $(this);
+        let $menu = $(this).find('.dropdown-menu');
+        $menu.toggleClass('show');
+        new Popper($button, $menu, {});
+    });
+
+    $(document).on('click', '.share-menu a', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        let $socialButton = $(this);
+        let $shareButton = $socialButton.closest('.btn-share');
+        let $menu = $socialButton.closest('.dropdown-menu');
+        let courseId = $shareButton.data('course-id');
+        let socialId = $socialButton.data('social');
+        let course = getCourseById(courseId);
+        let pageUrl = getCoursePageAbsoluteUrl(course);
+
+        $menu.toggleClass('show');
+        Share.popup(socialId, pageUrl, course.title, '', '');
+    });
+}
+
+function initScroll() {
+    $(window).scroll(function(event) {
+        let scrollPosition = $(window).scrollTop();
+        if (scrollPosition > 0) {
+            $('body').addClass('scroll');
+        }
+        else {
+            $('body').removeClass('scroll');
+        }
+    });
+}
+
+function showProfile() {
+    let profile = getSavedProfileData();
+    if (!profile) {
+        return false;
+    }
+
+    $('.avatar img').attr('src', profile.picture).addClass('custom-avatar');
+    $('.avatar .user-name').text(profile.name);
+    $('.avatar .auth-trigger').removeClass('auth-trigger');
+    $('body').addClass('auth');
+}
+
+function enableCourseCardFavouriteState($card) {
+    $card.find('.top-favourite-add .fa-bookmark').removeClass('far').addClass('fas');
+    $card
+        .find('.btn-favourite')
+        .addClass('active')
+        .attr('disabled', true)
+        .html('<i class="fas fa-check"></i>');
+}
+
+function disableCourseCardFavouriteState($card) {
+    $card.find('.top-favourite-add .fa-bookmark').removeClass('fas').addClass('far');
+    $card
+        .find('.btn-favourite')
+        .removeClass('active')
+        .attr('disabled', false)
+        .html('<i class="far fa-bookmark"></i>');
+}
+
+function getProfessionCodeFromUrl(paramName) {
+    if (!paramName) {
+        paramName = 'professionCode';
+    }
+    let professionCode = getParameterByName(paramName);
+
+    if (!professionCode) {
+        professionCode = location.pathname.split('/')[1];
+    }
+
+    return professionCode || 'qa-tester';
+}
+
+function getCurrentProfessionName(pageCode, useTvPadezh) {
+    if (!pageCode) {
+        pageCode = getProfessionCodeFromUrl();
+    }
+
+    let professionNames = {
+        'php-developer': 'разработчик PHP',
+        'hr-manager': 'HR менеджер',
+        'pr-specialist': 'PR специалист',
+        'python-developer': 'разработчик Python',
+        'golang-developer': 'разработчик Golang',
+        'javascript-developer': 'разработчик JavaScript',
+        'ui-ux-designer': 'UI/UX дизайнер',
+        'ios-developer': 'разработчик iOS',
+        'android-developer': 'разработчик Android',
+        'internet-marketologist': 'интернет-маркетолог',
+        'qa-tester': 'тестировщик',
+        'devops': 'DevOps специалист',
+        'data-scientist': 'Data Scientist',
+        'game-designer': 'гейм-дизайнер',
+        'project-manager': 'менеджер интернет-проектов',
+        'game-artist-2d': 'игровой художник 2D',
+        'game-artist-3d': 'игровой художник 3D'
+    };
+    let professionNamesTP = {
+        'php-developer': 'разработчиком PHP',
+        'hr-manager': 'HR менеджером',
+        'pr-specialist': 'PR специалистом',
+        'python-developer': 'разработчиком Python',
+        'golang-developer': 'разработчиком Golang',
+        'javascript-developer': 'разработчиком JavaScript',
+        'ui-ux-designer': 'UI/UX дизайнером',
+        'ios-developer': 'разработчиком iOS',
+        'android-developer': 'разработчиком Android',
+        'internet-marketologist': 'интернет-маркетологом',
+        'qa-tester': 'тестировщиком',
+        'devops': 'DevOps специалистом',
+        'data-scientist': 'Data Scientist`ом',
+        'game-designer': 'гейм-дизайнером',
+        'project-manager': 'менеджером интернет-проектов',
+        'game-artist-2d': 'игровым художником 2D',
+        'game-artist-3d': 'игровым художником 3D'
+    };
+
+    return useTvPadezh
+        ? professionNamesTP[pageCode] || false
+        : professionNames[pageCode] || false;
+}
+
