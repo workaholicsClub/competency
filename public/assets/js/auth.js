@@ -37,7 +37,6 @@ function launchAuth() {
 }
 
 function afterLogin() {
-    localStorage.setItem('isLoggedIn', 'true');
 }
 
 function afterLogout() {
@@ -66,6 +65,7 @@ function handleAuthentication() {
 }
 
 function localLogin(authResult) {
+    localStorage.setItem('isLoggedIn', 'true');
     expiresAt = JSON.stringify(
         authResult.expiresIn * 1000 + new Date().getTime()
     );
