@@ -82,19 +82,24 @@
                     </label>
                 </div>
             </section>
-            <div class="dropdown dropleft">
-                <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-bookmark"></i>
-                    <span class="fav-count ml-2">0</span>
-                </button>
-                <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn"></div>
-                <div class="dropdown-backdrop"></div>
-            </div>
+            <section class="fav-auth d-flex align-items-center">
+                <div class="d-flex align-items-center dropdown dropleft">
+                    <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center mr-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <label class="fav-text">Мои&nbsp;курсы</label>
+                        <i class="fas fa-bookmark mx-2"></i>
+                        <span class="fav-count">0</span>
+                    </button>
+                    <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn"></div>
+                    <div class="dropdown-backdrop"></div>
+                </div>
+                <img src="/assets/images/avatar.svg" class="auth-trigger avatar-holder">
+                <a href="#" class="auth-triggrer btn btn-link authed-remove">Войти</a>
+            </section>
         </div>
     </header>
     <header class="scroll">
         <div class="container wide-container d-flex align-items-center px-3">
-            <a class="logo-link" href="/"><img src="/assets/images/itcher-float.png" class="mr-2"></a>
+            <a class="" href="/"><img src="/assets/images/itcher-float.png" class="mr-2"></a>
             <section class="data flex-fill">
                 <div class="input-group">
                     <label class="request">
@@ -130,14 +135,19 @@
                     </label>
                 </div>
             </section>
-            <div class="dropdown dropleft">
-                <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-bookmark"></i>
-                    <span class="fav-count ml-2">0</span>
-                </button>
-                <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn"></div>
-                <div class="dropdown-backdrop"></div>
-            </div>
+            <section class="fav-auth d-flex align-items-center">
+                <div class="d-flex align-items-center dropdown dropleft">
+                    <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center mr-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <label class="fav-text">Мои&nbsp;курсы</label>
+                        <i class="fas fa-bookmark mx-2"></i>
+                        <span class="fav-count">0</span>
+                    </button>
+                    <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn"></div>
+                    <div class="dropdown-backdrop"></div>
+                </div>
+                <img src="/assets/images/avatar.svg" class="auth-trigger avatar-holder">
+                <a href="#" class="auth-triggrer btn btn-link authed-remove">Войти</a>
+            </section>
         </div>
     </header>
     <div class="pr-4 pl-4 pb-4">
@@ -567,7 +577,7 @@
                 <div class="card-body" data-id="${course.id}">
                     <div class="d-flex flex-row align-items-center course-card-header">
                         <span class="badge badge-course-info mr-2">Курс</span>
-                        <h6 class="text-muted flex-fill mb-0">от <a href="${course.url}">${course.platform}</a></h6>
+                        <h6 class="text-muted flex-fill mb-0">от <a href="${getCourseUrl(course)}">${course.platform}</a></h6>
                         <a href="#" class="top-favourite-add">
                             <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
                         </a>
@@ -601,7 +611,7 @@
                     <a href="${getCoursePageUrl(course)}" target="_blank" class="details-link" data-course-id="${course.id}">Подробнее на странице курса</a>
 
                     <div class="course-buttons flex-fill d-flex flex-row mt-4">
-                        <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2" data-course-id="${course.id}">
+                        <a href="${getCourseUrl(course)}" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2" data-course-id="${course.id}">
                             Записаться
                         </a>
                         <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2 ${isFavourited ? 'active' : ''}" ${isFavourited ? 'disabled="disabled"' : '' }>
@@ -639,7 +649,7 @@
                     <div class="d-flex flex-row justify-content-between align-items-start">
                         <span class="badge badge-course-info">Курс</span>
                         <div class="d-flex flex-row justify-content-end course-card-header">
-                            <h6 class="text-muted">от <a href="${course.url}">${course.platform}</a></h6>
+                            <h6 class="text-muted">от <a href="${getCourseUrl(course)}">${course.platform}</a></h6>
                             <a href="#" class="top-favourite-add">
                                 <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
                             </a>
@@ -669,7 +679,7 @@
                             : ''
                         }
                     </p>
-                    <a href="${getCoursePageUrl(course)}" target="_blank" class="details-link" data-course-id="${course.id}">Подробнее на странице курса</a>
+                    <a href="${getCoursePageUrl(course)}" class="details-link" data-course-id="${course.id}">Подробнее на странице курса</a>
 
                     <div class="row mt-4">
                         <div class="col price-duration-data">
@@ -692,7 +702,7 @@
                                     <li class="dropdown-item"><a href="#" data-social="telegram">Telegram</a></li>
                                 </ul>
                             </button>
-                            <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill btn-link mr-2" data-course-id="${course.id}">
+                            <a href="${getCourseUrl(course)}" class="btn btn-outline-info flex-fill btn-link mr-2" data-course-id="${course.id}">
                                 Записаться
                             </a>
                         </div>

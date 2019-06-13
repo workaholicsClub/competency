@@ -12,7 +12,7 @@
     <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-70x70.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
 
-    <title>Жажда знаний: вход</title>
+    <title>Жажда знаний: переход на страницу курса</title>
 
     <script>
         if (document.cookie.indexOf('user_is_admin=true') === -1) {
@@ -39,10 +39,20 @@
     </script>
 </head>
 <body class="centered">
-    <div class="container text-center">
+    <div class="container text-center paid-course" style="display: none;">
         <img src="/assets/images/itcher_02.png" width="70" >
-        <h1>Подождите, идет вход</h1>
-        <a href="/" class="btn btn-outline-info">Или вернитесь на главную</a>
+        <h1>Переход на сайт <div class="site-name"></div></h1>
+        <p>Вы действительно хотите записаться на курс <span class="course-name"></span>?</p>
+        <a href="/" class="btn btn-outline-info d-inline-block btn-confirm-conversion">Да, перейти к оплате</a><br>
+        <a href="#" class="btn btn-link btn-back">Назад</a>
+    </div>
+
+    <div class="container text-center free-course">
+        <img src="/assets/images/itcher_02.png" width="70" >
+        <h1>Переход на сайт <div class="site-name"></div></h1>
+        <p>Вы действительно хотите пройти курс <span class="course-name"></span>?</p>
+        <a href="/" class="btn btn-outline-info d-inline-block btn-confirm-conversion">Да, перейти к курсу</a><br>
+        <a href="#" class="btn btn-link btn-back">Назад</a>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -53,8 +63,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
-    <script src="https://cdn.auth0.com/js/auth0/9.10/auth0.min.js"></script>
-    <script src="/assets/js/auth.js"></script>
     <script>
         function getParameterByName(name, url) {
             if (!url) {
@@ -76,24 +84,33 @@
         }
 
         $(function () {
-            let savedRedirectTo = localStorage.getItem('user_redirect_to') || false;
-            let urlRedirectTo = getParameterByName('return_url');
-            let isReturningFromAuth = !Boolean(urlRedirectTo);
+            $(document).on('click', '.btn-back', function (event) {
+                event.preventDefault();
+                window.history.back();
+            });
 
-            if (isReturningFromAuth) {
-                initAuth();
-                processAuthInfo()
-                    .then(getProfile)
-                    .then(saveProfileData)
-                    .then(() => {
-                        window.location.href = savedRedirectTo;
-                    })
-                    .catch((err) => { err ? console.warn(err) : console.log('undefined err'); });
+            let urlRedirectTo = getParameterByName('next_url');
+            let isOurDomainRedirect = !urlRedirectTo.indexOf('skillitch') !== -1;
+            let isAdmin = document.cookie.indexOf('user_is_admin=true') !== -1;
+            let isAllowedRedirect = isOurDomainRedirect || isAdmin;
+            if (isAllowedRedirect) {
+                $('a.btn').attr('href', urlRedirectTo);
             }
-            else {
-                localStorage.setItem('user_redirect_to', urlRedirectTo);
-                initAuth();
-                launchAuth();
+
+            let siteName = getParameterByName('site');
+            if (siteName) {
+                $('.site-name').text(siteName);
+            }
+
+            let programTitle = getParameterByName('title');
+            if (programTitle) {
+                $('.course-name').text(`"${programTitle}"`);
+            }
+
+            let isPaid = getParameterByName('free') === "0";
+            if (isPaid) {
+                $('.free-course').hide();
+                $('.paid-course').show();
             }
         });
 

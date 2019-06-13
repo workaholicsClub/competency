@@ -53,6 +53,7 @@ if ($courseId) {
         "platform"      => $course['platform'],
         "title"         => $course['name'],
         "url"           => '/api/go.php?courseId='.$course['id'],
+        "rawUrl"        => $course['url'],
         "hasPartnerUrl" => !empty($course['partnerUrl']),
         "format"        => $course['format'],
         "hasTeacher"    => boolval($course['hasTeacher']),

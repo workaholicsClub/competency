@@ -175,6 +175,7 @@ section.filter-panel .more-label:hover {
     top: 0;
     left: 0;
     bottom: 0;
+    z-index: 10;
 }
 
 .view-on-desktop .course-card h6 {

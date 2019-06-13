@@ -328,6 +328,13 @@ function getCoursePageUrl(course) {
     return "/course.html?id="+course.id+"&from="+getProfessionCodeFromUrl();
 }
 
+function getCourseUrl(course) {
+    let isFree = course.price === 0 ? 1 : 0;
+    let url = new URL(course.rawUrl);
+    let site = url.hostname;
+    return "/away.html?next_url="+encodeURIComponent(course.url)+"&title="+encodeURIComponent(course.title)+"&site="+encodeURIComponent(site)+"&free="+isFree;
+}
+
 function getCoursePageAbsoluteUrl(course) {
     let relativeUrl = getCoursePageUrl(course);
     return window.location.origin + relativeUrl;
@@ -505,9 +512,9 @@ function showProfile() {
         return false;
     }
 
-    $('.avatar img').attr('src', profile.picture).addClass('custom-avatar');
+    $('.avatar img, img.avatar-holder').attr('src', profile.picture).addClass('custom-avatar');
     $('.avatar .user-name').text(profile.name);
-    $('.avatar .auth-trigger').removeClass('auth-trigger');
+    $('.auth-trigger').removeClass('auth-trigger');
     $('body').addClass('auth');
 }
 

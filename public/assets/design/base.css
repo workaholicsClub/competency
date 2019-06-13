@@ -2,11 +2,22 @@
     font-family: Gilroy;
     src: url("/assets/font/Gilroy-Light.otf") format("opentype");
 }
-
 @font-face {
     font-family: Gilroy;
     font-weight: bold;
     src: url("/assets/font/Gilroy-ExtraBold.otf") format("opentype");
+}
+@font-face {
+    font-family: 'GoogleSans';
+    font-style: normal;
+    font-weight: normal;
+    src: local('GoogleSans'), url('/assets/fonts/ProductSans-Regular.woff') format('woff');
+}
+@font-face {
+    font-family: 'GoogleSans';
+    font-style: normal;
+    font-weight: bold;
+    src: local('GoogleSans'), url('/assets/fonts/ProductSans-Bold.woff') format('woff');
 }
 
 body {
@@ -14,16 +25,33 @@ body {
     background: rgb(248, 249, 250);
 }
 
+body.centered {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
 header {
     box-sizing: border-box;
     touch-action: none;
+}
+
+.auth .authed-remove {
+    display: none!important;
 }
 
 header.animated {
     transition: height 0.5s ease;
 }
 
-a, a:hover, a:visited, a:active {
+header label {
+    margin-bottom: 0;
+}
+
+a, a:hover, a:visited, a:active,
+.btn-link, .btn-link:hover, .btn-link:visited, .btn-link:active {
     color: rgb(94, 88, 210);
 }
 
@@ -154,6 +182,26 @@ header .skills-input .skill:hover .delete-skill {
     display: block;
 }
 
+header .fav-auth label {
+    font-family: GoogleSans;
+    font-size: 14px;
+    font-weight: normal;
+    color: #000000;
+}
+
+header .fav-auth a.btn-link {
+    font-family: GoogleSans;
+    font-size: 14px;
+    font-weight: bold;
+    color: #6354d2;
+}
+
+header .avatar-holder {
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+}
+
 .salary-input-wrapper {
     position: relative;
 }
@@ -242,11 +290,11 @@ header.manual-skills .btn-choose-skills {
     height: 64px;
     margin-top: -32px;
     background: white;
-    border-radius: 32px;
     cursor: pointer;
 }
 
-.avatar img.custom-avatar {
+img.custom-avatar {
+    border-radius: 50%;
     border: solid 2px #cfd7de;
 }
 

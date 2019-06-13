@@ -25,7 +25,7 @@ function getCoursePageHTML(course) {
                     <div class="d-flex flex-row justify-content-between align-items-start">
                         <span class="badge badge-course-info">Курс</span>
                         <div class="d-flex flex-row justify-content-end course-card-header">
-                            <h6 class="text-muted">от <a href="${course.url}">${course.platform}</a></h6>
+                            <h6 class="text-muted">от <a href="${getCourseUrl(course)}">${course.platform}</a></h6>
                             <a href="#" class="top-favourite-add">
                                 <i class="${isFavourited ? 'fas' : 'far'} fa-bookmark"></i>
                             </a>
@@ -85,7 +85,7 @@ function getCoursePageHTML(course) {
                                     <li class="dropdown-item"><a href="#" data-social="telegram">Telegram</a></li>
                                 </ul>
                             </button>
-                            <a href="${course.url}" target="_blank" class="btn btn-outline-info flex-fill btn-link mr-2" data-course-id="${course.id}">
+                            <a href="${getCourseUrl(course)}" class="btn btn-outline-info flex-fill btn-link mr-2" data-course-id="${course.id}">
                                 Записаться
                             </a>
                         </div>
