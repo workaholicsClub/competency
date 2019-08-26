@@ -546,6 +546,10 @@ img.custom-avatar {
     align-items: flex-end;
 }
 
+.checkbox-group .skill-strength {
+    display: none;
+}
+
 .btn-outline-primary .skill-strength {
     margin-right: 0.375rem;
 }
@@ -788,7 +792,7 @@ section.filter-panel .salary-input-wrapper {
     line-height: 11px;
     letter-spacing: 1px;
     color: #333333;
-    padding: .375rem .375rem .375rem .75rem;
+    padding: .375rem .375rem .375rem .375rem;
 }
 
 .btn-with-plus::before {

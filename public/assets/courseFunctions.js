@@ -342,21 +342,44 @@ function getCoursePageAbsoluteUrl(course) {
 
 function getParameterByName(name, url) {
     if (!url) {
-        url = window.location.href;
+        url = window.location.search;
     }
 
-    name = name.replace(/[\[\]]/g, '\\$&');
-    let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-    let results = regex.exec(url);
-    if (!results) {
-        return null;
+    let allParams = getAllUrlParams(url);
+    let paramExists = typeof (allParams[name]) !== 'undefined';
+
+    return paramExists ? allParams[name] : null;
+}
+
+function getAllUrlParams(url) {
+    if (!url) {
+        url = window.location.search;
     }
 
-    if (!results[2]) {
-        return '';
-    }
+    let params={};
 
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    url.replace(/[?&]+([^=&]+)=([^&]*)/gi, (str, key, value) => {
+        key = decodeURIComponent(key);
+        value = decodeURIComponent(value.replace(/\+/g, ' '));
+
+        let paramExists = typeof(params[key]) !== 'undefined';
+        let paramConvertedToArray = paramExists && params[key] instanceof Array;
+
+        if (paramExists) {
+            if (!paramConvertedToArray) {
+                params[key] = [ params[key] ];
+            }
+
+            params[key].push(value);
+        }
+        else {
+            let paramIsArray = key.indexOf('[') > 0 && key.indexOf(']') > 0;
+
+            params[key] = paramIsArray ? [value] : value;
+        }
+    });
+
+    return params;
 }
 
 function splitLongText(text, wordLimit) {
