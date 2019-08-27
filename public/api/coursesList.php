@@ -95,8 +95,8 @@ ORDER BY maxSkillRate DESC, hasPrimary DESC, price ASC');
                         FROM skills sk
                         LEFT JOIN links_skills_vacancies lsv ON sk.id = lsv.skillId
                         LEFT JOIN vacancies v ON lsv.vacancyId = v.id
-                        LEFT JOIN links_skills_professions lsp ON sk.id = lsp.skillId AND v.professionId = lsp.professionId
-                        LEFT JOIN professions p ON v.professionId = p.id
+                        LEFT JOIN links_skills_professions lsp ON sk.id = lsp.skillId AND (v.professionId = lsp.professionId OR v.professionId IS NULL)
+                        LEFT JOIN professions p ON lsp.professionId = p.id
                         LEFT JOIN (SELECT professionId, COUNT(*) AS vcount FROM vacancies GROUP BY professionId) pcnt ON lsp.professionId = pcnt.professionId
                     WHERE p.code = '${professionCode}'
                     GROUP BY sk.id
