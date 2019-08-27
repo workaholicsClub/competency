@@ -864,15 +864,31 @@
 
     function setTemplateFilterValues() {
         let inputTemplate = getInputTemplateCode();
+        let price = getParameterByName('price');
+        let defaultPrice = !Boolean(price);
+        let hasPractice = getParameterByName('hasPractice');
+        let defaultPractice = !Boolean(hasPractice);
 
         if (inputTemplate === 'novice') {
             //activateCheckbox('input[name="price"][value="0"]');
-            activateCheckbox('input[name="hasPractice[]"][value="1"]');
+            if (defaultPractice) {
+                activateCheckbox('input[name="hasPractice[]"][value="1"]');
+            }
         }
 
         if (inputTemplate === 'other-novice') {
             //activateCheckbox('input[name="price"][value="1500"]');
-            activateCheckbox('input[name="hasPractice[]"][value="1"]');
+            if (defaultPractice) {
+                activateCheckbox('input[name="hasPractice[]"][value="1"]');
+            }
+        }
+
+        if (!defaultPrice) {
+            activateCheckbox('input[name="price"][value="'+price+'"]');
+        }
+
+        if (!defaultPractice) {
+            activateCheckbox('input[name="hasPractice[]"][value="'+hasPractice+'"]');
         }
     }
 
