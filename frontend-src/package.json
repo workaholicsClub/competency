@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "watch": "vue-cli-service build --no-clean --watch",
+    "build": "vue-cli-service build --no-clean",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@trevoreyre/autocomplete-vue": "^2.0.2",
     "core-js": "^2.6.5",
     "vue": "^2.6.10"
   },

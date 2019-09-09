@@ -1,11 +1,12 @@
 module.exports = {
+    publicPath: '/',
     outputDir: '../public/',
-    assetsDir: '../public/vue',
+    assetsDir: 'vue',
     pages: {
-        index: {
+        _add_edu_item: {
             entry: 'src/add_edu_item.js',
-            template: 'public/add_edu_item.html',
-            filename: '_add_edu_item.html',
+            template: 'page_templates/add_edu_item.html',
+            filename: 'add_edu_item.html',
         },
     }
 };
