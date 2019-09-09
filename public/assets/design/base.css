@@ -483,6 +483,10 @@ img.custom-avatar {
     letter-spacing: 1px;
 }
 
+.course-buttons .btn-link:hover {
+    text-decoration: none;
+}
+
 .view-on-mobile .course-buttons .btn-link {
     font-size: 0.8rem!important;
 }

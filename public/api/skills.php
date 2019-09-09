@@ -50,15 +50,19 @@ ORDER BY p.id, s.name');
 
 $skillsQuery->execute();
 $jsonOutput = [];
+$listOutput = [];
 
 while ($skill = $skillsQuery->fetch()) {
-    $jsonOutput[ $skill['profName'] ][] = [
+    $jsonSkill = [
         'id'           => $skill['id'],
         'name'         => $skill['name'],
         'isBase'       => boolval($skill['isBase']),
         'isPopular'    => boolval($skill['isTop10']),
         'vacancyCount' => intval($skill['vacancyCount']),
     ];
+
+    $jsonOutput[ $skill['profName'] ][] = $jsonSkill;
+    $listOutput[ $skill['id'] ] = $jsonSkill;
 }
 
 if ($jsonOutput === false) {
@@ -70,6 +74,9 @@ if ($_GET['format'] == 'script') {
     echo "function getSkillsList() {
         return " . json_encode($jsonOutput) . ";
     }";
+}
+else if ($_GET['format'] === 'jsonList') {
+    echo json_encode(array_values($listOutput));
 }
 else {
     echo json_encode($jsonOutput);
