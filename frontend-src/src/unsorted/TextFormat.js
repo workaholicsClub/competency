@@ -111,5 +111,50 @@ export default {
     lcfirstJoin(array, separator) {
         let lcArray = array.map( (item, index) => index === 0 ? item : this.lcfirst(item) );
         return lcArray.join(separator);
+    },
+
+    skillsToObjectList(maybeKeyValueObjectOrStringList) {
+        let isList = maybeKeyValueObjectOrStringList instanceof Array;
+        let isObjectList = isList && maybeKeyValueObjectOrStringList[0] instanceof Object;
+        let isStringList = isList && typeof(maybeKeyValueObjectOrStringList[0]) === 'string';
+
+        if (!isList) {
+            return false;
+        }
+
+        if (isObjectList) {
+            return maybeKeyValueObjectOrStringList;
+        }
+
+        if (isStringList) {
+            return maybeKeyValueObjectOrStringList.map( (skillName) => {
+                return {
+                    name: skillName,
+                    level: 0
+                };
+            });
+        }
+
+        return Object.keys(maybeKeyValueObjectOrStringList, (skillName) => {
+            let skillLevel = maybeKeyValueObjectOrStringList[skillName];
+
+            return {
+                name: skillName,
+                level: skillLevel,
+            }
+        });
+    },
+    getReadableValue(value, enumList) {
+        if (!enumList) {
+            return value;
+        }
+
+        return enumList.reduce( (previousValue, enumValue) => {
+            if (enumValue.code === value) {
+                return enumValue.title;
+            }
+
+            return previousValue;
+        }, value);
     }
 }

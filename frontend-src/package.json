@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "watch": "vue-cli-service build --no-clean --watch",
+    "watch": "vue-cli-service build --no-clean --watch --mode development && npm run clean",
     "build": "vue-cli-service build --no-clean",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^12.4.0",
+    "@ckeditor/ckeditor5-vue": "^1.0.0-beta.2",
     "@trevoreyre/autocomplete-vue": "^2.0.2",
     "core-js": "^2.6.5",
     "vue": "^2.6.10"

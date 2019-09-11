@@ -76,6 +76,12 @@
                     </label>
                 </div>
                 <div class="form-check form-check-inline">
+                    <label class="btn btn-outline-primary btn-filter-apply" :class="{'active': course.jobPlacement}">
+                        Помощь в трудоустройстве
+                        <input type="checkbox" class="form-check-input" v-model="course.jobPlacement">
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
                     <label class="btn btn-outline-primary btn-filter-apply" :class="{'active': course.forKids}">
                         Подходит детям
                         <input type="checkbox" class="form-check-input" v-model="course.forKids">
@@ -142,10 +148,10 @@
 </template>
 
 <script>
-    import SkillInput from './SkillInput.vue'
-    import CheckInput from './CheckInput.vue'
-    import UnitsSelect from './UnitsSelect.vue'
-    import CourseCard from './CourseCard.vue'
+    import SkillInput from '../SkillInput.vue'
+    import CheckInput from '../CheckInput.vue'
+    import UnitsSelect from '../UnitsSelect.vue'
+    import CourseCard from '../Cards/Course.vue'
 
     export default {
         name: 'CourseForm',

@@ -33,45 +33,19 @@
             </p>
 
             <div v-if="allSkills">
-                <div v-if="filteredSkills">
-                    <label class="mt-1 mb-0">По окончании будете уметь</label>
-                    <p>
-                        <skill-list :skills="filteredSkills"></skill-list>
-
-                        <span v-if="additionalSkills">
-                            <a class="continue-toggle" v-if="additionalSkillsShown" @click="toggleAdditionalSkills">Показать все</a>
-                            <a class="continue-toggle" v-else @click="toggleAdditionalSkills">Спрятать</a>
-                            <span class="continue" v-if="additionalSkillsShown">
-                                <skill-list :skills="additionalSkills"></skill-list>
-                            </span>
-                        </span>
-                    </p>
-                </div>
-                <div v-else>
-                    <label class="mt-1 mb-0">По окончании будете уметь</label>
-                    <p>
-                        <skill-list :skills="allSkills"></skill-list>
-                    </p>
-                </div>
+                <label class="mt-1 mb-0">По окончании будете уметь</label>
+                <matched-skill-list :skills="allSkills" :skills-in-filter="skillsInFilter"></matched-skill-list>
             </div>
 
             <div v-if="allRequirements">
                 <label class="mt-1 mb-0">Нужно знать</label>
-                <p>
-                    <skill-list :skills="allRequirements"></skill-list>
-                </p>
+                <skill-list :skills="allRequirements"></skill-list>
             </div>
 
-            <p v-if="splitDescription.visible">
-                {{splitDescription.visible}}
-                <span v-if="splitDescription.hidden">
-                    <a href="javascript:0;" class="continue-toggle d-flex justify-content-end flex-column" @click="toggleHiddenDescription" v-if="!hiddenDescriptionShown">
-                        <i class="fas fa-angle-down"></i>
-                    </a>
-                    <span class="continue" v-if="hiddenDescriptionShown">{{splitDescription.hidden}}</span>
-                </span>
+            <p v-if="course.description" class="mb-0">
+                <split-description :text="course.description"></split-description>
             </p>
-            <a :href="pageUrl" class="details-link" v-if="splitDescription.visible">Подробнее на странице курса</a>
+            <a :href="pageUrl" class="details-link" v-if="course.description">Подробнее на странице курса</a>
 
             <div class="mt-4" :class="{'row': !mobile}">
                 <div class="col price-duration-data" v-if="!mobile">
@@ -91,16 +65,7 @@
                     <button type="button" class="btn btn-outline-info btn-feedback mr-2">
                         <i class="far fa-comment"></i>
                     </button>
-                    <button type="button" class="btn btn-outline-info btn-share mr-2">
-                        <i class="fas fa-share-alt"></i>
-                        <ul class="share-menu dropdown-menu">
-                            <li class="dropdown-item"><a data-social="vkontakte">Вконтакте</a></li>
-                            <li class="dropdown-item"><a data-social="facebook">Facebook</a></li>
-                            <li class="dropdown-item"><a data-social="twitter">Twitter</a></li>
-                            <li class="dropdown-item"><a data-social="whatsapp">WhatsApp</a></li>
-                            <li class="dropdown-item"><a data-social="telegram">Telegram</a></li>
-                        </ul>
-                    </button>
+                    <share-button></share-button>
                     <a v-if="!mobile" :href="redirectUrl" class="btn btn-outline-info flex-fill btn-link mr-2">
                         Записаться
                     </a>
@@ -111,20 +76,24 @@
 </template>
 
 <script>
-    import SkillList from './SkillList.vue'
-    import TextFormat from '../unsorted/TextFormat'
+    import SkillList from '../SkillList.vue'
+    import MatchedSkillList from '../MatchedSkillList.vue'
+    import SplitDescription from '../SplitDescription.vue'
+    import ShareButton from '../ShareButton'
+    import TextFormat from '../../unsorted/TextFormat'
 
     export default {
         name: 'CourseCard',
         components: {
-            SkillList
+            SkillList,
+            MatchedSkillList,
+            SplitDescription,
+            ShareButton
         },
-        props: ['course', 'filter-skills', 'enums', 'mobile'],
+        props: ['course', 'skills-in-filter', 'enums', 'mobile'],
         data() {
             return {
                 isFavourited: false,
-                additionalSkillsShown: false,
-                hiddenDescriptionShown: false,
             }
         },
         computed: {
@@ -142,7 +111,7 @@
                     return false;
                 }
 
-                let readableDuration = this.getReadableValue(this.course.durationUnits, 'durationUnits');
+                let readableDuration = TextFormat.getReadableValue(this.course.durationUnits, this.enums['durationUnits']);
                 return this.course.duration + ' ' + TextFormat.declensionUnits(this.course.duration, readableDuration);
             },
             humanDuration() {
@@ -150,7 +119,7 @@
                     return false;
                 }
 
-                let readableDuration = this.getReadableValue(this.course.durationUnits, 'durationUnits');
+                let readableDuration = TextFormat.getReadableValue(this.course.durationUnits, this.enums['durationUnits']);
                 return TextFormat.getHumanReadableTime(this.course.duration, readableDuration);
             },
             originalLoad() {
@@ -162,7 +131,7 @@
                     return 'Свободный график';
                 }
 
-                let readableLoad = this.getReadableValue(this.course.loadUnits, 'loadUnits');
+                let readableLoad = TextFormat.getReadableValue(this.course.loadUnits, this.enums['loadUnits']);
 
                 return this.course.load + ' ' + TextFormat.declensionUnits(this.course.load, readableLoad);
             },
@@ -171,11 +140,11 @@
                     return false;
                 }
 
-                let readableForms = this.course.form.map( (form) => this.getReadableValue(form, 'forms') );
+                let readableForms = this.course.form.map( (form) => TextFormat.getReadableValue(form, this.enums['forms']) );
                 let formAndMaybeTime = TextFormat.lcfirstJoin(readableForms,'/');
 
                 if (this.course.time) {
-                    let readableTime = this.course.time.map( (time) => this.getReadableValue(time, 'times') );
+                    let readableTime = this.course.time.map( (time) => TextFormat.getReadableValue(time, this.enums['times']) );
                     formAndMaybeTime += ', ' + TextFormat.lcfirstJoin(readableTime, '/');
                 }
 
@@ -202,27 +171,11 @@
 
                 return this.course.price > 0 ? formattedPrice : 'Бесплатно';
             },
-            filteredSkills() {
-                let isFilterSkillsDefined = this.filterSkills instanceof Array && this.filterSkills.length > 0;
-
-                if ( !isFilterSkillsDefined ) {
-                    return false;
-                }
-
-                return [];
-            },
-            additionalSkills() {
-                if (!this.filteredSkills) {
-                    return false;
-                }
-
-                return [];
-            },
             allSkills() {
-                return this.skillsToObjectList(this.course.skills);
+                return TextFormat.skillsToObjectList(this.course.skills);
             },
             allRequirements() {
-                return this.skillsToObjectList(this.course.requirements);
+                return TextFormat.skillsToObjectList(this.course.requirements);
             },
             attributesLine() {
                 let certificateShortNames = {
@@ -236,12 +189,12 @@
                 let attributes = [];
 
                 if (this.course.audience && this.course.audience.length > 0) {
-                    let readableAudience = this.course.audience.map( (audience) => this.getReadableValue(audience, 'audience') );
+                    let readableAudience = this.course.audience.map( (audience) => TextFormat.getReadableValue(audience, this.enums['audience']) );
                     attributes.push( TextFormat.lcfirstJoin(readableAudience, '/') );
                 }
 
                 if (this.course.format && this.course.format.length > 0) {
-                    let readableFormats = this.course.format.map( (format) => this.getReadableValue(format, 'formats') );
+                    let readableFormats = this.course.format.map( (format) => TextFormat.getReadableValue(format, this.enums['formats']) );
                     attributes.push( TextFormat.lcfirstJoin(readableFormats, '/') );
                 }
 
@@ -258,7 +211,7 @@
 
                 if (this.course.certificate && this.course.certificate.length > 0) {
                     let certificateNames = this.course.certificate.map( (certificate) => {
-                        return certificateShortNames[ this.getReadableValue(certificate, 'certificates') ];
+                        return certificateShortNames[ TextFormat.getReadableValue(certificate, this.enums['certificates']) ];
                     });
                     attributes.push( TextFormat.lcfirstJoin(certificateNames, '/') + ' сертификат' );
                 }
@@ -268,84 +221,11 @@
 
                 return attributes;
             },
-            splitDescription() {
-                if (!this.course.description) {
-                    return {
-                        visible: false,
-                        hidden: false
-                    };
-                }
-
-                let wordLimit = 25;
-                let words = this.course.description.split(" ");
-                let visible = this.course.description;
-                let hidden = false;
-
-                if (words.length > wordLimit) {
-                    visible = words.slice(0, wordLimit).join(" ");
-                    hidden = words.slice(wordLimit).join(" ");
-                }
-
-                return {
-                    visible: visible,
-                    hidden: hidden
-                };
-            }
         },
         methods: {
             toggleFavourite() {
                 this.isFavourited = !this.isFavourited;
             },
-            toggleAdditionalSkills() {
-                this.additionalSkillsShown = !this.additionalSkillsShown;
-            },
-            toggleHiddenDescription() {
-                this.hiddenDescriptionShown = !this.hiddenDescriptionShown;
-            },
-            getReadableValue(value, type) {
-                if (!this.enums[type]) {
-                    return value;
-                }
-
-                return this.enums[type].reduce( (previousValue, enumValue) => {
-                    if (enumValue.code === value) {
-                        return enumValue.title;
-                    }
-
-                    return previousValue;
-                }, value);
-            },
-            skillsToObjectList(maybeKeyValueObjectOrStringList) {
-                let isList = maybeKeyValueObjectOrStringList instanceof Array;
-                let isObjectList = isList && maybeKeyValueObjectOrStringList[0] instanceof Object;
-                let isStringList = isList && typeof(maybeKeyValueObjectOrStringList[0]) === 'string';
-
-                if (!isList) {
-                    return false;
-                }
-
-                if (isObjectList) {
-                    return maybeKeyValueObjectOrStringList;
-                }
-
-                if (isStringList) {
-                    return maybeKeyValueObjectOrStringList.map( (skillName) => {
-                        return {
-                            name: skillName,
-                            level: 0
-                        };
-                    });
-                }
-
-                return Object.keys(maybeKeyValueObjectOrStringList, (skillName) => {
-                    let skillLevel = maybeKeyValueObjectOrStringList[skillName];
-
-                    return {
-                        name: skillName,
-                        level: skillLevel,
-                    }
-                });
-            }
         }
     }
 </script>

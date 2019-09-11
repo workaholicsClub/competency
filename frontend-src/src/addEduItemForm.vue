@@ -14,25 +14,46 @@
 
         <div :class="{'view-on-mobile': isMobile, 'view-on-desktop': isDesktop}">
             <course-form :course="course" :enums="enums.course" :mobile="isMobile" :skills="allSkills" v-show="currentTabCode === 'course'"></course-form>
+            <book-form :book="book" :enums="enums.book" :mobile="isMobile" :skills="allSkills" v-show="currentTabCode === 'book'"></book-form>
+            <project-form card-title="Идея проекта" :item="project" :enums="enums.project" :mobile="isMobile" :skills="allSkills" v-show="currentTabCode === 'project'"></project-form>
+            <explain-form card-title="Объяснение" :item="explanation" :enums="enums.explanation" :mobile="isMobile" :skills="allSkills" v-show="currentTabCode === 'explain'"></explain-form>
+            <motivation-form card-title="Мотивация" :item="motivation" :enums="enums.motivation" :mobile="isMobile" :skills="allSkills" v-show="currentTabCode === 'motivation'"></motivation-form>
+            <internship-form :internship="internship" :enums="enums.internship" :mobile="isMobile" :skills="allSkills" v-show="currentTabCode === 'internship'"></internship-form>
         </div>
     </div>
 </template>
 
 <script>
-    import CourseForm from './components/CourseForm.vue'
+    import CourseForm from './components/Forms/Course.vue'
+    import BookForm from './components/Forms/Book.vue'
+    import ProjectForm from './components/Forms/BasicText.vue'
+    import ExplainForm from './components/Forms/BasicText.vue'
+    import MotivationForm from './components/Forms/BasicText.vue'
+    import InternshipForm from './components/Forms/Internship.vue'
     import ApiClient from './unsorted/ApiClient'
+
+    let audience = [
+        {code: 'junior', title: 'Для начинающих'},
+        {code: 'middle', title: 'Средний уровень'},
+        {code: 'senior', title: 'Для профессионалов'},
+    ];
 
     export default {
         name: 'addEduItemForm',
         components: {
-            CourseForm
+            CourseForm,
+            BookForm,
+            ProjectForm,
+            ExplainForm,
+            MotivationForm,
+            InternshipForm
         },
         data() {
             return {
                 tabs: [
                     {code: 'course', title: 'Курс'},
                     {code: 'book', title: 'Книга'},
-                    {code: 'project', title: 'Проект'},
+                    {code: 'project', title: 'Идея проекта'},
                     {code: 'explain', title: 'Объяснение'},
                     {code: 'motivation', title: 'Мотивация'},
                     {code: 'internship', title: 'Стажировка'},
@@ -83,15 +104,44 @@
                             {code: 'day-per-week', title: 'день в неделю'},
                             {code: 'self', title: 'самостоятельно'},
                         ],
-                        audience: [
-                            {code: 'junior', title: 'Для начинающих'},
-                            {code: 'middle', title: 'Средний уровень'},
-                            {code: 'senior', title: 'Для профессионалов'},
-                        ]
+                        audience: audience
+                    },
+                    book: {
+                        formats: [
+                            {'code': 'digital', 'title': 'Электронная'},
+                            {'code': 'print', 'title': 'Печатная'},
+                        ],
+                        audience: audience
+                    },
+                    project: {},
+                    explanation: {},
+                    motivation: {},
+                    internship: {
+                        salaryTypes: [
+                            {code: 'month', title: 'В месяц'},
+                            {code: 'hour', title: 'В час'},
+                        ],
+                        durationUnits: [
+                            {code: 'week', title: 'неделя'},
+                            {code: 'month', title: 'месяц'},
+                            {code: 'year', title: 'год'},
+                        ],
+                        loadUnits: [
+                            {code: 'hour-per-day', title: 'час в день'},
+                            {code: 'hour-per-week', title: 'час в неделю'},
+                            {code: 'day-per-week', title: 'день в неделю'},
+                            {code: 'self', title: 'самостоятельно'},
+                        ],
+
                     }
                 },
                 currentTabCode: 'course',
                 allSkills: false,
+                window: {
+                    width: 0,
+                    height: 0
+                },
+
                 course: {
                     type: 'course',
                     priceType: 'total',
@@ -101,9 +151,20 @@
                 book: {
                     type: 'book'
                 },
-                window: {
-                    width: 0,
-                    height: 0
+                project: {
+                    type: 'project'
+                },
+                explanation: {
+                    type: 'explanation'
+                },
+                motivation: {
+                    type: 'motivation'
+                },
+                internship: {
+                    type: 'internship',
+                    salaryType: 'month',
+                    durationUnits: 'month',
+                    loadUnits: 'hour-per-week'
                 }
             };
         },
