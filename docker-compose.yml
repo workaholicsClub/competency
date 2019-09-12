@@ -12,7 +12,7 @@ services:
       - php
 
   php:
-    image: php:7.1-fpm
+    image: php:7.3-fpm
     build:
       context: "."
       dockerfile: "./etc/php/Dockerfile"
@@ -25,6 +25,8 @@ services:
       - MAILGUN_KEY=${MAILGUN_KEY}
       - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
       - XDEBUG_CONFIG=remote_host=${HOST_IP}
+      - MONGO_HOST=mongo
+      - MONGO_DB=skillitch
 
     volumes:
       - ".:/var/www"
@@ -33,6 +35,7 @@ services:
       - "./etc/php/pdo_sqlite.ini:/usr/local/etc/php/conf.d/pdo_sqlite.ini"
     depends_on:
       - database
+      - mongo
 
   database:
     image: mariadb
@@ -46,3 +49,11 @@ services:
     volumes:
       - "./etc/database/data:/var/lib/mysql"
       - "./etc/database:/docker-entrypoint-initdb.d"
+
+  mongo:
+    image: mongo
+    volumes:
+      - ./etc/database/mongo:/data/db
+    restart: always
+    ports:
+      - 27117:27017

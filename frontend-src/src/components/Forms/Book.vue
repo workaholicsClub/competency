@@ -86,6 +86,7 @@
         },
         methods: {
             save() {
+                this.$emit('save', this.book);
             }
         }
     }

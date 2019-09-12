@@ -13,12 +13,62 @@
         </ul>
 
         <div :class="{'view-on-mobile': isMobile, 'view-on-desktop': isDesktop}">
-            <course-form :course="course" :enums="enums.course" :mobile="isMobile" :skills="allSkills" v-show="currentTabCode === 'course'"></course-form>
-            <book-form :book="book" :enums="enums.book" :mobile="isMobile" :skills="allSkills" v-show="currentTabCode === 'book'"></book-form>
-            <project-form card-title="Идея проекта" :item="project" :enums="enums.project" :mobile="isMobile" :skills="allSkills" v-show="currentTabCode === 'project'"></project-form>
-            <explain-form card-title="Объяснение" :item="explanation" :enums="enums.explanation" :mobile="isMobile" :skills="allSkills" v-show="currentTabCode === 'explain'"></explain-form>
-            <motivation-form card-title="Мотивация" :item="motivation" :enums="enums.motivation" :mobile="isMobile" :skills="allSkills" v-show="currentTabCode === 'motivation'"></motivation-form>
-            <internship-form :internship="internship" :enums="enums.internship" :mobile="isMobile" :skills="allSkills" v-show="currentTabCode === 'internship'"></internship-form>
+            <course-form
+                    v-show="currentTabCode === 'course'"
+                    :course="course"
+                    :enums="enums.course"
+                    :mobile="isMobile"
+                    :skills="allSkills"
+                    @save="saveItem"
+            ></course-form>
+
+            <book-form
+                    v-show="currentTabCode === 'book'"
+                    :book="book"
+                    :enums="enums.book"
+                    :mobile="isMobile"
+                    :skills="allSkills"
+                    @save="saveItem"
+            ></book-form>
+
+            <project-form
+                    v-show="currentTabCode === 'project'"
+                    card-title="Идея проекта"
+                    :item="project"
+                    :enums="enums.project"
+                    :mobile="isMobile"
+                    :skills="allSkills"
+                    @save="saveItem"
+            ></project-form>
+
+            <explain-form
+                    v-show="currentTabCode === 'explain'"
+                    card-title="Объяснение"
+                    :item="explanation"
+                    :enums="enums.explanation"
+                    :mobile="isMobile"
+                    :skills="allSkills"
+                    @save="saveItem"
+            ></explain-form>
+
+            <motivation-form
+                    v-show="currentTabCode === 'motivation'"
+                    card-title="Мотивация"
+                    :item="motivation"
+                    :enums="enums.motivation"
+                    :mobile="isMobile"
+                    :skills="allSkills"
+                    @save="saveItem"
+            ></motivation-form>
+
+            <internship-form
+                    v-show="currentTabCode === 'internship'"
+                    :internship="internship"
+                    :enums="enums.internship"
+                    :mobile="isMobile"
+                    :skills="allSkills"
+                    @save="saveItem"
+            ></internship-form>
         </div>
     </div>
 </template>
@@ -31,6 +81,7 @@
     import MotivationForm from './components/Forms/BasicText.vue'
     import InternshipForm from './components/Forms/Internship.vue'
     import ApiClient from './unsorted/ApiClient'
+    import axios from 'axios'
 
     let audience = [
         {code: 'junior', title: 'Для начинающих'},
@@ -180,6 +231,30 @@
         methods: {
             async loadAllSkills() {
                 this.allSkills = await ApiClient.loadSkills();
+            },
+            async saveItem(item) {
+                let isNewItem = typeof (item['_id']) !== 'string';
+                let url = '/api/saveEduItem.php';
+
+                let response = await axios.post(url, item);
+
+                let hasError = response && response.error;
+                let successfullySaved = response && response.eduItem;
+
+                if (successfullySaved) {
+                    this[ response.eduItem.type ] = response.eduItem;
+                    this.showMessage('Сохранилось!')
+                }
+
+                if (hasError) {
+                    this.showError(response.error);
+                }
+            },
+            showMessage(messageText) {
+                console.log(messageText);
+            },
+            showError(errorMessage) {
+                console.log(errorMessage);
             },
             handleResize() {
                 this.window.width = window.innerWidth;

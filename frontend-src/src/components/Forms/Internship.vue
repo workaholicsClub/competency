@@ -133,12 +133,9 @@
             UnitsSelect,
             InternshipCard
         },
-        data() {
-            return {
-            }
-        },
         methods: {
             save() {
+                this.$emit('save', this.internship);
             }
         },
     }

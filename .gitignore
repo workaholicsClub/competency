@@ -1,9 +1,11 @@
 /etc/database/data/*
+/etc/database/mongo/*
 /vendor/
 /.idea/
 clover.xml
 /.env
 !/etc/database/data/.gitkeep
+!/etc/database/mongo/.gitkeep
 
 ### Node.js
 logs

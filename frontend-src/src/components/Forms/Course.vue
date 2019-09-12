@@ -164,6 +164,7 @@
         },
         methods: {
             save() {
+                this.$emit('save', this.course);
             }
         },
         computed: {
