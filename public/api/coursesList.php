@@ -13,9 +13,14 @@ try {
 
     $filter = [];
     $requestQuery = $_REQUEST['filter'];
+    $doQuery = !empty($requestQuery['skills']);
 
     foreach ($requestQuery as $field => $value) {
         if (is_array($value)) {
+	    foreach($value as $singleValue) {
+		$value[] = boolval($singleValue);
+	    }
+
             if ($field === 'requirements') {
                 $filter['$or'] = [
                     ['requirements' => null],
@@ -31,14 +36,19 @@ try {
         }
     }
 
-    $mongoQuery = new MongoDB\Driver\Query($filter);
-    $cursor = $manager->executeQuery($eduItemsCollection, $mongoQuery);
+    if ($doQuery) {
+        $mongoQuery = new MongoDB\Driver\Query($filter);
+        $cursor = $manager->executeQuery($eduItemsCollection, $mongoQuery);
 
-    foreach ($cursor as $course) {
-        $preparedCourse = (array) $course;
-        $preparedCourse['_id'] = (string) $preparedCourse['_id'];
+	foreach ($cursor as $course) {
+    	    $preparedCourse = (array) $course;
+            $preparedCourse['_id'] = (string) $preparedCourse['_id'];
 
-        $jsonOutput[] = $preparedCourse;
+	    $jsonOutput[] = $preparedCourse;
+        }
+    }
+    else {
+	$jsonOutput = [];
     }
 }
 catch (MongoDB\Driver\Exception\Exception $e) {
