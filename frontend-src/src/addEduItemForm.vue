@@ -148,7 +148,7 @@
                     type: 'project'
                 },
                 explanation: {
-                    type: 'explanation'
+                    type: 'explain'
                 },
                 motivation: {
                     type: 'motivation'

@@ -371,8 +371,6 @@
 
             this.filter = this.getTemplateFilterValues();
 
-            await this.loadRequestData();
-
             try {
                 await checkSession();
                 if (isAuthenticated()) {
@@ -385,6 +383,8 @@
             catch (error) {
                 this.user = false;
             }
+
+            await this.loadRequestData();
         },
         watch: {
             request: {

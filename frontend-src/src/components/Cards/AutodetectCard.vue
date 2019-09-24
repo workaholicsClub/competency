@@ -32,7 +32,7 @@
         </project-card>
 
         <explain-card
-                v-if="item.type === 'explanation'"
+                v-if="item.type === 'explain'"
                 :item="item"
                 :enums="enums.explanation"
                 :mobile="mobile"
