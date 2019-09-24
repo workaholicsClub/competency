@@ -3,10 +3,15 @@ module.exports = {
     outputDir: '../public/',
     assetsDir: 'vue',
     pages: {
-        _add_edu_item: {
+        add_edu_item: {
             entry: 'src/add_edu_item.js',
             template: 'page_templates/add_edu_item.html',
             filename: 'add_edu_item.html',
+        },
+        courses: {
+            entry: 'src/courses.js',
+            template: 'page_templates/courses.html',
+            filename: 'courses.html',
         },
     }
 };

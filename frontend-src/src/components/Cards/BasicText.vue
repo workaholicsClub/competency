@@ -1,17 +1,22 @@
 <template>
-    <div class="card course-card course-card-text" :class="{'take-a-look': isPopular, 'swiper-slide': mobile}">
+    <div class="card course-card course-card-text" :class="{'take-a-look': isPopular}">
+        <div class="card-img-top" v-if="item.imageUrl">
+            <img :src="item.imageUrl">
+        </div>
         <div class="card-body">
             <div v-if="mobile" class="d-flex flex-row align-items-center course-card-header">
                 <span class="badge badge-course-info mr-2">{{cardTitle}}</span>
+                <h6 class="text-muted flex-fill mb-0" v-if="item.author">{{item.author}}</h6>
                 <a class="top-favourite-add" @click="toggleFavourite">
-                    <i :class="{'fas': isFavourited, 'far': !isFavourited}" class="fa-bookmark"></i>
+                    <i :class="{'fas': isFavourite, 'far': !isFavourite}" class="fa-bookmark"></i>
                 </a>
             </div>
             <div v-else class="d-flex flex-row justify-content-between align-items-start">
                 <span class="badge badge-course-info">{{cardTitle}}</span>
+                <h6 class="text-muted text-muted flex-fill text-right" v-if="item.author">{{item.author}}</h6>
                 <div class="d-flex flex-row justify-content-end course-card-header">
                     <a class="top-favourite-add" @click="toggleFavourite">
-                        <i :class="{'fas': isFavourited, 'far': !isFavourited}" class="fa-bookmark"></i>
+                        <i :class="{'fas': isFavourite, 'far': !isFavourite}" class="fa-bookmark"></i>
                     </a>
                 </div>
             </div>
@@ -29,7 +34,7 @@
             </div>
 
             <div v-if="item.description" class="mb-0 mt-4">
-                <span v-html="item.description"></span>
+                <split-description :text="item.description" :use-html="true"></split-description>
             </div>
 
             <div class="mt-4" :class="{'row': !mobile}">
@@ -39,17 +44,16 @@
                      :class="{'flex-fill mt-0 p-0': mobile, 'col mt-1': !mobile}">
                     <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2"
                             type="button"
-                            :class="{'active': isFavourited}"
+                            :class="{'active': isFavourite}"
                             @click="toggleFavourite"
                     >
-                        <i :class="{'fas fa-check': isFavourited, 'far fa-bookmark': !isFavourited}"></i>
+                        <i :class="{'fas fa-check': isFavourite, 'far fa-bookmark': !isFavourite}"></i>
                     </button>
-                    <share-button></share-button>
+                    <!--share-button></share-button-->
                 </div>
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -67,15 +71,14 @@
             SplitDescription,
             ShareButton
         },
-        props: ['item', 'skills-in-filter', 'enums', 'mobile', 'card-title'],
+        props: ['item', 'skills-in-filter', 'enums', 'mobile', 'card-title', 'is-favourite'],
         data() {
             return {
-                isFavourited: false,
             }
         },
         methods: {
             toggleFavourite() {
-                this.isFavourited = !this.isFavourited;
+                this.$emit('favourite', this.item);
             },
         },
         computed: {
@@ -101,3 +104,13 @@
         }
     }
 </script>
+<style>
+    .card-img-top {
+        max-height: 25rem;
+        overflow: hidden;
+    }
+    .card-img-top img {
+        width: 100%;
+    }
+
+</style>

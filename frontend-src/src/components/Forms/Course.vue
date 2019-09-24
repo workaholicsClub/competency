@@ -155,7 +155,7 @@
 
     export default {
         name: 'CourseForm',
-        props: ['course', 'enums', 'skills', 'mobile'],
+        props: ['course', 'enums', 'skills', 'mobile', 'save-error', 'save-status'],
         components: {
             SkillInput,
             CheckInput,

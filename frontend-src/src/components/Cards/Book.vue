@@ -1,11 +1,11 @@
 <template>
-    <div class="card course-card course-card-text" :class="{'take-a-look': hasPartnerUrl, 'swiper-slide': mobile}">
+    <div class="card course-card course-card-text" :class="{'take-a-look': hasPartnerUrl}">
         <div class="card-body">
             <div v-if="mobile" class="d-flex flex-row align-items-center course-card-header">
                 <span class="badge badge-course-info mr-2">Книга</span>
                 <h6 class="text-muted flex-fill mb-0" v-if="book.author">{{book.author}}</h6>
                 <a class="top-favourite-add" @click="toggleFavourite">
-                    <i :class="{'fas': isFavourited, 'far': !isFavourited}" class="fa-bookmark"></i>
+                    <i :class="{'fas': isFavourite, 'far': !isFavourite}" class="fa-bookmark"></i>
                 </a>
             </div>
             <div v-else class="d-flex flex-row justify-content-between align-items-start">
@@ -13,7 +13,7 @@
                 <div class="d-flex flex-row justify-content-end course-card-header">
                     <h6 class="text-muted" v-if="book.author">{{book.author}}</h6>
                     <a class="top-favourite-add" @click="toggleFavourite">
-                        <i :class="{'fas': isFavourited, 'far': !isFavourited}" class="fa-bookmark"></i>
+                        <i :class="{'fas': isFavourite, 'far': !isFavourite}" class="fa-bookmark"></i>
                     </a>
                 </div>
             </div>
@@ -50,13 +50,13 @@
                     </a>
                     <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2"
                             type="button"
-                            :class="{'active': isFavourited}"
+                            :class="{'active': isFavourite}"
                             @click="toggleFavourite"
                     >
-                        <i :class="{'fas fa-check': isFavourited, 'far fa-bookmark': !isFavourited}"></i>
+                        <i :class="{'fas fa-check': isFavourite, 'far fa-bookmark': !isFavourite}"></i>
                     </button>
-                    <share-button></share-button>
-                    <a v-if="!mobile" :href="redirectUrl" class="btn btn-outline-info flex-fill btn-link mr-2">
+                    <!--share-button></share-button-->
+                    <a v-if="!mobile" :href="redirectUrl" target="_blank" class="btn btn-outline-info flex-fill btn-link mr-2">
                         {{buttonTitle}}
                     </a>
                 </div>
@@ -80,10 +80,9 @@
             SplitDescription,
             ShareButton
         },
-        props: ['book', 'skills-in-filter', 'enums', 'mobile'],
+        props: ['book', 'skills-in-filter', 'enums', 'mobile', 'is-favourite'],
         data() {
             return {
-                isFavourited: false,
             }
         },
         computed: {
@@ -132,7 +131,7 @@
         },
         methods: {
             toggleFavourite() {
-                this.isFavourited = !this.isFavourited;
+                this.$emit('favourite', this.item);
             },
         }
     }

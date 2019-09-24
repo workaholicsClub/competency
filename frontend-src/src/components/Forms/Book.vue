@@ -78,7 +78,7 @@
 
     export default {
         name: 'BookForm',
-        props: ['book', 'enums', 'skills', 'mobile'],
+        props: ['book', 'enums', 'skills', 'mobile', 'save-error', 'save-status'],
         components: {
             SkillInput,
             CheckInput,

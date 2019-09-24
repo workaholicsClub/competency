@@ -21,11 +21,12 @@
 }
 
 .scroll .view-on-desktop header {
-    display: none!important;
+    opacity: 0;
 }
 
 .scroll .view-on-desktop header.scroll {
     display: flex!important;
+    opacity: 1;
 }
 
 .view-on-desktop header .btn-favourites-list {
@@ -117,6 +118,11 @@ section.filter-panel .more-label:hover {
 
 .manual-skills .skill-group-title-label {
     display: block!important;
+}
+
+.view-on-desktop .data .dropdown {
+    margin-bottom: 0.2rem;
+    display: inline-block;
 }
 
 .view-on-desktop .course-list.loading {

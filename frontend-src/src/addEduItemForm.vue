@@ -19,6 +19,8 @@
                     :enums="enums.course"
                     :mobile="isMobile"
                     :skills="allSkills"
+                    :save-status="saved.course"
+                    :save-error="error.course"
                     @save="saveItem"
             ></course-form>
 
@@ -28,6 +30,8 @@
                     :enums="enums.book"
                     :mobile="isMobile"
                     :skills="allSkills"
+                    :save-status="saved.book"
+                    :save-error="error.book"
                     @save="saveItem"
             ></book-form>
 
@@ -38,6 +42,8 @@
                     :enums="enums.project"
                     :mobile="isMobile"
                     :skills="allSkills"
+                    :save-status="saved.project"
+                    :save-error="error.project"
                     @save="saveItem"
             ></project-form>
 
@@ -48,6 +54,8 @@
                     :enums="enums.explanation"
                     :mobile="isMobile"
                     :skills="allSkills"
+                    :save-status="saved.explanation"
+                    :save-error="error.explanation"
                     @save="saveItem"
             ></explain-form>
 
@@ -58,6 +66,8 @@
                     :enums="enums.motivation"
                     :mobile="isMobile"
                     :skills="allSkills"
+                    :save-status="saved.motivation"
+                    :save-error="error.motivation"
                     @save="saveItem"
             ></motivation-form>
 
@@ -67,6 +77,8 @@
                     :enums="enums.internship"
                     :mobile="isMobile"
                     :skills="allSkills"
+                    :save-status="saved.internship"
+                    :save-error="error.internship"
                     @save="saveItem"
             ></internship-form>
         </div>
@@ -74,20 +86,16 @@
 </template>
 
 <script>
-    import CourseForm from './components/Forms/Course.vue'
-    import BookForm from './components/Forms/Book.vue'
-    import ProjectForm from './components/Forms/BasicText.vue'
-    import ExplainForm from './components/Forms/BasicText.vue'
-    import MotivationForm from './components/Forms/BasicText.vue'
-    import InternshipForm from './components/Forms/Internship.vue'
-    import ApiClient from './unsorted/ApiClient'
-    import axios from 'axios'
-
-    let audience = [
-        {code: 'junior', title: 'Для начинающих'},
-        {code: 'middle', title: 'Средний уровень'},
-        {code: 'senior', title: 'Для профессионалов'},
-    ];
+    import CourseForm from './components/Forms/Course.vue';
+    import BookForm from './components/Forms/Book.vue';
+    import ProjectForm from './components/Forms/BasicText.vue';
+    import ExplainForm from './components/Forms/BasicText.vue';
+    import MotivationForm from './components/Forms/BasicText.vue';
+    import InternshipForm from './components/Forms/Internship.vue';
+    import ApiClient from './unsorted/ApiClient';
+    import Enums from "./unsorted/Enums";
+    import ArraysAndObjects from "./unsorted/ArraysAndObjects";
+    import {initAuth, login, logout, isAuthenticated, checkSession, getSavedProfileData} from "./unsorted/Auth";
 
     export default {
         name: 'addEduItemForm',
@@ -101,91 +109,8 @@
         },
         data() {
             return {
-                tabs: [
-                    {code: 'course', title: 'Курс'},
-                    {code: 'book', title: 'Книга'},
-                    {code: 'project', title: 'Идея проекта'},
-                    {code: 'explain', title: 'Объяснение'},
-                    {code: 'motivation', title: 'Мотивация'},
-                    {code: 'internship', title: 'Стажировка'},
-                ],
-                enums: {
-                    course: {
-                        forms: [
-                            {code: 'online', title: 'Онлайн'},
-                            {code: 'offline', title: 'Очный'},
-                        ],
-                        formats: [
-                            {code: 'video', title: 'Видео'},
-                            {code: 'webinar', title: 'Вебинар'},
-                            {code: 'chat', title: 'Чат'},
-                            {code: 'intensive', title: 'Интенсив'},
-                            {code: 'interactive', title: 'Интерактивный'},
-                            {code: 'textbook', title: 'Электронный учебник'},
-                        ],
-                        times: [
-                            {code: 'day', title: 'Днем'},
-                            {code: 'evening', title: 'Вечером'},
-                            {code: 'dayoffs', title: 'По выходным'},
-                        ],
-                        certificates: [
-                            {code: 'self', title: 'Собственный'},
-                            {code: 'state', title: 'Гос. образца'},
-                            {code: 'international', title: 'Международный'},
-                        ],
-                        priceTypes: [
-                            {code: 'total', title: 'За весь курс'},
-                            {code: 'lesson', title: 'За занятие'},
-                            {code: 'module', title: 'За модуль'},
-                            {code: 'month', title: 'В месяц'},
-                        ],
-                        durationUnits: [
-                            {code: 'minute', title: 'минута'},
-                            {code: 'hour', title: 'час'},
-                            {code: 'academic-hour', title: 'ак. час'},
-                            {code: 'day', title: 'день'},
-                            {code: 'week', title: 'неделя'},
-                            {code: 'month', title: 'месяц'},
-                            {code: 'lesson', title: 'урок'},
-                            {code: 'module', title: 'модуль'}
-                        ],
-                        loadUnits: [
-                            {code: 'hour-per-day', title: 'час в день'},
-                            {code: 'hour-per-week', title: 'час в неделю'},
-                            {code: 'day-per-week', title: 'день в неделю'},
-                            {code: 'self', title: 'самостоятельно'},
-                        ],
-                        audience: audience
-                    },
-                    book: {
-                        formats: [
-                            {'code': 'digital', 'title': 'Электронная'},
-                            {'code': 'print', 'title': 'Печатная'},
-                        ],
-                        audience: audience
-                    },
-                    project: {},
-                    explanation: {},
-                    motivation: {},
-                    internship: {
-                        salaryTypes: [
-                            {code: 'month', title: 'В месяц'},
-                            {code: 'hour', title: 'В час'},
-                        ],
-                        durationUnits: [
-                            {code: 'week', title: 'неделя'},
-                            {code: 'month', title: 'месяц'},
-                            {code: 'year', title: 'год'},
-                        ],
-                        loadUnits: [
-                            {code: 'hour-per-day', title: 'час в день'},
-                            {code: 'hour-per-week', title: 'час в неделю'},
-                            {code: 'day-per-week', title: 'день в неделю'},
-                            {code: 'self', title: 'самостоятельно'},
-                        ],
-
-                    }
-                },
+                tabs: Enums.types,
+                enums: Enums,
                 currentTabCode: 'course',
                 allSkills: false,
                 window: {
@@ -193,6 +118,23 @@
                     height: 0
                 },
 
+                user: false,
+                error: {
+                    course: false,
+                    book: false,
+                    project: false,
+                    explanation: false,
+                    motivation: false,
+                    internship: false
+                },
+                saved: {
+                    course: false,
+                    book: false,
+                    project: false,
+                    explanation: false,
+                    motivation: false,
+                    internship: false
+                },
                 course: {
                     type: 'course',
                     priceType: 'total',
@@ -219,7 +161,17 @@
                 }
             };
         },
-        created() {
+        async created() {
+            initAuth();
+            await checkSession();
+            if (isAuthenticated()) {
+                this.user = getSavedProfileData();
+            }
+
+            if (!this.user) {
+                login();
+            }
+
             window.addEventListener('resize', this.handleResize);
 
             this.handleResize();
@@ -228,27 +180,76 @@
         destroyed() {
             window.removeEventListener('resize', this.handleResize)
         },
+        watch: {
+            course: {
+                handler() {
+                    this.clearSaveStatus('course');
+                },
+                deep: true
+            },
+            book: {
+                handler() {
+                    this.clearSaveStatus('book');
+                },
+                deep: true
+            },
+            project: {
+                handler() {
+                    this.clearSaveStatus('project');
+                },
+                deep: true
+            },
+            explanation: {
+                handler() {
+                    this.clearSaveStatus('explanation');
+                },
+                deep: true
+            },
+            motivation: {
+                handler() {
+                    this.clearSaveStatus('motivation');
+                },
+                deep: true
+            },
+            internship: {
+                handler() {
+                    this.clearSaveStatus('internship');
+                },
+                deep: true
+            },
+        },
         methods: {
             async loadAllSkills() {
                 this.allSkills = await ApiClient.loadSkills();
             },
             async saveItem(item) {
-                let isNewItem = typeof (item['_id']) !== 'string';
-                let url = '/api/saveEduItem.php';
+                let itemData = ArraysAndObjects.clone(item);
+                itemData.user = ArraysAndObjects.clone(this.user);
 
-                let response = await axios.post(url, item);
+                try {
+                    let response = await ApiClient.saveItem(itemData);
+                    let hasError = response && response.error;
+                    let successfullySaved = response && response.eduItem;
 
-                let hasError = response && response.error;
-                let successfullySaved = response && response.eduItem;
+                    if (successfullySaved) {
+                        this[ response.eduItem.type ] = response.eduItem;
+                        await this.$nextTick;
+                        this.saved[response.eduItem.type] = true;
+                    }
 
-                if (successfullySaved) {
-                    this[ response.eduItem.type ] = response.eduItem;
-                    this.showMessage('Сохранилось!')
+                    if (hasError) {
+                        this.saved[itemData.type] = false;
+                        this.error[itemData.type] = response.error || 'Какая-то ошибка сохранения';
+                    }
+                }
+                catch (error) {
+                    this.saved[itemData.type] = false;
+                    this.error[itemData.type] = error || 'Какая-то ошибка сохранения';
                 }
 
-                if (hasError) {
-                    this.showError(response.error);
-                }
+            },
+            clearSaveStatus(type) {
+                this.saved[type] = false;
             },
             showMessage(messageText) {
                 console.log(messageText);

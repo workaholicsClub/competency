@@ -5,6 +5,14 @@
             <input type="text" class="form-control" v-model="item.title">
         </div>
         <div class="form-group">
+            <label>Автор</label>
+            <input type="text" class="form-control" v-model="item.author">
+        </div>
+        <div class="form-group">
+            <label>Ссылка на изображение</label>
+            <input type="text" class="form-control" v-model="item.imageUrl">
+        </div>
+        <div class="form-group">
             <label>Описание</label>
             <ckeditor :editor="editor" v-model="item.description" :config="editorConfig"></ckeditor>
         </div>
@@ -33,7 +41,9 @@
         </div>
 
         <div class="form-group course-buttons">
-            <button type="button" class="btn btn-outline-info btn-link btn-block" @click="save">Сохранить запись</button>
+            <button type="button" class="btn btn-link btn-block bg-success text-white" v-if="saveStatus">Запись сохранена</button>
+            <button type="button" class="btn btn-link btn-block bg-danger text-white" @click="save" v-else-if="saveError">{{saveError}}. Попробовать еще</button>
+            <button type="button" class="btn btn-outline-info btn-link btn-block" @click="save" v-else>Сохранить запись</button>
         </div>
     </form>
 </template>
@@ -46,7 +56,7 @@
 
     export default {
         name: 'BasicTextForm',
-        props: ['item', 'enums', 'skills', 'mobile', 'card-title'],
+        props: ['item', 'enums', 'skills', 'mobile', 'card-title', 'save-error', 'save-status'],
         components: {
             SkillInput,
             CheckInput,

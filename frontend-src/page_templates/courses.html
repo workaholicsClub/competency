@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script>
+        if (document.cookie.indexOf('user_is_admin=true') === -1) {
+            /* Google Tag Manager */
+            (function(w,d,s,l,i) {
+                w[l]=w[l]||[];w[l].push({'gtm.start':
+                        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-WG2XFBS');
+
+            /* Google Analytics */
+            let anScript = document.createElement('script');
+            let firstScript = document.getElementsByTagName('script')[0];
+            anScript.async = true;
+            anScript.src = 'https://www.googletagmanager.com/gtag/js?id=UA-113216929-1';
+            firstScript.parentNode.insertBefore(anScript,firstScript);
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-113216929-1');
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/css/swiper.min.css">
+    <link rel="stylesheet" href="/assets/design/base.css" type="text/css">
+    <link rel="stylesheet" href="/assets/design/desktop-override.css" type="text/css">
+    <link rel="stylesheet" href="/assets/design/survey.css" type="text/css">
+
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="Жажда знаний: найди свой курс"/>
+    <meta property="og:image" content="/assets/images/banner_01.png"/>
+
+    <title>Жажда знаний: найди свой курс</title>
+</head>
+<body>
+
+<div id="app-root">
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.5/js/swiper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/interactjs@1.3.4/dist/interact.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.1/svg.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script src="https://cdn.auth0.com/js/auth0/9.10/auth0.min.js"></script>
+<script src="/assets/courseFunctions.js"></script>
+
+</body>
+</html>

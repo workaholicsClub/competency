@@ -126,7 +126,7 @@
 
     export default {
         name: 'InternshipForm',
-        props: ['internship', 'enums', 'skills', 'mobile'],
+        props: ['internship', 'enums', 'skills', 'mobile', 'save-error', 'save-status'],
         components: {
             SkillInput,
             CheckInput,
@@ -137,6 +137,6 @@
             save() {
                 this.$emit('save', this.internship);
             }
-        },
+        }
     }
 </script>

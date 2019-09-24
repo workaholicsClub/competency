@@ -97,6 +97,10 @@ a, a:hover, a:visited, a:active,
     padding: 4px 7px;
 }
 
+header.scroll .editable-toggle {
+    font-size: 14px;
+}
+
 .editable-toggle::after {
     margin-left: 8px;
     content: '\f0dc';
@@ -342,7 +346,7 @@ img.custom-avatar {
 }
 
 .no-result-text {
-    min-height: 76vh;
+    min-height: 71vh;
 }
 
 .no-result-text h2 {
@@ -365,7 +369,7 @@ img.custom-avatar {
     content: '\f0d7';
 }
 
-.swiper-wrapper .course-card {
+.swiper-wrapper .swiper-slide {
     width: 85%;
 }
 
@@ -501,10 +505,19 @@ img.custom-avatar {
     text-transform: uppercase;
     color: rgb(94, 88, 210)!important;
     border-color: rgb(94, 88, 210)!important;
+    text-decoration: none;
+}
+
+.favourite-list .btn-link:hover {
+    color: white!important;
 }
 
 .course-buttons .btn-favourite i {
     margin-left: 0.2rem;
+}
+
+.course-buttons .btn-favourite.active i {
+    margin-left: 0.1rem;
 }
 
 .swiper-pagination {
@@ -850,7 +863,7 @@ section.filter-panel .input-group {
     margin-bottom: 1.5rem;
 }
 
-section.filter-panel .input-group:last-child {
+section.filter-panel .filter-field:last-child {
     margin-bottom: 6.5rem;
 }
 
