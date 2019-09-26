@@ -726,6 +726,7 @@
             },
             async loadCourses() {
                 let filter = this.prefixedFilterWithoutSkills;
+                filter['professionCode'] = this.professionCode;
                 filter['filter[skills]'] = this.filter.neededSkills;
                 filter['filter[requirements]'] = this.filter.existingSkills;
 
