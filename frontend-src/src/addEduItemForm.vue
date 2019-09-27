@@ -50,12 +50,12 @@
             <explain-form
                     v-show="currentTabCode === 'explain'"
                     card-title="Объяснение"
-                    :item="explanation"
-                    :enums="enums.explanation"
+                    :item="explain"
+                    :enums="enums.explain"
                     :mobile="isMobile"
                     :skills="allSkills"
-                    :save-status="saved.explanation"
-                    :save-error="error.explanation"
+                    :save-status="saved.explain"
+                    :save-error="error.explain"
                     @save="saveItem"
             ></explain-form>
 
@@ -95,7 +95,7 @@
     import ApiClient from './unsorted/ApiClient';
     import Enums from "./unsorted/Enums";
     import ArraysAndObjects from "./unsorted/ArraysAndObjects";
-    import {initAuth, login, logout, isAuthenticated, checkSession, getSavedProfileData} from "./unsorted/Auth";
+    import {initAuth, login, isAuthenticated, checkSession, getSavedProfileData} from "./unsorted/Auth";
 
     export default {
         name: 'addEduItemForm',
@@ -123,7 +123,7 @@
                     course: false,
                     book: false,
                     project: false,
-                    explanation: false,
+                    explain: false,
                     motivation: false,
                     internship: false
                 },
@@ -131,7 +131,7 @@
                     course: false,
                     book: false,
                     project: false,
-                    explanation: false,
+                    explain: false,
                     motivation: false,
                     internship: false
                 },
@@ -147,7 +147,7 @@
                 project: {
                     type: 'project'
                 },
-                explanation: {
+                explain: {
                     type: 'explain'
                 },
                 motivation: {
@@ -199,9 +199,9 @@
                 },
                 deep: true
             },
-            explanation: {
+            explain: {
                 handler() {
-                    this.clearSaveStatus('explanation');
+                    this.clearSaveStatus('explain');
                 },
                 deep: true
             },

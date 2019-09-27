@@ -142,7 +142,9 @@
         </div>
 
         <div class="form-group course-buttons">
-            <button type="button" class="btn btn-outline-info btn-link btn-block" @click="save">Сохранить курс</button>
+            <button type="button" class="btn btn-link btn-block bg-success text-white" v-if="saveStatus">Курс сохранен</button>
+            <button type="button" class="btn btn-link btn-block bg-danger text-white" @click="save" v-else-if="saveError">{{saveError}}. Попробовать еще</button>
+            <button type="button" class="btn btn-outline-info btn-link btn-block" @click="save" v-else>Сохранить курс</button>
         </div>
     </form>
 </template>

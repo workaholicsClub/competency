@@ -5,7 +5,7 @@
             <input type="text" class="form-control" v-model="book.title">
         </div>
         <div class="form-group">
-            <label>Ссылка на книгу</label>
+            <label>Ссылка на книгу/скачивание</label>
             <input type="text" class="form-control" v-model="book.url">
         </div>
         <div class="form-group">
@@ -34,7 +34,7 @@
             <label>Стоимость</label>
             <input type="number" class="form-control" v-model.number="book.price">
             <small class="form-text text-muted">
-                0, если книга бесплатная
+                0, если книга бесплатная и ее можно скачать
             </small>
         </div>
         <div class="form-group">
@@ -66,7 +66,9 @@
         </div>
 
         <div class="form-group course-buttons">
-            <button type="button" class="btn btn-outline-info btn-link btn-block" @click="save">Сохранить книгу</button>
+            <button type="button" class="btn btn-link btn-block bg-success text-white" v-if="saveStatus">Книга сохранена</button>
+            <button type="button" class="btn btn-link btn-block bg-danger text-white" @click="save" v-else-if="saveError">{{saveError}}. Попробовать еще</button>
+            <button type="button" class="btn btn-outline-info btn-link btn-block" @click="save" v-else>Сохранить книгу</button>
         </div>
     </form>
 </template>

@@ -113,14 +113,15 @@
         </div>
 
         <div class="form-group course-buttons">
-            <button type="button" class="btn btn-outline-info btn-link btn-block" @click="save">Сохранить стажировку</button>
+            <button type="button" class="btn btn-link btn-block bg-success text-white" v-if="saveStatus">Cтажировка сохранена</button>
+            <button type="button" class="btn btn-link btn-block bg-danger text-white" @click="save" v-else-if="saveError">{{saveError}}. Попробовать еще</button>
+            <button type="button" class="btn btn-outline-info btn-link btn-block" @click="save" v-else>Сохранить стажировку</button>
         </div>
     </form>
 </template>
 
 <script>
     import SkillInput from '../SkillInput.vue'
-    import CheckInput from '../CheckInput.vue'
     import UnitsSelect from '../UnitsSelect.vue'
     import InternshipCard from '../Cards/Internship.vue'
 
@@ -129,7 +130,6 @@
         props: ['internship', 'enums', 'skills', 'mobile', 'save-error', 'save-status'],
         components: {
             SkillInput,
-            CheckInput,
             UnitsSelect,
             InternshipCard
         },

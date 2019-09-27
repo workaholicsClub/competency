@@ -110,7 +110,7 @@ export default {
         audience: audience
     },
     project: {},
-    explanation: {},
+    explain: {},
     motivation: {},
     internship: {
         salaryTypes: [

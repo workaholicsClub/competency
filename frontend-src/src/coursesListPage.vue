@@ -342,7 +342,8 @@
                 allSkills: false,
                 isFavouritesShown: false,
                 favourites: [],
-                isLoading: false,
+                firstTimeLoaded: false,
+                isLoading: true,
                 slider: false,
                 request: {},
                 isRequestShown: {
@@ -732,7 +733,12 @@
 
                 this.isLoading = true;
                 this.catalog = await ApiClient.loadCoursesDebounced(filter);
-                this.isLoading = false;
+                if (!this.firstTimeLoaded) {
+                    this.firstTimeLoaded = true;
+                }
+                else {
+                    this.isLoading = false;
+                }
 
                 return this.catalog;
             },
