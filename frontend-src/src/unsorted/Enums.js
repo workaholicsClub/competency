@@ -11,6 +11,7 @@ export default {
         {code: 'project', title: 'Идея проекта'},
         {code: 'explain', title: 'Объяснение'},
         {code: 'motivation', title: 'Мотивация'},
+        {code: 'homework', title: 'Домашка'},
         {code: 'internship', title: 'Стажировка'},
     ],
     audience: audience,
@@ -112,6 +113,7 @@ export default {
     project: {},
     explain: {},
     motivation: {},
+    homework: {},
     internship: {
         salaryTypes: [
             {code: 'month', title: 'В месяц'},
@@ -168,4 +170,51 @@ export default {
         'game-artist-2d': 'игровым художником 2D',
         'game-artist-3d': 'игровым художником 3D'
     },
+    requestValues: {
+        who: {
+            'qa-tester': 'тестировщик',
+            'javascript-developer': 'разработчик JavaScript',
+            'php-developer': 'разработчик PHP',
+            'python-developer': 'разработчик Python',
+            'data-scientist': 'Data Scientist',
+            'internet-marketologist': 'интернет-маркетолог',
+            'golang-developer': 'разработчик Golang',
+            'ios-developer': 'разработчик iOS',
+            'android-developer': 'разработчик Android',
+            'ui-ux-designer': 'UI/UX дизайнер',
+            'game-designer': 'гейм-дизайнер',
+            'game-artist-2d': 'игровой художник 2D',
+            'game-artist-3d': 'игровой художник 3D',
+            'pr-specialist': 'PR специалист',
+            'hr-manager': 'HR менеджер',
+            'project-manager': 'менеджер интернет-проектов',
+            'devops': 'DevOps специалист',
+            'non-prof': ['новичок', 'специалист из другой области'],
+        },
+        exp: [
+            'без опыта работы',
+            'с опытом работы до 3 лет',
+            'с опытом работы 3 или более года'
+        ],
+        want: {
+            'php-developer': 'разработчиком PHP',
+            'hr-manager': 'стать HR менеджером',
+            'pr-specialist': 'стать PR специалистом',
+            'python-developer': 'стать разработчиком Python',
+            'golang-developer': 'стать разработчиком Golang',
+            'javascript-developer': 'стать разработчиком JavaScript',
+            'ui-ux-designer': 'стать UI/UX дизайнером',
+            'ios-developer': 'стать разработчиком iOS',
+            'android-developer': 'стать разработчиком Android',
+            'internet-marketologist': 'стать интернет-маркетологом',
+            'qa-tester': 'стать тестировщиком',
+            'devops': 'стать DevOps специалистом',
+            'data-scientist': 'стать Data Scientist`ом',
+            'game-designer': 'стать гейм-дизайнером',
+            'project-manager': 'стать менеджером интернет-проектов',
+            'game-artist-2d': 'стать игровым художником 2D',
+            'game-artist-3d': 'стать игровым художником 3D',
+            'universal': ['начать с нуля', 'продолжить обучение', 'повысить квалификацию', 'прокачать навык']
+        }
+    }
 }

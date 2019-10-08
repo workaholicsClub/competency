@@ -13,5 +13,10 @@ module.exports = {
             template: 'page_templates/courses.html',
             filename: 'courses.html',
         },
+        item: {
+            entry: 'src/itemPage.js',
+            template: 'page_templates/itemPage.html',
+            filename: 'item.html',
+        },
     }
 };

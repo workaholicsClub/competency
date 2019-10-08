@@ -75,5 +75,8 @@ export default {
 
         let result = await axios.post(url, item);
         return result.data;
-    }
+    },
+    loadItem(itemId) {
+        return this.loadApiData('/api/courseData.php', {id: itemId});
+    },
 }

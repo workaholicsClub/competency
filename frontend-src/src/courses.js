@@ -1,11 +1,11 @@
 import Vue from 'vue'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
 import Catalog from './coursesListPage.vue'
-import Fragment from 'vue-fragment'
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
-Vue.use(Fragment.Plugin);
+Vue.use(VueAwesomeSwiper);
 
 window.vueInstance = new Vue({
     render: h => h(Catalog),

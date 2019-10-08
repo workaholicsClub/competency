@@ -65,6 +65,7 @@
             applyRequest() {
                 this.$emit('input', this.request);
                 this.changed = false;
+                this.$emit('apply', this.request);
             }
         },
         computed: {

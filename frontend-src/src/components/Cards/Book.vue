@@ -36,9 +36,12 @@
                 <skill-list :skills="allRequirements"></skill-list>
             </div>
 
-            <p v-if="book.description" class="mb-0">
-                <split-description :text="book.description"></split-description>
+            <p v-if="book.description" class="mb-0 mt-4">
+                <span v-if="showFull">{{book.description}}</span>
+                <split-description :text="book.description" v-else></split-description>
             </p>
+
+            <a :href="pageUrl" class="details-link" v-if="!showFull">Подробнее на странице книги</a>
 
             <div class="mt-4" :class="{'row': !mobile}">
                 <div class="col price-duration-data" v-if="!mobile">
@@ -71,6 +74,7 @@
     import SplitDescription from '../SplitDescription.vue'
     import ShareButton from '../ShareButton'
     import TextFormat from '../../unsorted/TextFormat'
+    import UrlFunctions from "../../unsorted/UrlFunctions"
 
     export default {
         name: 'BookCard',
@@ -80,7 +84,7 @@
             SplitDescription,
             ShareButton
         },
-        props: ['book', 'skills-in-filter', 'enums', 'mobile', 'is-favourite'],
+        props: ['book', 'skills-in-filter', 'enums', 'mobile', 'show-full', 'is-favourite'],
         data() {
             return {
             }
@@ -90,7 +94,7 @@
                 return this.book.url || false;
             },
             pageUrl() {
-                return "/book.html?id=" + this.book.id || false;
+                return UrlFunctions.makeItemUrl(this.book);
             },
             hasPartnerUrl() {
                 return Boolean(this.book.partnerUrl);

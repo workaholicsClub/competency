@@ -40,8 +40,11 @@
             </div>
 
             <div v-if="internship.description" class="mb-0 mt-4">
-                <split-description :text="internship.description"></split-description>
+                <span v-if="showFull">{{internship.description}}</span>
+                <split-description :text="internship.description" v-else></split-description>
             </div>
+
+            <a :href="pageUrl" class="details-link" v-if="!showFull">Подробнее на странице стажировки</a>
 
             <div class="mt-4" :class="{'row': !mobile}">
                 <a v-if="mobile" :href="redirectUrl" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2">
@@ -85,14 +88,17 @@
             SplitDescription,
             ShareButton
         },
-        props: ['internship', 'skills-in-filter', 'enums', 'mobile', 'is-favourite'],
+        props: ['internship', 'skills-in-filter', 'enums', 'mobile', 'show-full', 'is-favourite'],
         data() {
             return {
             }
         },
         methods: {
             toggleFavourite() {
-                this.$emit('favourite', this.item)
+                this.$emit('favourite', this.internship)
+            },
+            pageUrl() {
+                return UrlFunctions.makeItemUrl(this.internship);
             },
         },
         computed: {

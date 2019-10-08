@@ -369,6 +369,10 @@ img.custom-avatar {
     content: '\f0d7';
 }
 
+.view-on-mobile section.data {
+    max-width: 266px;
+}
+
 .swiper-wrapper .swiper-slide {
     width: 85%;
 }

@@ -34,8 +34,11 @@
             </div>
 
             <div v-if="item.description" class="mb-0 mt-4">
-                <split-description :text="item.description" :use-html="true"></split-description>
+                <span v-html="item.description" v-if="showFull"></span>
+                <split-description :text="item.description" :use-html="true" v-else></split-description>
             </div>
+
+            <a :href="pageUrl" class="details-link" v-if="!showFull">Подробнее на странице записи</a>
 
             <div class="mt-4" :class="{'row': !mobile}">
                 <div class="col price-duration-data" v-if="!mobile">
@@ -62,6 +65,7 @@
     import SplitDescription from '../SplitDescription.vue'
     import ShareButton from '../ShareButton'
     import TextFormat from '../../unsorted/TextFormat'
+    import UrlFunctions from "../../unsorted/UrlFunctions";
 
     export default {
         name: 'BasicTextCard',
@@ -71,7 +75,7 @@
             SplitDescription,
             ShareButton
         },
-        props: ['item', 'skills-in-filter', 'enums', 'mobile', 'card-title', 'is-favourite'],
+        props: ['item', 'skills-in-filter', 'enums', 'mobile', 'show-full', 'card-title', 'is-favourite'],
         data() {
             return {
             }
@@ -79,6 +83,9 @@
         methods: {
             toggleFavourite() {
                 this.$emit('favourite', this.item);
+            },
+            pageUrl() {
+                return UrlFunctions.makeItemUrl(this.item);
             },
         },
         computed: {

@@ -47,13 +47,16 @@ export default {
 
         return isRequestNotEmpty ? {who: who, exp: experience, want: wish} : false;
     },
-    setRequestValuesInURL(request) {
-        let currentUrl = new URL(location.href);
+    addRequestParamsToUrl(url, request) {
+        let currentUrl = new URL(url);
         currentUrl.searchParams.set('who', request.who);
         currentUrl.searchParams.set('experience', request.exp);
         currentUrl.searchParams.set('wish', request.want);
 
-        let newUrl = currentUrl.pathname+currentUrl.search;
+        return currentUrl.pathname+currentUrl.search;
+    },
+    setRequestValuesInURL(request) {
+        let newUrl = this.addRequestParamsToUrl(location.href, request);
         let newState = {request: request};
         let newTitle = document.title;
 
@@ -70,5 +73,13 @@ export default {
         }
 
         return professionCode || 'qa-tester';
+    },
+    getItemIdFromUrl() {
+        let matches = location.pathname.match(/[a-z0-9]+$/);
+        return matches[0] || false;
+    },
+    makeItemUrl(item) {
+        let type = item.type || 'item';
+        return `/catalog/${type}/${item._id}`;
     }
 }

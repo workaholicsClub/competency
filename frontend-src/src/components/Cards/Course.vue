@@ -42,10 +42,11 @@
                 <skill-list :skills="allRequirements"></skill-list>
             </div>
 
-            <p v-if="course.description" class="mb-0">
-                <split-description :text="course.description"></split-description>
+            <p v-if="course.description" class="mb-0 mt-4">
+                <span v-if="showFull">{{course.description}}</span>
+                <split-description :text="course.description" v-else></split-description>
             </p>
-            <a :href="pageUrl" class="details-link" v-if="course.description">Подробнее на странице курса</a>
+            <a :href="pageUrl" class="details-link" v-if="!showFull">Подробнее на странице курса</a>
 
             <div class="mt-4" :class="{'row': !mobile}">
                 <div class="col price-duration-data" v-if="!mobile">
@@ -81,6 +82,7 @@
     import SplitDescription from '../SplitDescription.vue'
     import ShareButton from '../ShareButton'
     import TextFormat from '../../unsorted/TextFormat'
+    import UrlFunctions from '../../unsorted/UrlFunctions'
 
     export default {
         name: 'CourseCard',
@@ -90,7 +92,7 @@
             SplitDescription,
             ShareButton
         },
-        props: ['course', 'skills-in-filter', 'enums', 'mobile', 'is-favourite'],
+        props: ['course', 'skills-in-filter', 'enums', 'mobile', 'show-full', 'is-favourite'],
         data() {
             return {
             }
@@ -100,7 +102,7 @@
                 return this.course.url || false;
             },
             pageUrl() {
-                return "/course.html?id="+this.course.id || false;
+                return UrlFunctions.makeItemUrl(this.course);
             },
             hasPartnerUrl: function () {
                 return Boolean(this.course.partnerUrl);
@@ -174,7 +176,16 @@
                 return TextFormat.skillsToObjectList(this.course.skills);
             },
             allRequirements() {
-                return TextFormat.skillsToObjectList(this.course.requirements);
+                let hasCorrectRequirementsField = typeof(this.course.requirements) !== 'undefined' && this.course.requirements instanceof Array;
+                if (!hasCorrectRequirementsField) {
+                    return false;
+                }
+
+                let hasOneRequirement = this.course.requirements.length === 1;
+                let hasDatabaseChangeGlitch = hasOneRequirement && typeof(this.course.requirements[0]) !== 'undefined' && this.course.requirements[0] === "";
+                let processRequirements = this.course.requirements.length > 0 && !hasDatabaseChangeGlitch;
+
+                return processRequirements ? TextFormat.skillsToObjectList(this.course.requirements) : false;
             },
             attributesLine() {
                 let certificateShortNames = {

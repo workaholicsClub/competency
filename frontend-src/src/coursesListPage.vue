@@ -1,60 +1,24 @@
 <template>
     <div class="course-list-page">
+        <page-header
+                v-model="request"
+                :request-values="requestValues"
+                :user="user"
+                :favourites="favourites"
+                :count-favourites="countFavourites"
+                :show-salary="true"
+                :salary="salary"
+                :salaryRangeReadable="salaryRangeReadable"
+                :salaryLoaded="salaryLoaded"
+                :histogram="histogram"
+
+                @login="login"
+                @logout="logout"
+                @remove-favourite="removeFavourite"
+                @open-skills="openPanel('skills')"
+        >
+        </page-header>
         <div class="view-on-desktop d-none d-sm-block d-md-block">
-            <header class="">
-                <div class="container wide-container d-flex align-items-center px-3 mb-3">
-                    <a href="/"><img src="/assets/images/itcher.png" class="mr-2"></a>
-                    <section class="data flex-fill">
-                        <div class="input-group">
-                            <request-form ref="request" v-model="request" :request-values="requestValues" :is-request-shown="isRequestShown"></request-form>
-                        </div>
-                    </section>
-                    <section class="fav-auth d-flex align-items-center">
-                        <div class="d-flex align-items-center dropdown dropleft">
-                            <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center mr-4" @click="toggleFavourites">
-                                <label class="fav-text">Моя&nbsp;подборка</label>
-                                <i class="fas fa-bookmark mx-2"></i>
-                                <span class="fav-count">{{countFavourites}}</span>
-                            </button>
-                            <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn" :class="{'show': isFavouritesShown}">
-                                <favourite-card v-for="item in favourites" :item="item" @remove="removeFavourite(item)" :key="item._id"></favourite-card>
-                            </div>
-                            <div class="dropdown-backdrop" @click="toggleFavourites"></div>
-                        </div>
-                        <img src="/assets/images/avatar.svg" class="avatar-holder" @click="login" v-if="!user">
-                        <img :src="user.picture" class="avatar-holder custom-avatar" v-else>
-                        <a href="javascript:0;" class="btn btn-link" @click="login" v-if="!user">Войти</a>
-                        <a href="javascript:0;" class="btn btn-link" @click="logout" v-else>Выйти</a>
-                    </section>
-                </div>
-            </header>
-            <header class="scroll">
-                <div class="container wide-container d-flex align-items-center px-3">
-                    <a class="" href="/"><img src="/assets/images/itcher-float.png" class="mr-2"></a>
-                    <section class="data flex-fill">
-                        <div class="input-group">
-                            <request-form v-model="request" :request-values="requestValues" :is-request-shown="isRequestShown"></request-form>
-                        </div>
-                    </section>
-                    <section class="fav-auth d-flex align-items-center">
-                        <div class="d-flex align-items-center dropdown dropleft">
-                            <button id="desktop-fav-btn" class="btn btn-favourites-list d-flex align-items-center justify-content-center mr-4" @click="toggleFavourites">
-                                <label class="fav-text">Моя подборка</label>
-                                <i class="fas fa-bookmark mx-2"></i>
-                                <span class="fav-count">{{countFavourites}}</span>
-                            </button>
-                            <div class="dropdown-menu favourite-list p-4" aria-labelledby="desktop-fav-btn" :class="{'show': isFavouritesShown}">
-                                <favourite-card v-for="item in favourites" :item="item" @remove="removeFavourite(item)" :key="item._id"></favourite-card>
-                            </div>
-                            <div class="dropdown-backdrop" @click="toggleFavourites"></div>
-                        </div>
-                        <img src="/assets/images/avatar.svg" class="avatar-holder" @click="login" v-if="!user">
-                        <img :src="user.picture" class="avatar-holder custom-avatar" v-else>
-                        <a href="javascript:0;" class="btn btn-link" @click="login" v-if="!user">Войти</a>
-                        <a href="javascript:0;" class="btn btn-link" @click="logout" v-else>Выйти</a>
-                    </section>
-                </div>
-            </header>
             <div class="pr-4 pl-4 pb-4">
                 <div class="container wide-container d-flex flex-row align-items-start">
                     <section class="skills-section pr-4 pl-4 pb-4">
@@ -116,6 +80,7 @@
                                     :item="item"
                                     :skills-in-filter="neededSkillNames"
                                     :mobile="false"
+                                    :show-full="false"
                                     :key="item._id"
                                     :is-favourite="isFavourite(item)"
                                     @favourite="toggleFavourite(item)"
@@ -132,54 +97,25 @@
             </div>
         </div>
         <div class="view-on-mobile d-block d-sm-none d-md-none">
-            <header class="avatar d-flex flex-column card p-4 top-drawer" :class="{'expanded': headerExpanded}">
-                <h5>
-                    <a href="javascript:0;" class="user-name" @click="login" v-if="!user">Неопознанный Итчер</a>
-                    <a href="javascript:0;" class="user-name" v-else>{{user.name}}</a>
-                </h5>
-                <div class="d-flex flex-row justify-content-between align-items-start">
-                    <div class="d-flex flex-row h-100 ">
-                        <section class="data d-flex flex-column align-items-start h-100 flex-fill mr-2">
-                            <div class="input-group">
-                                <request-form v-model="request" :request-values="requestValues" :is-request-shown="isRequestShown"></request-form>
-                            </div>
-
-                            <button class="btn btn-outline-info btn-block mt-4 btn-choose-skills">Выбрать навыки</button>
-
-                            <div class="input-group salary-input-group">
-                                <label class="">Желаемая зарплата:</label>
-                                <a href="#" class="editable-toggle salary-input-display" v-if="salaryLoaded" @click="openPanel('skills')"><span v-html="salaryRangeReadable"></span></a>
-                                <a href="#" class="editable-toggle salary-input-display" v-else>...</a>
-                            </div>
-                        </section>
-                        <section class="logo">
-                            <img src="/assets/images/avatar.svg" @click="login" v-if="!user">
-                            <img :src="user.picture" class="custom-avatar" v-else>
-                        </section>
-                    </div>
-                </div>
-                <salary-input v-model="salary" :histogram="histogram" width="260" height="51" v-if="histogram"></salary-input>
-                <div class="profile-handle" @click="headerExpanded = !headerExpanded"></div>
-            </header>
             <main>
                 <section class="pagination d-flex flex-row justify-content-center align-items-center no-result-hide">
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-pagination"></div>
                     <div class="swiper-button-next"></div>
                 </section>
-
-                <section class="swiper-container" v-if="catalogHasItems">
-                    <div class="swiper-wrapper course-list" :class="{'loading': isLoading}">
-                        <autodetect-card
-                                v-for="item in catalog"
-                                v-show="!isLoading"
-                                :item="item"
-                                :skills-in-filter="neededSkillNames"
-                                :mobile="true"
-                                :key="item._id"
-                        ></autodetect-card>
-                    </div>
-                </section>
+                <swiper :options="swiperOptions" class="course-list" :class="{'loading': isLoading}" v-if="catalogHasItems">
+                    <autodetect-card
+                            v-for="item in catalog"
+                            v-show="!isLoading"
+                            :item="item"
+                            :skills-in-filter="neededSkillNames"
+                            :mobile="true"
+                            :show-full="false"
+                            :key="item._id"
+                            :is-favourite="isFavourite(item)"
+                            @favourite="toggleFavourite(item)"
+                    ></autodetect-card>
+                </swiper>
 
                 <section class="swiper-container" v-else-if="isLoading">
                     <div class="swiper-wrapper course-list loading"></div>
@@ -311,12 +247,13 @@
     import AutodetectCard from './components/Cards/AutodetectCard.vue';
     import FavouriteCard from './components/Cards/Favourite.vue';
     import FilterForm from './components/FilterForm.vue';
-    import RequestForm from './components/RequestForm.vue';
+    import PageHeader from './components/PageHeader.vue';
     import Enums from "./unsorted/Enums";
     import TextFormat from "./unsorted/TextFormat";
     import UrlFunctions from "./unsorted/UrlFunctions";
     import {initAuth, login, logout, isAuthenticated, checkSession, getSavedProfileData} from "./unsorted/Auth";
     import InputTemplate from "./unsorted/InputTemplate";
+    import Favourites from "./unsorted/Favourites";
 
     export default {
         name: 'Catalog',
@@ -326,7 +263,7 @@
             AutodetectCard,
             FavouriteCard,
             FilterForm,
-            RequestForm
+            PageHeader
         },
         data() {
             return {
@@ -340,27 +277,32 @@
                 existingSkills: [],
                 selectedExistingSkills: [],
                 allSkills: false,
-                isFavouritesShown: false,
                 favourites: [],
                 firstTimeLoaded: false,
                 isLoading: true,
-                slider: false,
                 request: {},
-                isRequestShown: {
-                    who: false,
-                    exp: false,
-                    want: false,
-                },
                 isPanelShown: {
                     favourites: false,
                     skills: false,
                     filter: false
                 },
-                headerExpanded: false,
                 sidebarSalaryHidden: true,
                 histogram: false,
                 vacancyCount: false,
                 salary: {from: false, to: false},
+                swiperOptions: {
+                    slidesPerView: 'auto',
+                    centeredSlides: true,
+                    spaceBetween: 12,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        type: 'fraction',
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                }
             }
         },
         async created() {
@@ -504,24 +446,6 @@
                 return this.addSkill(this.existingSkills, title);
             },
 
-            initSlider() {
-                this.slider = new Swiper('.swiper-container', {
-                    slidesPerView: 'auto',
-                    centeredSlides: true,
-                    spaceBetween: 12,
-                    pagination: {
-                        el: '.swiper-pagination',
-                        type: 'fraction',
-                    },
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                });
-            },
-            updateSlider() {
-                this.slider.update();
-            },
             getRequestValuesFromURL() {
                 let requestValues = UrlFunctions.getRequestValuesFromURL();
                 if (requestValues) {
@@ -547,7 +471,7 @@
 
                 if (this.inputTemplateCode === 'novice') {
                     if (defaultPractice) {
-                        filter.hasPractice = ["1"];
+                        //filter.hasPractice = ["1"];
                     }
 
                     if (defaultAudience) {
@@ -557,7 +481,7 @@
 
                 if (this.inputTemplateCode === 'other-novice') {
                     if (defaultPractice) {
-                        filter.hasPractice = ["1"];
+                        //filter.hasPractice = ["1"];
                     }
 
                     if (defaultAudience) {
@@ -604,31 +528,14 @@
             closeAllPanels() {
                 Object.keys(this.isPanelShown).forEach( (code) => this.closePanel(code) );
             },
-
-            toggleFavourites() {
-                this.isFavouritesShown = !this.isFavouritesShown;
-            },
-            findFavouriteIndex(item) {
-                return this.favourites.reduce( (foundIndex, favourite, currentIndex) => {
-                    if (favourite._id === item._id) {
-                        return currentIndex;
-                    }
-                    else {
-                        return foundIndex;
-                    }
-                }, -1);
-            },
             isFavourite(item) {
-                return this.findFavouriteIndex(item) !== -1;
+                return Favourites.findFavouriteIndex(item, this.favourites) !== -1;
             },
             addFavourite(item) {
-                this.favourites.push(item);
+                this.favourites = Favourites.addFavourite(item, this.favourites);
             },
             removeFavourite(item) {
-                let itemIndex = this.findFavouriteIndex(item);
-                if (itemIndex !== -1) {
-                    this.favourites.splice(itemIndex, 1);
-                }
+                this.favourites = Favourites.removeFavourite(item, this.favourites);
             },
             toggleFavourite(item) {
                 if (this.isFavourite(item)) {
@@ -639,15 +546,11 @@
                 }
             },
             saveFavourites() {
-                localStorage.setItem('user_favourites', JSON.stringify(this.favourites));
+                Favourites.saveFavourites(this.favourites);
             },
             loadFavourites() {
-                let data = localStorage.getItem('user_favourites');
-                if (data) {
-                    this.favourites = JSON.parse(data) || [];
-                }
+                return Favourites.loadFavourites();
             },
-
             isSkillExisting(skillRate) {
                 let template = this.inputTemplate;
                 if (!template) {
@@ -887,18 +790,6 @@
             countFilter() {
                 return this.activeFilters.length;
             }
-        },
-        updated() {
-            this.$nextTick(() => {
-                if (this.catalogHasItems) {
-                    if (this.sliderInitialized) {
-                        this.updateSlider();
-                    }
-                    else {
-                        this.initSlider();
-                    }
-                }
-            });
         }
     }
 </script>

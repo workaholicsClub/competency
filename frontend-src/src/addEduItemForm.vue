@@ -71,6 +71,18 @@
                     @save="saveItem"
             ></motivation-form>
 
+            <homework-form
+                    v-show="currentTabCode === 'homework'"
+                    card-title="Домашка"
+                    :item="homework"
+                    :enums="enums.homework"
+                    :mobile="isMobile"
+                    :skills="allSkills"
+                    :save-status="saved.homework"
+                    :save-error="error.homework"
+                    @save="saveItem"
+            ></homework-form>
+
             <internship-form
                     v-show="currentTabCode === 'internship'"
                     :internship="internship"
@@ -91,6 +103,7 @@
     import ProjectForm from './components/Forms/BasicText.vue';
     import ExplainForm from './components/Forms/BasicText.vue';
     import MotivationForm from './components/Forms/BasicText.vue';
+    import HomeworkForm from './components/Forms/BasicText.vue';
     import InternshipForm from './components/Forms/Internship.vue';
     import ApiClient from './unsorted/ApiClient';
     import Enums from "./unsorted/Enums";
@@ -105,6 +118,7 @@
             ProjectForm,
             ExplainForm,
             MotivationForm,
+            HomeworkForm,
             InternshipForm
         },
         data() {
@@ -125,6 +139,7 @@
                     project: false,
                     explain: false,
                     motivation: false,
+                    homework: false,
                     internship: false
                 },
                 saved: {
@@ -133,6 +148,7 @@
                     project: false,
                     explain: false,
                     motivation: false,
+                    homework: false,
                     internship: false
                 },
                 course: {
@@ -152,6 +168,9 @@
                 },
                 motivation: {
                     type: 'motivation'
+                },
+                homework: {
+                    type: 'homework'
                 },
                 internship: {
                     type: 'internship',
@@ -208,6 +227,12 @@
             motivation: {
                 handler() {
                     this.clearSaveStatus('motivation');
+                },
+                deep: true
+            },
+            homework: {
+                handler() {
+                    this.clearSaveStatus('homework');
                 },
                 deep: true
             },

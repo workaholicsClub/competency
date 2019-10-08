@@ -150,7 +150,7 @@ try {
     }
 }
 catch (MongoDB\Driver\Exception\Exception $e) {
-    $result['error'] = $e->getMessage();
+    $jsonOutput['error'] = $e->getMessage();
 }
 
 if ($jsonOutput === false) {

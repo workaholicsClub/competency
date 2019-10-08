@@ -140,23 +140,23 @@
                         Популярные профессии
                     </div>
                     <p>
-                        <a href="/php-developer/courses">PHP-разработчик</a>,
-                        <a href="/python-developer/courses">Python-разработчик</a>,
-                        <a href="/golang-developer/courses">Golang-разработчик</a>,
-                        <a href="/javascript-developer/courses">JavaScript-разработчик</a>,
-                        <a href="/ios-developer/courses">iOS-разработчик</a>,
-                        <a href="/android-developer/courses">Android-разработчик</a>,
-                        <a href="/ui-ux-designer/courses">UI/UX дизайнер</a>,
-                        <a href="/game-designer/courses">Гейм-дизайнер</a>,
-                        <a href="/game-artist-2d/courses">Игровой художник 2D</a>,
-                        <a href="/game-artist-3d/courses">Игровой художник 3D</a>,
-                        <a href="/pr-specialist/courses">PR-специалист</a>,
-                        <a href="/hr-manager/courses">HR-менеджер</a>,
-                        <a href="/internet-marketologist/courses">Интернет-маркетолог</a>,
-                        <a href="/project-manager/courses">Менеджер интернет-проектов</a>,
-                        <a href="/devops/courses">DevOps специалист</a>,
-                        <a href="/qa-tester/courses">Тестировщик</a>,
-                        <a href="/data-scientist/courses">Data Scientist</a>
+                        <a href="/php-developer/catalog">PHP-разработчик</a>,
+                        <a href="/python-developer/catalog">Python-разработчик</a>,
+                        <a href="/golang-developer/catalog">Golang-разработчик</a>,
+                        <a href="/javascript-developer/catalog">JavaScript-разработчик</a>,
+                        <a href="/ios-developer/catalog">iOS-разработчик</a>,
+                        <a href="/android-developer/catalog">Android-разработчик</a>,
+                        <a href="/ui-ux-designer/catalog">UI/UX дизайнер</a>,
+                        <a href="/game-designer/catalog">Гейм-дизайнер</a>,
+                        <a href="/game-artist-2d/catalog">Игровой художник 2D</a>,
+                        <a href="/game-artist-3d/catalog">Игровой художник 3D</a>,
+                        <a href="/pr-specialist/catalog">PR-специалист</a>,
+                        <a href="/hr-manager/catalog">HR-менеджер</a>,
+                        <a href="/internet-marketologist/catalog">Интернет-маркетолог</a>,
+                        <a href="/project-manager/catalog">Менеджер интернет-проектов</a>,
+                        <a href="/devops/catalog">DevOps специалист</a>,
+                        <a href="/qa-tester/catalog">Тестировщик</a>,
+                        <a href="/data-scientist/catalog">Data Scientist</a>
                     </p>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-4 order-lg-first" >
@@ -179,24 +179,10 @@
 
     <div class="backdrop" style="display: none"></div>
 
-    <!-- BEGIN JIVOSITE CODE {literal} -->
-    <script type='text/javascript'>
-        (function(){ var widget_id = 'undd9PhcEl';var d=document;var w=window;function l(){
-            var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
-            s.src = '//code.jivosite.com/script/widget/'+widget_id
-            ; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}
-            if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}
-            else{w.addEventListener('load',l,false);}}})();
-    </script>
-    <!-- {/literal} END JIVOSITE CODE -->
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-    <!-- Styled select -->
     <script src="assets/js/classie.js"></script>
     <script src="assets/js/selectFx.js"></script>
     <script>
@@ -206,7 +192,6 @@
             } );
         })();
     </script>
-    <!-- /Styled select -->
 
     <script>
         const defaultWant = 'стать ...';
@@ -248,7 +233,7 @@
                 }
 
                 let searchUrl = new URL(location.href);
-                searchUrl.pathname = `/${profCode}/courses`;
+                searchUrl.pathname = `/${profCode}/catalog`;
                 location.href = searchUrl.toString();
             }
 

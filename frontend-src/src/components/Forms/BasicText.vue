@@ -13,6 +13,10 @@
             <input type="text" class="form-control" v-model="item.imageUrl">
         </div>
         <div class="form-group">
+            <label>Для кого</label>
+            <check-input v-model="item.audience" :items-enum="enums.audience"></check-input>
+        </div>
+        <div class="form-group">
             <label>Описание</label>
             <ckeditor :editor="editor" v-model="item.description" :config="editorConfig"></ckeditor>
         </div>

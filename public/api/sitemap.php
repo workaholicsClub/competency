@@ -2,7 +2,9 @@
 
 const BASE_URL = 'https://skillit.ch/';
 
-$jsonOutput = false;
+$mongoHost = getenv('MONGO_HOST');
+$mongoDatabaseName = getenv('MONGO_DB');
+$mongoDSN = "mongodb://${mongoHost}/";
 
 $user = getenv('MYSQL_USER');
 $password = getenv('MYSQL_PASSWORD');
@@ -14,12 +16,6 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
-try {
-    $pdo = new PDO($dsn, $user, $password, $options);
-} catch (\PDOException $exception) {
-    $jsonOutput = false;
-}
-
 $urls = [];
 $urls[] = [
     'loc'      => BASE_URL,
@@ -27,47 +23,60 @@ $urls[] = [
     'priority' => '0.8',
 ];
 
-$professionsQuery = $pdo->prepare('SELECT * FROM professions p');
-$coursesQuery = $pdo->prepare('SELECT 
-	*,
-	SUM(isProfession) AS profSkills,
-    COUNT(*)-SUM(isProfession) AS nonProfSkills,
-    SUM(isProfession) > COUNT(*)-SUM(isProfession) AS hasMoreProfSkills,
-    SUM(isProfession)/COUNT(*) AS profSkillsRate
-FROM (
-	SELECT c.*, MAX(p.`code` = ?) AS isProfession FROM courses c
-			LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
-			LEFT JOIN links_skills_professions lsp ON lsc.skillId = lsp.skillId
-			LEFT JOIN professions p ON lsp.professionId = p.id
-	WHERE c.inArchive != 1
-	GROUP BY c.id, lsc.skillId
-) sq
-GROUP BY id
-HAVING profSkillsRate >= 0.5');
+try {
+    $manager = new MongoDB\Driver\Manager($mongoDSN);
+    $eduItemsCollection = "${mongoDatabaseName}.eduItems";
 
-$professionsQuery->execute();
+    $filter = [];
+    $mongoQuery = new MongoDB\Driver\Query($filter);
+    $cursor = $manager->executeQuery($eduItemsCollection, $mongoQuery);
 
-while ($profession = $professionsQuery->fetch()) {
-    $urls[] = [
-        'loc' => BASE_URL . $profession['code'] . '/courses',
-        'lastmod' => date(DateTime::RFC3339),
-        'priority' => '1.0',
-    ];
+    foreach ($cursor as $course) {
+        $preparedCourse = (array) $course;
 
-    $urls[] = [
-        'loc' => BASE_URL . $profession['code'] . '/vacancies',
-        'lastmod' => date(DateTime::RFC3339),
-        'priority' => '0.6',
-    ];
-
-    $coursesQuery->execute([$profession['code']]);
-    while ($course = $coursesQuery->fetch()) {
         $urls[] = [
-            'loc' => BASE_URL . 'course.html?id='.$course['id'].'&from='.$profession['code'],
+            'loc' => BASE_URL . 'catalog/' . $preparedCourse['type'] . '/' . (string) $preparedCourse['_id'],
             'lastmod' => date(DateTime::RFC3339),
             'priority' => '0.8',
         ];
     }
+
+}
+catch (MongoDB\Driver\Exception\Exception $e) {
+}
+
+try {
+    $pdo = new PDO($dsn, $user, $password, $options);
+    $professionsQuery = $pdo->prepare('SELECT * FROM professions p');
+    $coursesQuery = $pdo->prepare('SELECT 
+            *,
+            SUM(isProfession) AS profSkills,
+            COUNT(*)-SUM(isProfession) AS nonProfSkills,
+            SUM(isProfession) > COUNT(*)-SUM(isProfession) AS hasMoreProfSkills,
+            SUM(isProfession)/COUNT(*) AS profSkillsRate
+        FROM (
+            SELECT c.*, MAX(p.`code` = ?) AS isProfession FROM courses c
+                    LEFT JOIN links_skills_courses lsc ON c.id = lsc.courseId
+                    LEFT JOIN links_skills_professions lsp ON lsc.skillId = lsp.skillId
+                    LEFT JOIN professions p ON lsp.professionId = p.id
+            WHERE c.inArchive != 1
+            GROUP BY c.id, lsc.skillId
+        ) sq
+        GROUP BY id
+        HAVING profSkillsRate >= 0.5');
+
+    $professionsQuery->execute();
+
+    while ($profession = $professionsQuery->fetch()) {
+        $urls[] = [
+            'loc' => BASE_URL . $profession['code'] . '/catalog',
+            'lastmod' => date(DateTime::RFC3339),
+            'priority' => '1.0',
+        ];
+    }
+}
+catch (\PDOException $exception) {
+    $jsonOutput = false;
 }
 
 header("Content-type: text/xml");
