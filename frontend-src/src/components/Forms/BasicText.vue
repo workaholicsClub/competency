@@ -14,7 +14,7 @@
         </div>
         <div class="form-group">
             <label>Для кого</label>
-            <check-input v-model="item.audience" :items-enum="enums.audience"></check-input>
+            <check-input v-model="item.audience" :items-enum="audience"></check-input>
         </div>
         <div class="form-group">
             <label>Описание</label>
@@ -57,6 +57,7 @@
     import CheckInput from '../CheckInput.vue'
     import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
     import BasicTextCard from '../Cards/BasicText.vue'
+    import Enums from "../../unsorted/Enums";
 
     export default {
         name: 'BasicTextForm',
@@ -68,6 +69,7 @@
         },
         data() {
             return {
+                audience: Enums.audience,
                 editor: ClassicEditor,
                 editorConfig: {
                 }
