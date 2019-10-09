@@ -44,7 +44,7 @@
                 <split-description :text="internship.description" v-else></split-description>
             </div>
 
-            <a :href="pageUrl" class="details-link" v-if="!showFull">Подробнее на странице стажировки</a>
+            <a :href="pageUrl" class="details-link" target="_blank" v-if="!showFull">Подробнее на странице стажировки</a>
 
             <div class="mt-4" :class="{'row': !mobile}">
                 <a v-if="mobile" :href="redirectUrl" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2">

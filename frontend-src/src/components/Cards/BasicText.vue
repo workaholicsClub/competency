@@ -23,6 +23,10 @@
 
             <h5>{{item.title || ''}}</h5>
 
+            <p class="text-info mt-1" v-if="item.audience">
+                {{readableAudience}}
+            </p>
+
             <div v-if="allSkills">
                 <label class="mt-1 mb-0">Какие навыки можно прокачать</label>
                 <matched-skill-list :skills="allSkills" :skills-in-filter="skillsInFilter"></matched-skill-list>
@@ -38,7 +42,7 @@
                 <split-description :text="item.description" :use-html="true" v-else></split-description>
             </div>
 
-            <a :href="pageUrl" class="details-link" v-if="!showFull">Подробнее на странице записи</a>
+            <a :href="pageUrl" class="details-link" target="_blank" v-if="!showFull">Подробнее на странице записи</a>
 
             <div class="mt-4" :class="{'row': !mobile}">
                 <div class="col price-duration-data" v-if="!mobile">
@@ -66,6 +70,7 @@
     import ShareButton from '../ShareButton'
     import TextFormat from '../../unsorted/TextFormat'
     import UrlFunctions from "../../unsorted/UrlFunctions";
+    import Enums from "../../unsorted/Enums";
 
     export default {
         name: 'BasicTextCard',
@@ -84,11 +89,15 @@
             toggleFavourite() {
                 this.$emit('favourite', this.item);
             },
+        },
+        computed: {
             pageUrl() {
                 return UrlFunctions.makeItemUrl(this.item);
             },
-        },
-        computed: {
+            readableAudience() {
+                let readableAudience = this.item.audience.map( (audience) => TextFormat.getReadableValue(audience, Enums.audience) );
+                return TextFormat.lcfirstJoin(readableAudience, '/');
+            },
             allSkills() {
                 let hasSkills = this.item.skills && this.item.skills.length > 0;
                 if (!hasSkills) {

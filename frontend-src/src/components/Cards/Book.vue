@@ -41,7 +41,7 @@
                 <split-description :text="book.description" v-else></split-description>
             </p>
 
-            <a :href="pageUrl" class="details-link" v-if="!showFull">Подробнее на странице книги</a>
+            <a :href="pageUrl" class="details-link" target="_blank" v-if="!showFull">Подробнее на странице книги</a>
 
             <div class="mt-4" :class="{'row': !mobile}">
                 <div class="col price-duration-data" v-if="!mobile">

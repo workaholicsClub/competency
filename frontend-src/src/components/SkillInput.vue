@@ -90,8 +90,12 @@
         },
         computed: {
             allSkills() {
-                let systemSkillsWithoutChanged = this.systemSkills.filter( skill => this.userChangedSkills.indexOf(skill) === -1 );
-                return this.userChangedSkills.concat(systemSkillsWithoutChanged);
+                let allSkills = this.systemSkills.concat(this.userChangedSkills);
+                let unique = allSkills.filter((value, index, self) => {
+                    return self.indexOf(value) === index;
+                });
+
+                return unique;
             },
             skillNames() {
                 return this.skills ? this.skills.map( (skill) => skill.name ) : [];

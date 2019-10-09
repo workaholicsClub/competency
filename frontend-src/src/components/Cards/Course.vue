@@ -46,7 +46,7 @@
                 <span v-if="showFull">{{course.description}}</span>
                 <split-description :text="course.description" v-else></split-description>
             </p>
-            <a :href="pageUrl" class="details-link" v-if="!showFull">Подробнее на странице курса</a>
+            <a :href="pageUrl" class="details-link" target="_blank" v-if="!showFull">Подробнее на странице курса</a>
 
             <div class="mt-4" :class="{'row': !mobile}">
                 <div class="col price-duration-data" v-if="!mobile">
