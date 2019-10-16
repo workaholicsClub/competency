@@ -484,11 +484,20 @@ img.custom-avatar {
     font-size: 1.3rem;
 }
 
+.course-buttons .btn-link i {
+    line-height: 2.3rem;
+    font-size: 1.3rem;
+}
+
 .course-buttons .btn-link {
     font-weight: bold;
     border-width: 2px;
     line-height: 2.1rem;
     letter-spacing: 1px;
+}
+
+.course-buttons .btn-link.long-text {
+    line-height: 1rem!important;
 }
 
 .course-buttons .btn-link:hover {

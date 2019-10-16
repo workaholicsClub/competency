@@ -236,6 +236,8 @@
 <style>
     .swiper-wrapper {
         width: 1000000px;
+        display: flex;
+        align-items: flex-start;
     }
     .swiper-wrapper .swiper-slide {
         max-width: 400px;

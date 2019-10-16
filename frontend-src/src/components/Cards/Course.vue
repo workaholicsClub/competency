@@ -53,8 +53,12 @@
                     <p class="mt-0 mb-0 price"><span v-html="humanPrice"></span></p>
                 </div>
                 <div :class="{'course-buttons flex-fill d-flex flex-row mt-0 p-0': mobile, 'col course-buttons d-flex flex-row mt-1': !mobile}">
-                    <a v-if="mobile" :href="redirectUrl" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2">
-                        Записаться
+                    <a v-if="mobile"
+                            :href="redirectUrl"
+                            class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2"
+                            :class="{'long-text': hasPartnerUrl}"
+                            v-html="hasPartnerUrl ? 'Записаться<br>и помочь проекту': 'Записаться'"
+                    >
                     </a>
                     <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2"
                             type="button"
@@ -68,7 +72,7 @@
                     </button>
                     <share-button></share-button-->
                     <a v-if="!mobile" :href="redirectUrl" target="_blank" class="btn btn-outline-info flex-fill btn-link mr-2">
-                        Записаться
+                        Записаться {{hasPartnerUrl ? 'и помочь проекту': ''}}
                     </a>
                 </div>
             </div>

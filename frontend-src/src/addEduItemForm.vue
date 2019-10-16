@@ -93,6 +93,17 @@
                     :save-error="error.internship"
                     @save="saveItem"
             ></internship-form>
+
+            <app-form
+                    v-show="currentTabCode === 'app'"
+                    :item="app"
+                    :enums="enums.app"
+                    :mobile="isMobile"
+                    :skills="allSkills"
+                    :save-status="saved.app"
+                    :save-error="error.app"
+                    @save="saveItem"
+            ></app-form>
         </div>
     </div>
 </template>
@@ -105,6 +116,7 @@
     import MotivationForm from './components/Forms/BasicText.vue';
     import HomeworkForm from './components/Forms/BasicText.vue';
     import InternshipForm from './components/Forms/Internship.vue';
+    import AppForm from './components/Forms/App.vue';
     import ApiClient from './unsorted/ApiClient';
     import Enums from "./unsorted/Enums";
     import ArraysAndObjects from "./unsorted/ArraysAndObjects";
@@ -119,7 +131,8 @@
             ExplainForm,
             MotivationForm,
             HomeworkForm,
-            InternshipForm
+            InternshipForm,
+            AppForm
         },
         data() {
             return {
@@ -140,7 +153,8 @@
                     explain: false,
                     motivation: false,
                     homework: false,
-                    internship: false
+                    internship: false,
+                    app: false
                 },
                 saved: {
                     course: false,
@@ -149,7 +163,8 @@
                     explain: false,
                     motivation: false,
                     homework: false,
-                    internship: false
+                    internship: false,
+                    app: false,
                 },
                 course: {
                     type: 'course',
@@ -177,6 +192,9 @@
                     salaryType: 'month',
                     durationUnits: 'month',
                     loadUnits: 'hour-per-week'
+                },
+                app: {
+                    type: 'app'
                 }
             };
         },

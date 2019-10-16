@@ -13,6 +13,7 @@ export default {
         {code: 'motivation', title: 'Мотивация'},
         {code: 'homework', title: 'Домашка'},
         {code: 'internship', title: 'Стажировка'},
+        {code: 'app', title: 'Приложение'},
     ],
     audience: audience,
     templates: {
@@ -114,6 +115,7 @@ export default {
     explain: {},
     motivation: {},
     homework: {},
+    app: {},
     internship: {
         salaryTypes: [
             {code: 'month', title: 'В месяц'},

@@ -80,6 +80,18 @@
                 @favourite="emitFavourite(item)"
         >
         </internship-card>
+
+        <app-card
+                v-if="item.type === 'app'"
+                :item="item"
+                :enums="enums.app"
+                :mobile="mobile"
+                :show-full="showFull"
+                :is-favourite="isFavourite"
+                @favourite="emitFavourite(item)"
+        >
+        </app-card>
+
     </component>
 </template>
 
@@ -91,6 +103,7 @@
     import MotivationCard from './BasicText.vue'
     import HomeworkCard from './BasicText.vue'
     import InternshipCard from './Internship.vue'
+    import AppCard from './App.vue'
     import Enums from "../../unsorted/Enums";
 
     export default {
@@ -103,7 +116,8 @@
             ExplainCard,
             MotivationCard,
             HomeworkCard,
-            InternshipCard
+            InternshipCard,
+            AppCard
         },
         data() {
             return {
