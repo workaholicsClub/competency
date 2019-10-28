@@ -7,7 +7,11 @@ services:
       - 8090:80
     volumes:
       - "./public:/var/www/public"
-      - "./etc/nginx/site.conf:/etc/nginx/conf.d/default.conf"
+      - "./etc/nginx/site.conf:/etc/nginx/conf.d/default.template"
+      - "./etc/nginx/replaceEnvInTemplate.sh:/home/replaceEnvInTemplate.sh"
+    command: /bin/bash -c "/home/replaceEnvInTemplate.sh /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
+    environment:
+      - ROOT_URL=${ROOT_URL}
     depends_on:
       - php
 

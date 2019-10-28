@@ -79,6 +79,7 @@
     import SplitDescription from '../SplitDescription.vue'
     import ShareButton from '../ShareButton'
     import TextFormat from '../../unsorted/TextFormat'
+    import UrlFunctions from "../../unsorted/UrlFunctions";
 
     export default {
         name: 'InternshipCard',
@@ -86,7 +87,6 @@
             SkillList,
             MatchedSkillList,
             SplitDescription,
-            ShareButton
         },
         props: ['internship', 'skills-in-filter', 'enums', 'mobile', 'show-full', 'is-favourite'],
         data() {

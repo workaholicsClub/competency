@@ -55,7 +55,7 @@
 <script>
     import SkillInput from '../SkillInput.vue'
     import CheckInput from '../CheckInput.vue'
-    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+    import CustomEditor from '../../unsorted/CKEditor';
     import BasicTextCard from '../Cards/BasicText.vue'
     import Enums from "../../unsorted/Enums";
 
@@ -69,10 +69,9 @@
         },
         data() {
             return {
+                editor: CustomEditor,
+                editorConfig: {},
                 audience: Enums.audience,
-                editor: ClassicEditor,
-                editorConfig: {
-                }
             }
         },
         methods: {

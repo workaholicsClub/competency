@@ -67,7 +67,6 @@
     import SkillList from '../SkillList.vue'
     import MatchedSkillList from '../MatchedSkillList.vue'
     import SplitDescription from '../SplitDescription.vue'
-    import ShareButton from '../ShareButton'
     import TextFormat from '../../unsorted/TextFormat'
     import UrlFunctions from "../../unsorted/UrlFunctions";
     import Enums from "../../unsorted/Enums";
@@ -78,7 +77,6 @@
             SkillList,
             MatchedSkillList,
             SplitDescription,
-            ShareButton
         },
         props: ['item', 'skills-in-filter', 'enums', 'mobile', 'show-full', 'card-title', 'is-favourite'],
         data() {

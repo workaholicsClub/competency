@@ -94,7 +94,6 @@
             SkillList,
             MatchedSkillList,
             SplitDescription,
-            ShareButton
         },
         props: ['course', 'skills-in-filter', 'enums', 'mobile', 'show-full', 'is-favourite'],
         data() {

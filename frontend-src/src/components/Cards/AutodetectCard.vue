@@ -92,6 +92,16 @@
         >
         </app-card>
 
+        <game-card
+                v-if="item.type === 'game'"
+                :item="item"
+                :enums="enums.game"
+                :mobile="mobile"
+                :show-full="showFull"
+                :is-favourite="isFavourite"
+                @favourite="emitFavourite(item)"
+        >
+        </game-card>
     </component>
 </template>
 
@@ -104,6 +114,7 @@
     import HomeworkCard from './BasicText.vue'
     import InternshipCard from './Internship.vue'
     import AppCard from './App.vue'
+    import GameCard from './Game.vue'
     import Enums from "../../unsorted/Enums";
 
     export default {
@@ -117,7 +128,8 @@
             MotivationCard,
             HomeworkCard,
             InternshipCard,
-            AppCard
+            AppCard,
+            GameCard
         },
         data() {
             return {

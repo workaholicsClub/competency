@@ -104,6 +104,17 @@
                     :save-error="error.app"
                     @save="saveItem"
             ></app-form>
+
+            <game-form
+                    v-show="currentTabCode === 'game'"
+                    :item="game"
+                    :enums="enums.game"
+                    :mobile="isMobile"
+                    :skills="allSkills"
+                    :save-status="saved.game"
+                    :save-error="error.game"
+                    @save="saveItem"
+            ></game-form>
         </div>
     </div>
 </template>
@@ -117,6 +128,7 @@
     import HomeworkForm from './components/Forms/BasicText.vue';
     import InternshipForm from './components/Forms/Internship.vue';
     import AppForm from './components/Forms/App.vue';
+    import GameForm from './components/Forms/Game.vue';
     import ApiClient from './unsorted/ApiClient';
     import Enums from "./unsorted/Enums";
     import ArraysAndObjects from "./unsorted/ArraysAndObjects";
@@ -132,7 +144,8 @@
             MotivationForm,
             HomeworkForm,
             InternshipForm,
-            AppForm
+            AppForm,
+            GameForm
         },
         data() {
             return {
@@ -154,7 +167,8 @@
                     motivation: false,
                     homework: false,
                     internship: false,
-                    app: false
+                    app: false,
+                    game: false
                 },
                 saved: {
                     course: false,
@@ -165,6 +179,7 @@
                     homework: false,
                     internship: false,
                     app: false,
+                    game: false
                 },
                 course: {
                     type: 'course',
@@ -195,6 +210,9 @@
                 },
                 app: {
                     type: 'app'
+                },
+                game: {
+                    type: 'game'
                 }
             };
         },
@@ -260,6 +278,18 @@
                 },
                 deep: true
             },
+            app: {
+                handler() {
+                    this.clearSaveStatus('app');
+                },
+                deep: true
+            },
+            game: {
+                handler() {
+                    this.clearSaveStatus('game');
+                },
+                deep: true
+            },
         },
         methods: {
             async loadAllSkills() {
@@ -295,10 +325,8 @@
                 this.saved[type] = false;
             },
             showMessage(messageText) {
-                console.log(messageText);
             },
             showError(errorMessage) {
-                console.log(errorMessage);
             },
             handleResize() {
                 this.window.width = window.innerWidth;

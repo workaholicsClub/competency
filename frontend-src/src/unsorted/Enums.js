@@ -14,6 +14,7 @@ export default {
         {code: 'homework', title: 'Домашка'},
         {code: 'internship', title: 'Стажировка'},
         {code: 'app', title: 'Приложение'},
+        {code: 'game', title: 'Игра'},
     ],
     audience: audience,
     templates: {
@@ -116,6 +117,17 @@ export default {
     motivation: {},
     homework: {},
     app: {},
+    game: {
+        platform: [
+            {code: 'web', title: 'Веб'},
+            {code: 'android', title: 'Android'},
+            {code: 'ios', title: 'iOS'},
+            {code: 'windows', title: 'Windows'},
+            {code: 'linux', title: 'Linux'},
+            {code: 'macos', title: 'MacOS'},
+        ],
+        audience: audience
+    },
     internship: {
         salaryTypes: [
             {code: 'month', title: 'В месяц'},

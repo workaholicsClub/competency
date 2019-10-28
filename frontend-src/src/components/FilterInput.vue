@@ -4,7 +4,11 @@
             <div class="input-group">
                 <label class="group-title-label">{{field.title}}</label>
                 <div class="checkbox-group">
-                    <label class="btn btn-outline-primary btn-filter-apply" :class="{'active': isSelected(valueItem.code)}" v-for="valueItem in field.values">
+                    <label class="btn btn-outline-primary btn-filter-apply"
+                            :class="{'active': isSelected(valueItem.code)}"
+                            v-for="valueItem in field.values"
+                            :key="valueItem.code"
+                    >
                         {{valueItem.title}}
                         <input type="checkbox" :value="valueItem.code" :name="field.code + '[]'" v-model="selectedItems">
                     </label>
@@ -15,7 +19,11 @@
             <div class="d-flex flex-row flex-wrap mr-4">
                 <label class="d-inline mr-2 group-title-label">{{field.title}}</label>
 
-                <label class="btn btn-outline-primary btn-filter-apply" :class="{'active': isSelected(valueItem.code)}" v-for="valueItem in field.values">
+                <label class="btn btn-outline-primary btn-filter-apply"
+                        :class="{'active': isSelected(valueItem.code)}"
+                        v-for="valueItem in field.values"
+                        :key="valueItem.code"
+                >
                     {{valueItem.title}}
                     <input type="checkbox" :value="valueItem.code" :name="field.code + '[]'" v-model="selectedItems">
                 </label>

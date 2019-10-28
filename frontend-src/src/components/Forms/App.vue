@@ -52,7 +52,7 @@
             <label>Стоимость</label>
             <input type="number" class="form-control" v-model.number="item.price">
             <small class="form-text text-muted">
-                0, если курс бесплатный
+                0, если приложение бесплатное
             </small>
         </div>
 
@@ -93,10 +93,10 @@
 </template>
 
 <script>
-    import SkillInput from '../SkillInput.vue'
-    import CheckInput from '../CheckInput.vue'
-    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-    import AppCard from '../Cards/App.vue'
+    import SkillInput from '../SkillInput.vue';
+    import CheckInput from '../CheckInput.vue';
+    import CustomEditor from '../../unsorted/CKEditor';
+    import AppCard from '../Cards/App.vue';
     import Enums from "../../unsorted/Enums";
 
     export default {
@@ -109,10 +109,9 @@
         },
         data() {
             return {
+                editor: CustomEditor,
+                editorConfig: {},
                 audience: Enums.audience,
-                editor: ClassicEditor,
-                editorConfig: {
-                }
             }
         },
         methods: {

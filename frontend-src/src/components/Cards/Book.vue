@@ -72,7 +72,6 @@
     import SkillList from '../SkillList.vue'
     import MatchedSkillList from '../MatchedSkillList.vue'
     import SplitDescription from '../SplitDescription.vue'
-    import ShareButton from '../ShareButton'
     import TextFormat from '../../unsorted/TextFormat'
     import UrlFunctions from "../../unsorted/UrlFunctions"
 
@@ -82,7 +81,6 @@
             SkillList,
             MatchedSkillList,
             SplitDescription,
-            ShareButton
         },
         props: ['book', 'skills-in-filter', 'enums', 'mobile', 'show-full', 'is-favourite'],
         data() {
@@ -109,7 +107,7 @@
                 return this.book.price > 0 ? formattedPrice : 'Бесплатно';
             },
             buttonTitle() {
-                return this.book.price > 0 ? 'Купиить' : 'Скачать';
+                return this.book.price > 0 ? 'Купить' : 'Скачать';
             },
             allSkills() {
                 return TextFormat.skillsToObjectList(this.book.skills);
