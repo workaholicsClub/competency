@@ -28,7 +28,8 @@
             <main class="container wide-container course-data">
                 <autodetect-card
                         :item="item"
-                        :mobile="false"
+                        :mobile="true"
+                        :show-full="true"
                         :is-favourite="isFavourite(item)"
                         @favourite="toggleFavourite(item)"
                 ></autodetect-card>

@@ -111,7 +111,7 @@
     import ProjectCard from './BasicText.vue'
     import ExplainCard from './BasicText.vue'
     import MotivationCard from './BasicText.vue'
-    import HomeworkCard from './BasicText.vue'
+    import HomeworkCard from './Homework.vue'
     import InternshipCard from './Internship.vue'
     import AppCard from './App.vue'
     import GameCard from './Game.vue'

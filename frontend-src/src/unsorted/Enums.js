@@ -115,7 +115,20 @@ export default {
     project: {},
     explain: {},
     motivation: {},
-    homework: {},
+    homework: {
+        defaultLang: 'python',
+        lang: [
+            {code: 'python', title: 'Python', repl: '@AlieksandrPavlo/PythonTemplate'},
+            {code: 'javascript', title: 'JavaScript', repl: '@AlieksandrPavlo/JavaScriptTemplate'},
+            {code: 'java', title: 'Java', repl: '@AlieksandrPavlo/JavaTemplate'},
+            {code: 'php', title: 'PHP', repl: '@AlieksandrPavlo/PhpTemplate'},
+            {code: 'golang', title: 'Go', repl: '@AlieksandrPavlo/GoTemplate'},
+            {code: 'swift', title: 'Swift', repl: '@AlieksandrPavlo/SwiftTemplate'},
+            {code: 'kotlin', title: 'Kotlin', repl: '@AlieksandrPavlo/KotlinTemplate'},
+            {code: 'cpp', title: 'C++', repl: '@AlieksandrPavlo/CppTemplate'},
+            {code: 'html', title: 'HTML/CSS', repl: '@AlieksandrPavlo/HtmlCssTemplate'},
+        ]
+    },
     app: {},
     game: {
         platform: [

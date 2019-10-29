@@ -125,7 +125,7 @@
     import ProjectForm from './components/Forms/BasicText.vue';
     import ExplainForm from './components/Forms/BasicText.vue';
     import MotivationForm from './components/Forms/BasicText.vue';
-    import HomeworkForm from './components/Forms/BasicText.vue';
+    import HomeworkForm from './components/Forms/Homework.vue';
     import InternshipForm from './components/Forms/Internship.vue';
     import AppForm from './components/Forms/App.vue';
     import GameForm from './components/Forms/Game.vue';
