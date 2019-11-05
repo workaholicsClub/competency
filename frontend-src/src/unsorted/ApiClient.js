@@ -32,7 +32,7 @@ export default {
             params: data
         });
 
-        return result.data
+        return result.data;
     },
     loadSkills() {
         return this.loadApiData('/api/skills.php', {format: 'jsonList'});
@@ -79,4 +79,20 @@ export default {
     loadItem(itemId) {
         return this.loadApiData('/api/courseData.php', {id: itemId});
     },
+    async runCodeOnGlot(code, glotLangCode) {
+        let requestPayload = new FormData();
+        requestPayload.append('lang', glotLangCode);
+        requestPayload.append('code', code);
+
+        const result = await axios({
+            method: 'post',
+            url: '/api/runCode.php',
+            data: requestPayload,
+            headers: {
+                'content-type': `multipart/form-data; boundary=${requestPayload._boundary}`,
+            },
+        });
+
+        return result.data;
+    }
 }

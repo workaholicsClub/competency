@@ -49,7 +49,7 @@
                     </li>
                 </ul>
 
-                <code-run height="500" :lang="selectedLang"></code-run>
+                <code-run height="500" :lang="selectedLang" :id="item._id"></code-run>
             </div>
 
             <div class="mb-0 mt-4" v-if="showFull && !answerHidden">
@@ -73,6 +73,9 @@
                     >
                         Показать ответ
                     </a>
+                    <a v-if="mobile" href="https://ttttt.me/skill_itch_chat" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2">
+                        Помощь и проверка в чате
+                    </a>
                     <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2"
                             type="button"
                             :class="{'active': isFavourite}"
@@ -82,6 +85,9 @@
                     </button>
                     <a v-if="!mobile && !showFull" :href="pageUrl" target="_blank" class="btn btn-outline-info flex-fill btn-link mr-2">
                         Решить онлайн
+                    </a>
+                    <a v-if="!mobile" href="https://ttttt.me/skill_itch_chat" target="_blank" class="btn btn-outline-info flex-fill btn-link mr-2">
+                        Помощь и проверка в чате
                     </a>
                     <a v-if="!mobile && showFull && item.answer && answerHidden"
                             class="btn btn-outline-info flex-fill btn-link mr-2"

@@ -31,6 +31,7 @@ services:
       - XDEBUG_CONFIG=remote_host=${HOST_IP}
       - MONGO_HOST=mongo
       - MONGO_DB=skillitch
+      - GLOT_TOKEN=${GLOT_TOKEN}
 
     volumes:
       - ".:/var/www"

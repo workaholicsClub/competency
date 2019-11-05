@@ -47,7 +47,7 @@
             <a :href="pageUrl" class="details-link" target="_blank" v-if="!showFull">Подробнее на странице стажировки</a>
 
             <div class="mt-4" :class="{'row': !mobile}">
-                <a v-if="mobile" :href="redirectUrl" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2">
+                <a v-if="mobile" :href="redirectUrl" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2">
                     Подать заявку
                 </a>
                 <div class="col price-duration-data" v-if="!mobile">

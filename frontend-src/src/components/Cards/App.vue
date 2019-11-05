@@ -61,7 +61,8 @@
 
                     <a v-if="mobile" v-for="button in downloadButtons"
                             :href="button.url"
-                            target="_blank" class="btn btn-outline-info mr-2"
+                            target="_blank"
+                            class="btn btn-outline-info mr-2"
                             :class="{'btn-link': button.isHighlighted, 'btn-share': !button.isHighlighted}">
                         <i :class="button.icon"></i>
                     </a>

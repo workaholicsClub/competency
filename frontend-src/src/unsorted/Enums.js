@@ -118,16 +118,52 @@ export default {
     homework: {
         defaultLang: 'python',
         lang: [
-            {code: 'python', title: 'Python', repl: '@AlieksandrPavlo/PythonTemplate'},
-            {code: 'javascript', title: 'JavaScript', repl: '@AlieksandrPavlo/JavaScriptTemplate'},
-            {code: 'java', title: 'Java', repl: '@AlieksandrPavlo/JavaTemplate'},
-            {code: 'php', title: 'PHP', repl: '@AlieksandrPavlo/PhpTemplate'},
-            {code: 'golang', title: 'Go', repl: '@AlieksandrPavlo/GoTemplate'},
-            {code: 'swift', title: 'Swift', repl: '@AlieksandrPavlo/SwiftTemplate'},
-            {code: 'kotlin', title: 'Kotlin', repl: '@AlieksandrPavlo/KotlinTemplate'},
-            {code: 'cpp', title: 'C++', repl: '@AlieksandrPavlo/CppTemplate'},
-            {code: 'html', title: 'HTML/CSS', repl: '@AlieksandrPavlo/HtmlCssTemplate'},
-        ]
+            {code: 'python', title: 'Python', glotCode: 'python', prismCode: 'python'},
+            {code: 'javascript', title: 'JavaScript', glotCode: 'javascript', prismCode: 'javascript'},
+            {code: 'java', title: 'Java', glotCode: 'java', prismCode: 'java'},
+            {code: 'php', title: 'PHP', glotCode: 'php', prismCode: 'php'},
+            {code: 'golang', title: 'Go', glotCode: 'go', prismCode: 'go'},
+            {code: 'swift', title: 'Swift', glotCode: 'swift', prismCode: 'swift'},
+            {code: 'kotlin', title: 'Kotlin', glotCode: 'kotlin', prismCode: 'kotlin'},
+            {code: 'cpp', title: 'C++', glotCode: 'cpp', prismCode: 'cpp'},
+            //при добавлении нового языка, добавь его в список подсветок Prism.js в babel.config.js
+            //{code: 'html', title: 'HTML/CSS', repl: '@AlieksandrPavlo/HtmlCssTemplate', glot: false},
+        ],
+        examples: {
+            python: `message="Привет, Олимпийский!"
+print(message)`,
+            javascript: `let message="Привет, Олимпийский!";
+console.log(message);`,
+            java: `class Main {
+  public static void main(String[] args) {
+    String message = "Привет, Олимпийский!";
+    System.out.println(message);
+  }
+}`,
+            php: `<?php
+$message = "Привет, Олимпийский!";
+echo $message;`,
+            golang: `package main
+
+import "fmt"
+
+func main() {
+  var message string = "Привет, Олимпийский!\\n"
+  fmt.Printf(message)
+}`,
+            swift: `var message = "Привет, Олимпийский!"
+print(message)`,
+            kotlin: `fun main(args: Array<String>) {
+    var message = "Привет, Олимпийский!";
+    println(message);
+}`,
+            cpp: `#include <iostream>
+
+int main() {
+  std::string message = "Привет, Олимпийский!\\n";
+  std::cout << message;
+}`
+        }
     },
     app: {},
     game: {

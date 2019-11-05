@@ -55,6 +55,7 @@
                 <div :class="{'course-buttons flex-fill d-flex flex-row mt-0 p-0': mobile, 'col course-buttons d-flex flex-row mt-1': !mobile}">
                     <a v-if="mobile"
                             :href="redirectUrl"
+                            target="_blank"
                             class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2"
                             :class="{'long-text': hasPartnerUrl}"
                             v-html="hasPartnerUrl ? 'Записаться<br>и помочь проекту': 'Записаться'"
