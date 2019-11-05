@@ -21,6 +21,7 @@
                         :show-full="true"
                         :is-favourite="isFavourite(item)"
                         @favourite="toggleFavourite(item)"
+                        @skills="overrideSkills"
                 ></autodetect-card>
             </main>
         </div>
@@ -32,6 +33,7 @@
                         :show-full="true"
                         :is-favourite="isFavourite(item)"
                         @favourite="toggleFavourite(item)"
+                        @skills="overrideSkills"
                 ></autodetect-card>
             </main>
         </div>
@@ -53,6 +55,7 @@
                             :key="item._id"
                             :is-favourite="isFavourite(item)"
                             @favourite="toggleFavourite(item)"
+                            @skills="overrideSkills"
                     ></autodetect-card>
                 </swiper>
             </main>
@@ -86,6 +89,7 @@
                 favourites: Favourites.loadFavourites(),
                 item: false,
                 similar: [],
+                skillsOverride: false,
                 swiperOptions: {
                     slidesPerView: 'auto',
                     initialSlide: 1,
@@ -136,6 +140,10 @@
             }
         },
         methods: {
+            overrideSkills(skills) {
+                this.skillsOverride = skills;
+                this.loadSimilarItems();
+            },
             async loadItemData() {
                 let itemId = UrlFunctions.getItemIdFromUrl();
                 if (itemId) {
@@ -143,8 +151,12 @@
                 }
             },
             async loadSimilarItems() {
+                let skillsToFilter = this.skillsOverride
+                    ? this.skillsOverride
+                    : this.item.skills;
+
                 let filter = {
-                    'filter[skills]': this.item.skills
+                    'filter[skills]': skillsToFilter
                 };
 
                 this.similar = await ApiClient.loadCoursesDebounced(filter);

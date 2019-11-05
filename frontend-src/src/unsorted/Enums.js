@@ -118,14 +118,14 @@ export default {
     homework: {
         defaultLang: 'python',
         lang: [
-            {code: 'python', title: 'Python', glotCode: 'python', prismCode: 'python'},
-            {code: 'javascript', title: 'JavaScript', glotCode: 'javascript', prismCode: 'javascript'},
-            {code: 'java', title: 'Java', glotCode: 'java', prismCode: 'java'},
-            {code: 'php', title: 'PHP', glotCode: 'php', prismCode: 'php'},
-            {code: 'golang', title: 'Go', glotCode: 'go', prismCode: 'go'},
-            {code: 'swift', title: 'Swift', glotCode: 'swift', prismCode: 'swift'},
-            {code: 'kotlin', title: 'Kotlin', glotCode: 'kotlin', prismCode: 'kotlin'},
-            {code: 'cpp', title: 'C++', glotCode: 'cpp', prismCode: 'cpp'},
+            {code: 'python', title: 'Python', glotCode: 'python', prismCode: 'python', skills: ['Python']},
+            {code: 'javascript', title: 'JavaScript', glotCode: 'javascript', prismCode: 'javascript', skills: ['JavaScript']},
+            {code: 'java', title: 'Java', glotCode: 'java', prismCode: 'java', skills: ['Java']},
+            {code: 'php', title: 'PHP', glotCode: 'php', prismCode: 'php', skills: ['PHP']},
+            {code: 'golang', title: 'Go', glotCode: 'go', prismCode: 'go', skills: ['Go']},
+            {code: 'swift', title: 'Swift', glotCode: 'swift', prismCode: 'swift', skills: ['Swift']},
+            {code: 'kotlin', title: 'Kotlin', glotCode: 'kotlin', prismCode: 'kotlin', skills: ['Kotlin']},
+            {code: 'cpp', title: 'C++', glotCode: 'cpp', prismCode: 'cpp', skills: ['C/C++']},
             //при добавлении нового языка, добавь его в список подсветок Prism.js в babel.config.js
             //{code: 'html', title: 'HTML/CSS', repl: '@AlieksandrPavlo/HtmlCssTemplate', glot: false},
         ],

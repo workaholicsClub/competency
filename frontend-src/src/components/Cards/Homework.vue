@@ -45,7 +45,7 @@
             <div class="mb-0 mt-4" v-if="showFull">
                 <ul class="nav nav-pills justify-content-center mb-4">
                     <li class="nav-item" v-for="lang in langs" :key="lang.code">
-                        <a :class="{'active': lang.code === selectedLang}" @click="selectedLang = lang.code" class="nav-link" href="#">{{lang.title}}</a>
+                        <a :class="{'active': lang.code === selectedLang}" @click="changeLang(lang.code)" class="nav-link" href="#">{{lang.title}}</a>
                     </li>
                 </ul>
 
@@ -73,7 +73,7 @@
                     >
                         Показать ответ
                     </a>
-                    <a v-if="mobile" href="https://ttttt.me/skill_itch_chat" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2">
+                    <a v-if="mobile && showFull" href="https://ttttt.me/skill_itch_chat" target="_blank" class="btn btn-outline-info flex-fill d-flex justify-content-center btn-link mr-2">
                         Помощь и проверка в чате
                     </a>
                     <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2"
@@ -86,7 +86,7 @@
                     <a v-if="!mobile && !showFull" :href="pageUrl" target="_blank" class="btn btn-outline-info flex-fill btn-link mr-2">
                         Решить онлайн
                     </a>
-                    <a v-if="!mobile" href="https://ttttt.me/skill_itch_chat" target="_blank" class="btn btn-outline-info flex-fill btn-link mr-2">
+                    <a v-if="!mobile && showFull" href="https://ttttt.me/skill_itch_chat" target="_blank" class="btn btn-outline-info flex-fill btn-link mr-2">
                         Помощь и проверка в чате
                     </a>
                     <a v-if="!mobile && showFull && item.answer && answerHidden"
@@ -119,6 +119,11 @@
             CodeRun
         },
         props: ['item', 'skills-in-filter', 'enums', 'mobile', 'show-full', 'card-title', 'is-favourite'],
+        created() {
+            if (this.showFull) {
+                this.changeLang(this.selectedLang);
+            }
+        },
         data() {
             return {
                 langs: Enums.homework.lang,
@@ -130,8 +135,20 @@
             toggleFavourite() {
                 this.$emit('favourite', this.item);
             },
+            changeLang(langCode) {
+                this.selectedLang = langCode;
+                if (this.selectedLangData) {
+                    let langSkills = this.selectedLangData.skills;
+                    this.$emit('skills', langSkills);
+                }
+            }
         },
         computed: {
+            selectedLangData() {
+                return this.langs.reduce( (found, current) => {
+                    return current.code === this.selectedLang ? current : found;
+                }, false);
+            },
             pageUrl() {
                 return UrlFunctions.makeItemUrl(this.item);
             },

@@ -9,6 +9,7 @@
                 :skills-in-filter="skillsInFilter"
                 :is-favourite="isFavourite"
                 @favourite="emitFavourite(item)"
+                @skills="emitSkills"
         >
         </course-card>
 
@@ -20,6 +21,7 @@
                 :show-full="showFull"
                 :is-favourite="isFavourite"
                 @favourite="emitFavourite(item)"
+                @skills="emitSkills"
         >
         </book-card>
 
@@ -31,6 +33,7 @@
                 card-title="Идея проекта"
                 :is-favourite="isFavourite"
                 @favourite="emitFavourite(item)"
+                @skills="emitSkills"
         >
         </project-card>
 
@@ -43,6 +46,7 @@
                 card-title="Объяснение"
                 :is-favourite="isFavourite"
                 @favourite="emitFavourite(item)"
+                @skills="emitSkills"
         >
         </explain-card>
 
@@ -55,6 +59,7 @@
                 card-title="Мотивация"
                 :is-favourite="isFavourite"
                 @favourite="emitFavourite(item)"
+                @skills="emitSkills"
         >
         </motivation-card>
 
@@ -67,6 +72,7 @@
                 card-title="Домашка"
                 :is-favourite="isFavourite"
                 @favourite="emitFavourite(item)"
+                @skills="emitSkills"
         >
         </homework-card>
 
@@ -78,6 +84,7 @@
                 :show-full="showFull"
                 :is-favourite="isFavourite"
                 @favourite="emitFavourite(item)"
+                @skills="emitSkills"
         >
         </internship-card>
 
@@ -89,6 +96,7 @@
                 :show-full="showFull"
                 :is-favourite="isFavourite"
                 @favourite="emitFavourite(item)"
+                @skills="emitSkills"
         >
         </app-card>
 
@@ -100,6 +108,7 @@
                 :show-full="showFull"
                 :is-favourite="isFavourite"
                 @favourite="emitFavourite(item)"
+                @skills="emitSkills"
         >
         </game-card>
     </component>
@@ -139,6 +148,9 @@
         methods: {
             emitFavourite(item) {
                 this.$emit('favourite', item);
+            },
+            emitSkills(skills) {
+                this.$emit('skills', skills);
             }
         },
         computed: {
