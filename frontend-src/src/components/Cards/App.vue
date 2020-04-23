@@ -59,13 +59,16 @@
                 <div class="course-buttons d-flex flex-row justify-content-end"
                      :class="{'flex-fill mt-0 p-0': mobile, 'col mt-1': !mobile}">
 
-                    <a v-if="mobile" v-for="button in downloadButtons"
-                            :href="button.url"
-                            target="_blank"
-                            class="btn btn-outline-info mr-2"
-                            :class="{'btn-link': button.isHighlighted, 'btn-share': !button.isHighlighted}">
-                        <i :class="button.icon"></i>
-                    </a>
+                    <span v-if="mobile">
+                        <a v-for="(button, index) in downloadButtons"
+                                :href="button.url"
+                                target="_blank"
+                                class="btn btn-outline-info mr-2"
+                                :key="'u'+index"
+                                :class="{'btn-link': button.isHighlighted, 'btn-share': !button.isHighlighted}">
+                            <i :class="button.icon"></i>
+                        </a>
+                    </span>
 
                     <button class="btn btn-outline-info d-flex flex-row btn-favourite mr-2"
                             type="button"
@@ -75,13 +78,16 @@
                         <i :class="{'fas fa-check': isFavourite, 'far fa-bookmark': !isFavourite}"></i>
                     </button>
 
-                    <a v-if="!mobile" v-for="button in downloadButtons"
-                            :href="button.url"
-                            target="_blank"
-                            class="btn btn-outline-info mr-2"
-                            :class="{'btn-link flex-fill': button.isHighlighted, 'btn-share': !button.isHighlighted}">
-                        {{button.text}} <i :class="button.icon"></i>
-                    </a>
+                    <span v-if="!mobile">
+                        <a v-for="(button, index) in downloadButtons"
+                                :href="button.url"
+                                target="_blank"
+                                class="btn btn-outline-info mr-2"
+                                :key="'l'+index"
+                                :class="{'btn-link flex-fill': button.isHighlighted, 'btn-share': !button.isHighlighted}">
+                            {{button.text}} <i :class="button.icon"></i>
+                        </a>
+                    </span>
                 </div>
             </div>
         </div>

@@ -22,6 +22,11 @@ module.exports = {
             template: 'page_templates/itemPage.html',
             filename: 'item.html',
         },
+        collection: {
+            entry: 'src/collectionPage.js',
+            template: 'page_templates/collection.html',
+            filename: 'collection.html',
+        },
     },
 
     transpileDependencies: [

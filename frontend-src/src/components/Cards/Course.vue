@@ -85,7 +85,6 @@
     import SkillList from '../SkillList.vue'
     import MatchedSkillList from '../MatchedSkillList.vue'
     import SplitDescription from '../SplitDescription.vue'
-    import ShareButton from '../ShareButton'
     import TextFormat from '../../unsorted/TextFormat'
     import UrlFunctions from '../../unsorted/UrlFunctions'
 

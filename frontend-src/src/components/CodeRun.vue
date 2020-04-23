@@ -67,6 +67,7 @@
                 saved: true,
                 execStdOut: '',
                 execError: false,
+                loadException: false
             };
         },
         methods: {
@@ -96,6 +97,7 @@
                         this.code = code;
                     }
                     catch (exception) {
+                        this.loadException = exception;
                     }
                 }
             },

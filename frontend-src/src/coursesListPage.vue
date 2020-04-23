@@ -306,7 +306,7 @@
             }
         },
         async created() {
-            initScroll();
+            //initScroll();
 
             initAuth();
             this.loadFavourites();

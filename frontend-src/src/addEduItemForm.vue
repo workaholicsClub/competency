@@ -324,9 +324,9 @@
             clearSaveStatus(type) {
                 this.saved[type] = false;
             },
-            showMessage(messageText) {
+            showMessage() {//(messageText) {
             },
-            showError(errorMessage) {
+            showError() {//(errorMessage) {
             },
             handleResize() {
                 this.window.width = window.innerWidth;
