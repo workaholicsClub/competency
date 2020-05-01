@@ -27,6 +27,11 @@ module.exports = {
             template: 'page_templates/collection.html',
             filename: 'collection.html',
         },
+        kupioxa: {
+            entry: 'src/kupioxaPage.js',
+            template: 'page_templates/kupioxa.html',
+            filename: 'kupioxa.html',
+        },
     },
 
     transpileDependencies: [
