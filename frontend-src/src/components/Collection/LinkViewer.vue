@@ -71,25 +71,25 @@
 
     @media (min-width: 576px) {
         .media-footer .text-truncate {
-            max-width: 312px;
+            max-width: 162px;
         }
     }
 
     @media (min-width: 768px) {
         .media-footer .text-truncate {
-            max-width: 312px;
+            max-width: 162px;
         }
     }
 
     @media (min-width: 992px) {
         .media-footer .text-truncate {
-            max-width: 492px;
+            max-width: 342px;
         }
     }
 
     @media (min-width: 1200px) {
         .media-footer .text-truncate {
-            max-width: 622px;
+            max-width: 472px;
         }
     }
 
