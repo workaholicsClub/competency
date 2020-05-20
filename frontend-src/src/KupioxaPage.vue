@@ -3,12 +3,12 @@
         <story-page v-if="currentChapter.type === 'story'"
                 :chapter="currentChapter"
 
-                @next="currentChapterIndex++"
+                @next="gotoNextChapter"
         ></story-page>
 
         <task-page v-if="currentChapter.type === 'task'"
                 :chapter="currentChapter"
-                @next="currentChapterIndex++"
+                @next="gotoNextChapter"
         ></task-page>
 
         <finish-page v-if="currentChapter.type === 'finish'"
@@ -34,6 +34,30 @@
             return {
                 story: KupioxaStory,
                 currentChapterIndex: 0
+            }
+        },
+        created() {
+            this.updateChapterFromUrl();
+            window.onpopstate = this.updateChapterFromUrl;
+        },
+        methods: {
+            updateChapterFromUrl() {
+                let match = location.href.match(/\/(\d+)/);
+                if (match && match[1]) {
+                    let chapterIndex = parseInt(match[1])-1;
+                    this.gotoChapter(chapterIndex);
+                }
+                else {
+                    this.gotoChapter(0);
+                }
+            },
+            gotoNextChapter() {
+                this.gotoChapter( this.currentChapterIndex + 1 );
+            },
+            gotoChapter(chapterIndex) {
+                let url = '/kupioxa/'+(chapterIndex+1);
+                this.currentChapterIndex = chapterIndex;
+                history.pushState({}, document.title, url);
             }
         },
         computed: {

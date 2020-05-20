@@ -5,8 +5,7 @@
         <div class="row pt-4 justify-content-center">
             <div class="col col-12 col-md-6">
                 <div class="mb-4" v-html="chapter.text"></div>
-                <button class="btn btn-primary btn-lg btn-block" @click="$emit('next')">
-                    {{chapter.nextChapterButtonText}}
+                <button class="btn btn-primary btn-lg btn-block" @click="$emit('next')" v-html="chapter.nextChapterButtonText">
                 </button>
             </div>
         </div>

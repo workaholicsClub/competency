@@ -7,11 +7,21 @@
         </div>
         <div class="row pt-4">
             <div class="col col-12 col-md-6 mb-4">
-                <label>Тут читать задачу</label>
+                <label>Читай задачу</label>
                 <div v-html="chapter.text"></div>
+                <div class="alert alert-info" v-html="chapter.formalText" v-if="chapter.formalText"></div>
+
+                <button v-if="chapter.formalDescription"
+                        class="btn btn-outline-primary btn-block mt-4" type="button" data-toggle="collapse" data-target="#formalDescription" aria-expanded="false">
+                    Подробнее
+                </button>
+                <div  v-if="chapter.formalDescription"
+                        class="collapse mt-2" id="formalDescription">
+                    <div class="card card-body" v-html="chapter.formalDescription"></div>
+                </div>
             </div>
             <div class="col col-12 col-md-6 d-flex flex-column">
-                <label>Тут картинка</label>
+                <label>Смотри картинку</label>
                 <component v-if="chapter.visualComponent"
                     :is="chapter.visualComponent"
                     :stdout="execStdOut"
@@ -25,14 +35,14 @@
         </div>
         <div class="row pt-4">
             <div class="col col-12 col-md-6 mb-4">
-                <label>Тут писать программу</label>
+                <label>Пиши программу</label>
                 <prism-editor v-if="hasPrefixCode"
                         :code="codePrefix"
                         language="python"
                         :line-numbers="true"
                         :auto-style-line-numbers="true"
                         :readonly="true"
-                        class="hide-numbers"
+                        class="hide-numbers prefix"
                 ></prism-editor>
 
                 <prism-editor
@@ -59,23 +69,14 @@
                 <div class="alert alert-warning mt-4" v-if="resultError">{{resultError}}</div>
             </div>
             <div class="col col-12 col-md-6">
-                <label>А тут смотреть то, что программа напечатала</label>
+                <label>Смотри что программа напечатала</label>
                 <div class="codeError" v-if="execError">{{execError}}</div>
                 <div class="codeResult" v-else>{{execStdOut || ''}}</div>
             </div>
         </div>
         <div class="row pt-4" v-if="success">
             <div class="col col-12 text-center">
-                <button class="btn btn-success btn-lg btn-block" @click="$emit('next')">{{chapter.nextChapterButtonText}}</button>
-            </div>
-        </div>
-        <div class="row pt-4">
-            <div class="col col-12">
-                <label>Тут читать пояснения</label>
-                <div class="card">
-                    <div class="card-body" v-html="chapter.formalDescription">
-                    </div>
-                </div>
+                <button class="btn btn-success btn-lg btn-block" ref="successButton" @click="$emit('next')">{{chapter.nextChapterButtonText}}</button>
             </div>
         </div>
     </div>
@@ -127,6 +128,9 @@
                 if (this.resolveAnimationFinish) {
                     this.resolveAnimationFinish();
                 }
+            },
+            scrollToSuccessButton() {
+                this.$refs.successButton.scrollIntoView({block: "center", behavior: "smooth"});
             },
             async animationFinished() {
                 return new Promise(resolve => {
@@ -206,6 +210,11 @@
 
                 this.testing = false;
                 this.success = result;
+
+                if (this.success) {
+                    await this.$nextTick();
+                    this.scrollToSuccessButton();
+                }
             },
             load() {
                 try {
@@ -275,11 +284,25 @@
         height: auto!important;
     }
 
+    .prefix prism-editor__line-numbers,
+    .prefix pre {
+        background-color: rgb(230, 230, 230)!important;
+    }
+
     .hide-numbers .prism-editor__line-number {
         opacity: 0;
     }
 
     .hide-numbers pre {
         cursor: default;
+    }
+
+    .card-body p:last-child,
+    .alert p:last-child {
+        margin-bottom: 0;
+    }
+
+    .prefix .token.operator, .prefix .token.entity, .prefix .token.url, .prefix .language-css .token.string, .prefix .style .token.string {
+        background: none!important;
     }
 </style>
