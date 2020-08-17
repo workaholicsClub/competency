@@ -32,6 +32,11 @@ module.exports = {
             template: 'page_templates/kupioxa.html',
             filename: 'kupioxa.html',
         },
+        steepest: {
+            entry: 'src/steepestPage.js',
+            template: 'page_templates/steepest.html',
+            filename: 'steepest.html',
+        },
     },
 
     transpileDependencies: [
