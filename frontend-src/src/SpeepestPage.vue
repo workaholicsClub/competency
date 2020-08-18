@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-12">
                 <h1>Наискорейший Пью
-                    <a href="https://t.me/skill_itch" class="btn btn-link">Предыстория</a>
+                    <a href="https://t.me/skill_itch/72" class="btn btn-link">Предыстория</a>
                     <a href="https://github.com/workaholicsClub/competency/blob/master/frontend-src/src/SpeepestPage.vue" class="btn btn-link">Github</a>
                 </h1>
                 <p>Поиск минимума функции методом наискорейшего спуска</p>
