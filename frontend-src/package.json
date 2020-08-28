@@ -34,6 +34,7 @@
     "axios": "^0.19.0",
     "babel-plugin-prismjs": "^1.1.1",
     "core-js": "^2.6.5",
+    "lodash.flatten": "^4.4.0",
     "mathjs": "^7.1.0",
     "plotly.js": "^1.54.7",
     "postcss-loader": "^3.0.0",
@@ -47,6 +48,7 @@
     "vue-disqus": "^3.0.5",
     "vue-fragment": "^1.5.1",
     "vue-mathjax": "0.0.11",
+    "vue-naive-svg-chart": "^1.4.7",
     "vue-prism-editor": "^0.3.0"
   },
   "devDependencies": {

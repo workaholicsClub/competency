@@ -37,6 +37,11 @@ module.exports = {
             template: 'page_templates/steepest.html',
             filename: 'steepest.html',
         },
+        ducks: {
+            entry: 'src/ducksPage.js',
+            template: 'page_templates/ducks.html',
+            filename: 'ducks.html',
+        },
     },
 
     transpileDependencies: [
@@ -49,6 +54,11 @@ module.exports = {
                 language: 'en'
             } )
         ]
+    },
+
+    devServer: {
+        hot: false,
+        liveReload: false
     },
 
     chainWebpack: config => {
