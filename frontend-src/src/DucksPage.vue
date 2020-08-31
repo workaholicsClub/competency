@@ -161,8 +161,8 @@
             let startPosition = '50vh';
             let settingsPosition = 'calc(50vh + 116px)';
 
-            let levelFromUrl = location.href.replace(/.*\//, '');
-            let isLevelOnlyNumbers = /\d+/.test(levelFromUrl);
+            let levelFromUrl = location.href.replace(/.*\//, '').replace(/\?.*$/, '');
+            let isLevelOnlyNumbers = /^\d+$/.test(levelFromUrl);
             let levelNumber = isLevelOnlyNumbers ? parseInt(levelFromUrl) : 1;
 
             return {
