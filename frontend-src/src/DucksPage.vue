@@ -42,65 +42,49 @@
                 <div class="hint-speed" :class="{'hidden': hovered === null}">
                     {{hovered}} сек:
                     <span class="text-black">{{hoveredBlack}} см</span>,
-                    <span class="text-red">{{hoveredRed}} см</span>
+                    <span class="text-red">{{hoveredRed}} см</span>,
+                    <span class="text-red">{{hoveredSpeedRed}} см/сек</span>,
                 </div>
             </div>
-            <div class="duck-line settings-line">
+            <div class="duck-line settings-line" v-if="redDuckSwims">
+                <div class="gauge">
+                    <speedometer
+                            :value="currentSpeed"
+                            :min="speedLimits.min"
+                            :max="speedLimits.max"
+                    ></speedometer>
+                </div>
+            </div>
+            <div class="duck-line settings-line" v-else>
                 <div class="settings-pool"></div>
-                <button class="btn btn-duck"
-                        :class="{'btn-success': activeButton === 'settings', 'btn-secondary': activeButton !== 'settings'}"
-                        @click="toggleSettings"
-                >
-                    <i class="fas fa-cog"></i>
-                </button>
+                <div class="settings-row">
+                    <div class="form-group">
+                        <div class="header text-center text-black">
+                            <p><vue-mathjax :formula="mathJaxSpeedEquation" v-if="speedEquationCorrect"></vue-mathjax></p>
+                        </div>
+                        <label class="text-black">Подбери уравнение <span class="text-red">скорости</span> красной уточки</label>
+                        <input type="text" class="form-control form-control-lg" v-model="currentSpeedEquation">
+                        <small class="form-text text-right"
+                                :class="{'text-red': !speedEquationCorrect, 'text-black': speedEquationCorrect}"
+                        >{{speedEquationCorrect ? 'Все ОК' : 'Ошибка в уравнении'}}</small>
+                    </div>
+
+                    <label class="text-black" v-if="currentLevel.coeffs">или пощелкай кнопками</label>
+                    <div class="form-row form-row" v-if="currentLevel.coeffs">
+                        <div class="col-12 col-md-4" v-for="(coeff, index) in currentLevel.coeffs" :key="coeff.title">
+                            <num-input :max="coeff.max" :min="coeff.min" :step="coeff.step || 1" v-model="coeffs[index]"></num-input>
+                            <label class="coeff-label" v-if="coeff.title">
+                                <vue-mathjax :formula="'$$'+coeff.title+'$$'"></vue-mathjax>
+                            </label>
+                        </div>
+                    </div>
+                </div>
                 <button class="btn btn-duck"
                         :class="{'btn-success': activeButton === 'play', 'btn-secondary': activeButton !== 'play'}"
                         @click="goDuckGo"
                 >
                     <i class="fas fa-play"></i>
                 </button>
-            </div>
-            <div class="settings-row" :class="{'hidden': !showSettings}">
-                <div class="form-group">
-                    <label class="text-black">Подбери уравнение <span class="text-red">скорости</span> красной уточки</label>
-                    <input type="text" class="form-control form-control-lg" v-model="currentSpeedEquation">
-                    <small class="form-text text-right"
-                            :class="{'text-red': !speedEquationCorrect, 'text-black': speedEquationCorrect}"
-                    >{{speedEquationCorrect ? 'Все ОК' : 'Ошибка в уравнении'}}</small>
-                </div>
-
-                <label class="text-black" v-if="currentLevel.coeffs">или пощелкай кнопками</label>
-                <div class="form-row form-row mb-4 pb-4" v-if="currentLevel.coeffs">
-                    <div class="col-12 col-md-4" v-for="(coeff, index) in currentLevel.coeffs" :key="coeff.title">
-                        <num-input :max="coeff.max" :min="coeff.min" :step="coeff.step || 1" v-model="coeffs[index]"></num-input>
-                        <label class="coeff-label" v-if="coeff.title">
-                            <vue-mathjax :formula="'$$'+coeff.title+'$$'"></vue-mathjax>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="header text-center text-black">
-                    <p><vue-mathjax :formula="mathJaxSpeedEquation" v-if="speedEquationCorrect"></vue-mathjax></p>
-                </div>
-                <div class="graph-container">
-                    <svg-line-graph
-                            id="line-chart-2"
-                            class="duck-graph"
-                            type="line"
-                            :dataset="speedLineData"
-                            :labels="labels"
-                            :padding="16"
-                            :showLegend="false"
-                            :active="[]"
-                            :units="{x: 'сек', y: 'см/сек'}"
-                            @hover="handleSpeedHover"
-                    ></svg-line-graph>
-                </div>
-
-                <div class="hint-speed" :class="{'hidden': hoveredSpeed === null}">
-                    {{hoveredSpeed}} сек:
-                    <span class="text-red">{{hoveredSpeedRed}} см/сек</span>
-                </div>
             </div>
         </div>
 
@@ -148,6 +132,7 @@
 
 <script>
     import SvgLineGraph from "./components/SvgLineGraph";
+    import Speedometer from "./components/Speedometer";
     import {VueMathjax} from 'vue-mathjax';
     import NumInput from "./components/NumInput";
     import duckLevels from "./duckLevels";
@@ -156,7 +141,7 @@
 
     export default {
         name: "DucksPage",
-        components: {SvgLineGraph, VueMathjax, NumInput},
+        components: {Speedometer, SvgLineGraph, VueMathjax, NumInput},
         data() {
             let startPosition = '50vh';
             let settingsPosition = 'calc(50vh + 116px)';
@@ -171,10 +156,10 @@
                 showSettings: false,
                 showSuccess: false,
                 gameFinished: false,
+                redDuckSwims: false,
                 activeButton: 'play',
                 coeffs: [],
                 hovered: null,
-                hoveredSpeed: null,
                 path: {
                     black: null,
                     red: null
@@ -192,6 +177,7 @@
                     red: false,
                 },
                 progressPosition: 0,
+                currentSpeed: 0,
                 ticks: null,
                 duckSays: {
                     black: false,
@@ -199,7 +185,7 @@
                 },
                 startPosition,
                 settingsPosition,
-                activeGraphPoints: [0, 0],
+                activeGraphPoints: [0, 0, 0],
                 animationDelay: 1000,
                 duckSayDelay: 2000,
                 integrationConst: 0,
@@ -233,9 +219,6 @@
             },
             handleHover(val) {
                 this.hovered = val;
-            },
-            handleSpeedHover(val) {
-                this.hoveredSpeed = val;
             },
             toggleSettings() {
                 this.showSettings = !this.showSettings;
@@ -316,6 +299,10 @@
                 this.progressPosition = x;
                 return this.wait(this.animationDelay);
             },
+            setCurrentSpeed(newSpeed) {
+                this.currentSpeed = newSpeed;
+                return this.wait(this.animationDelay);
+            },
             duckSay(duckCode, msg) {
                 this.$set(this.duckSays, duckCode, msg);
                 return new Promise(resolve => {
@@ -329,6 +316,10 @@
             showGraphPoint(duckCode, pointIndex) {
                 let graphIndex = duckCode === 'black' ? 0 : 1;
                 this.$set(this.activeGraphPoints, graphIndex, pointIndex);
+
+                if (duckCode === 'red') {
+                    this.$set(this.activeGraphPoints, 2, pointIndex);
+                }
             },
 
             hideRedGraph() {
@@ -344,8 +335,12 @@
                 for (const pointIndex in this.path[duckCode]) {
                     const point = this.path[duckCode][pointIndex];
                     const progressPoint = this.ticks[pointIndex];
+                    const currentSpeed = this.speedPoints[pointIndex];
 
                     this.moveProgressTo(progressPoint);
+                    if (duckCode === 'red') {
+                        this.setCurrentSpeed(currentSpeed);
+                    }
                     await this.moveDuckTo(point+'px', duckCode);
 
                     this.showGraphPoint(duckCode, pointIndex);
@@ -397,7 +392,10 @@
                     this.moveDuckToStart('red')
                 ]);
 
+                this.redDuckSwims = true;
                 await this.duckSwim('red');
+                this.setCurrentSpeed(0);
+                this.redDuckSwims = false;
 
                 if (this.isSuccess) {
                     await this.duckSay('red', `Кря! Элементарно!`);
@@ -551,6 +549,16 @@
                     return f.evaluate({t});
                 });
             },
+            speedLimits() {
+                let min = Math.min.apply(null, this.speedPoints);
+                let max = Math.max.apply(null, this.speedPoints);
+                if (min === max) {
+                    min = min * 0.5;
+                    max = max * 1.5;
+                }
+
+                return {min, max};
+            },
             speedPoints() {
                 if (!this.speedEquationCorrect) {
                     return this.tPoints.map( () => 0 );
@@ -593,14 +601,15 @@
                     : null;
             },
             hoveredSpeedRed() {
-                return this.hoveredSpeed !== null
-                    ? this.speedPoints[this.hoveredSpeed]
+                return this.hovered !== null
+                    ? this.speedPoints[this.hovered]
                     : null;
             },
             lineData() {
                 return [
                     {data: this.blackPoints, color: 'black', label: 'Черная уточка'},
                     {data: this.redPoints, color: 'red', label: 'Красная уточка'},
+                    {data: this.speedPoints, color: 'red', label: 'Скорость красной уточки', dashed: true},
                 ]
             },
             speedLineData() {
@@ -621,6 +630,9 @@
 </script>
 
 <style scoped>
+    body {
+    }
+
     .sea {
         background: #0e7fe1;
         width: 100%;
@@ -631,6 +643,17 @@
         /*align-items: center;*/
         margin: 0;
         padding: 16px 0;
+    }
+
+    .gauge {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translate(-50%, 0);
+        z-index: 100;
+        background: #fff;
+        border-radius: .4em;
+        padding: 24px;
     }
 
     .ducks-container {
@@ -648,7 +671,7 @@
 
     .settings-line {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
     }
 
     .duck-graph {
@@ -712,7 +735,6 @@
     }
 
     .settings-row {
-        margin-top: 32px;
         position: relative;
         background: #fff;
         border-radius: .4em;
@@ -722,15 +744,16 @@
     .settings-row:after {
         content: '';
         position: absolute;
-        top: 0;
-        left: 65px;
+        left: 0;
+        top: 30px;
         width: 0;
         height: 0;
         border: 20px solid transparent;
-        border-bottom-color: #fff;
-        border-top: 0;
+        border-right-color: #fff;
+        border-left: 0;
+        border-bottom: 0;
+        margin-top: -10px;
         margin-left: -20px;
-        margin-top: -20px;
     }
 
     .settings-row input {

@@ -12,7 +12,7 @@
             <svg>
                 <generic-base :propsObj="baseProps" @hover="handleHover">
                     <g v-for="l in lines" :key="l.label">
-                        <polyline :points="l.linePoints" :style="'fill: none; stroke: '+l.color+'; stroke-width: 2;'" />
+                        <polyline :points="l.linePoints" :style="`fill: none; stroke: ${l.color}; stroke-width: 2; stroke-dasharray: ${l.dashed ? 5 : 0}`" />
                         <defs v-if="lineFill==='gradient'">
                             <linearGradient :id="id+'-'+l.label.split(' ').join('-')" x1="0" x2="0" y1="0" y2="1">
                                 <stop offset="0%" :stop-color="l.color"/>
@@ -226,6 +226,7 @@
 
                     return {
                         color: line.color,
+                        dashed: line.dashed,
                         label: line.label,
                         points: line.data.map((d, index) => {
                             return {
