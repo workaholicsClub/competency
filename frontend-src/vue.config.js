@@ -42,6 +42,11 @@ module.exports = {
             template: 'page_templates/ducks.html',
             filename: 'ducks.html',
         },
+        slope: {
+            entry: 'src/slopePage.js',
+            template: 'page_templates/slope.html',
+            filename: 'slope.html',
+        },
     },
 
     transpileDependencies: [

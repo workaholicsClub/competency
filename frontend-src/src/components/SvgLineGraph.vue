@@ -12,7 +12,7 @@
             <svg>
                 <generic-base :propsObj="baseProps" @hover="handleHover">
                     <g v-for="l in lines" :key="l.label">
-                        <polyline :points="l.linePoints" :style="`fill: none; stroke: ${l.color}; stroke-width: 2; stroke-dasharray: ${l.dashed ? 5 : 0}`" />
+                        <polyline :points="l.linePoints" :style="`fill: none; stroke: ${l.lineColor ? l.lineColor : l.color}; stroke-width: 2; stroke-dasharray: ${l.dashed ? 5 : 0}`" />
                         <defs v-if="lineFill==='gradient'">
                             <linearGradient :id="id+'-'+l.label.split(' ').join('-')" x1="0" x2="0" y1="0" y2="1">
                                 <stop offset="0%" :stop-color="l.color"/>
@@ -91,8 +91,8 @@
                     }
                     return labelText;
                 }).sort((a, b) => { return b.length - a.length })[0].length * 10
-                this.innerWidth = ele.getBoundingClientRect().width - (this.padding * 2) - this.yAxisSpace
-                this.innerHeight = ele.getBoundingClientRect().height - (this.padding * 2) - this.xAxisSpace
+                this.innerWidth = ele.getBoundingClientRect().width - (this.padding * 2) - this.yAxisSpace;
+                this.innerHeight = ele.getBoundingClientRect().height - (this.padding * 2) - this.xAxisSpace;
                 const tempDataArr = (this.type === 'column' || this.type === 'bar') && this.stack ? this.computeStack(dataset) : flatten(dataset.map(d => { return d.data }))
                 this.biggest = tempDataArr.reduce((a, b) => { return Math.max(a, b) })
                 this.max = Math.ceil(this.biggest / this.stepBaseFactor) * this.stepBaseFactor
@@ -100,6 +100,21 @@
                 this.min = Math.floor(this.smallest / this.stepBaseFactor) * this.stepBaseFactor
                 this.min = this.min > 0 ? 0 : this.min
             },
+            compute (dataset) {
+                this.genericCompute(dataset)
+                this.yStepSize = this.stepBaseFactor;
+                let range = this.min >= 0 ? this.max : this.max - this.min;
+                let canAdjustYStep = this.innerHeight > this.fontSize * 2;
+                if (canAdjustYStep) {
+                    while (this.innerHeight / (range / this.yStepSize) < this.fontSize * 2) {
+                        this.yStepSize += this.stepBaseFactor
+                        this.max = Math.ceil(this.biggest / this.yStepSize) * this.yStepSize
+                        this.min = Math.floor(this.smallest / this.yStepSize) * this.yStepSize
+                        this.min = this.min > 0 ? 0 : this.min
+                    }
+                }
+            },
+
             handleHover(val) {
                 this.hovered = val;
                 this.$emit('hover', val);
@@ -123,10 +138,14 @@
                 return index === this.hovered ? base * 2 : base
             },
             sendXPoints() {
-                this.$emit('tickUpdate', this.xPoints);
+                if (this.xPoints && this.xPoints[0] && this.xPoints[0].length > 0 && typeof(this.xPoints[0][0]) === 'number') {
+                    this.$emit('tickUpdate', this.xPoints);
+                }
             },
             sendYPoints() {
-                this.$emit('pathUpdate', this.yPoints);
+                if (this.yPoints && this.yPoints[0] && this.yPoints[0].length > 0 && typeof(this.yPoints[0][0]) === 'number') {
+                    this.$emit('pathUpdate', this.yPoints);
+                }
             },
             filterByIndex(p, index, lineIndex) {
                 let hasActive = this.active && this.active.length === this.computedDataset.length;
@@ -226,6 +245,7 @@
 
                     return {
                         color: line.color,
+                        lineColor: line.lineColor || null,
                         dashed: line.dashed,
                         label: line.label,
                         points: line.data.map((d, index) => {
