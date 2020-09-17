@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "watch": "vue-cli-service build --no-clean --watch --mode development && npm run clean",
+    "watch": "vue-cli-service build --no-clean --watch --mode development",
     "build": "vue-cli-service build --no-clean",
     "lint": "vue-cli-service lint"
   },

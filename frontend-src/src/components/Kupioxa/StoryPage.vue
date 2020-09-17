@@ -20,5 +20,7 @@
 </script>
 
 <style scoped>
-
+    .btn-block {
+        white-space: normal;
+    }
 </style>

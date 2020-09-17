@@ -49,21 +49,27 @@ module.exports = {
         },
     },
 
+    devServer: {
+        hot: false,
+        hotOnly: false,
+        liveReload: false
+    },
+
     transpileDependencies: [
         /ckeditor5-[^/\\]+[/\\]src[/\\].+\.js$/,
     ],
 
     configureWebpack: {
+        devServer: {
+            hot: false,
+            hotOnly: false,
+            liveReload: false
+        },
         plugins: [
             new CKEditorWebpackPlugin( {
                 language: 'en'
             } )
         ]
-    },
-
-    devServer: {
-        hot: false,
-        liveReload: false
     },
 
     chainWebpack: config => {

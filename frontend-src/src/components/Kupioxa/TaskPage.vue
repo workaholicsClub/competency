@@ -12,13 +12,9 @@
                 <div class="alert alert-info" v-html="chapter.formalText" v-if="chapter.formalText"></div>
 
                 <button v-if="chapter.formalDescription"
-                        class="btn btn-outline-primary btn-block mt-4" type="button" data-toggle="collapse" data-target="#formalDescription" aria-expanded="false">
+                        class="btn btn-outline-primary btn-block mt-4" type="button" @click="showDetails = true">
                     Подробнее
                 </button>
-                <div  v-if="chapter.formalDescription"
-                        class="collapse mt-2" id="formalDescription">
-                    <div class="card card-body" v-html="chapter.formalDescription"></div>
-                </div>
             </div>
             <div class="col col-12 col-md-6 d-flex flex-column">
                 <label>Смотри картинку</label>
@@ -28,14 +24,27 @@
                     :test="currentTest"
                     :success="success"
                     :reset="resetAnimationFlag"
+                    :testIndex="currentTestIndex"
+                    :runIndex="runIndex"
+
+                    v-bind="chapter.componentProps"
 
                     @finish="finishAnimationWait"
                 ></component>
             </div>
         </div>
         <div class="row pt-4">
-            <div class="col col-12 col-md-6 mb-4">
+            <div class="col col-12 mb-4" :class="{'col-md-6': !chapter.wide}">
                 <label>Пиши программу</label>
+                <prism-editor v-if="hasTestCode"
+                        :code="testPrefix"
+                        language="python"
+                        :line-numbers="true"
+                        :auto-style-line-numbers="true"
+                        :readonly="true"
+                        class="hide-numbers prefix"
+                ></prism-editor>
+
                 <prism-editor v-if="hasPrefixCode"
                         :code="codePrefix"
                         language="python"
@@ -43,6 +52,7 @@
                         :auto-style-line-numbers="true"
                         :readonly="true"
                         class="hide-numbers prefix"
+                        :class="{'has-prefix': hasTestCode}"
                 ></prism-editor>
 
                 <prism-editor
@@ -51,6 +61,16 @@
                         language="python"
                         :line-numbers="true"
                         :auto-style-line-numbers="true"
+                        :class="{'has-suffix': hasSuffixCode, 'has-prefix': hasPrefixCode || hasTestCode}"
+                ></prism-editor>
+
+                <prism-editor v-if="hasSuffixCode"
+                        :code="codeSuffix"
+                        language="python"
+                        :line-numbers="true"
+                        :auto-style-line-numbers="true"
+                        :readonly="true"
+                        class="hide-numbers suffix"
                 ></prism-editor>
 
                 <div class="d-flex flex-wrap mt-2">
@@ -68,7 +88,7 @@
 
                 <div class="alert alert-warning mt-4" v-if="resultError">{{resultError}}</div>
             </div>
-            <div class="col col-12 col-md-6">
+            <div class="col col-12" :class="{'col-md-6': !chapter.wide}">
                 <label>Смотри что программа напечатала</label>
                 <div class="codeError" v-if="execError">{{execError}}</div>
                 <div class="codeResult" v-else>{{execStdOut || ''}}</div>
@@ -76,9 +96,26 @@
         </div>
         <div class="row pt-4" v-if="success">
             <div class="col col-12 text-center">
-                <button class="btn btn-success btn-lg btn-block" ref="successButton" @click="$emit('next')">{{chapter.nextChapterButtonText}}</button>
+                <button class="btn btn-success btn-lg btn-block" ref="successButton" @click="$emit('next')" v-html="chapter.nextChapterButtonText"></button>
             </div>
         </div>
+
+        <div class="modal fade" :class="{'show': showDetails}" v-if="chapter.formalDescription">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть" @click="showDetails = false">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <div v-html="chapter.formalDescription"></div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-success btn-lg" @click="showDetails = false">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -98,6 +135,7 @@
             return {
                 code: this.chapter.starterCode || '',
                 savedData: {},
+                showDetails: false,
                 executing: false,
                 testing: false,
                 saved: true,
@@ -107,7 +145,8 @@
                 resultError: false,
                 resetAnimationFlag: false,
                 resolveAnimationFinish: false,
-                currentTestIndex: 0
+                currentTestIndex: 0,
+                runIndex: 0,
             }
         },
         created() {
@@ -127,6 +166,7 @@
             finishAnimationWait() {
                 if (this.resolveAnimationFinish) {
                     this.resolveAnimationFinish();
+                    this.resolveAnimationFinish = false;
                 }
             },
             scrollToSuccessButton() {
@@ -146,9 +186,16 @@
             },
 
             async runCodeAndResetAnimation() {
+                if (this.chapter.resetAnimationOnStart) {
+                    await this.resetAnimation();
+                }
+
                 await this.runCode();
                 await this.animationFinished();
-                await this.resetAnimation();
+
+                if (!this.chapter.resetAnimationOnStart) {
+                    await this.resetAnimation();
+                }
             },
 
             async runCode() {
@@ -157,7 +204,7 @@
                 this.execStdOut = '';
                 await this.$nextTick();
 
-                let codeWithPrefix = this.codePrefix + '\n' + this.code;
+                let codeWithPrefix = this.testPrefix + '\n' + this.codePrefix + '\n' + this.code;
                 let execResult = await ApiClient.runCodeOnGlot(codeWithPrefix, 'python');
 
                 this.execStdOut = execResult.stdout;
@@ -169,6 +216,7 @@
             },
             async validate() {
                 let result = true;
+                this.success = false;
 
                 if (!this.chapter.validator) {
                     this.success = true;
@@ -176,6 +224,7 @@
                 }
 
                 this.currentTestIndex = 0;
+                this.runIndex = 0;
                 this.testing = true;
                 await this.resetAnimation();
 
@@ -185,8 +234,9 @@
 
                     if (result) {
                         await this.runCode(true);
-                        await this.$nextTick();
-                        await this.animationFinished();
+                        let whenFinished = this.animationFinished();
+                        this.runIndex = index;
+                        await whenFinished;
 
                         let testResult = this.chapter.validator(this.execStdOut, test);
 
@@ -197,12 +247,10 @@
                         }
                         else {
                             if (!lastIndex) {
+                                whenFinished = this.animationFinished();
                                 this.execStdOut = '';
-                                await this.$nextTick();
-
                                 this.currentTestIndex++;
-                                await this.$nextTick();
-                                await this.animationFinished();
+                                await whenFinished;
                             }
                         }
                     }
@@ -243,13 +291,23 @@
             currentTest() {
                 return this.chapter.tests[this.currentTestIndex];
             },
+            testPrefix() {
+                return this.currentTest.exec || '';
+            },
             codePrefix() {
-                return this.chapter.testIsPrefix
-                    ? this.currentTest.exec || ''
-                    : '';
+                return this.chapter.prefixCode || '';
+            },
+            codeSuffix() {
+                return this.chapter.suffixCode || '';
+            },
+            hasTestCode() {
+                return this.chapter.testIsPrefix;
             },
             hasPrefixCode() {
-                return Boolean(this.chapter.prefixCode) || this.chapter.testIsPrefix;
+                return Boolean(this.chapter.prefixCode) ;
+            },
+            hasSuffixCode() {
+                return Boolean(this.chapter.suffixCode);
             }
 
         }
@@ -284,10 +342,25 @@
         height: auto!important;
     }
 
+    .suffix prism-editor__line-numbers,
+    .suffix pre,
     .prefix prism-editor__line-numbers,
     .prefix pre {
         background-color: rgb(230, 230, 230)!important;
     }
+
+    .prefix prism-editor__line-numbers,
+    .prefix pre,
+    .has-suffix pre {
+        padding-bottom: 0!important;
+    }
+
+    .suffix prism-editor__line-numbers,
+    .suffix pre,
+    .has-prefix pre {
+        padding-top: 0!important;
+    }
+
 
     .hide-numbers .prism-editor__line-number {
         opacity: 0;
@@ -304,5 +377,25 @@
 
     .prefix .token.operator, .prefix .token.entity, .prefix .token.url, .prefix .language-css .token.string, .prefix .style .token.string {
         background: none!important;
+    }
+
+    .modal.show {
+        display: block;
+    }
+    .modal-dialog-scrollable {
+        display: flex;
+        max-height: calc(100% - 1rem);
+    }
+    .modal-dialog-scrollable .modal-body {
+        overflow-y: auto;
+    }
+    .fade {
+        background: rgba(0,0,0,0.3);
+    }
+
+    @media (min-width: 576px) {
+        .modal-dialog {
+            max-width: 90vw;
+        }
     }
 </style>

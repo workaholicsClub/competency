@@ -249,7 +249,7 @@
                 <a href="https://vk.com/skill_itch" target="_blank" class="btn btn-link text-black">
                     <i class="fab fa-vk"></i>
                 </a>
-                <a href="https://github.com/workaholicsClub/competency/blob/master/frontend-src/src/DucksPage.vue" target="_blank" class="btn btn-link text-black">
+                <a href="https://github.com/workaholicsClub/competency/blob/master/frontend-src/src/SlopePage.vue" target="_blank" class="btn btn-link text-black">
                     <i class="fab fa-github"></i>
                 </a>
             </div>
