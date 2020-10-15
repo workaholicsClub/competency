@@ -36,6 +36,7 @@
     "core-js": "^2.6.5",
     "lodash.flatten": "^4.4.0",
     "mathjs": "^7.1.0",
+    "ode-euler": "^1.0.6",
     "plotly.js": "^1.54.7",
     "postcss-loader": "^3.0.0",
     "prismjs": "^1.17.1",

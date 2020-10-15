@@ -47,6 +47,11 @@ module.exports = {
             template: 'page_templates/slope.html',
             filename: 'slope.html',
         },
+        cauldron: {
+            entry: 'src/cauldron/main.js',
+            template: 'src/cauldron/main.html',
+            filename: 'cauldron.html',
+        },
     },
 
     devServer: {

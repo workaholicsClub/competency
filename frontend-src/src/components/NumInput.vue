@@ -7,7 +7,7 @@
                     :class="{'btn-lg': this.lg, 'btn-sm': this.sm}"
                     @click="decrease"
                     :disabled="typeof(min) === 'number' && newValue === min"
-            >&mdash;</button>
+            >&minus;</button>
         </div>
         <input
                 type="text"
@@ -57,6 +57,12 @@
             }
         },
         methods: {
+            smartRound(float) {
+                return parseFloat(float
+                    .toFixed(2)
+                    .replace(/0+$/,'')
+                    .replace(/\.$/, ''));
+            },
             increase() {
                 if (this.max) {
                     this.newValue = this.newValue < this.max ? this.newValue + this.step : this.max;
@@ -64,7 +70,7 @@
                 else {
                     this.newValue += this.step;
                 }
-
+                this.newValue = this.smartRound(this.newValue);
                 this.updateValue();
             },
             decrease() {
@@ -74,6 +80,7 @@
                 else {
                     this.newValue -= this.step;
                 }
+                this.newValue = this.smartRound(this.newValue);
                 this.updateValue();
             },
             updateValue() {
