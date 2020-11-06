@@ -12,9 +12,10 @@
 
     export default {
         name: "Dialog",
-        props: ['stdout', 'test', 'success', 'reset', 'testIndex', 'runIndex', 'inputPersonLines', 'inputKupioxaLines', 'startPerson', 'saveDialog'],
+        props: ['stdout', 'test', 'success', 'reset', 'testIndex', 'runIndex', 'inputPersonLines', 'inputKupioxaLines', 'startPerson', 'saveDialog', 'stdoutKupioxaOnly'],
         data() {
             return {
+                lastStdout: null,
                 speaking: false,
                 dialog: [],
                 pauseMs: 2000,
@@ -22,7 +23,15 @@
         },
         watch: {
             stdout() {
-                if (!this.stdout) {
+                let isFirstTimeExecute = this.lastStdout === null;
+                let isStdoutReset = this.stdout === false;
+                let isStdoutUnchanged = this.lastStdout === this.stdout;
+
+                let doNotStart = isFirstTimeExecute || isStdoutReset || isStdoutUnchanged;
+
+                this.lastStdout = this.stdout;
+
+                if (doNotStart) {
                     this.finish();
                     return;
                 }
@@ -48,6 +57,7 @@
         methods: {
             resetDialog() {
                 this.dialog = [];
+                this.lastStdout = null;
             },
 
             finish() {
@@ -75,6 +85,10 @@
                     }
                 }
 
+                if (this.kupioxaLines.length == 0 && this.startPerson && this.personLines.length > 0) {
+                    this.dialog.push({text: this.personLines[0], my: false});
+                }
+
                 this.speaking = false;
                 this.finish();
             }
@@ -88,18 +102,18 @@
                     return this.inputKupioxaLines[this.testIndex];
                 }
 
-                return this.stdoutLines.length > 3
-                    ? this.stdoutLines.filter( (line, index) => index % 2 === 0 )
-                    : this.stdoutLines;
+                return this.stdoutKupioxaOnly
+                    ? this.stdoutLines
+                    : this.stdoutLines.filter( (line, index) => index % 2 === 0 );
             },
             personLines() {
                 if (this.inputPersonLines) {
                     return this.inputPersonLines[this.testIndex];
                 }
 
-                return this.stdoutLines.length > 3
-                    ? this.stdoutLines.filter( (line, index) => index % 2 === 1 )
-                    : Array(this.stdoutLines.length).fill('К сожалению, не знаю');
+                return this.stdoutKupioxaOnly
+                    ? Array(this.stdoutLines.length).fill('К сожалению, не знаю')
+                    : this.stdoutLines.filter( (line, index) => index % 2 === 1 );
             },
         }
     }

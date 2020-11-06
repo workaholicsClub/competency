@@ -157,38 +157,33 @@
 
     export default {
         name: "Vars",
-        props: ['stdout', 'test', 'success', 'reset'],
+        props: ['stdout', 'test', 'success', 'reset', 'runIndex'],
         data() {
             return {
+                isFirstTest: true,
+                showTest: true,
+                showTestIntro: false,
+                showResult: false,
+                showSuccess: false,
+
                 resultChanged: false,
                 testChanged: true,
                 testIntro: false,
+                animating: false,
 
                 pauseMs: 4000,
             }
         },
         watch: {
-            test: {
-                deep: true,
-                async handler() {
-                    this.resultChanged = false;
-                    this.testChanged = true;
-                    this.testIntro = true;
-                    await this.$nextTick();
-
-                    await pause(this.pauseMs);
-                    this.testIntro = false;
-                    await this.$nextTick();
-                    await pause(this.pauseMs);
-
-                    this.$emit('finish');
-                }
-            },
             reset() {
                 if (this.reset) {
-                    this.resultChanged = false;
-                    this.testChanged = true;
-                    this.testIntro = false;
+                    this.isFirstTest = true;
+                    this.resetVars();
+                }
+            },
+            runIndex() {
+                if (!this.animating) {
+                    this.$emit('finish');
                 }
             },
             async stdout() {
@@ -197,18 +192,53 @@
                     return;
                 }
 
-                this.resultChanged = true;
-                this.testChanged = false;
-                await this.$nextTick();
-
-                await pause(this.pauseMs);
+                await this.playAnimation();
+                this.isFirstTest = false;
                 this.$emit('finish');
             },
             async success() {
-                this.resultChanged = false;
-                this.testChanged = false;
+                this.showTest = false;
+                this.showTestIntro = false;
+                this.showResult = false;
+                this.showSuccess = true;
                 await this.$nextTick();
+                await pause(this.pauseMs);
                 this.$emit('finish');
+            }
+        },
+        methods: {
+            resetVars() {
+                this.showTest = true;
+                this.showTestIntro = false;
+                this.showResult = false;
+                this.showSuccess = false;
+            },
+            async playAnimation() {
+                this.animating = true;
+
+                if (!this.isFirstTest) {
+                    this.showTest = false;
+                    this.showTestIntro = true;
+                    this.showResult = false;
+                    await this.$nextTick();
+                    await pause(this.pauseMs);
+                }
+
+                if (!this.showTest) {
+                    this.showTest = true;
+                    this.showTestIntro = false;
+                    this.showResult = false;
+                    await this.$nextTick();
+                    await pause(this.pauseMs);
+                }
+
+                this.showTest = false;
+                this.showTestIntro = false;
+                this.showResult = true;
+                await this.$nextTick();
+                await pause(this.pauseMs);
+
+                this.animating = false;
             }
         },
         computed: {
@@ -228,18 +258,6 @@
             },
             chocolatePrice() {
                 return this.parsedPrices ? this.parsedPrices[1] : false;
-            },
-            showTest() {
-                return !this.success && this.testChanged && !this.testIntro;
-            },
-            showTestIntro() {
-                return !this.success && this.testChanged && this.testIntro;
-            },
-            showResult() {
-                return !this.success && this.resultChanged && Boolean(this.stdout);
-            },
-            showSuccess() {
-                return this.success;
             },
             juliaSpeaking() {
                 return this.showResult;

@@ -36,6 +36,7 @@
         <div class="row pt-4">
             <div class="col col-12 mb-4" :class="{'col-md-6': !chapter.wide}">
                 <label>Пиши программу</label>
+                <div class="alert alert-warning mt-4" v-if="resultError">{{resultError}}</div>
                 <prism-editor v-if="hasTestCode"
                         :code="testPrefix"
                         language="python"
@@ -85,8 +86,6 @@
                     <button class="btn btn-outline-info mt-2 disabled" disabled="disabled" v-if="saved">Сохранено</button>
                     <button class="btn btn-info mt-2" @click="save" v-else>Сохранить</button>
                 </div>
-
-                <div class="alert alert-warning mt-4" v-if="resultError">{{resultError}}</div>
             </div>
             <div class="col col-12" :class="{'col-md-6': !chapter.wide}">
                 <label>Смотри что программа напечатала</label>
@@ -139,14 +138,14 @@
                 executing: false,
                 testing: false,
                 saved: true,
-                execStdOut: false,
+                execStdOut: null,
                 execError: false,
                 success: false,
                 resultError: false,
                 resetAnimationFlag: false,
                 resolveAnimationFinish: false,
                 currentTestIndex: 0,
-                runIndex: 0,
+                runIndex: null,
             }
         },
         created() {
@@ -201,7 +200,7 @@
             async runCode() {
                 this.executing = true;
                 this.execError = false;
-                this.execStdOut = '';
+                this.execStdOut = false;
                 await this.$nextTick();
 
                 let codeWithPrefix = this.testPrefix + '\n' + this.codePrefix + '\n' + this.code;
@@ -224,7 +223,7 @@
                 }
 
                 this.currentTestIndex = 0;
-                this.runIndex = 0;
+                this.runIndex = null;
                 this.testing = true;
                 await this.resetAnimation();
 
@@ -248,7 +247,7 @@
                         else {
                             if (!lastIndex) {
                                 whenFinished = this.animationFinished();
-                                this.execStdOut = '';
+                                this.execStdOut = false;
                                 this.currentTestIndex++;
                                 await whenFinished;
                             }
@@ -338,6 +337,10 @@
 </style>
 
 <style>
+    pre code, code pre {
+        color: #e83e8c!important;
+    }
+
     .prism-editor-wrapper {
         height: auto!important;
     }
@@ -393,9 +396,12 @@
         background: rgba(0,0,0,0.3);
     }
 
+    .modal-dialog {
+    }
+
     @media (min-width: 576px) {
         .modal-dialog {
-            max-width: 90vw;
+            max-width: 50%;
         }
     }
 </style>

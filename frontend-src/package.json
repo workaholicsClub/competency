@@ -43,6 +43,7 @@
     "raw-loader": "^0.5.1",
     "regression": "^2.0.1",
     "shortid": "^2.2.15",
+    "string.prototype.replaceall": "^1.0.3",
     "tiptap": "^1.27.0",
     "tiptap-extensions": "^1.29.0",
     "vue": "^2.6.10",
