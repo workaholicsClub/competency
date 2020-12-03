@@ -354,6 +354,7 @@
         watch: {
             flows: {
                 deep: true,
+
                 handler() {
                     this.stopConveyor();
                     this.stopMixer();
