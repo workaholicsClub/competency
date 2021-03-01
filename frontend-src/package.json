@@ -39,7 +39,7 @@
     "ode-euler": "^1.0.6",
     "plotly.js": "^1.54.7",
     "postcss-loader": "^3.0.0",
-    "prismjs": "^1.17.1",
+    "prismjs": "^1.23.0",
     "raw-loader": "^0.5.1",
     "regression": "^2.0.1",
     "shortid": "^2.2.15",
