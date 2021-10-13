@@ -10,6 +10,8 @@ import PetkaData from "../views/micropetka/Data";
 import PetkaCheck from "../views/micropetka/Check";
 import PetkaSuccess from "../views/micropetka/Success";
 
+import MatrixMoversGame from "../views/matrixmovers/Game";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -29,6 +31,11 @@ const routes = [
             {path: 'check', component: PetkaCheck},
             {path: 'success', component: PetkaSuccess},
         ]
+    },
+    {
+        path: '/matrixmovers',
+        name: 'matrixmovers',
+        component: MatrixMoversGame
     },
     // {
     //   path: '/about',
