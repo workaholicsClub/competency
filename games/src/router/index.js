@@ -12,6 +12,8 @@ import PetkaSuccess from "../views/micropetka/Success";
 
 import MatrixMoversGame from "../views/matrixmovers/Game";
 
+import ShopGame from "../views/shop/Shop";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -37,6 +39,11 @@ const routes = [
         name: 'matrixmovers',
         component: MatrixMoversGame
     },
+    {
+        path: '/shop',
+        name: 'shop',
+        component: ShopGame
+    }
     // {
     //   path: '/about',
     //   name: 'About',

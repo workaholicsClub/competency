@@ -7,6 +7,9 @@
             <b-nav-item>
                 <router-link to="/matrixmovers">Супер-грузчики с матричным телекинезом двигают мебель</router-link>
             </b-nav-item>
+            <b-nav-item>
+                <router-link to="/shop">Заработай миллион</router-link>
+            </b-nav-item>
         </b-nav>
     </b-card>
 </template>
